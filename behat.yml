@@ -1,0 +1,14 @@
+default:
+  autoload:
+    '': '%paths.base%/tests/acceptance/src'
+  suites:
+    default:
+      autowire: true
+      services: "@psr_container"
+      paths:
+        - '%paths.base%/tests/acceptance/features'
+      contexts:
+        - AppTest\Acceptance\SampleContext
+  extensions:
+    Roave\BehatPsrContainer\PsrContainerExtension:
+      container: '%paths.base%/tests/acceptance/container.php'

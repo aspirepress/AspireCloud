@@ -1,0 +1,41 @@
+server {
+    listen 80 default_server;
+    return 302 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    client_max_body_size 4M;
+    server_name application.local;
+
+    ssl_certificate /_wildcard.application.local.pem;
+    ssl_certificate_key /_wildcard.application.local-key.pem;
+
+
+    root /var/www/html/public/;
+
+    index index.html index.htm index.php;
+
+
+    charset utf-8;
+
+    location = /favicon.ico { log_not_found off; access_log off; }
+    location = /robots.txt  { log_not_found off; access_log off; }
+
+    location / {
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass webapp:9000;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    error_page 404 /index.php;
+
+    location ~ /\.ht {
+        deny all;
+    }
+}

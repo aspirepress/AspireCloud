@@ -1,0 +1,10 @@
+/.phpcs-cache
+/.phpunit.result.cache
+/clover.xml
+/coveralls-upload.json
+/phpunit.xml
+/vendor/
+docker-compose.override.yml
+/assets/output/*
+/node_modules/
+/logs/error.log

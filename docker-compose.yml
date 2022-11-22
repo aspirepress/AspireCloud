@@ -1,0 +1,59 @@
+version: '3'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/default:/etc/nginx/conf.d/default.conf
+    networks:
+      application:
+        aliases:
+          - 'application.app.local'
+
+  webapp:
+    build:
+      context: .
+      dockerfile: docker/webapp/Dockerfile
+    environment:
+      - XDEBUG_CONFIG=idekey=PHPSTORM start_with_request=true var_display_max_depth=-1 max_nesting_level=3000
+      - PHP_IDE_CONFIG=serverName=altimeter.local
+      - XDEBUG_MODE=develop,debug,coverage
+      - IN_TEST_MODE=true
+    volumes:
+      - .:/var/www/html
+    networks:
+      - application
+
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=password
+      - PGDATA=/opt/pgdata
+      - POSTGRES_DB=application
+    ports:
+      - 5432:5432
+    volumes:
+      - postgresdata:/opt/pgdata
+    networks:
+      - application
+
+  node:
+    image: node:19
+    user: node
+    working_dir: /home/node/app
+    volumes:
+      - .:/home/node/app
+
+networks:
+  application:
+    driver: "bridge"
+
+volumes:
+  postgresdata:
+    "driver": "local"
