@@ -14,14 +14,14 @@ test:
 acceptance:
 	docker compose run --rm webapp bash -c "vendor/bin/behat -vvv ${OPTS}"
 
-psalm:
-	docker compose run --rm webapp bash -c "vendor/bin/psalm --show-info=false ${OPTS}"
+stan:
+	docker compose run --rm webapp bash -c "vendor/bin/phpstan ${OPTS}"
 
-css:
-	docker compose run --rm node bash -c "npx tailwindcss -i ./assets/source/style.css -o ./assets/output/style.css"
+assets:
+	docker compose run --rm node bash -c "npx mix"
 
-css-watch:
-	docker compose run --rm node bash -c "npx tailwindcss -i ./assets/source/style.css -o ./assets/output/style.css --watch"
+assets-watch:
+	docker compose run --rm node bash -c "npx mix watch"
 
 install-node:
 	docker compose run --rm node bash -c "npm install"

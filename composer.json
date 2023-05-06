@@ -10,9 +10,9 @@
         }
     },
     "require": {
-        "php": "~8.0.0 || ~8.1.0",
+        "php": "^8.2",
         "composer/package-versions-deprecated": "^1.10.99",
-        "laminas/laminas-component-installer": "^2.6",
+        "laminas/laminas-component-installer": "^3.2",
         "laminas/laminas-config-aggregator": "^1.6",
         "laminas/laminas-diactoros": "^2.7",
         "laminas/laminas-servicemanager": "^3.4",

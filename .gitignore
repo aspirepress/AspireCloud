@@ -8,3 +8,4 @@ docker-compose.override.yml
 /assets/output/*
 /node_modules/
 /logs/error.log
+mix-manifest.json
