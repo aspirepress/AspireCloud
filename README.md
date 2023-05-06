@@ -10,9 +10,10 @@ you desire.
 2. Run `docker compose run --rm webapp composer install` to install the Composer dependencies in `\vendor`
 3. Run `make assets` to build the Tailwind CSS assets.
 4. (Optional) Add application.local to your `/etc/hosts` file
-5. Visit https://application.local (or localhost if you did not do step #4).
-6. See the "Hello World!" underlined and bold.
-7. Replace with your own application.
+5. Run `docker compose up -d` to start the Docker containers.
+6. Visit https://application.local (or localhost if you did not do step #4).
+7. See the "Hello World!" underlined and bold.
+8. Replace with your own application.
 
 ## Notes
 
