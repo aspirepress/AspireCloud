@@ -6,10 +6,9 @@ server {
 server {
     listen 443 ssl;
     client_max_body_size 4M;
-    server_name application.local;
 
-    ssl_certificate /_wildcard.application.local.pem;
-    ssl_certificate_key /_wildcard.application.local-key.pem;
+    ssl_certificate /application;
+    ssl_certificate_key /application-key;
 
 
     root /var/www/html/public/;

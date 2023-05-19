@@ -24,7 +24,6 @@ services:
       - XDEBUG_CONFIG=idekey=PHPSTORM start_with_request=true var_display_max_depth=-1 max_nesting_level=3000
       - PHP_IDE_CONFIG=serverName=altimeter.local
       - XDEBUG_MODE=develop,debug,coverage
-      - IN_TEST_MODE=true
     volumes:
       - .:/var/www/html
     networks:
