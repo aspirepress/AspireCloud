@@ -15,4 +15,4 @@ RUN docker-php-ext-install pdo \
     && docker-php-ext-enable xdebug \
     && docker-php-ext-enable pdo_pgsql
 
-COPY --from=composer:2.1 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
