@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Acceptance;
 
 use Behat\Behat\Context\Context;
