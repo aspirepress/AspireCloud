@@ -8,7 +8,7 @@ use Monolog\Logger;
 
 class LoggingFactory
 {
-    public function __invoke(ServiceManager $serviceManager, string $serviceName) : Logger
+    public function __invoke(ServiceManager $serviceManager, string $serviceName): Logger
     {
         $config = $serviceManager->get('config');
         $loggingInfo = $config['logging'];

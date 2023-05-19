@@ -10,7 +10,7 @@ class SampleContext implements Context
     /**
      * @Given that the world has not ended
      */
-    public function worldNotEnded() : void
+    public function worldNotEnded(): void
     {
         Assert::eq(self::class, self::class);
     }
@@ -18,7 +18,7 @@ class SampleContext implements Context
     /**
      * @Then true still equals true
      */
-    public function sampleTestLine() : void
+    public function sampleTestLine(): void
     {
         Assert::true(true);
     }

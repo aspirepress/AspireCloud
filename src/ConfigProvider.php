@@ -10,7 +10,7 @@ class ConfigProvider
     /**
      * @return array<string, mixed>
      */
-    public function __invoke() : array
+    public function __invoke(): array
     {
         return [
             'dependencies' => [

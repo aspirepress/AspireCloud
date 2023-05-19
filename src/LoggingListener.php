@@ -17,7 +17,7 @@ class LoggingListener
         $this->logger = $logger;
     }
 
-    public function __invoke(\Throwable $error, ServerRequestInterface $request, ResponseInterface $response) : void
+    public function __invoke(\Throwable $error, ServerRequestInterface $request, ResponseInterface $response): void
     {
         $this->logger->error(
             sprintf(

@@ -14,12 +14,12 @@
     <!-- Paths to check -->
     <file>config</file>
     <file>src</file>
-    <file>test</file>
+    <file>tests</file>
     <exclude-pattern>config/config.php</exclude-pattern>
     <exclude-pattern>config/routes.php</exclude-pattern>
 
-    <!-- Include all rules from the Laminas Coding Standard -->
-    <rule ref="LaminasCodingStandard"/>
+    <!-- Include all rules from the PSR-12 Coding Standard -->
+    <rule ref="PSR12"/>
 
     <rule ref="Squiz.Classes.ClassFileName.NoMatch">
         <exclude-pattern>src/ConfigProvider.*.php</exclude-pattern>

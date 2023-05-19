@@ -12,11 +12,10 @@ class TestPage implements RequestHandlerInterface
 {
     public function __construct(
         private TemplateRendererInterface $templateRenderer
-    )
-    {
+    ) {
     }
 
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new HtmlResponse(
             $this->templateRenderer->render('app::sample', ['statement' => 'Hello world!'])

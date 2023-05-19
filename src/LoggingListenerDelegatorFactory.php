@@ -7,7 +7,7 @@ use Psr\Container\ContainerInterface;
 
 class LoggingListenerDelegatorFactory
 {
-    public function __invoke(ContainerInterface $container, string $name, callable $callback) : ErrorHandler
+    public function __invoke(ContainerInterface $container, string $name, callable $callback): ErrorHandler
     {
         $logger = $container->get('error');
 
