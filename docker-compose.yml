@@ -43,7 +43,7 @@ services:
       - application
 
   node:
-    image: node:19
+    image: node:latest
     user: node
     working_dir: /home/node/app
     volumes:
