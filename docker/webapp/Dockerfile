@@ -11,7 +11,7 @@ RUN docker-php-ext-install pdo \
     && docker-php-ext-install pdo_pgsql \
     && docker-php-ext-install zip \
     && docker-php-ext-install intl \
-    && pecl install xdebug-3.2.1 \
+    && pecl install xdebug-3.3.0 \
     && docker-php-ext-enable xdebug \
     && docker-php-ext-enable pdo_pgsql
 

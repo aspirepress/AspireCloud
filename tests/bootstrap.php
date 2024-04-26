@@ -6,4 +6,4 @@ declare(strict_types=1);
 error_reporting(E_ALL);
 
 // autoloader
-require(dirname(__DIR__) . '/vendor/autoload.php');
+require dirname(__DIR__) . '/vendor/autoload.php';

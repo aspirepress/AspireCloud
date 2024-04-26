@@ -19,13 +19,13 @@ class ConfigProvider
                 'delegators' => [
                     ErrorHandler::class => [LoggingListenerDelegatorFactory::class],
                 ],
-                'factories' => [
+                'factories'  => [
                     TestPage::class => TestPageFactory::class,
 
                     // Logging Config
                     'error' => LoggingFactory::class,
-                ]
-            ]
+                ],
+            ],
         ];
     }
 }

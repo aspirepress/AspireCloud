@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
+use Monolog\Level;
+
 return [
     /*
      * Logging Configuration
      */
     'logging' => [
-        'path' => './logs/',
+        'path'  => './logs/',
         'error' => [
-            'file' => 'error.log',
-            'level' => \Monolog\Level::Debug,
+            'file'  => 'error.log',
+            'level' => Level::Debug,
         ],
     ],
 
@@ -19,7 +21,7 @@ return [
      */
     'templates' => [
         'extension' => 'php',
-        'paths' => [
+        'paths'     => [
             'app' => './templates/app',
         ],
     ],

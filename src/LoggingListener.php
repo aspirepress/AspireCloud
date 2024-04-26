@@ -7,10 +7,11 @@ namespace App;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class LoggingListener
 {
-    const LOG_FORMAT = '%d [%s] %s: %s';
+    private const LOG_FORMAT = '%d [%s] %s: %s';
 
     private LoggerInterface $logger;
 
@@ -19,7 +20,7 @@ class LoggingListener
         $this->logger = $logger;
     }
 
-    public function __invoke(\Throwable $error, ServerRequestInterface $request, ResponseInterface $response): void
+    public function __invoke(Throwable $error, ServerRequestInterface $request, ResponseInterface $response): void
     {
         $this->logger->error(
             sprintf(
@@ -27,7 +28,7 @@ class LoggingListener
                 $response->getStatusCode(),
                 $request->getMethod(),
                 (string) $request->getUri(),
-                (string)$error
+                (string) $error
             )
         );
     }

@@ -11,8 +11,9 @@
         }
     },
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "composer/package-versions-deprecated": "^1.10.99",
+        "laminas/laminas-coding-standard": "^2.5",
         "laminas/laminas-component-installer": "^3.2",
         "laminas/laminas-config-aggregator": "^1.6",
         "laminas/laminas-diactoros": "^2.7",
@@ -35,8 +36,7 @@
         "phpunit/phpunit": "^9.5.11",
         "roave/behat-psr11extension": "^2.2",
         "roave/security-advisories": "dev-master",
-        "slevomat/coding-standard": "^8.12",
-        "squizlabs/php_codesniffer": "^3.7"
+        "slevomat/coding-standard": "^7.2"
     },
     "autoload": {
         "psr-4": {

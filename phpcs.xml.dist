@@ -21,6 +21,14 @@
     <!-- Include all rules from the PSR-12 Coding Standard -->
     <rule ref="PSR12"/>
 
+    <!-- Include all rules from the Laminas Coding Standard -->
+    <rule ref="LaminasCodingStandard">
+        <!-- Allow long lines -->
+        <exclude name="Generic.Files.LineLength.TooLong" />
+        <!-- Allow PHP standard functions to be called without importing -->
+        <exclude name="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName"/>
+    </rule>
+
     <rule ref="Squiz.Classes.ClassFileName.NoMatch">
         <exclude-pattern>src/ConfigProvider.*.php</exclude-pattern>
     </rule>
