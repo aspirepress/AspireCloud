@@ -52,7 +52,7 @@ sh-webapp: # webapp is alpine, so we need to use sh, not sh
 	docker compose exec webapp sh
 
 sh-%: ## Execute shell for the container where % is a service name (webapp, postgres, node, nginx, smtp, rabbitmq)
-	docker compose exec $* sh
+	docker compose exec $* sh || docker compose run --rm $* sh
 
 clear-cache: ## Clear cache
 	docker compose run --rm webapp rm -f data/cache/config-cache.php
