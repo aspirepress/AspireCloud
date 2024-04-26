@@ -1,6 +1,6 @@
-FROM php:8.2-fpm
+FROM php:8.3-fpm
 
-MAINTAINER Brandon Savage
+MAINTAINER Sarah Savage
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update \
