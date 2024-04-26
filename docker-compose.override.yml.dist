@@ -1,0 +1,7 @@
+version: '3.9'
+
+services:
+  webapp:
+    environment:
+      - XDEBUG_CONFIG=idekey=PHPSTORM start_with_request=true var_display_max_depth=-1 max_nesting_level=3000 client_host=docker.for.mac.localhost
+      - XDEBUG_MODE=develop,debug,coverage
