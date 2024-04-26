@@ -6,7 +6,8 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "composer/package-versions-deprecated": true,
-            "laminas/laminas-component-installer": true
+            "laminas/laminas-component-installer": true,
+            "ramsey/composer-repl": true
         }
     },
     "require": {
@@ -22,6 +23,7 @@
         "mezzio/mezzio-helpers": "^5.7",
         "mezzio/mezzio-platesrenderer": "^2.2",
         "monolog/monolog": "^3.2",
+        "ramsey/composer-repl": "^1.4",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
