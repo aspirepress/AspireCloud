@@ -78,3 +78,9 @@ migration-rollback: ## Rollback database migrations
 
 run-seeds: ## Run database seeds
 	docker compose run --rm webapp vendor/bin/phinx seed:run -c migrations/config/phinx.php
+
+devmode-enable: ## Enable the PHP development mode
+	docker compose run --rm webapp composer development-enable
+
+devmode-disable: ## Disable the PHP development mode
+	docker compose run --rm webapp composer development-disable

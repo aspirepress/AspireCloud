@@ -12,6 +12,7 @@
     },
     "require": {
         "php": "^8.3",
+        "aura/sql": "^5.0",
         "composer/package-versions-deprecated": "^1.10.99",
         "laminas/laminas-coding-standard": "^2.5",
         "laminas/laminas-component-installer": "^3.2",
@@ -49,7 +50,8 @@
         "psr-4": {
             "AppTest\\Unit\\": "tests/unit/src",
             "AppTest\\Functional\\": "tests/functional/src",
-            "AppTest\\Acceptance\\": "tests/acceptance/src"
+            "AppTest\\Acceptance\\": "tests/acceptance/src",
+            "AppTest\\Helpers\\" : "tests/helpers"
         }
     },
     "scripts": {
