@@ -25,7 +25,7 @@ class ConfigProvider
                     TestPage::class => TestPageFactory::class,
 
                     // Logging Config
-                    'logger' => LoggingFactory::class,
+                    'logger'            => LoggingFactory::class,
                     UidProcessor::class => InvokableFactory::class,
                 ],
             ],
