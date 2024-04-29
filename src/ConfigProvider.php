@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App;
 
 use App\LoggingListenerDelegatorFactory;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\Stratigility\Middleware\ErrorHandler;
+use Monolog\Processor\UidProcessor;
 
 class ConfigProvider
 {
@@ -23,7 +25,8 @@ class ConfigProvider
                     TestPage::class => TestPageFactory::class,
 
                     // Logging Config
-                    'error' => LoggingFactory::class,
+                    'logger' => LoggingFactory::class,
+                    UidProcessor::class => InvokableFactory::class,
                 ],
             ],
         ];

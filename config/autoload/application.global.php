@@ -10,22 +10,43 @@ return [
      * Database Configuration
      */
     'database' => [
-        'type'   => 'pgsql',
-        'host'   => getenv('DB_HOST'),
-        'name'   => getenv('DB_NAME'),
-        'user'   => getenv('DB_USER'),
-        'pass'   => getenv('DB_PASS'),
+        'type' => 'pgsql',
+        'host' => getenv('DB_HOST'),
+        'name' => getenv('DB_NAME'),
+        'user' => getenv('DB_USER'),
+        'pass' => getenv('DB_PASS'),
         'schema' => getenv('DB_SCHEMA'),
     ],
 
     /*
-     * Logging Configuration
-     */
+         * Logging Configuration
+         */
     'logging' => [
-        'path'  => './logs/',
-        'error' => [
-            'file'  => 'error.log',
-            'level' => Level::Debug,
+        'channel' => $_ENV['LOG_CHANNEL'] ?? 'default',
+        'channels' => [
+            'default' => [
+                'logger' => ['stderr'],
+            ],
+            'file' => [
+                'logger' => ['file_error', 'stderr'],
+            ],
+            'test' => [
+                'logger' => ['test'],
+            ],
+        ],
+        'handlers' => [
+            'stderr' => [
+                'handler' => \Monolog\Handler\ErrorLogHandler::class,
+                'args' => [0, $_ENV['LOG_LEVEL'] ?? Level::Error],
+            ],
+            'file_error' => [
+                'handler' => \Monolog\Handler\StreamHandler::class,
+                'args' => ['./logs/error.log', $_ENV['LOG_LEVEL'] ?? Level::Error],
+            ],
+            'test' => [
+                'handler' => \Monolog\Handler\TestHandler::class,
+                'args' => [],
+            ],
         ],
     ],
 
@@ -34,7 +55,7 @@ return [
      */
     'templates' => [
         'extension' => 'php',
-        'paths'     => [
+        'paths' => [
             'app' => './templates/app',
         ],
     ],

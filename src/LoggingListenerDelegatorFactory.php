@@ -11,7 +11,7 @@ class LoggingListenerDelegatorFactory
 {
     public function __invoke(ContainerInterface $container, string $name, callable $callback): ErrorHandler
     {
-        $logger = $container->get('error');
+        $logger = $container->get('logger');
 
         $listener = new LoggingListener($logger);
         /** @var ErrorHandler $errorHandler */
