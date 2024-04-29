@@ -63,3 +63,18 @@ cs: ## Run code style checks
 
 cs-fix: ## Fix code style issues
 	docker compose run --rm webapp bash -c "vendor/bin/phpcbf ${OPTS} && vendor/bin/phpcs ${OPTS}"
+
+create-migration: ## Create a new database migration
+	docker compose run --rm webapp vendor/bin/phinx create ${OPTS} -c migrations/config/phinx.php
+
+create-seed: ##	Create a new database seed
+	docker compose run --rm webapp vendor/bin/phinx seed:create ${OPTS} -c migrations/config/phinx.php
+
+migrate: ## Run database migrations
+	docker compose run --rm webapp vendor/bin/phinx migrate -c migrations/config/phinx.php
+
+migration-rollback: ## Rollback database migrations
+	docker compose run --rm webapp vendor/bin/phinx rollback -e development -c migrations/config/phinx.php
+
+run-seeds: ## Run database seeds
+	docker compose run --rm webapp vendor/bin/phinx seed:run -c migrations/config/phinx.php
