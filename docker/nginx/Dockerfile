@@ -1,6 +1,6 @@
 FROM nginx:latest
 
-ENV URL='application.local'
+ENV URL='cdn.aspirepress.local'
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
