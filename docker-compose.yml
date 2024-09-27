@@ -30,12 +30,17 @@ services:
       - aspirepress-cdn
       - application
 
+  redis:
+    image: redis:latest
+    networks:
+      - aspirepress-cdn
+
   postgres:
     image: postgres:latest
     environment:
       - POSTGRES_PASSWORD=password
       - PGDATA=/opt/pgdata
-      - POSTGRES_DB=aspirepress-cdn
+      - POSTGRES_DB=aspirepress_cdn
     ports:
       - 5432:5432
     volumes:
@@ -43,13 +48,6 @@ services:
     networks:
       - aspirepress-cdn
       - application
-
-  node:
-    image: node:latest
-    user: node
-    working_dir: /home/node/app
-    volumes:
-      - .:/home/node/app
 
 networks:
   application:

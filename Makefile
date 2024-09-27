@@ -15,6 +15,21 @@ endif
 list:
 	@grep -E '^[a-zA-Z%_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+init: down clean build install-composer up reset-database ## Initial configuration tasks
+
+build: ## Builds the Docker containers
+	docker compose build
+
+clean: ## Remove all Docker containers, volumes, etc
+	docker compose down -v --remove-orphans
+	docker compose rm -f
+	rm -fr ./vendor
+
+up: ## Starts the Docker containers
+	docker compose up -d
+
+down: ## Stops the Docker containers
+	docker compose down
 
 unit: ## Run unit tests
 	docker compose run --rm webapp bash -c "vendor/bin/phpunit --testsuite=unit ${OPTS}"
@@ -32,15 +47,6 @@ quality: ## Run all quality checks
 
 quality-baseline: ## Run all static analysis checks with baseline
 	docker compose run --rm webapp vendor/bin/phpstan analyse -b baseline.neon $(PHPSTAN_XDEBUG) src tests
-
-assets: ## Build assets
-	docker compose run --rm node bash -c "npx mix"
-
-assets-watch: ## Watch assets
-	docker compose run --rm node bash -c "npx mix watch"
-
-install-node: ## Install node dependencies
-	docker compose run --rm node bash -c "npm install"
 
 install-composer: ## Install composer dependencies
 	docker compose run --rm webapp bash -c "composer install"
@@ -84,3 +90,8 @@ devmode-enable: ## Enable the PHP development mode
 
 devmode-disable: ## Disable the PHP development mode
 	docker compose run --rm webapp composer development-disable
+
+_empty-database: # internal target to empty database
+	docker compose run --rm webapp vendor/bin/phinx migrate -c db/phinx.php -t 0
+
+reset-database: _empty-database migrate run-seeds ## Clean database, run migrations and seeds
