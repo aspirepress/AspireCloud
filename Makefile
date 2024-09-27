@@ -15,7 +15,7 @@ endif
 list:
 	@grep -E '^[a-zA-Z%_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-init: down clean build install-composer up reset-database ## Initial configuration tasks
+init: down clean build install-composer up reset-database devmode-enable ## Initial configuration tasks
 
 build: ## Builds the Docker containers
 	docker compose build
@@ -63,6 +63,8 @@ sh-%: ## Execute shell for the container where % is a service name (webapp, post
 clear-cache: ## Clear cache
 	docker compose run --rm webapp rm -f data/cache/config-cache.php
 	rm -rf public/build/
+
+check: cs-fix quality test ## Check all quality and test elements
 
 cs: ## Run code style checks
 	docker compose run --rm webapp bash -c "vendor/bin/phpcs ${OPTS}"

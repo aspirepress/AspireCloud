@@ -16,7 +16,6 @@ $cacheConfig = [
 $aggregator = new ConfigAggregator([
     \Mezzio\ConfigProvider::class,
     \Mezzio\Tooling\ConfigProvider::class,
-    \Mezzio\Plates\ConfigProvider::class,
     \Mezzio\Helper\ConfigProvider::class,
     \Mezzio\Router\FastRouteRouter\ConfigProvider::class,
     \Laminas\HttpHandlerRunner\ConfigProvider::class,
@@ -24,9 +23,7 @@ $aggregator = new ConfigAggregator([
     new ArrayProvider($cacheConfig),
     \Mezzio\Router\ConfigProvider::class,
     \Laminas\Diactoros\ConfigProvider::class,
-
     \App\ConfigProvider::class,
-
     // Load application config in a pre-defined order in such a way that local settings
     // overwrite global settings. (Loaded as first to last):
     //   - `global.php`

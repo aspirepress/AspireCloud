@@ -23,7 +23,6 @@
         "mezzio/mezzio": "^3.7",
         "mezzio/mezzio-fastroute": "^3.0.3",
         "mezzio/mezzio-helpers": "^5.7",
-        "mezzio/mezzio-platesrenderer": "^2.2",
         "monolog/monolog": "^3.2",
         "ramsey/composer-repl": "^1.4",
         "robmorgan/phinx": "^0.16.0",
