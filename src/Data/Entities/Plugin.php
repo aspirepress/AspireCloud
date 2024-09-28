@@ -28,20 +28,23 @@ final class Plugin
         Assert::keyExists($data, 'name');
         Assert::keyExists($data, 'slug');
         Assert::keyExists($data, 'current_version');
-        Assert::keyExists($data, 'file');
 
         Assert::uuid($data['id']);
         Assert::string($data['name']);
         Assert::string($data['slug']);
         Assert::string($data['current_version']);
-        Assert::isInstanceOf($data['file'], DownloadableFile::class);
+
+        if (isset($data['file'])) {
+            Assert::isInstanceOf($data['file'], DownloadableFile::class);
+            $file = $data['file'];
+        }
 
         return new self(
             Uuid::fromString($data['id']),
             $data['name'],
             $data['slug'],
             Version::fromString($data['current_version']),
-            $data['file']
+            $file ?? null
         );
     }
 

@@ -30,10 +30,7 @@ class FileUrlLocal implements FileUrlInterface
     {
         $uri = new Uri($url);
 
-        Assert::notEmpty($uri->getScheme());
-        Assert::notEmpty($uri->getHost());
         Assert::notEmpty($uri->getPath());
-        Assert::contains('zip', $uri->getPath());
 
         return new self($uri);
 

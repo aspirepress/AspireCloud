@@ -93,15 +93,15 @@ final class Version
 
         $versionString = (string) $major;
 
-        if ($minor) {
+        if (! ($minor === null)) {
             $versionString .= '.' . $minor;
         }
 
-        if ($patch) {
+        if (! ($patch === null)) {
             $versionString .= '.' . $patch;
         }
 
-        if ($security) {
+        if (! ($security === null)) {
             $versionString .= '.' . $security;
         }
 

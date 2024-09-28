@@ -1,15 +1,17 @@
 <?php
 
+Dotenv\Dotenv::createImmutable(__DIR__ . "/../")->load();
+
 return
 [
     'paths' => [
-        'migrations' => '%%PHINX_CONFIG_DIR%%/db/migrations',
-        'seeds' => '%%PHINX_CONFIG_DIR%%/db/seeds'
+        'migrations' => '%%PHINX_CONFIG_DIR%%/migrations',
+        'seeds' => '%%PHINX_CONFIG_DIR%%/seeds'
     ],
     'environments' => [
         'default_migration_table' => 'phinxlog',
         'default_environment' => 'development',
-        'production' => [
+        'development' => [
             'adapter' => 'pgsql',
             'host' => $_ENV['DB_HOST'],
             'name' => $_ENV['DB_NAME'],
@@ -19,7 +21,7 @@ return
             'schema' => $_ENV['DB_SCHEMA'],
             'charset' => 'utf8',
         ],
-        'development' => [
+        'production' => [
             'adapter' => 'mysql',
             'host' => 'localhost',
             'name' => 'development_db',

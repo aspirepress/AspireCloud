@@ -23,6 +23,10 @@ class PluginCheckHandler implements RequestHandlerInterface
         $pluginData = $request->getParsedBody();
         $plugin = $this->pluginVersionRepository->getPluginBySlug($pluginData['slug']);
 
+        if (!$plugin) {
+            return new JsonResponse(['error' => 'Plugin not found'], 404);
+        }
+
         return new JsonResponse($plugin->toArray(AsString::YES));
     }
 }

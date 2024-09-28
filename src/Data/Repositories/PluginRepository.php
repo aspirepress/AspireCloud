@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AspirePress\Cdn\Data\Repositories;
 
+use AspirePress\Cdn\Data\Entities\DownloadableFile;
 use AspirePress\Cdn\Data\Entities\Plugin;
 use AspirePress\Cdn\Data\Values\Version;
 use Aura\Sql\ExtendedPdoInterface;
@@ -16,13 +17,26 @@ class PluginRepository
     }
     public function getPluginBySlug(string $slug): ?Plugin
     {
-        $plugin = Plugin::fromValues(
-            Uuid::uuid7(),
-            'Foo Plugin',
-            'foo-plugin',
-            Version::fromString('1.2.3.4')
-        );
+        if (empty($slug)) {
+            return null;
+        }
 
+        $sql = 'SELECT * FROM plugins WHERE slug = :slug';
+        $data = $this->epdo->fetchOne($sql, ['slug' => $slug]);
+
+        if (!$data) {
+            return null;
+        }
+
+        $sql = "SELECT * FROM files WHERE plugin_id = :plugin_id AND version = :version AND type = 'cdn'";
+        $fileData = $this->epdo->fetchOne($sql, ['plugin_id' => $data['id'], 'version' => $data['current_version']]);
+        if ($fileData) {
+            $file = DownloadableFile::fromArray($fileData);
+            $data['file'] = $file;
+        }
+
+
+        $plugin = Plugin::fromArray($data);
         return $plugin;
     }
 }

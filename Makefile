@@ -73,19 +73,19 @@ cs-fix: ## Fix code style issues
 	docker compose run --rm webapp bash -c "vendor/bin/phpcbf ${OPTS} && vendor/bin/phpcs ${OPTS}"
 
 create-migration: ## Create a new database migration
-	docker compose run --rm webapp vendor/bin/phinx create ${OPTS} -c migrations/config/phinx.php
+	docker compose run --rm webapp vendor/bin/phinx create ${OPTS} -c db/phinx.php
 
 create-seed: ##	Create a new database seed
-	docker compose run --rm webapp vendor/bin/phinx seed:create ${OPTS} -c migrations/config/phinx.php
+	docker compose run --rm webapp vendor/bin/phinx seed:create ${OPTS} -c db/phinx.php
 
 migrate: ## Run database migrations
-	docker compose run --rm webapp vendor/bin/phinx migrate -c migrations/config/phinx.php
+	docker compose run --rm webapp vendor/bin/phinx migrate -c db/phinx.php
 
 migration-rollback: ## Rollback database migrations
-	docker compose run --rm webapp vendor/bin/phinx rollback -e development -c migrations/config/phinx.php
+	docker compose run --rm webapp vendor/bin/phinx rollback -e development -c db/phinx.php
 
-run-seeds: ## Run database seeds
-	docker compose run --rm webapp vendor/bin/phinx seed:run -c migrations/config/phinx.php
+seed: ## Run database seeds
+	docker compose run --rm webapp vendor/bin/phinx seed:run -c db/phinx.php
 
 devmode-enable: ## Enable the PHP development mode
 	docker compose run --rm webapp composer development-enable
@@ -96,4 +96,4 @@ devmode-disable: ## Disable the PHP development mode
 _empty-database: # internal target to empty database
 	docker compose run --rm webapp vendor/bin/phinx migrate -c db/phinx.php -t 0
 
-reset-database: _empty-database migrate run-seeds ## Clean database, run migrations and seeds
+reset-database: _empty-database migrate seed ## Clean database, run migrations and seeds

@@ -21,7 +21,7 @@ class LocalFilePath implements FilePathInterface
 
     public static function fromString(string $path): self
     {
-        Assert::fileExists($path);
+        //Assert::fileExists($path);
         return new self($path);
     }
 }

@@ -76,7 +76,15 @@ class VersionTest extends TestCase
         $testVersion = Version::fromString($testVersion);
 
         $sut->versionNewerThan($testVersion);
+    }
 
+    /**
+     * @dataProvider versionStrings
+     */
+    public function testVersionNumbersCanContainZeros(string $versionToTest): void
+    {
+        $sut = Version::fromString($versionToTest);
+        $this->assertEquals($versionToTest, $sut->getVersion());
     }
 
     protected function versionDataProvider(): array
@@ -167,6 +175,19 @@ class VersionTest extends TestCase
             ['2.1', '2.0'],
             ['2.1.2.0', '2.1.0.0'],
             ['2.1.1.1', '2.1.1.0'],
+        ];
+    }
+
+    protected function versionStrings(): array
+    {
+        return [
+            ['1.0.0.0'],
+            ['1.0.1.0'],
+            ['1.0'],
+            ['1.0.1'],
+            ['1.0.0.1'],
+            ['1.1.0.0'],
+            ['0.0.1.0'],
         ];
     }
 }
