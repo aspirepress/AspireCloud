@@ -19,11 +19,7 @@ use Mezzio\Middleware\ErrorResponseGenerator;
 
 return [
     'dependencies' => [
-        'factories' => [
-            ErrorResponseGenerator::class => Container\WhoopsErrorResponseGeneratorFactory::class,
-            'Mezzio\Whoops'               => Container\WhoopsFactory::class,
-            'Mezzio\WhoopsPageHandler'    => Container\WhoopsPageHandlerFactory::class,
-        ],
+
     ],
     'whoops'       => [
         'json_exceptions' => [
