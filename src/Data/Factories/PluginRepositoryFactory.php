@@ -11,6 +11,6 @@ class PluginRepositoryFactory
     public function __invoke(ServiceManager $serviceManager): PluginRepository
     {
         $pdo = $serviceManager->get(ExtendedPdoInterface::class);
-        return new PluginRepository();
+        return new PluginRepository($pdo);
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AspirePress\Cdn\Data\Entities;
 
+use AspirePress\Cdn\Data\Enums\AsString;
+use AspirePress\Cdn\Data\Values\Version;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Webmozart\Assert\Assert;
@@ -14,8 +16,8 @@ final class Plugin
         private UuidInterface $id,
         private string $name,
         private string $slug,
-        private string $currentVersion,
-        private DownloadableFile $file
+        private Version $currentVersion,
+        private ?DownloadableFile $file
     )
     {
     }
@@ -34,12 +36,26 @@ final class Plugin
         Assert::string($data['current_version']);
         Assert::isInstanceOf($data['file'], DownloadableFile::class);
 
-        return new self (
+        return new self(
             Uuid::fromString($data['id']),
             $data['name'],
             $data['slug'],
-            $data['current_version'],
+            Version::fromString($data['current_version']),
             $data['file']
+        );
+    }
+
+    public static function fromValues(UuidInterface $id, string $name, string $slug, Version $currentVersion, ?DownloadableFile $file = null): self
+    {
+        Assert::notEmpty($name);
+        Assert::notEmpty($slug);
+
+        return new self(
+            $id,
+            $name,
+            $slug,
+            $currentVersion,
+            $file
         );
     }
 
@@ -58,27 +74,33 @@ final class Plugin
         return $this->slug;
     }
 
-    public function getCurrentVersion(): string
+    public function getCurrentVersion(): Version
     {
         return $this->currentVersion;
     }
 
-    public function getFile(): DownloadableFile
+    public function getFile(): ?DownloadableFile
     {
         return $this->file;
     }
 
-    public function newerVersionAvailable($testVersion)
+    public function newerVersionAvailable(Version|string $version): bool
     {
-        $currentVersion = $this->getCurrentVersion();
+        return $this->currentVersion->versionNewerThan($version);
+    }
 
-        $cvParts = explode('.', $currentVersion);
-        $tvParts = explode('.', $testVersion);
+    public function toArray(AsString $asString = AsString::NO): array
+    {
+        $id = ($asString == AsString::YES) ? (string) $this->id : $this->id;
+        $version = ($asString == AsString::YES) ? (string) $this->currentVersion : $this->currentVersion;
+        $file = ($asString == AsString::YES && $this->getFile()) ? $this->getFile()->toArray(true) : $this->getFile();
 
-        if ($cvParts[0] > $tvParts[0]) {
-            return true;
-        }
-
-
+        return [
+            'id' => $id,
+            'name' => $this->getName(),
+            'slug' => $this->getSlug(),
+            'current_version' => $version,
+            'file' => $file,
+        ];
     }
 }
