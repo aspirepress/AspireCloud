@@ -2,9 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace AspirePress\Cdn;
 
-use App\LoggingListenerDelegatorFactory;
+use AspirePress\Cdn\Data\Factories\PluginRepositoryFactory;
+use AspirePress\Cdn\Data\Repositories\PluginRepository;
+use AspirePress\Cdn\LoggingListenerDelegatorFactory;
+use AspirePress\Cdn\V1\PluginCheck\Factories\PluginCheckHandlerFactory;
+use AspirePress\Cdn\V1\PluginCheck\Handlers\PluginCheckHandler;
+use Aura\Sql\ExtendedPdoInterface;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Monolog\Processor\UidProcessor;
@@ -22,7 +27,11 @@ class ConfigProvider
                     ErrorHandler::class => [LoggingListenerDelegatorFactory::class],
                 ],
                 'factories'  => [
-                    TestPage::class => TestPageFactory::class,
+                    PluginCheckHandler::class => PluginCheckHandlerFactory::class,
+
+                    PluginRepository::class => PluginRepositoryFactory::class,
+
+                    ExtendedPdoInterface::class => ExtendedPdoFactory::class,
 
                     // Logging Config
                     'logger'            => LoggingFactory::class,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace AspirePress\Cdn;
 
 use Laminas\ServiceManager\ServiceManager;
 use Mezzio\Template\TemplateRendererInterface;

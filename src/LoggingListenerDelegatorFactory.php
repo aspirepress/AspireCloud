@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace AspirePress\Cdn;
 
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Psr\Container\ContainerInterface;

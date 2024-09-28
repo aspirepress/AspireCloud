@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace AspirePress\Cdn;
 
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Template\TemplateRendererInterface;

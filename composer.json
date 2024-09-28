@@ -42,15 +42,15 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "AspirePress\\Cdn\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AppTest\\Unit\\": "tests/unit/src",
-            "AppTest\\Functional\\": "tests/functional/src",
-            "AppTest\\Acceptance\\": "tests/acceptance/src",
-            "AppTest\\Helpers\\" : "tests/helpers"
+            "AspirePress\\Cdn\\Unit\\": "tests/unit/src",
+            "AspirePress\\Cdn\\Functional\\": "tests/functional/src",
+            "AspirePress\\Cdn\\Acceptance\\": "tests/acceptance/src",
+            "AspirePress\\Cdn\\Helpers\\" : "tests/helpers"
         }
     },
     "scripts": {

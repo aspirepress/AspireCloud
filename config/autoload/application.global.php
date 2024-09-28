@@ -14,11 +14,11 @@ return [
      */
     'database' => [
         'type'   => 'pgsql',
-        'host'   => getenv('DB_HOST'),
-        'name'   => getenv('DB_NAME'),
-        'user'   => getenv('DB_USER'),
-        'pass'   => getenv('DB_PASS'),
-        'schema' => getenv('DB_SCHEMA'),
+        'host'   => $_ENV['DB_HOST'],
+        'name'   => $_ENV['DB_NAME'],
+        'user'   => $_ENV['DB_USER'],
+        'pass'   => $_ENV['DB_PASS'],
+        'schema' => $_ENV['DB_SCHEMA'],
     ],
 
     /*

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Functional;
+namespace AspirePress\CdnFunctional;
 
 use PHPUnit\Framework\TestCase;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Helpers;
+namespace AspirePress\Cdn\Helpers;
 
 use Psr\Container\ContainerInterface;
 use RuntimeException;

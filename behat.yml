@@ -8,7 +8,7 @@ default:
       paths:
         - '%paths.base%/tests/acceptance/features'
       contexts:
-        - AppTest\Acceptance\SampleContext
+        - AspirePress\Cdn\Acceptance\SampleContext
   extensions:
     Roave\BehatPsrContainer\PsrContainerExtension:
       container: '%paths.base%/tests/acceptance/container.php'

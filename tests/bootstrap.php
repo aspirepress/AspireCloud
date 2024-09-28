@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 // turn on all errors
-use AppTest\Helpers\ContainerHelper;
-use AppTest\Helpers\DbHelper;
+use AspirePress\Cdn\Helpers\ContainerHelper;
+use AspirePress\Cdn\Helpers\DbHelper;
 use Laminas\ServiceManager\ServiceManager;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;

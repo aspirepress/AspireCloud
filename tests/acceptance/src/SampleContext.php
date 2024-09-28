@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Acceptance;
+namespace AspirePress\Cdn\Acceptance;
 
 use Behat\Behat\Context\Context;
 use Webmozart\Assert\Assert;
