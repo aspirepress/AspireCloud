@@ -6,6 +6,7 @@ namespace AspirePress\Cdn\V1\PluginCheck\Handlers;
 
 use AspirePress\Cdn\Data\Enums\AsString;
 use AspirePress\Cdn\Data\Repositories\PluginRepository;
+use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,6 +22,8 @@ class PluginCheckHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $pluginData = $request->getParsedBody();
+        file_put_contents('/var/www/html/body.txt', print_r($pluginData, true));
+        return new EmptyResponse();
         $plugin = $this->pluginVersionRepository->getPluginBySlug($pluginData['slug']);
 
         if (!$plugin) {

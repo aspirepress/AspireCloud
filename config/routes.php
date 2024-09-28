@@ -26,5 +26,5 @@ use Psr\Container\ContainerInterface;
  */
 
 return static function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-    $app->post('/', PluginCheckHandler::class, 'app.home');
+    $app->post('plugins/update-check/1.1/', PluginCheckHandler::class, 'app.home');
 };
