@@ -23,8 +23,7 @@ class DownloadableFile
         private Version $version,
         private ?FilePathInterface $filePath,
         private ?FileUrlInterface $fileUrl
-    )
-    {
+    ) {
     }
 
     public static function fromArray(array $data): self
@@ -44,7 +43,7 @@ class DownloadableFile
         Assert::oneOf($data['type'], ['local', 'cdn']);
         Assert::keyExists($data, 'version');
 
-        $version = Version::fromString($data['version']);
+        $version  = Version::fromString($data['version']);
         $filePath = LocalFilePath::fromString($data['file_path']);
 
         if ($data['file_url'] !== null) {
@@ -89,6 +88,4 @@ class DownloadableFile
     {
         return $this->fileUrl;
     }
-
-
 }

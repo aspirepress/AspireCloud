@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace AspirePress\Cdn\Unit\Data\Values;
 
 use AspirePress\Cdn\Data\Values\Version;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 class VersionTest extends TestCase
 {
@@ -14,7 +16,7 @@ class VersionTest extends TestCase
      */
     public function testCreatingVersion(string $version): void
     {
-        $parts = explode('.', $version);
+        $parts      = explode('.', $version);
         $totalParts = count($parts);
 
         $sut = Version::fromString($version);
@@ -50,7 +52,7 @@ class VersionTest extends TestCase
                 break;
 
             default:
-                throw new \RuntimeException('We should have not got here; invalid version provided to test');
+                throw new RuntimeException('We should have not got here; invalid version provided to test');
         }
     }
 
@@ -60,7 +62,7 @@ class VersionTest extends TestCase
     public function testVersionComparison(string $testVersion, string $currentVersion, bool $expected): void
     {
         $testVersion = Version::fromString($testVersion);
-        $sut = Version::fromString($currentVersion);
+        $sut         = Version::fromString($currentVersion);
 
         $this->assertSame($expected, $sut->versionNewerThan($testVersion));
     }
@@ -70,9 +72,9 @@ class VersionTest extends TestCase
      */
     public function testExceptionsRaisedIfUsersVersionExceedsCurrentVersion($testVersion, $currentVersion)
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
-        $sut = Version::fromString($currentVersion);
+        $sut         = Version::fromString($currentVersion);
         $testVersion = Version::fromString($testVersion);
 
         $sut->versionNewerThan($testVersion);
@@ -93,7 +95,7 @@ class VersionTest extends TestCase
             ['1'],
             ['1.2'],
             ['1.2.3'],
-            ['1.2.3.4']
+            ['1.2.3.4'],
         ];
     }
 
@@ -103,67 +105,67 @@ class VersionTest extends TestCase
             [
                 '1', // Test Version
                 '2', // Current Version
-                true // If current version should be bigger than test version
+                true, // If current version should be bigger than test version
             ],
             [
                 '1', // Test Version
                 '1', // Current Version
-                false // If current version should be bigger than test version
+                false, // If current version should be bigger than test version
             ],
             [
                 '2.1', // Test Version
                 '2.2', // Current Version
-                true // If current version should be bigger than test version
+                true, // If current version should be bigger than test version
             ],
             [
                 '2.1.0', // Test Version
                 '2.1.1', // Current Version
-                true // If current version should be bigger than test version
+                true, // If current version should be bigger than test version
             ],
             [
                 '2.1.0', // Test Version
                 '2.1.0', // Current Version
-                false // If current version should be bigger than test version
+                false, // If current version should be bigger than test version
             ],
             [
                 '2.1.0.0', // Test Version
                 '2.1.0.1', // Current Version
-                true // If current version should be bigger than test version
+                true, // If current version should be bigger than test version
             ],
             [
                 '2.2.0.1', // Test Version
                 '2.2.3.1', // Current Version
-                true // If current version should be bigger than test version
+                true, // If current version should be bigger than test version
             ],
             [
                 '2.2.0.0', // Test Version
                 '2.2.0.0', // Current Version
-                false // If current version should be bigger than test version
+                false, // If current version should be bigger than test version
             ],
             [
                 '2.2.0.1', // Test Version
                 '3.0.0.0', // Current Version
-                true // If current version should be bigger than test version
+                true, // If current version should be bigger than test version
             ],
             [
                 '2.2.0.1', // Test Version
                 '2.2.1.0', // Current Version
-                true // If current version should be bigger than test version
+                true, // If current version should be bigger than test version
             ],
             [
                 '2.2.0.1', // Test Version
                 '2.2.0.2', // Current Version
-                true // If current version should be bigger than test version
+                true, // If current version should be bigger than test version
             ],
             [
                 '2.2.0.1', // Test Version
                 '2.3.0.0', // Current Version
-                true // If current version should be bigger than test version
+                true, // If current version should be bigger than test version
             ],
             [
                 '2.2.0.1', // Test Version
                 '2.2.2.1', // Current Version
-                true // If current version should be bigger than test version
+                true, // If current version should be bigger than test version
             ],
         ];
     }

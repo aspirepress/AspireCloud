@@ -12,13 +12,12 @@ class FileUrlLocal implements FileUrlInterface
 {
     private function __construct(
         private UriInterface $uri,
-    )
-    {
+    ) {
     }
 
     public function getUrlString(): string
     {
-        return (string)$this->uri;
+        return (string) $this->uri;
     }
 
     public function getUri(): UriInterface
@@ -33,7 +32,5 @@ class FileUrlLocal implements FileUrlInterface
         Assert::notEmpty($uri->getPath());
 
         return new self($uri);
-
     }
-
 }

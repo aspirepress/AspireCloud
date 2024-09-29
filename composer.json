@@ -14,6 +14,7 @@
         "php": "^8.3",
         "aura/sql": "^5.0",
         "composer/package-versions-deprecated": "^1.10.99",
+        "guzzlehttp/guzzle": "^7.9",
         "laminas/laminas-coding-standard": "^2.5",
         "laminas/laminas-component-installer": "^3.2",
         "laminas/laminas-config-aggregator": "^1.6",

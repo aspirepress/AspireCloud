@@ -1,17 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AspirePress\Cdn\Data\Values;
 
 use AspirePress\Cdn\Data\Values\FilePathInterface;
-use Webmozart\Assert\Assert;
 
 class LocalFilePath implements FilePathInterface
 {
-
     private function __construct(
         private string $path,
-    )
-    {
+    ) {
     }
 
     public function getPath(): string

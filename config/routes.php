@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use AspirePress\Cdn\V1\PluginCheck\Handlers\PluginCheckHandler;
+use AspirePress\Cdn\V1\PluginCheck\Handlers\CatchAllHandler;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
@@ -26,5 +26,5 @@ use Psr\Container\ContainerInterface;
  */
 
 return static function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-    $app->post('plugins/update-check/1.1/', PluginCheckHandler::class, 'app.home');
+    $app->route('/{path:.*}', CatchAllHandler::class, ['GET', 'POST'], 'app.home');
 };

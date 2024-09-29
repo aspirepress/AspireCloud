@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AspirePress\Cdn\Data\Values;
 
+use InvalidArgumentException;
 use Webmozart\Assert\Assert;
 
 final class Version
@@ -13,8 +14,7 @@ final class Version
         private ?int $minor,
         private ?int $patch,
         private ?int $security
-    )
-    {
+    ) {
     }
 
     public static function fromString(string $version): self
@@ -23,9 +23,9 @@ final class Version
 
         Assert::allNumeric($parts);
 
-        $major = null;
-        $minor = null;
-        $patch = null;
+        $major    = null;
+        $minor    = null;
+        $patch    = null;
         $security = null;
 
         switch (count($parts)) {
@@ -45,15 +45,15 @@ final class Version
                 break;
 
             case 4:
-                $major = (int) $parts[0];
-                $minor = (int) $parts[1];
-                $patch = (int) $parts[2];
+                $major    = (int) $parts[0];
+                $minor    = (int) $parts[1];
+                $patch    = (int) $parts[2];
                 $security = (int) $parts[3];
                 break;
 
             default:
                 // We should never get here!
-                throw new \InvalidArgumentException('Invalid version provided!');
+                throw new InvalidArgumentException('Invalid version provided!');
         }
 
         return new self(
@@ -86,9 +86,9 @@ final class Version
 
     public function getVersion(): string
     {
-        $major = $this->major;
-        $minor = $this->minor;
-        $patch = $this->patch;
+        $major    = $this->major;
+        $minor    = $this->minor;
+        $patch    = $this->patch;
         $security = $this->security;
 
         $versionString = (string) $major;
@@ -122,15 +122,15 @@ final class Version
 
         // Check that the test version is not greater than the current version.
         Assert::false($testVersion->getMajor() > $this->getMajor());
-        Assert::false($testVersion->getMajor() ===  $this->getMajor() && $testVersion->getMinor() > $this->getMinor());
-        Assert::false($testVersion->getMajor() ===  $this->getMajor() && $testVersion->getMinor() === $this->getMinor() && $testVersion->getPatch() > $this->getPatch());
-        Assert::false($testVersion->getMajor() ===  $this->getMajor() && $testVersion->getMinor() === $this->getMinor() && $testVersion->getPatch() === $this->getPatch() && $testVersion->getSecurity() > $this->getSecurity());
+        Assert::false($testVersion->getMajor() === $this->getMajor() && $testVersion->getMinor() > $this->getMinor());
+        Assert::false($testVersion->getMajor() === $this->getMajor() && $testVersion->getMinor() === $this->getMinor() && $testVersion->getPatch() > $this->getPatch());
+        Assert::false($testVersion->getMajor() === $this->getMajor() && $testVersion->getMinor() === $this->getMinor() && $testVersion->getPatch() === $this->getPatch() && $testVersion->getSecurity() > $this->getSecurity());
 
         // Test versions for comparison, flagging any that are different
-        $majorNewer = ($this->getMajor() === $testVersion->getMajor());
-        $minorNewer = ($this->getMinor() === $testVersion->getMinor());
-        $patchNewer = ($this->getPatch() === $testVersion->getPatch());
-        $securityNewer = ($this->getSecurity() === $testVersion->getSecurity());
+        $majorNewer    = $this->getMajor() === $testVersion->getMajor();
+        $minorNewer    = $this->getMinor() === $testVersion->getMinor();
+        $patchNewer    = $this->getPatch() === $testVersion->getPatch();
+        $securityNewer = $this->getSecurity() === $testVersion->getSecurity();
 
         return ! ($majorNewer && $minorNewer && $patchNewer && $securityNewer);
     }

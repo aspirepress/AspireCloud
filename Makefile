@@ -15,7 +15,7 @@ endif
 list:
 	@grep -E '^[a-zA-Z%_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-init: down clean build install-composer up reset-database devmode-enable ## Initial configuration tasks
+init: down clean build up install-composer reset-database devmode-enable ## Initial configuration tasks
 
 build: ## Builds the Docker containers
 	docker compose build

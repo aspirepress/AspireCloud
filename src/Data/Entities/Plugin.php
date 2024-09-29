@@ -18,8 +18,7 @@ final class Plugin
         private string $slug,
         private Version $currentVersion,
         private ?DownloadableFile $file
-    )
-    {
+    ) {
     }
 
     public static function fromArray(array $data): self
@@ -94,16 +93,16 @@ final class Plugin
 
     public function toArray(AsString $asString = AsString::NO): array
     {
-        $id = ($asString == AsString::YES) ? (string) $this->id : $this->id;
-        $version = ($asString == AsString::YES) ? (string) $this->currentVersion : $this->currentVersion;
-        $file = ($asString == AsString::YES && $this->getFile()) ? $this->getFile()->toArray(true) : $this->getFile();
+        $id      = $asString == AsString::YES ? (string) $this->id : $this->id;
+        $version = $asString == AsString::YES ? (string) $this->currentVersion : $this->currentVersion;
+        $file    = $asString == AsString::YES && $this->getFile() ? $this->getFile()->toArray(true) : $this->getFile();
 
         return [
-            'id' => $id,
-            'name' => $this->getName(),
-            'slug' => $this->getSlug(),
+            'id'              => $id,
+            'name'            => $this->getName(),
+            'slug'            => $this->getSlug(),
             'current_version' => $version,
-            'file' => $file,
+            'file'            => $file,
         ];
     }
 }

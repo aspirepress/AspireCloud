@@ -14,13 +14,8 @@ declare(strict_types=1);
  * `composer development-enable`.
  */
 
-use Mezzio\Container;
-use Mezzio\Middleware\ErrorResponseGenerator;
-
 return [
-    'dependencies' => [
-
-    ],
+    'dependencies' => [],
     'whoops'       => [
         'json_exceptions' => [
             'display'    => true,
