@@ -35,7 +35,8 @@ Please do not use this project to harass the .org website. We don't want our pro
 ## License
 
 The license for this project is source-available, but the source may not be reused without written permission from 
-AspirePress. This may change.
+AspirePress. This may change. You are obligated to use the license and license terms in effect at the time your version
+was tagged.
 
 ## Contributing
 
