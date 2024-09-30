@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn\V1\PluginCheck\Handlers;
+namespace AspirePress\Cdn\V1\CatchAll\Handlers;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -34,9 +34,17 @@ class CatchAllHandler implements RequestHandlerInterface
                 ]
             );
         } catch (ClientException $e) {
-            return new EmptyResponse($e->getStatusCode());
+            if (method_exists($e, 'getResponse') && $e->getResponse() instanceof ResponseInterface) {
+                $statusCode = $e->getResponse()->getStatusCode();
+            } else {
+                $statusCode = 500;
+            }
+            return new EmptyResponse($statusCode);
         }
 
-        return new TextResponse($response->getBody()->getContents());
+        $contentType = $response->getHeader('Content-Type');
+        $statusCode  = $response->getStatusCode();
+
+        return new TextResponse($response->getBody()->getContents(), $statusCode, ['Content-Type' => $contentType]);
     }
 }

@@ -21,6 +21,9 @@ final class Plugin
     ) {
     }
 
+    /**
+     * @param array<string, string> $data
+     */
     public static function fromArray(array $data): self
     {
         Assert::keyExists($data, 'id');
@@ -91,11 +94,14 @@ final class Plugin
         return $this->currentVersion->versionNewerThan($version);
     }
 
+    /**
+     * @return array<string, string|array<string, string>>
+     */
     public function toArray(AsString $asString = AsString::NO): array
     {
-        $id      = $asString == AsString::YES ? (string) $this->id : $this->id;
-        $version = $asString == AsString::YES ? (string) $this->currentVersion : $this->currentVersion;
-        $file    = $asString == AsString::YES && $this->getFile() ? $this->getFile()->toArray(true) : $this->getFile();
+        $id      = $asString === AsString::YES ? (string) $this->id : $this->id;
+        $version = $asString === AsString::YES ? (string) $this->currentVersion : $this->currentVersion;
+        $file    = $asString === AsString::YES && $this->getFile() ? $this->getFile()->toArray($asString) : $this->getFile();
 
         return [
             'id'              => $id,

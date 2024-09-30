@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AspirePress\Cdn\Data\Entities;
 
+use AspirePress\Cdn\Data\Enums\AsString;
 use AspirePress\Cdn\Data\Values\FilePathInterface;
 use AspirePress\Cdn\Data\Values\FileUrlInterface;
 use AspirePress\Cdn\Data\Values\FileUrlLocal;
@@ -26,6 +27,9 @@ class DownloadableFile
     ) {
     }
 
+    /**
+     * @param array<string, string> $data
+     */
     public static function fromArray(array $data): self
     {
         Assert::keyExists($data, 'id');
@@ -46,7 +50,7 @@ class DownloadableFile
         $version  = Version::fromString($data['version']);
         $filePath = LocalFilePath::fromString($data['file_path']);
 
-        if ($data['file_url'] !== null) {
+        if (! empty($data['file_url'])) {
             $fileUrl = FileUrlLocal::fromUrl($data['file_url']);
         } else {
             $fileUrl = null;
@@ -63,10 +67,10 @@ class DownloadableFile
         );
     }
 
-    public static function fromValues(UuidInterface $id, UuidInterface $pluginId, string $fileName, string $type, ?FilePathInterface $filePath, ?FileUrlInterface $fileUrl): self
+    public static function fromValues(UuidInterface $id, UuidInterface $pluginId, string $fileName, string $type, Version $version, ?FilePathInterface $filePath, ?FileUrlInterface $fileUrl): self
     {
         Assert::oneOf($type, ['local', 'cdn']);
-        return new self($id, $pluginId, $fileName, $type, $filePath, $fileUrl);
+        return new self($id, $pluginId, $fileName, $type, $version, $filePath, $fileUrl);
     }
 
     public function getId(): UuidInterface
@@ -87,5 +91,28 @@ class DownloadableFile
     public function getFileUrl(): ?FileUrlInterface
     {
         return $this->fileUrl;
+    }
+
+    public function getPluginId(): UuidInterface
+    {
+        return $this->pluginId;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getVersion(): Version
+    {
+        return $this->version;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function toArray(AsString $asString = AsString::NO): array
+    {
+        return [];
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use AspirePress\Cdn\V1\PluginCheck\Handlers\CatchAllHandler;
+use AspirePress\Cdn\V1\CatchAll\Handlers\CatchAllHandler;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;

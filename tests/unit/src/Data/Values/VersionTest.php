@@ -70,7 +70,7 @@ class VersionTest extends TestCase
     /**
      * @dataProvider  versionMismatches
      */
-    public function testExceptionsRaisedIfUsersVersionExceedsCurrentVersion($testVersion, $currentVersion)
+    public function testExceptionsRaisedIfUsersVersionExceedsCurrentVersion(string $testVersion, string $currentVersion): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -89,6 +89,9 @@ class VersionTest extends TestCase
         $this->assertEquals($versionToTest, $sut->getVersion());
     }
 
+    /**
+     * @return array<int, array<int, string>>
+     */
     protected function versionDataProvider(): array
     {
         return [
@@ -99,6 +102,9 @@ class VersionTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<int, array<int, string>>
+     */
     protected function versionComparisonDataProvider(): array
     {
         return [
@@ -170,6 +176,9 @@ class VersionTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<int, array<int, string>>
+     */
     protected function versionMismatches(): array
     {
         return [
@@ -180,6 +189,9 @@ class VersionTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<int, array<int, string>>
+     */
     protected function versionStrings(): array
     {
         return [
