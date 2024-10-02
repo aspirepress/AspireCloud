@@ -23,7 +23,7 @@ final class InitialMigration extends AbstractMigration
         $plugins->addColumn('id', 'uuid', ['null' => false])
             ->addColumn('name', 'string', ['null' => false])
             ->addColumn('slug', 'string', ['null' => false])
-            ->addColumn('current_version', 'string', ['null' => false])
+            ->addColumn('current_version', 'string', ['null' => true])
             ->addIndex(['slug'], ['unique' => true])
             ->create();
 
