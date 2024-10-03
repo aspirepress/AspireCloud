@@ -5,7 +5,7 @@ MAINTAINER Sarah Savage
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update \
     && apt-get install -y -q \
-        libpq-dev git zip libzip-dev libicu-dev
+        libpq-dev git zip libzip-dev libicu-dev postgresql-client
 
 RUN docker-php-ext-install pdo \
     && docker-php-ext-install pdo_pgsql \
