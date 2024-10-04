@@ -33,7 +33,7 @@ final class AddDateTimeColumns extends AbstractMigration
         while ($row = $stmt->fetch()) {
             $metadata = json_decode($row['metadata'], true);
             if (isset($metadata['aspirepress_meta']['finalized'])) {
-                $updateStmt->execute([':processed' => $metadata['finalized'], ':id' => $row['id']]);
+                $updateStmt->execute([':processed' => $metadata['aspirepress_meta']['finalized'], ':id' => $row['id']]);
             }
         }
     }
