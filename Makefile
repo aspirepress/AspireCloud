@@ -107,4 +107,7 @@ run-pgsql: ## Runs Postgres on the command line using the .env file variables
 	docker compose run --rm webapp sh -c "export PGPASSWORD=${DB_PASS} && psql -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME}"
 
 network: ## Create application docker network
-	docker network create --driver=bridge wp-services
+	@bin/create-external-network.sh
+
+rm-network:
+	@bin/remove-external-network.sh
