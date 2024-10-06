@@ -104,4 +104,4 @@ _empty-database: # internal target to empty database
 reset-database: _empty-database migrate seed ## Clean database, run migrations and seeds
 
 run-pgsql:
-	docker compose run --rm webapp sh -c "PGPASSWORD=${DB_PASS} && psql -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME}"
+	docker compose run --rm webapp sh -c "PGPASSWORD="${DB_PASS}" && psql -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME}"
