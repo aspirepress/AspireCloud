@@ -53,6 +53,7 @@ networks:
   application:
     driver: "bridge"
     name: wp-services
+    external: true
   aspirepress-cdn:
     name: aspirepress-cdn
     driver: bridge

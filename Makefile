@@ -20,7 +20,7 @@ endif
 list:
 	@grep -E '^[a-zA-Z%_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-init: down clean build up install-composer reset-database devmode-enable ## Initial configuration tasks
+init: down clean build network up install-composer reset-database devmode-enable ## Initial configuration tasks
 
 build: ## Builds the Docker containers
 	docker compose build
@@ -105,3 +105,6 @@ reset-database: _empty-database migrate seed ## Clean database, run migrations a
 
 run-pgsql:
 	docker compose run --rm webapp sh -c "PGPASSWORD="${DB_PASS}" && psql -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME}"
+
+network: # Create application docker network
+	docker network create --driver=bridge wp-services
