@@ -12,6 +12,11 @@ else
     PHPSTAN_XDEBUG := --xdebug
 endif
 
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
 list:
 	@grep -E '^[a-zA-Z%_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
@@ -97,3 +102,6 @@ _empty-database: # internal target to empty database
 	docker compose run --rm webapp vendor/bin/phinx migrate -c db/phinx.php -t 0
 
 reset-database: _empty-database migrate seed ## Clean database, run migrations and seeds
+
+run-pgsql:
+	docker compose run --rm webapp sh -c "PGPASSWORD=${DB_PASS} && psql -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME}"
