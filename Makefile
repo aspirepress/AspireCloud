@@ -103,8 +103,8 @@ _empty-database: # internal target to empty database
 
 reset-database: _empty-database migrate seed ## Clean database, run migrations and seeds
 
-run-pgsql:
-	docker compose run --rm webapp sh -c "PGPASSWORD="${DB_PASS}" && psql -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME}"
+run-pgsql: ## Runs Postgres on the command line using the .env file variables
+	docker compose run --rm webapp sh -c "export PGPASSWORD=${DB_PASS} && psql -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME}"
 
-network: # Create application docker network
+network: ## Create application docker network
 	docker network create --driver=bridge wp-services
