@@ -34,9 +34,25 @@ Please do not use this project to harass the .org website. We don't want our pro
 
 ## License
 
-The license for this project is source-available, but the source may not be reused without written permission from 
-AspirePress. This may change. You are obligated to use the license and license terms in effect at the time your version
-was tagged.
+The license for this project is the [MIT License](https://opensource.org/license/mit). You may exercise all rights under
+the MIT license, including but not limited to using this project for commercial purposes.
+
+## Trademarks
+
+AspirePress is a trademark of Tailwinds, LLC, and we reserve our rights to this trademark. You may use the trademark to
+clearly describe what you are offering (e.g. "we host an AspirePress mirror") but you may NOT use the AspirePress trademark
+in a way that implies endorsement of or official affiliation with the AsiprePress project (e.g. "we're an official
+AspirePress partner" or "we are AspirePress"). For disambiguation or questions, reach out to support@aspirepress.org.
+Permission to use the trademark for legitimate purposes will not be unreasonably withheld.
+
+Note that if you earn money from your implementation of this code, you must only use the trademark in a way that implies
+you are "powered by AspirePress". For example, a hosting company called FooHosting would say "FooHosting CDN - Powered
+by AspirePress".
+
+If you use the trademark, you MUST link to AspirePress.org in a prominent location, and include the following text:
+
+"AspirePress is a trademark of Tailwinds LLC. All rights reserved. Used under fair use and in compliance with the
+trademark policy."
 
 ## Contributing
 
