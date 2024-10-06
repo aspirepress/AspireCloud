@@ -17,9 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup init
-        run: make init
-        
       - name: Setup .env
         run: |
           echo "DB_HOST=${{ env.DB_HOST }}" >> .env
@@ -28,6 +25,9 @@ jobs:
           echo "DB_PASS=${{ env.DB_PASS }}" >> .env
           echo "DB_PORT=${{ env.DB_PORT }}" >> .env
           echo "DB_SCHEMA=${{ env.DB_SCHEMA }}" >> .env
+
+      - name: Setup init
+        run: make init
 
       - name: Run docker-compose
         uses: hoverkraft-tech/compose-action@v2.0.1
