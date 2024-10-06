@@ -1,0 +1,29 @@
+name: Merge request pipeline
+
+on: [pull_request]
+
+env:
+  DB_HOST: "postgres"
+  DB_NAME: "aspirepress_cdn"
+  DB_USER: "postgres"
+  DB_PASS: "password"
+  DB_PORT: "5432"
+  DB_SCHEMA: "public"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup init
+        run: make init
+
+      - name: Run docker-compose
+        uses: hoverkraft-tech/compose-action@v2.0.1
+        with:
+          compose-file: "./docker-compose.yml"
+
+      - name: Execute all tests
+        run: make test
