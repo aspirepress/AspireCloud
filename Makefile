@@ -42,7 +42,7 @@ unit: ## Run unit tests
 functional: ## Run functional tests
 	docker compose run --rm webapp bash -c "vendor/bin/phpunit --testsuite=functional ${OPTS}"
 
-test: unit functional acceptance ## Run all tests
+test: unit functional acceptance quality-baseline ## Run all tests
 
 acceptance: ## Run acceptance tests
 	docker compose run --rm webapp bash -c "vendor/bin/behat -vvv ${OPTS}"
