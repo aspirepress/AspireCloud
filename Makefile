@@ -109,5 +109,5 @@ run-pgsql: ## Runs Postgres on the command line using the .env file variables
 network: ## Create application docker network
 	@bin/create-external-network.sh
 
-rm-network:
+rm-network: ## Remove application docker network
 	@bin/remove-external-network.sh
