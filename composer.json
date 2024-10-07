@@ -1,6 +1,6 @@
 {
-    "name": "tailwindsllc/project-skeleton",
-    "description": "A project skeleton for Tailwinds projects.",
+    "name": "aspirepress/aspirecloud",
+    "description": "AspireCloud is designed to act as an API server and passthrough for WP .org (where the endpoints are not implemented by us).",
     "config": {
         "sort-packages": true,
         "allow-plugins": {

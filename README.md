@@ -5,7 +5,7 @@ This project is designed to function as a CDN/API endpoint system for distributi
 ## Setup
 
 1. Run `make init` to initialize the project.
-2. Configure WordPress to use your local version of the CDN.
+2. Configure WordPress to use your local version of AspireCloud.
 3. You should now be online!
 
 ## XDebug Instructions for PHPStorm
@@ -30,23 +30,3 @@ The long-term goal is to gradually implement WordPress.org APIs to reduce relian
 ## License
 
 This project is licensed under the [MIT License](https://opensource.org/license/mit). You may exercise all rights granted by the MIT license, including using this project for commercial purposes.
-
-## Trademarks
-
-AspirePress is a trademark of Tailwinds, LLC. We reserve all rights to this trademark. You may use it to accurately describe what you are offering (e.g., "we host an AspirePress mirror"), but **you may NOT use the AspirePress trademark** in any way that implies endorsement or official affiliation with AspirePress (e.g., "we're an official AspirePress partner" or "we are AspirePress").
-
-For clarification or questions, reach out to support@aspirepress.org. Permission to use the trademark for legitimate purposes will not be unreasonably withheld.
-
-If you earn money from your use of this code, you may only use the trademark to imply that your service is "powered by AspirePress." For example, a hosting company called FooHosting might say, "FooHosting CDN - Powered by AspirePress."
-
-If you use the trademark, you **must** link to AspirePress.org in a prominent location and include the following text:
-
-> "AspirePress is a trademark of Tailwinds LLC. All rights reserved. Used under fair use and in compliance with the trademark policy."
-
-## Contributing
-
-By contributing to this project, you grant AspirePress and its members an exclusive, royalty-free, global, irrevocable license to use, relicense, redistribute, modify, and otherwise utilize any source code you contribute. Contribution does not guarantee that you will be granted rights to use the project for your own purposes. By contributing, you acknowledge that AspirePress owns the license to your contributed code, and you may not revoke it or reuse the code without written permission from AspirePress.
-
-You also agree to indemnify and hold AspirePress and its members harmless from any harm, including litigation or copyright enforcement, that arises from code you commit that you do not own. **Do not commit code you do not own or that is copyrighted by someone else!**
-
-AspirePress permits the use of any open-source license, except for CopyLeft licenses (e.g., GPL, LGPL). You may contribute open-source code that complies with this condition.
