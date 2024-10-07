@@ -101,7 +101,20 @@ devmode-disable: ## Disable the PHP development mode
 _empty-database: # internal target to empty database
 	docker compose run --rm webapp vendor/bin/phinx migrate -c db/phinx.php -t 0
 
+migrate-testing: ## Run database migrations
+	docker compose run --rm webapp vendor/bin/phinx migrate -e testing -c db/phinx.php
+
+seed-testing: ## Run database seeds
+	docker compose run --rm webapp vendor/bin/phinx seed:run -e testing -c db/phinx.php
+
+_empty-testing-database: # internal target to empty database
+	docker compose run --rm webapp vendor/bin/phinx migrate -e testing -c db/phinx.php -t 0
+
 reset-database: _empty-database migrate seed ## Clean database, run migrations and seeds
+
+
+
+reset-testing-database: _empty-testing-database migrate-testing seed-testing
 
 run-pgsql: ## Runs Postgres on the command line using the .env file variables
 	docker compose run --rm webapp sh -c "export PGPASSWORD=${DB_PASS} && psql -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME}"
