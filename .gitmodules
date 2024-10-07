@@ -1,3 +1,6 @@
 [submodule "utils/assetgrabber"]
 	path = utils/assetgrabber
 	url = git@github.com:aspirepress/assetgrabber
+[submodule "db"]
+	path = db
+	url = git@github.com:aspirepress/aspirecloud-migrations.git
