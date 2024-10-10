@@ -1,4 +1,4 @@
-# AspirePress CDN
+# AspireCloud
 
 This project is designed to function as a CDN/API endpoint system for distributing WordPress assets (themes, plugins, core) to users of the [AspirePress Updater](https://github.com/aspirepress/updater-plugin). It is free software, with the condition that it must not be used for commercial gain when distributing freely available products.
 
@@ -21,7 +21,7 @@ This project is designed to function as a CDN/API endpoint system for distributi
 
 ## Notes
 
-AspirePress CDN operates as an API and a pseudo pull-through cache against WordPress.org. This means that if AspirePress CDN provides the requested endpoint, it attempts to deliver the resource; otherwise, it passes the request through to WordPress.org and returns their response to the end user.
+AspireCloud operates as an API and a pseudo pull-through cache against WordPress.org. This means that if AspireCloud provides the requested endpoint, it attempts to deliver the resource; otherwise, it passes the request through to WordPress.org and returns their response to the end user.
 
 The long-term goal is to gradually implement WordPress.org APIs to reduce reliance on their website and endpoints.
 
