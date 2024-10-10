@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn;
+namespace AspirePress\AspireCloud;
 
 use InvalidArgumentException;
 use Laminas\ServiceManager\ServiceManager;

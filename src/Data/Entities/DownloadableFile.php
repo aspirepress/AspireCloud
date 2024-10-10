@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn\Data\Entities;
+namespace AspirePress\AspireCloud\Data\Entities;
 
-use AspirePress\Cdn\Data\Enums\AsString;
-use AspirePress\Cdn\Data\Values\FilePathInterface;
-use AspirePress\Cdn\Data\Values\FileUrlInterface;
-use AspirePress\Cdn\Data\Values\FileUrlLocal;
-use AspirePress\Cdn\Data\Values\LocalFilePath;
-use AspirePress\Cdn\Data\Values\Version;
+use AspirePress\AspireCloud\Data\Enums\AsString;
+use AspirePress\AspireCloud\Data\Values\FilePathInterface;
+use AspirePress\AspireCloud\Data\Values\FileUrlInterface;
+use AspirePress\AspireCloud\Data\Values\FileUrlLocal;
+use AspirePress\AspireCloud\Data\Values\LocalFilePath;
+use AspirePress\AspireCloud\Data\Values\Version;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Webmozart\Assert\Assert;

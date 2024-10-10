@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn\Data\Values;
+namespace AspirePress\AspireCloud\Data\Values;
 
 use Laminas\Diactoros\Uri;
 use Psr\Http\Message\UriInterface;

@@ -44,15 +44,15 @@
     },
     "autoload": {
         "psr-4": {
-            "AspirePress\\Cdn\\": "src/"
+            "AspirePress\\AspireCloud\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AspirePress\\Cdn\\Unit\\": "tests/unit/src",
-            "AspirePress\\Cdn\\Functional\\": "tests/functional/src",
-            "AspirePress\\Cdn\\Acceptance\\": "tests/acceptance/src",
-            "AspirePress\\Cdn\\Helpers\\" : "tests/helpers"
+            "AspirePress\\AspireCloud\\Unit\\": "tests/unit/src",
+            "AspirePress\\AspireCloud\\Functional\\": "tests/functional/src",
+            "AspirePress\\AspireCloud\\Acceptance\\": "tests/acceptance/src",
+            "AspirePress\\AspireCloud\\Helpers\\" : "tests/helpers"
         }
     },
     "scripts": {

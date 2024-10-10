@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn\Data\Enums;
+namespace AspirePress\AspireCloud\Data\Enums;
 
 enum AsString
 {

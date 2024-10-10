@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn\V1\CatchAll\Handlers;
+namespace AspirePress\AspireCloud\V1\CatchAll\Handlers;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;

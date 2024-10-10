@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn;
+namespace AspirePress\AspireCloud;
 
-use AspirePress\Cdn\Data\Factories\PluginRepositoryFactory;
-use AspirePress\Cdn\Data\Repositories\PluginRepository;
+use AspirePress\AspireCloud\Data\Factories\PluginRepositoryFactory;
+use AspirePress\AspireCloud\Data\Repositories\PluginRepository;
 use Aura\Sql\ExtendedPdoInterface;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\Stratigility\Middleware\ErrorHandler;

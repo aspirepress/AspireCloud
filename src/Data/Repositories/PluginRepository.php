@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn\Data\Repositories;
+namespace AspirePress\AspireCloud\Data\Repositories;
 
-use AspirePress\Cdn\Data\Entities\DownloadableFile;
-use AspirePress\Cdn\Data\Entities\Plugin;
+use AspirePress\AspireCloud\Data\Entities\DownloadableFile;
+use AspirePress\AspireCloud\Data\Entities\Plugin;
 use Aura\Sql\ExtendedPdoInterface;
 
 class PluginRepository

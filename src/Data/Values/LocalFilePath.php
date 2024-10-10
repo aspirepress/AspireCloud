@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn\Data\Values;
+namespace AspirePress\AspireCloud\Data\Values;
 
-use AspirePress\Cdn\Data\Values\FilePathInterface;
+use AspirePress\AspireCloud\Data\Values\FilePathInterface;
 
 class LocalFilePath implements FilePathInterface
 {

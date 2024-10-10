@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn\Data\Factories;
+namespace AspirePress\AspireCloud\Data\Factories;
 
-use AspirePress\Cdn\Data\Repositories\PluginRepository;
+use AspirePress\AspireCloud\Data\Repositories\PluginRepository;
 use Aura\Sql\ExtendedPdoInterface;
 use Laminas\ServiceManager\ServiceManager;
 
