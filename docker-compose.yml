@@ -26,6 +26,9 @@ services:
       - XDEBUG_MODEl=develop,debug,coverage
     volumes:
       - .:/var/www/html
+    env_file:
+      - .env.dist
+      - .env
     networks:
       - aspirepress-cdn
       - application

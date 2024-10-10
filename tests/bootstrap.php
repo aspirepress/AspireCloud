@@ -14,11 +14,6 @@ error_reporting(E_ALL);
 // autoloader
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-if (file_exists('.env')) {
-    $dotenv = Dotenv\Dotenv::createUnsafeImmutable('.');
-    $dotenv->load();
-}
-
 /** @var ServiceManager $container */
 $container = require __DIR__ . '/../config/container.php';
 
