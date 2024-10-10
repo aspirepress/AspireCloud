@@ -2,6 +2,6 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn\Test\Acceptance;
+namespace AspirePress\AspireCloud\Test\Acceptance;
 
 return require 'config/container.php';

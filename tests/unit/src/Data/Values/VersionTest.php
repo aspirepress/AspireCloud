@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn\Unit\Data\Values;
+namespace AspirePress\AspireCloud\Unit\Data\Values;
 
-use AspirePress\Cdn\Data\Values\Version;
+use AspirePress\AspireCloud\Data\Values\Version;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;

@@ -23,7 +23,7 @@ $aggregator = new ConfigAggregator([
     new ArrayProvider($cacheConfig),
     \Mezzio\Router\ConfigProvider::class,
     \Laminas\Diactoros\ConfigProvider::class,
-    \AspirePress\Cdn\ConfigProvider::class,
+    \AspirePress\AspireCloud\ConfigProvider::class,
     // Load application config in a pre-defined order in such a way that local settings
     // overwrite global settings. (Loaded as first to last):
     //   - `global.php`

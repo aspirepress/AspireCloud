@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use AspirePress\Cdn\V1\CatchAll\Handlers\CatchAllHandler;
+use AspirePress\AspireCloud\V1\CatchAll\Handlers\CatchAllHandler;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
@@ -14,15 +14,15 @@ use Psr\Container\ContainerInterface;
  *
  * Setup routes with a single request method:
  *
- * $app->get('/', AspirePress\Cdn\Handler\HomePageHandler::class, 'home');
- * $app->post('/album', AspirePress\Cdn\Handler\AlbumCreateHandler::class, 'album.create');
- * $app->put('/album/{id:\d+}', AspirePress\Cdn\Handler\AlbumUpdateHandler::class, 'album.put');
- * $app->patch('/album/{id:\d+}', AspirePress\Cdn\Handler\AlbumUpdateHandler::class, 'album.patch');
- * $app->delete('/album/{id:\d+}', AspirePress\Cdn\Handler\AlbumDeleteHandler::class, 'album.delete');
+ * $app->get('/', AspirePress\AspireCloud\Handler\HomePageHandler::class, 'home');
+ * $app->post('/album', AspirePress\AspireCloud\Handler\AlbumCreateHandler::class, 'album.create');
+ * $app->put('/album/{id:\d+}', AspirePress\AspireCloud\Handler\AlbumUpdateHandler::class, 'album.put');
+ * $app->patch('/album/{id:\d+}', AspirePress\AspireCloud\Handler\AlbumUpdateHandler::class, 'album.patch');
+ * $app->delete('/album/{id:\d+}', AspirePress\AspireCloud\Handler\AlbumDeleteHandler::class, 'album.delete');
  *
  * Or with multiple request methods:
  *
- * $app->route('/contact', AspirePress\Cdn\Handler\ContactHandler::class, ['GET', 'POST', ...], 'contact');
+ * $app->route('/contact', AspirePress\AspireCloud\Handler\ContactHandler::class, ['GET', 'POST', ...], 'contact');
  */
 
 return static function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn\Helpers;
+namespace AspirePress\AspireCloud\Helpers;
 
 use Psr\Container\ContainerInterface;
 use RuntimeException;

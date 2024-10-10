@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\CdnFunctional;
+namespace AspirePress\AspireCloudFunctional;
 
 use PHPUnit\Framework\TestCase;
 
