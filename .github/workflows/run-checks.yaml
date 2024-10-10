@@ -1,0 +1,19 @@
+name: Commit Pipeline
+
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build container
+        run: docker build -t aspirepress/aspirecloud-php -f ./docker/webapp/Dockerfile .
+
+      - name: Install Composer dependencies
+        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-php sh -c "composer install"
+
+      - name: Run quality check
+        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-php sh -c "./vendor/bin/phpstan --memory-limit-1G analyse"
