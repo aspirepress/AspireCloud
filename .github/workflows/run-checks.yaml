@@ -16,4 +16,4 @@ jobs:
         run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-php sh -c "composer install"
 
       - name: Run quality check
-        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-php sh -c "./vendor/bin/phpstan --memory-limit-1G analyse"
+        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-php sh -c "./vendor/bin/phpstan --memory-limit=1G analyse"

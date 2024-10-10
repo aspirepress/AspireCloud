@@ -1,0 +1,6 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to static method fromString\\(\\) on an unknown class AspirePress\\\\Cdn\\\\Data\\\\Values\\\\Version\\.$#"
+			count: 6
+			path: tests/unit/src/Data/Values/VersionTest.php

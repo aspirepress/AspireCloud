@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AspirePress\Cdn\Acceptance;
+namespace AspirePress\AspireCloud\Acceptance;
 
 use Behat\Behat\Context\Context;
 use Webmozart\Assert\Assert;
