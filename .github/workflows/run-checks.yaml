@@ -1,6 +1,6 @@
 name: Commit Pipeline
 
-
+on: push
 
 jobs:
   build:
