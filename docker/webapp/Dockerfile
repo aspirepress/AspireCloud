@@ -1,11 +1,20 @@
-FROM php:8.3-fpm
+FROM php:8.3-fpm-alpine
 
 MAINTAINER Sarah Savage
 
+
 RUN export DEBIAN_FRONTEND=noninteractive \
-    && apt-get update \
-    && apt-get install -y -q \
-        libpq-dev git zip libzip-dev libicu-dev postgresql-client
+    && apk update \
+    && apk add \
+    linux-headers \
+            libpq-dev \
+            git \
+            zip \
+            libzip-dev \
+            icu-dev \
+            postgresql-client \
+            $PHPIZE_DEPS
+
 
 RUN docker-php-ext-install pdo \
     && docker-php-ext-install pdo_pgsql \
