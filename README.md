@@ -4,9 +4,15 @@ This project is designed to function as a CDN/API endpoint system for distributi
 
 ## Setup
 
-1. Run `make init` to initialize the project.
-2. Configure WordPress to use your local version of AspireCloud.
-3. You should now be online!
+### Quick Start
+
+```
+git submodule update --init --recursive
+cp .env.dist .env
+make init
+```
+
+Next configure WordPress to use your local version of AspireCloud, and you're good to go! 
 
 ## XDebug Instructions for PHPStorm
 

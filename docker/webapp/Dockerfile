@@ -6,14 +6,15 @@ MAINTAINER Sarah Savage
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apk update \
     && apk add \
-    linux-headers \
-            libpq-dev \
-            git \
-            zip \
-            libzip-dev \
-            icu-dev \
-            postgresql-client \
-            $PHPIZE_DEPS
+        bash \
+        linux-headers \
+        libpq-dev \
+        git \
+        zip \
+        libzip-dev \
+        icu-dev \
+        postgresql-client \
+        $PHPIZE_DEPS
 
 
 RUN docker-php-ext-install pdo \
