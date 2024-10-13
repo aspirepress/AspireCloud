@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use AspirePress\AspireCloud\Repository\Api\V1\ApiTokenIssuanceHandler;
 use AspirePress\AspireCloud\V1\CatchAll\Handlers\CatchAllHandler;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
@@ -26,5 +27,6 @@ use Psr\Container\ContainerInterface;
  */
 
 return static function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
+    $app->post('/repository/api/v1/apitoken', ApiTokenIssuanceHandler::class, 'repository.api.v1.apitoken');
     $app->route('/{path:.*}', CatchAllHandler::class, ['GET', 'POST'], 'app.home');
 };
