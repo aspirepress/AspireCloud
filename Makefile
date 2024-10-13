@@ -124,3 +124,6 @@ network: ## Create application docker network
 
 rm-network: ## Remove application docker network
 	@bin/remove-external-network.sh
+
+gen-api: ## Generate API models
+	npx @openapitools/openapi-generator-cli generate -i ./spec/wpapi.yaml -g php -o ./spec/model --global-property models,supportingFiles --invoker-package=OpenWPAPI

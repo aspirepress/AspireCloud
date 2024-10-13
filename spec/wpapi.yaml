@@ -1,0 +1,560 @@
+openapi: 3.0.3
+info:
+  title: OpenWP API
+  license:
+    name: TBD
+    
+  version: 0.0.1
+servers:
+  - url: https://api.wordpress.org
+tags:
+  - name: core
+    description: Core WP API Endpoints
+  - name: plugins
+    description: WP API endpoints for browsing plugins
+  - name: themes
+    description: WP API endpoints for browsing themes
+paths:
+  /core/version-check/{apiversion}:
+    get:
+      parameters:
+        - name: apiversion
+          in: path
+          description: Version of the WP API
+          required: true
+          schema:
+            type: number
+          # Query parameters
+        - name: version
+          in: query
+          description: Version of WordPress
+          required: true
+          schema:
+            type: string
+          # Query parameters
+        - name: php
+          in: query
+          description: PHP version
+          required: false
+          schema:
+            type: string
+
+        - name: locale
+          in: query
+          description: Locale information
+          required: false
+          schema:
+            type: string
+
+        - name: mysql
+          in: query
+          description: MySQL version
+          required: false
+          schema:
+            type: string
+
+        - name: local_package
+          in: query
+          description: Local package info
+          required: false
+          schema:
+            type: string
+
+        - name: blogs
+          in: query
+          description: Number of blogs
+          required: false
+          schema:
+            type: integer
+            format: int32
+
+        - name: users
+          in: query
+          description: Number of users
+          required: false
+          schema:
+            type: integer
+            format: int32
+
+        - name: multisite_enabled
+          in: query
+          description: Multisite enabled flag (1 for true, 0 for false)
+          required: false
+          schema:
+            type: integer
+            format: int32
+
+        - name: initial_db_version
+          in: query
+          description: Initial database version
+          required: false
+          schema:
+            type: integer
+            format: int32
+
+        - name: extensions
+          in: query
+          description: List of extension versions, use the format extensions[extensionname]=version
+          required: false
+          explode: true
+          style: deepObject
+          schema:
+            type: object
+            additionalProperties:
+              type: string
+
+        - name: platform_flags[os]
+          in: query
+          description: Operating system
+          required: false
+          schema:
+            type: string
+
+        - name: platform_flags[bits]
+          in: query
+          description: Number of bits (e.g., 32 or 64)
+          required: false
+          schema:
+            type: integer
+            format: int32
+
+        - name: image_support[imagick][0]
+          in: query
+          description: Image support for Imagick
+          required: false
+          schema:
+            type: string
+            enum: [webp,avif]
+        - name: image_support[imagick][1]
+          in: query
+          description: Image support for Imagick
+          required: false
+          schema:
+            type: string
+            enum: [webp,avif]
+            
+        - name: image_support[gd][0]
+          in: query
+          description: Image support for Imagick
+          required: false
+          schema:
+            type: string
+            enum: [webp,avif]
+            
+        - name: image_support[gd][1]
+          in: query
+          description: Image support for Imagick
+          required: false
+          schema:
+            type: string
+            enum: [webp,avif]
+      tags:
+        - core
+      summary: Check versions of plugins
+      description: Checks to see if any versions need updating
+      operationId: coreVersionCheck
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionCheckResponse'
+  /themes/update-check/1.1/:
+    post:
+      summary: Check for WordPress theme updates
+      tags:
+        - themes
+      description: This endpoint checks for available updates for WordPress themes.
+      operationId: checkThemeUpdates
+      requestBody:
+        description: Theme update check request.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                themes:
+                  type: string
+                  description: |
+                    A JSON-encoded string that includes details of the active theme and a list of installed themes. 
+                    
+                    The structure must follow this format:
+                    ```json
+                    {
+                      "active": "active_theme",
+                      "themes": {
+                        "theme_slug": {
+                          "Name": "Theme Name",
+                          "Title": "Theme Title",
+                          "Version": "Version Number",
+                          "Author": "Author Name",
+                          "Author URI": "Author URL",
+                          "UpdateURI": "Update URI",
+                          "Template": "Parent Theme (if child theme)",
+                          "Stylesheet": "Theme Stylesheet"
+                        },
+                        ...
+                      }
+                    }
+                    ```
+
+                    Example:
+                    ```json
+                    {
+                      "active": "twentytwentythree",
+                      "themes": {
+                        "Divi": {
+                          "Name": "Divi",
+                          "Title": "Divi",
+                          "Version": "4.4.8",
+                          "Author": "Elegant Themes",
+                          "Author URI": "http://www.elegantthemes.com",
+                          "UpdateURI": "",
+                          "Template": "Divi",
+                          "Stylesheet": "Divi"
+                        },
+                        "twentytwenty": {
+                          "Name": "Twenty Twenty",
+                          "Title": "Twenty Twenty",
+                          "Version": "1.5",
+                          "Author": "the WordPress team",
+                          "Author URI": "https://wordpress.org/",
+                          "UpdateURI": "",
+                          "Template": "twentytwenty",
+                          "Stylesheet": "twentytwenty"
+                        }
+                      }
+                    }
+                    ```
+                translations:
+                  type: string
+                  description: JSON-encoded array of translations.
+                  example: '[]'
+                locale:
+                  type: string
+                  description: JSON-encoded array of locales.
+                  example: '[]'
+      responses:
+        '200':
+          description: Successful response with theme update information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThemeUpdateResponse'
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+          
+  /plugins/update-check/1.1/:
+    post:
+      summary: Check for WordPress plugin updates
+      tags:
+        - plugins
+      description: This endpoint checks for available updates for WordPress plugins.
+      operationId: checkPluginUpdates
+      requestBody:
+        description: Plugin update check request.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                themes:
+                  type: string
+                  description: |
+                    A JSON-encoded string that includes details of the installed plugins. 
+                    
+                    The structure must follow this format:
+                    ```json
+                    {
+                      "plugins": {
+                        "plugin\/plugin.php": {
+                          "Name": "Plugin Name",
+                          "Description": "Plugin Description",
+                          "Version": "Version Number",
+                          "Author": "Author Name",
+                          "AuthorURI": "Author URL",
+                          "PluginURI": "Update URI",
+                          "Template": "Parent Theme (if child theme)",
+                          "Stylesheet": "Theme Stylesheet"
+                        },
+                        ...
+                      }
+                    }
+                    ```
+                translations:
+                  type: string
+                  description: JSON-encoded array of translations.
+                  example: '[]'
+                locale:
+                  type: string
+                  description: JSON-encoded array of locales.
+                  example: '[]'
+      responses:
+        '200':
+          description: Successful response with theme update information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PluginUpdateResponse'
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+  
+    VersionCheckResponse: 
+      type: object
+      properties:
+        offers:
+          type: array
+          items:
+            $ref: '#/components/schemas/UpdateOffer'
+        translations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Translation'
+            
+    ThemeUpdateResponse: 
+      type: object
+      properties:
+        themes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThemeOffer'
+        no_update:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThemeOffer'
+        translations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Translation'
+           
+    PluginUpdateResponse: 
+      type: object
+      properties:
+        themes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PluginOffer'
+        no_update:
+          type: array
+          items:
+            $ref: '#/components/schemas/PluginOffer'
+        translations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Translation'
+            
+    
+    ThemeOffer:
+        type: object
+        properties:
+          id:
+            type: string
+            description: |
+              Optional. ID of the plugin for update purposes, should be a URI
+              specified in the `Update URI` header field.
+          slug:
+            type: string
+            description: Slug of the plugin.
+          version:
+            type: string
+            description: The version of the plugin.
+          url:
+            type: string
+            description: The URL for details of the plugin.
+          package:
+            type: string
+            nullable: true
+            description: Optional. The update ZIP for the plugin.
+          tested:
+            type: string
+            nullable: true
+            description: Optional. The version of WordPress the plugin is tested against.
+          requires_php:
+            type: string
+            nullable: true
+            description: Optional. The version of PHP which the plugin requires.
+          autoupdate:
+            type: boolean
+            nullable: true
+            description: Optional. Whether the plugin should automatically update.
+          icons:
+            type: object
+            nullable: true
+            additionalProperties:
+              type: string
+            description: Optional. Array of plugin icons.
+          banners:
+            type: object
+            nullable: true
+            additionalProperties:
+              type: string
+            description: Optional. Array of plugin banners.
+          banners_rtl:
+            type: object
+            nullable: true
+            additionalProperties:
+              type: string
+            description: Optional. Array of plugin RTL banners.
+    Translation:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of translation (e.g., core)
+        slug:
+          type: string
+          description: The slug identifying the translation
+        language:
+          type: string
+          description: The language code for the translation (e.g., fr_FR)
+        version:
+          type: string
+          description: The version of the translation
+        updated:
+          type: string
+          format: date-time
+          description: The date and time when the translation was last updated
+        package:
+          type: string
+          format: uri
+          description: URL to download the translation package
+        autoupdate:
+          type: boolean
+          description: Indicates if the translation supports auto-updates
+    PluginOffer:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            ID of the plugin for update purposes, should be a URI
+            specified in the `Update URI` header field.
+        slug:
+          type: string
+          description: Slug of the plugin.
+        plugin:
+          type: string
+          description: The file path of the plugin.
+        new_version:
+          type: string
+          description: The new version of the plugin available for update.
+        url:
+          type: string
+          description: The URL for details of the plugin.
+        package:
+          type: string
+          nullable: true
+          description: Optional. The update ZIP for the plugin.
+        icons:
+          type: object
+          nullable: true
+          additionalProperties:
+            type: string
+          description: Optional. Array of plugin icons with different resolutions.
+        banners:
+          type: object
+          nullable: true
+          additionalProperties:
+            type: string
+          description: Optional. Array of plugin banners.
+        banners_rtl:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: Optional. Array of plugin RTL banners.
+        requires:
+          type: string
+          nullable: true
+          description: Optional. The minimum version of WordPress required for the plugin.
+        tested:
+          type: string
+          nullable: true
+          description: Optional. The version of WordPress the plugin is tested against.
+        requires_php:
+          type: string
+          nullable: true
+          description: Optional. The minimum version of PHP required for the plugin.
+        requires_plugins:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: Optional. List of required plugins for this plugin.
+        compatibility:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: Optional. List of compatibility data for this plugin.
+    UpdateOffer:
+      type: object
+      properties:
+        response:
+          type: string
+          description: The response type (e.g., upgrade, autoupdate)
+        download:
+          type: string
+          format: uri
+          description: URL to download the update
+        locale:
+          type: string
+          description: The locale for the update
+        packages:
+          type: object
+          properties:
+            full:
+              type: string
+              format: uri
+              description: URL to the full package
+            no_content:
+              type: string
+              format: uri
+              description: URL to the no content package
+            new_bundled:
+              type: string
+              format: uri
+              description: URL to the new bundled package
+            partial:
+              type: string
+              format: uri
+              nullable: true
+              description: URL to the partial update (optional)
+            rollback:
+              type: string
+              format: uri
+              nullable: true
+              description: URL to the rollback package (optional)
+        current:
+          type: string
+          description: The current version of the software
+        version:
+          type: string
+          description: The new version available for update
+        php_version:
+          type: string
+          description: Required PHP version
+        mysql_version:
+          type: string
+          description: Required MySQL version
+        new_bundled:
+          type: string
+          description: New bundled version
+        partial_version:
+          type: string
+          nullable: true
+          description: The partial version if applicable
+        new_files:
+          type: boolean
+          description: Whether new files are included in the update
+

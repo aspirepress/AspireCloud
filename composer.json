@@ -10,6 +10,15 @@
             "ramsey/composer-repl": true
         }
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "spec/model",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
     "require": {
         "php": "^8.3",
         "aura/sql": "^5.0",
@@ -28,7 +37,8 @@
         "ramsey/composer-repl": "^1.4",
         "ramsey/uuid": "^4.7",
         "robmorgan/phinx": "^0.16.0",
-        "webmozart/assert": "^1.11"
+        "webmozart/assert": "^1.11",
+        "aspirecloud/apispec": "dev-main"
     },
     "require-dev": {
         "behat/behat": "^3.11",
@@ -51,7 +61,7 @@
             "AspirePress\\AspireCloud\\Unit\\": "tests/unit/src",
             "AspirePress\\AspireCloud\\Functional\\": "tests/functional/src",
             "AspirePress\\AspireCloud\\Acceptance\\": "tests/acceptance/src",
-            "AspirePress\\AspireCloud\\Helpers\\" : "tests/helpers"
+            "AspirePress\\AspireCloud\\Helpers\\": "tests/helpers"
         }
     },
     "scripts": {
