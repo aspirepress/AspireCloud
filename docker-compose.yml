@@ -20,10 +20,7 @@ services:
     build:
       context: .
       dockerfile: docker/webapp/Dockerfile
-    environment:
-      - XDEBUG_CONFIG=idekey=PHPSTORM start_with_request=true var_display_max_depth=-1 max_nesting_level=3000 client_host=docker.for.mac.localhost
-      - PHP_IDE_CONFIG=serverName=application.local
-      - XDEBUG_MODEl=develop,debug,coverage
+      target: devphp
     volumes:
       - .:/var/www/html
     env_file:
