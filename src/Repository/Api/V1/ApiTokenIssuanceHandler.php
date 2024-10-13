@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AspirePress\AspireCloud\Repository\Api\V1;
 
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class ApiTokenIssuanceHandler implements RequestHandlerInterface
