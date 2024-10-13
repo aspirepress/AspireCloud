@@ -1,0 +1,85 @@
+meta {
+  name: Core Version Check
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://{{API_URL}}/core/version-check/:api_version/?version=6.2.2&php=7.4.19&locale=en_US&mysql=5.7.34&local_package=&blogs=1&users=1&multisite_enabled=0&initial_db_version=47018&extensions%5Bapache2handler%5D=7.4.19&extensions%5Bbcmath%5D=7.4.19&extensions%5BCore%5D=7.4.19&extensions%5Bctype%5D=7.4.19&extensions%5Bcurl%5D=7.4.19&extensions%5Bdate%5D=7.4.19&extensions%5Bdom%5D=20031129&extensions%5Bexif%5D=7.4.19&extensions%5Bfileinfo%5D=7.4.19&extensions%5Bfilter%5D=7.4.19&extensions%5Bftp%5D=7.4.19&extensions%5Bgd%5D=7.4.19&extensions%5Bhash%5D=7.4.19&extensions%5Biconv%5D=7.4.19&extensions%5Bimagick%5D=3.4.4&extensions%5Bjson%5D=7.4.19&extensions%5Blibxml%5D=7.4.19&extensions%5Bmbstring%5D=7.4.19&extensions%5Bmysqli%5D=7.4.19&extensions%5Bmysqlnd%5D=mysqlnd+7.4.19&extensions%5Bopenssl%5D=7.4.19&extensions%5Bpcre%5D=7.4.19&extensions%5BPDO%5D=7.4.19&extensions%5Bpdo_sqlite%5D=7.4.19&extensions%5BPhar%5D=7.4.19&extensions%5Bposix%5D=7.4.19&extensions%5BReflection%5D=7.4.19&extensions%5Bsession%5D=7.4.19&extensions%5BSimpleXML%5D=7.4.19&extensions%5Bsodium%5D=7.4.19&extensions%5BSPL%5D=7.4.19&extensions%5Bsqlite3%5D=7.4.19&extensions%5Bstandard%5D=7.4.19&extensions%5Btokenizer%5D=7.4.19&extensions%5Bxml%5D=7.4.19&extensions%5Bxmlreader%5D=7.4.19&extensions%5Bxmlwriter%5D=7.4.19&extensions%5BZend+OPcache%5D=7.4.19&extensions%5Bzip%5D=1.15.6&extensions%5Bzlib%5D=7.4.19&platform_flags%5Bos%5D=Linux&platform_flags%5Bbits%5D=64&image_support%5Bimagick%5D%5B0%5D=webp
+  body: formUrlEncoded
+  auth: none
+}
+
+params:query {
+  version: 6.2.2
+  php: 7.4.19
+  locale: en_US
+  mysql: 5.7.34
+  local_package: 
+  blogs: 1
+  users: 1
+  multisite_enabled: 0
+  initial_db_version: 47018
+  extensions[apache2handler]: 7.4.19
+  extensions[bcmath]: 7.4.19
+  extensions[Core]: 7.4.19
+  extensions[ctype]: 7.4.19
+  extensions[curl]: 7.4.19
+  extensions[date]: 7.4.19
+  extensions[dom]: 20031129
+  extensions[exif]: 7.4.19
+  extensions[fileinfo]: 7.4.19
+  extensions[filter]: 7.4.19
+  extensions[ftp]: 7.4.19
+  extensions[gd]: 7.4.19
+  extensions[hash]: 7.4.19
+  extensions[iconv]: 7.4.19
+  extensions[imagick]: 3.4.4
+  extensions[json]: 7.4.19
+  extensions[libxml]: 7.4.19
+  extensions[mbstring]: 7.4.19
+  extensions[mysqli]: 7.4.19
+  extensions[mysqlnd]: mysqlnd 7.4.19
+  extensions[openssl]: 7.4.19
+  extensions[pcre]: 7.4.19
+  extensions[PDO]: 7.4.19
+  extensions[pdo_sqlite]: 7.4.19
+  extensions[Phar]: 7.4.19
+  extensions[posix]: 7.4.19
+  extensions[Reflection]: 7.4.19
+  extensions[session]: 7.4.19
+  extensions[SimpleXML]: 7.4.19
+  extensions[sodium]: 7.4.19
+  extensions[SPL]: 7.4.19
+  extensions[sqlite3]: 7.4.19
+  extensions[standard]: 7.4.19
+  extensions[tokenizer]: 7.4.19
+  extensions[xml]: 7.4.19
+  extensions[xmlreader]: 7.4.19
+  extensions[xmlwriter]: 7.4.19
+  extensions[Zend OPcache]: 7.4.19
+  extensions[zip]: 1.15.6
+  extensions[zlib]: 7.4.19
+  platform_flags[os]: Linux
+  platform_flags[bits]: 64
+  image_support[imagick][0]: webp
+}
+
+params:path {
+  api_version: 1.7
+}
+
+headers {
+  Host: api.wordpress.org
+  User-Agent: WordPress/6.2.2; http://172.18.0.5/
+  Accept: */*
+  Accept-Encoding: deflate, gzip
+  Connection: Keep-Alive
+  wp_install: http://172.18.0.5/
+  wp_blog: http://172.18.0.5/
+  Content-Type: application/x-www-form-urlencoded
+}
+
+body:form-urlencoded {
+  translations: []
+}

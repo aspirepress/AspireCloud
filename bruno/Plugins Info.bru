@@ -1,0 +1,32 @@
+meta {
+  name: Plugins Info
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://{{API_URL}}/plugins/info/:api_version/?action=query_plugins&request%5Bpage%5D=1&request%5Bper_page%5D=36&request%5Blocale%5D=en_US&request%5Bbrowse%5D=popular&request%5Bwp_version%5D=6.2
+  body: none
+  auth: none
+}
+
+params:query {
+  action: query_plugins
+  request[page]: 1
+  request[per_page]: 36
+  request[locale]: en_US
+  request[browse]: popular
+  request[wp_version]: 6.2
+}
+
+params:path {
+  api_version: 1.2
+}
+
+headers {
+  Host: api.wordpress.org
+  User-Agent: WordPress/6.2.2; http://172.18.0.5/
+  Accept: */*
+  Accept-Encoding: deflate, gzip
+  Connection: Keep-Alive
+}
