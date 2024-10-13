@@ -112,8 +112,6 @@ _empty-testing-database: # internal target to empty database
 
 reset-database: _empty-database migrate seed ## Clean database, run migrations and seeds
 
-
-
 reset-testing-database: _empty-testing-database migrate-testing seed-testing
 
 run-pgsql: ## Runs Postgres on the command line using the .env file variables
@@ -124,3 +122,6 @@ network: ## Create application docker network
 
 rm-network: ## Remove application docker network
 	@bin/remove-external-network.sh
+
+build-prod:
+	docker build --target prodphp -t aspirepress/aspirecloud-php -f ./docker/webapp/Dockerfile .
