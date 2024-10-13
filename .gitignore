@@ -10,3 +10,4 @@ docker-compose.override.yml
 /logs/error.log
 mix-manifest.json
 *.sql
+.env
