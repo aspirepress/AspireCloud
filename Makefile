@@ -78,19 +78,19 @@ cs-fix: ## Fix code style issues
 	docker compose run --rm webapp bash -c "vendor/bin/phpcbf ${OPTS} && vendor/bin/phpcs ${OPTS}"
 
 create-migration: ## Create a new database migration
-	docker compose run --rm webapp vendor/bin/phinx create ${OPTS} -c db/phinx.php
+	docker compose run --rm webapp vendor/bin/phinx create ${OPTS} -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 create-seed: ##	Create a new database seed
-	docker compose run --rm webapp vendor/bin/phinx seed:create ${OPTS} -c db/phinx.php
+	docker compose run --rm webapp vendor/bin/phinx seed:create ${OPTS} -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 migrate: ## Run database migrations
-	docker compose run --rm webapp vendor/bin/phinx migrate -c db/phinx.php
+	docker compose run --rm webapp vendor/bin/phinx migrate -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 migration-rollback: ## Rollback database migrations
-	docker compose run --rm webapp vendor/bin/phinx rollback -e development -c db/phinx.php
+	docker compose run --rm webapp vendor/bin/phinx rollback -e development -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 seed: ## Run database seeds
-	docker compose run --rm webapp vendor/bin/phinx seed:run -c db/phinx.php
+	docker compose run --rm webapp vendor/bin/phinx seed:run -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 devmode-enable: ## Enable the PHP development mode
 	docker compose run --rm webapp composer development-enable
@@ -99,16 +99,16 @@ devmode-disable: ## Disable the PHP development mode
 	docker compose run --rm webapp composer development-disable
 
 _empty-database: # internal target to empty database
-	docker compose run --rm webapp vendor/bin/phinx migrate -c db/phinx.php -t 0
+	docker compose run --rm webapp vendor/bin/phinx migrate -c vendor/aspirepress/aspirecloud-migrations/phinx.php -t 0
 
 migrate-testing: ## Run database migrations
-	docker compose run --rm webapp vendor/bin/phinx migrate -e testing -c db/phinx.php
+	docker compose run --rm webapp vendor/bin/phinx migrate -e testing -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 seed-testing: ## Run database seeds
-	docker compose run --rm webapp vendor/bin/phinx seed:run -e testing -c db/phinx.php
+	docker compose run --rm webapp vendor/bin/phinx seed:run -e testing -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 _empty-testing-database: # internal target to empty database
-	docker compose run --rm webapp vendor/bin/phinx migrate -e testing -c db/phinx.php -t 0
+	docker compose run --rm webapp vendor/bin/phinx migrate -e testing -c vendor/aspirepress/aspirecloud-migrations/phinx.php -t 0
 
 reset-database: _empty-database migrate seed ## Clean database, run migrations and seeds
 
