@@ -2,8 +2,7 @@
 
 ## AspirePress Users:
 The steps below are of interest to anyone wanting to use the proxy with their own services. 
-If you are building AspireCloud using the Makefile, all the below steps have already been performed or will be.
-
+If you are building AspireCloud using the Makefile, all the below steps have already been performed.
 
 ----
 
