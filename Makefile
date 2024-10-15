@@ -126,3 +126,10 @@ rm-network: ## Remove application docker network. (traefik
 
 build-prod:
 	docker build --target prodphp -t aspirepress/aspirecloud-php -f ./docker/webapp/Dockerfile .
+
+traefik-up: network
+	docker compose -f docker/traefik/docker-compose.yml up -d
+
+traefik-down:
+	docker compose -f docker/traefik/docker-compose.yml down
+
