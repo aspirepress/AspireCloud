@@ -1,0 +1,15 @@
+meta {
+  name: PHP Stats
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://{{API_URL}}/stats/php/1.0/
+  body: none
+  auth: none
+}
+
+docs {
+  Populates the [WP Statistics](https://wordpress.org/about/stats/) web page
+}

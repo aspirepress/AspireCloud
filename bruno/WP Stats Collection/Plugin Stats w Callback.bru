@@ -1,0 +1,21 @@
+meta {
+  name: Plugin Stats w Callback
+  type: http
+  seq: 6
+}
+
+get {
+  url: https://{{API_URL}}/stats/plugin/1.0/downloads.php?slug=newpath-wildapricot-press&limit=20&callback=myFunc
+  body: none
+  auth: none
+}
+
+params:query {
+  slug: newpath-wildapricot-press
+  limit: 20
+  callback: myFunc
+}
+
+docs {
+  Populates the [WP Statistics](https://wordpress.org/about/stats/) web page
+}

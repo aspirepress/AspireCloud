@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "WordPress Update API",
+  "name": "WordPress.org API",
   "type": "collection",
   "ignore": [
     "node_modules",

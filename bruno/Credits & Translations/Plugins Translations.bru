@@ -1,0 +1,20 @@
+meta {
+  name: Plugins Translations
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://{{API_URL}}/translations/plugins/:api_version?slug=elementor&version=3.24.7
+  body: none
+  auth: none
+}
+
+params:query {
+  slug: elementor
+  version: 3.24.7
+}
+
+params:path {
+  api_version: 1.0
+}

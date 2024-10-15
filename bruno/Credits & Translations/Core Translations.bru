@@ -1,0 +1,19 @@
+meta {
+  name: Core Translations
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://{{API_URL}}/translations/core/:api_version/?version=6.0
+  body: none
+  auth: none
+}
+
+params:query {
+  version: 6.0
+}
+
+params:path {
+  api_version: 1.0
+}

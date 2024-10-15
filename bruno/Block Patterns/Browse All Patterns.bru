@@ -1,0 +1,23 @@
+meta {
+  name: Browse All Patterns
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://{{API_URL}}/patterns/:api_version/?pattern-categories=2&wp-version=5.8&locale=en_US
+  body: none
+  auth: none
+}
+
+params:query {
+  pattern-categories: 2
+  wp-version: 5.8
+  locale: en_US
+  ~search: button 
+  ~pattern-keywords: 11
+}
+
+params:path {
+  api_version: 1.0
+}

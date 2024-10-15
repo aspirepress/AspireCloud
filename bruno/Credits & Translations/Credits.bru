@@ -1,0 +1,20 @@
+meta {
+  name: Credits
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{API_URL}}/core/credits/:api_version/?version=6.0&locale=en-US
+  body: none
+  auth: none
+}
+
+params:query {
+  version: 6.0
+  locale: en-US
+}
+
+params:path {
+  api_version: 1.0
+}

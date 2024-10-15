@@ -1,0 +1,19 @@
+meta {
+  name: Serve Happy
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://{{API_URL}}/core/serve-happy/:api_version/?php_version=8.0
+  body: none
+  auth: none
+}
+
+params:query {
+  php_version: 8.0
+}
+
+params:path {
+  api_version: 1.0
+}

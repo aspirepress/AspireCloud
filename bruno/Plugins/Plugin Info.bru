@@ -1,0 +1,24 @@
+meta {
+  name: Plugin Info
+  type: http
+  seq: 4
+}
+
+get {
+  url: https://{{API_URL}}/plugins/info/:api_version/:slug
+  body: none
+  auth: none
+}
+
+params:path {
+  slug: newpath-wildapricot-press.json
+  api_version: 1.0
+}
+
+headers {
+  Host: api.wordpress.org
+  User-Agent: WordPress/6.2.2; http://172.18.0.5/
+  Accept: */*
+  Accept-Encoding: deflate, gzip
+  Connection: Keep-Alive
+}

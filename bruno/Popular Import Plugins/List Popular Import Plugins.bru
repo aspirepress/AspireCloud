@@ -1,0 +1,15 @@
+meta {
+  name: List Popular Import Plugins
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://{{API_URL}}/core/importers/:api_version/
+  body: none
+  auth: none
+}
+
+params:path {
+  api_version: 1.1
+}
