@@ -7,16 +7,17 @@ RUN install-php-extensions pdo pdo_pgsql zip intl redis
 
 RUN apk add bash git postgresql-client zip
 
-COPY ./docker/webapp/Caddyfile /etc/caddy/Caddyfile
+COPY ./docker/webapp-frankenphp/Caddyfile /etc/caddy/Caddyfile
+COPY ./docker/webapp-frankenphp/php.ini /usr/local/etc/php/php.ini
 
 WORKDIR /var/www/html
 
+################
 FROM base AS dev
 
 RUN install-php-extensions xdebug
 
-COPY ./docker/webapp/php.ini /usr/local/etc/php/php.ini
-
+################
 FROM base AS prod
 
 COPY . /var/www/html
