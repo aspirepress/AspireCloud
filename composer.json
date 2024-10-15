@@ -10,6 +10,12 @@
             "ramsey/composer-repl": true
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/aspirepress/aspirecloud-migrations.git"
+        }
+    ],
     "require": {
         "php": "^8.3",
         "aura/sql": "^5.0",
@@ -29,7 +35,8 @@
         "ramsey/composer-repl": "^1.4",
         "ramsey/uuid": "^4.7",
         "robmorgan/phinx": "^0.16.0",
-        "webmozart/assert": "^1.11"
+        "webmozart/assert": "^1.11",
+        "aspirepress/aspirecloud-migrations": "dev-main"
     },
     "require-dev": {
         "behat/behat": "^3.11",
