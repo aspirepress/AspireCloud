@@ -118,10 +118,10 @@ run-pgsql: ## Runs Postgres on the command line using the .env file variables
 	docker compose run --rm webapp sh -c "export PGPASSWORD=${DB_PASS} && psql -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME}"
 
 network: ## Create application docker network
-	@bin/create-external-network.sh
+	bin/create-external-network.sh wp-services
 
-rm-network: ## Remove application docker network
-	@bin/remove-external-network.sh
+rm-network: ## Remove application docker network.
+	-bin/remove-external-network.sh wp-services
 
 build-prod:
 	docker build --target prodphp -t aspirepress/aspirecloud-php -f ./docker/webapp/Dockerfile .
