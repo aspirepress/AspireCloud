@@ -1,8 +1,9 @@
 # Docker Network Proxy
 
-## AspirePress Users:
+## AspirePress Users
 The steps below are of interest to anyone wanting to use the proxy with their own services. 
-If you are building AspireCloud using the Makefile, all the below steps have already been performed.
+If you are building AspireCloud using the Makefile, all the below steps have already been performed, 
+and you only need edit your `/etc/hosts` file as described in the project README.  
 
 ----
 
