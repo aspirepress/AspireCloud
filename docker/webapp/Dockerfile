@@ -1,38 +1,25 @@
-FROM php:8.3-fpm-alpine AS basephp
+FROM dunglas/frankenphp:1.2.5-php8.3-alpine AS base
 
-RUN apk add \
-    bash \
-    linux-headers \
-    libpq-dev \
-    git \
-    zip \
-    libzip-dev \
-    icu-dev \
-    postgresql-client \
-    $PHPIZE_DEPS
+COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.5.2/install-php-extensions /usr/local/bin/
 
+RUN install-php-extensions pdo pdo_pgsql zip intl redis
 
-RUN docker-php-ext-install pdo \
-    && docker-php-ext-install pdo_pgsql \
-    && docker-php-ext-install zip \
-    && docker-php-ext-install intl \
-    && docker-php-ext-enable pdo_pgsql \
-    && pecl install redis \
-    && docker-php-ext-enable redis
+RUN apk add bash postgresql-client
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY ./docker/webapp/Caddyfile /etc/caddy/Caddyfile
 
-FROM basephp AS devphp
+WORKDIR /var/www/html
 
-RUN pecl install xdebug-3.3.0 \
-&& docker-php-ext-enable xdebug
+FROM base AS dev
+
+RUN install-php-extensions xdebug
 
 COPY ./docker/webapp/php.ini /usr/local/etc/php/php.ini
 
-FROM basephp AS prodphp
+FROM base AS prod
 
 COPY . /var/www/html
 
 RUN composer install -n --no-dev -q
-
 
