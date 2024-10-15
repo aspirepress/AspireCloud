@@ -2,7 +2,7 @@ services:
   webapp:
     build:
       context: .
-      dockerfile: docker/webapp/Dockerfile
+      dockerfile: docker/webapp-frankenphp/Dockerfile
       target: dev
     ports:
       - ${LOCAL_HTTP_PORT:-8099}:80
