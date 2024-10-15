@@ -4,7 +4,6 @@ services:
       context: .
       dockerfile: ./docker/nginx/Dockerfile
     ports:
-      - 8099:80
       - 8100:443
     volumes:
       - .:/var/www/html
