@@ -5,7 +5,7 @@ ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/relea
 
 RUN install-php-extensions pdo pdo_pgsql zip intl redis
 
-RUN apk add bash postgresql-client
+RUN apk add bash git postgresql-client zip
 
 COPY ./docker/webapp/Caddyfile /etc/caddy/Caddyfile
 
