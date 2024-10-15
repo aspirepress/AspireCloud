@@ -1,0 +1,11 @@
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/certs/_wildcard.local.pem
+        keyFile: /etc/traefik/certs/_wildcard.local-key.pem
+
+  certificates:
+    - certFile: /etc/traefik/certs/_wildcard.local.pem
+      keyFile: /etc/traefik/certs/_wildcard.local-key.pem
+

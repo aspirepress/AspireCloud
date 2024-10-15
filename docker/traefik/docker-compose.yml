@@ -1,0 +1,19 @@
+services:
+  traefik:
+    image: traefik:2.3 # an old but reliable version
+    restart: unless-stopped
+    ports:
+      - "${TRAEFIK_HTTP_PORT:-80}:80"
+      - "${TRAEFIK_HTTPS_PORT:-443}:443"
+      - "${TRAEFIK_DASHBOARD_PORT:-8080}:8080"
+    volumes:
+      - ${TRAEFIK_CONFIG_FILE:-./traefik.yaml}:/etc/traefik/traefik.yaml
+      - ${TRAEFIK_CONFIG_DIR:-./traefik-config.d}:/etc/traefik/traefik-config.d
+      - ${TRAEFIK_CERTS_DIR:-./certs}:/etc/traefik/certs
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true

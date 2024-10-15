@@ -14,6 +14,12 @@ services:
     networks:
       - aspirepress-cdn
       - application
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ap-api.rule=Host(`api.aspirepress.local`)"
+      - "traefik.http.routers.ap-api-https.rule=Host(`api.aspirepress.local`)"
+      - "traefik.http.routers.ap-api-https.tls=true"
 
   redis:
     image: redis:latest
@@ -42,6 +48,8 @@ networks:
   aspirepress-cdn:
     name: aspirepress-cdn
     driver: bridge
+  traefik:
+    external: true
 
 volumes:
   postgresdata:

@@ -117,10 +117,11 @@ reset-testing-database: _empty-testing-database migrate-testing seed-testing
 run-pgsql: ## Runs Postgres on the command line using the .env file variables
 	docker compose run --rm webapp sh -c "export PGPASSWORD=${DB_PASS} && psql -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME}"
 
-network: ## Create application docker network
+network: ## Create docker networks for app and traefik proxy (if they don't exist already)
 	bin/create-external-network.sh wp-services
+	bin/create-external-network.sh traefik
 
-rm-network: ## Remove application docker network.
+rm-network: ## Remove application docker network. (traefik
 	-bin/remove-external-network.sh wp-services
 
 build-prod:
