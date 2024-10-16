@@ -131,7 +131,7 @@ rm-network: ## Remove application docker network. (traefik
 	-bin/remove-external-network.sh wp-services
 
 build-prod:
-	docker build --target prodphp -t aspirepress/aspirecloud-php -f ./docker/webapp/Dockerfile .
+	docker build --target prod -t aspirepress/aspirecloud-php -f ./docker/webapp-frankenphp/Dockerfile .
 
 traefik-up: network
 	docker compose -f docker/traefik/docker-compose.yml up -d
