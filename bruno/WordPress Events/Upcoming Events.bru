@@ -1,0 +1,27 @@
+meta {
+  name: Upcoming Events
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://{{API_URL}}/events/:api_version?country=CA
+  body: none
+  auth: none
+}
+
+params:query {
+  country: CA
+  ~number: 3
+  ~location: Seattle
+  ~locale: de_DE
+  ~timezone: Europe/Berlin
+  ~location: Dresden
+  ~latitude: 51.051
+  ~longitude: 13.738
+  ~ip: 136.0.16.1
+}
+
+params:path {
+  api_version: 1.0
+}

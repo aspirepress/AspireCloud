@@ -1,0 +1,30 @@
+meta {
+  name: Themes Update Check
+  type: http
+  seq: 1
+}
+
+post {
+  url: https://{{API_URL}}/themes/update-check/:api_version/
+  body: formUrlEncoded
+  auth: none
+}
+
+params:path {
+  api_version: 1.1
+}
+
+headers {
+  Host: api.wordpress.org
+  User-Agent: WordPress/6.2.2; http://172.18.0.5/
+  Accept: */*
+  Accept-Encoding: deflate, gzip
+  Connection: Keep-Alive
+  Content-Type: application/x-www-form-urlencoded
+}
+
+body:form-urlencoded {
+  themes: {"active":"twentytwentythree","themes":{"Divi":{"Name":"Divi","Title":"Divi","Version":"4.4.8","Author":"Elegant+Themes","Author+URI":"http:\/\/www.elegantthemes.com","UpdateURI":"","Template":"Divi","Stylesheet":"Divi"},"diviecommerce":{"Name":"Divi+Ecommerce","Title":"Divi+Ecommerce","Version":"1.2.3","Author":"Divi+Space","Author+URI":"https:\/\/divi.space","UpdateURI":"","Template":"Divi","Stylesheet":"diviecommerce"},"twentynineteen":{"Name":"Twenty+Nineteen","Title":"Twenty+Nineteen","Version":"1.7","Author":"the+WordPress+team","Author+URI":"https:\/\/wordpress.org\/","UpdateURI":"","Template":"twentynineteen","Stylesheet":"twentynineteen"},"twentyseventeen":{"Name":"Twenty+Seventeen","Title":"Twenty+Seventeen","Version":"2.4","Author":"the+WordPress+team","Author+URI":"https:\/\/wordpress.org\/","UpdateURI":"","Template":"twentyseventeen","Stylesheet":"twentyseventeen"},"twentytwenty":{"Name":"Twenty+Twenty","Title":"Twenty+Twenty","Version":"1.5","Author":"the+WordPress+team","Author+URI":"https:\/\/wordpress.org\/","UpdateURI":"","Template":"twentytwenty","Stylesheet":"twentytwenty"},"twentytwentyone":{"Name":"Twenty+Twenty-One","Title":"Twenty+Twenty-One","Version":"2.3","Author":"the+WordPress+team","Author+URI":"https:\/\/wordpress.org\/","UpdateURI":"","Template":"twentytwentyone","Stylesheet":"twentytwentyone"},"twentytwentythree":{"Name":"Twenty+Twenty-Three","Title":"Twenty+Twenty-Three","Version":"1.1","Author":"the+WordPress+team","Author+URI":"https:\/\/wordpress.org","UpdateURI":"","Template":"twentytwentythree","Stylesheet":"twentytwentythree"},"twentytwentytwo":{"Name":"Twenty+Twenty-Two","Title":"Twenty+Twenty-Two","Version":"1.4","Author":"the+WordPress+team","Author+URI":"https:\/\/wordpress.org\/","UpdateURI":"","Template":"twentytwentytwo","Stylesheet":"twentytwentytwo"}}}
+  translations: []
+  locale: []
+}

@@ -1,0 +1,15 @@
+meta {
+  name: Browse Happy
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://{{API_URL}}/core/browse-happy/:api_version/
+  body: none
+  auth: none
+}
+
+params:path {
+  api_version: 1.1
+}

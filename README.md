@@ -7,7 +7,6 @@ This project is designed to function as a CDN/API endpoint system for distributi
 ### Quick Start
 
 ```
-git submodule update --init --recursive
 cp .env.dist .env
 make init
 ```

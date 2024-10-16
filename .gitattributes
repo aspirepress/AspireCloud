@@ -1,0 +1,3 @@
+# Force LF only on files where CRLF is deadly; git defaults are fine for the rest.
+*.bash text=auto eol=lf
+*.sh text=auto eol=lf

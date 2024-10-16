@@ -1,0 +1,19 @@
+meta {
+  name: Plugin Checksums
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://{{DOWNLOADS_URL}}/plugin-checksums/
+  body: none
+  auth: none
+}
+
+headers {
+  Host: api.wordpress.org
+  User-Agent: WordPress/6.2.2; http://172.18.0.5
+  Accept: */*
+  Accept-Encoding: deflate, gzip
+  Connection: Keep-Alive
+}

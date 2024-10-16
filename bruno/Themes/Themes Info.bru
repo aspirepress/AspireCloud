@@ -1,0 +1,51 @@
+meta {
+  name: Themes Info
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://{{API_URL}}/themes/info/:api_version/?action=query_themes | theme_information | hot_tags | feature_list&request[per_page]=100&request[fields][reviews_url]=1&request[slug]=adonay&browse=popular | featured |  updated | new&request[author]=x&request[page]=1
+  body: none
+  auth: none
+}
+
+params:query {
+  action: query_themes | theme_information | hot_tags | feature_list
+  request[per_page]: 100
+  request[fields][reviews_url]: 1
+  request[slug]: adonay
+  browse: popular | featured |  updated | new
+  request[author]: x
+  request[page]: 1
+  ~request[tag][0]: education
+  ~request[tag][1]: accessibility-ready
+  ~request[tag][2]: four-columns
+  ~request[locale]: en_US
+  ~request[wp_version]: 6.2
+  ~request[search]: 
+  ~request[fields ]: description: false
+  ~number: 
+}
+
+params:path {
+  api_version: 1.2
+}
+
+headers {
+  Host: api.wordpress.org
+  User-Agent: WordPress/6.2.2; http://172.18.0.5/
+  Accept: */*
+  Accept-Encoding: deflate, gzip
+  Connection: Keep-Alive
+}
+
+docs {
+  Note: You can find information about arguments and examples in the following blog articles:
+  
+  [v1.2](https://wplake.org/blog/wordpress-org-api/) 
+  
+  [v1.0](http://wp.tutsplus.com/tutorials/plugins/communicating-with-the-wordpress-org-plugin-api/)
+  
+  The source-code behind this API is [available](https://meta.trac.wordpress.org/browser/sites/trunk/wordpress.org/public_html/wp-content/plugins/theme-directory/class-themes-api.php).
+}

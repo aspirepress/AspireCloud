@@ -1,0 +1,19 @@
+meta {
+  name: Plugin Stats
+  type: http
+  seq: 5
+}
+
+get {
+  url: https://{{API_URL}}/stats/plugin/1.0/:slug
+  body: none
+  auth: none
+}
+
+params:path {
+  slug: newpath-wildapricot-press
+}
+
+docs {
+  Populates the [WP Statistics](https://wordpress.org/about/stats/) web page
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Documentation
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://{{API_URL}}/core/handbook/:api_version/?function=wp_options_meta&version=6.0&redirect=false
+  body: none
+  auth: none
+}
+
+params:query {
+  function: wp_options_meta
+  version: 6.0
+  redirect: false
+}
+
+params:path {
+  api_version: 1.0
+}

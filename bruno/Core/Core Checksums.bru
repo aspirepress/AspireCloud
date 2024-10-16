@@ -1,0 +1,28 @@
+meta {
+  name: Core Checksums
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://{{API_URL}}/core/checksums/:api_version/?version=6.0&locale=en_US
+  body: none
+  auth: none
+}
+
+params:query {
+  version: 6.0
+  locale: en_US
+}
+
+params:path {
+  api_version: 1.0
+}
+
+headers {
+  Host: api.wordpress.org
+  User-Agent: WordPress/6.2.2; http://172.18.0.5
+  Accept: */*
+  Accept-Encoding: deflate, gzip
+  Connection: Keep-Alive
+}
