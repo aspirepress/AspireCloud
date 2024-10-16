@@ -24,6 +24,24 @@ Next configure WordPress to use your local version of AspireCloud, and you're go
 7. Refresh the page. It should stop at the first line of execution. If not, repeat the steps and use `xdebug_info()` to verify XDebug’s activity.
 8. Once debugging works, remove the "Break at first line..." setting from Step #1 to allow the program to progress until it hits breakpoints.
 
+## Using https://api.aspirepress.local instead of localhost
+
+The local dev instance can be reached this way by enabling a [traefik](https://hub.docker.com/_/traefik) proxy server:
+
+    make traefik-up
+
+Next, add an entry to your `/etc/hosts` file (`C:\Windows\System32\drivers\etc\hosts` on Windows).  
+
+    127.0.0.1 api.aspirepress.local
+    ::1       api.aspirepress.local
+
+### Note about SSL/TLS (https:// urls)
+
+Becase the proxy generates self-signed certs, you will get security warnings the first time you access the time your container after it is rebuilt.
+Any other access will also need to disable certificate validation.   
+
+Also note that plain old http://api.aspirepress.local always works. 
+
 ## Notes
 
 AspireCloud operates as an API and a pseudo pull-through cache against WordPress.org. This means that if AspireCloud provides the requested endpoint, it attempts to deliver the resource; otherwise, it passes the request through to WordPress.org and returns their response to the end user.

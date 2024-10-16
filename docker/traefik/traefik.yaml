@@ -1,0 +1,25 @@
+api:
+  dashboard: true
+  insecure: true   # expose API with no auth; harmless for local dev
+
+accessLog: {}
+
+log:
+  level: "INFO"
+  # level: "DEBUG"
+
+providers:
+  docker:
+    network: traefik
+    exposedByDefault: false
+
+  file:
+    directory: "/etc/traefik/traefik-config.d"
+    watch: true
+
+entrypoints:
+  web:
+    address: ":80"
+
+  web-secure:
+    address: ":443"

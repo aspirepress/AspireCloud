@@ -27,7 +27,7 @@ FROM basephp AS devphp
 RUN pecl install xdebug-3.3.0 \
 && docker-php-ext-enable xdebug
 
-COPY ./docker/webapp/php.ini /usr/local/etc/php/php.ini
+COPY ./docker/webapp-fpm/php.ini /usr/local/etc/php/php.ini
 
 FROM basephp AS prodphp
 
