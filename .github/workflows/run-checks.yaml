@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build container
-        run: docker build --target devphp -t aspirepress/aspirecloud-php -f ./docker/webapp/Dockerfile .
+        run: docker build --target dev -t aspirepress/aspirecloud-php -f ./docker/webapp-frankenphp/Dockerfile .
 
       - name: Install Composer dependencies
         run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-php sh -c "composer install"
