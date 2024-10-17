@@ -14,8 +14,9 @@ WORKDIR /var/www/html
 ################
 FROM base AS dev
 
-# Xdebug exists, but is explicitly disabled for cli in docker-compose.yml.  Use docker-compose.override.yml to enable.
+# Xdebug exists, but is explicitly disabled for cli.  Use docker-compose.override.yml to enable.
 RUN install-php-extensions xdebug
+RUN sed -i 's/^/#/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 ################
 # FROM base AS prod
