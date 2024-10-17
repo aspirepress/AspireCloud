@@ -22,5 +22,5 @@ FROM base AS prod
 
 COPY . /var/www/html
 
-RUN composer install -n --no-dev -q
+RUN composer install -n -q
 
