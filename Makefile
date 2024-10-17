@@ -17,11 +17,7 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
-ifeq ($(AP_COMPOSE_STACK),frankenphp)
-	COMPOSE_FILE := docker-compose.frankenphp.yml
-else
-	COMPOSE_FILE := docker-compose.yml
-endif
+COMPOSE_FILE := docker-compose.yml
 
 list:
 	@grep -E '^[a-zA-Z%_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -131,7 +127,7 @@ rm-network: ## Remove application docker network. (traefik
 	-bin/remove-external-network.sh wp-services
 
 build-prod:
-	docker build --target prod -t aspirepress/aspirecloud-php -f ./docker/webapp-frankenphp/Dockerfile .
+	docker build --target prod -t aspirepress/aspirecloud-php -f ./docker/webapp/Dockerfile .
 
 traefik-up: network
 	docker compose -f docker/traefik/docker-compose.yml up -d
