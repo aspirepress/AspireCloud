@@ -3,6 +3,6 @@
 cd $(dirname $0)/..
 base=$(pwd)
 
-CLI_SERVICE=${CLI_SERVICE:-cli}
+svc=${CLI_SERVICE:-cli}
 
-exec docker compose run --rm $CLI_SERVICE "$@"
+exec docker compose run --rm $svc "$@"
