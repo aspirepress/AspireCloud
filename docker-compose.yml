@@ -42,6 +42,22 @@ services:
       - aspirepress-cdn
       - application
 
+  cli:
+    build:
+      context: .
+      dockerfile: docker/cli/Dockerfile
+      target: dev
+    volumes:
+      - .:/var/www/html
+    env_file:
+      - .env.dist
+      - .env
+    networks:
+      aspirepress-cdn: ~
+      application:
+        aliases:
+          - 'cdn.aspirepress.local'
+
 networks:
   aspirepress-cdn: ~
   application:
