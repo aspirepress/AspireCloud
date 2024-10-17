@@ -28,6 +28,10 @@ class CatchAllHandler implements RequestHandlerInterface
         $path        = $request->getUri()->getPath();
         $queryParams = $request->getQueryParams();
 
+        if ($path === '/') {
+            return new EmptyResponse(200);
+        }
+
         try {
             $guzzle   = new Client(['base_uri' => 'https://api.wordpress.org']);
             $response = $guzzle->request(
