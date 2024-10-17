@@ -1,14 +1,16 @@
 services:
-  nginx:
+  webapp:
     build:
       context: .
-      dockerfile: ./docker/nginx/Dockerfile
+      dockerfile: docker/webapp/Dockerfile
+      target: dev
     ports:
       - ${LOCAL_HTTP_PORT:-8099}:80
-      - ${LOCAL_HTTPS_PORT:-8100}:443
     volumes:
       - .:/var/www/html
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    env_file:
+      - .env.dist
+      - .env
     networks:
       traefik: ~
       aspirepress-cdn: ~
@@ -20,20 +22,6 @@ services:
       - "traefik.http.routers.ap-api.rule=Host(`api.aspirepress.local`)"
       - "traefik.http.routers.ap-api-https.rule=Host(`api.aspirepress.local`)"
       - "traefik.http.routers.ap-api-https.tls=true"
-
-  webapp:
-    build:
-      context: .
-      dockerfile: docker/webapp-fpm/Dockerfile
-      target: devphp
-    volumes:
-      - .:/var/www/html
-    env_file:
-      - .env.dist
-      - .env
-    networks:
-      - aspirepress-cdn
-      - application
 
   redis:
     image: redis:latest
@@ -47,12 +35,28 @@ services:
       - PGDATA=/opt/pgdata
       - POSTGRES_DB=aspirepress_cdn
     ports:
-      - ${LOCAL_POSTGRES_PORT:-5432}:5432
+      - "${LOCAL_POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgresdata:/opt/pgdata
     networks:
       - aspirepress-cdn
       - application
+
+  cli:
+    build:
+      context: .
+      dockerfile: docker/cli/Dockerfile
+      target: dev
+    volumes:
+      - .:/var/www/html
+    env_file:
+      - .env.dist
+      - .env
+    networks:
+      aspirepress-cdn: ~
+      application:
+        aliases:
+          - 'cdn.aspirepress.local'
 
 networks:
   aspirepress-cdn: ~
