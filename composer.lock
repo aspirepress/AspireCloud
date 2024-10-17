@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/aspirepress/aspirecloud-migrations.git",
-                "reference": "b7834e9a8df13d373fcd3370fb5c60961039e818"
+                "reference": "34fcffe374aa1617ed885fff7daa5f412668849b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aspirepress/aspirecloud-migrations/zipball/b7834e9a8df13d373fcd3370fb5c60961039e818",
-                "reference": "b7834e9a8df13d373fcd3370fb5c60961039e818",
+                "url": "https://api.github.com/repos/aspirepress/aspirecloud-migrations/zipball/34fcffe374aa1617ed885fff7daa5f412668849b",
+                "reference": "34fcffe374aa1617ed885fff7daa5f412668849b",
                 "shasum": ""
             },
             "require": {
@@ -38,7 +38,7 @@
                 "source": "https://github.com/aspirepress/aspirecloud-migrations/tree/main",
                 "issues": "https://github.com/aspirepress/aspirecloud-migrations/issues"
             },
-            "time": "2024-10-17T10:22:24+00:00"
+            "time": "2024-10-17T10:35:14+00:00"
         },
         {
             "name": "aura/sql",
