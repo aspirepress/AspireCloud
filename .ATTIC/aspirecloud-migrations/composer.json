@@ -1,0 +1,14 @@
+{
+    "name": "aspirepress/aspirecloud-migrations",
+    "description": "A set of migrations to run for AspireCloud",
+    "type": "library",
+    "require": {
+        "robmorgan/phinx": "^0.16.5"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sarah Savage"
+        }
+    ]
+}
