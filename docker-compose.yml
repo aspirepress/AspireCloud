@@ -8,9 +8,6 @@ services:
       - ${LOCAL_HTTP_PORT:-8099}:80
     volumes:
       - .:/var/www/html
-    env_file:
-      - .env.dist
-      - .env
     networks:
       traefik: ~
       aspirepress-cdn: ~
@@ -33,7 +30,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=password
       - PGDATA=/opt/pgdata
-      - POSTGRES_DB=aspirepress_cdn
+      - POSTGRES_DB=aspirecloud
     ports:
       - "${LOCAL_POSTGRES_PORT:-5432}:5432"
     volumes:
@@ -49,9 +46,6 @@ services:
       target: dev
     volumes:
       - .:/var/www/html
-    env_file:
-      - .env.dist
-      - .env
     networks:
       aspirepress-cdn: ~
       application:
