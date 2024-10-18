@@ -12,12 +12,12 @@
     ],
     "require": {
         "php": "^8.2",
-        "aspirepress/aspirecloud-migrations": "dev-main",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "robmorgan/phinx": "^0.16.5"
     },
     "require-dev": {
+        "aspirepress/aspirecloud-migrations": "dev-main",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.1",
         "laravel/pint": "^1.13",

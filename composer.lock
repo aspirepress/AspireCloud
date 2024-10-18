@@ -4,42 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ffe0e9a89ba4d3221d48c06e04051cea",
+    "content-hash": "2628af42db1f27743cfffbc1f82a4a46",
     "packages": [
-        {
-            "name": "aspirepress/aspirecloud-migrations",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/aspirepress/aspirecloud-migrations.git",
-                "reference": "34fcffe374aa1617ed885fff7daa5f412668849b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/aspirepress/aspirecloud-migrations/zipball/34fcffe374aa1617ed885fff7daa5f412668849b",
-                "reference": "34fcffe374aa1617ed885fff7daa5f412668849b",
-                "shasum": ""
-            },
-            "require": {
-                "robmorgan/phinx": "^0.16.5"
-            },
-            "default-branch": true,
-            "type": "library",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Sarah Savage"
-                }
-            ],
-            "description": "A set of migrations to run for AspireCloud",
-            "support": {
-                "source": "https://github.com/aspirepress/aspirecloud-migrations/tree/main",
-                "issues": "https://github.com/aspirepress/aspirecloud-migrations/issues"
-            },
-            "time": "2024-10-17T10:35:14+00:00"
-        },
         {
             "name": "brick/math",
             "version": "0.12.1",
@@ -6261,6 +6227,40 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "aspirepress/aspirecloud-migrations",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aspirepress/aspirecloud-migrations.git",
+                "reference": "34fcffe374aa1617ed885fff7daa5f412668849b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aspirepress/aspirecloud-migrations/zipball/34fcffe374aa1617ed885fff7daa5f412668849b",
+                "reference": "34fcffe374aa1617ed885fff7daa5f412668849b",
+                "shasum": ""
+            },
+            "require": {
+                "robmorgan/phinx": "^0.16.5"
+            },
+            "default-branch": true,
+            "type": "library",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sarah Savage"
+                }
+            ],
+            "description": "A set of migrations to run for AspireCloud",
+            "support": {
+                "source": "https://github.com/aspirepress/aspirecloud-migrations/tree/main",
+                "issues": "https://github.com/aspirepress/aspirecloud-migrations/issues"
+            },
+            "time": "2024-10-17T10:35:14+00:00"
+        },
         {
             "name": "brianium/paratest",
             "version": "v7.6.0",
