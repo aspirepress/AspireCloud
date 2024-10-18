@@ -58,6 +58,16 @@ services:
         aliases:
           - 'cdn.aspirepress.local'
 
+  mailhog:
+    restart: on-failure
+    image: mailhog/mailhog
+    entrypoint: [ "/bin/sh", "-c", "MailHog >/dev/null 2>&1" ] # mailhog's logging is spammy and useless
+    ports:
+      - "${LOCAL_MAILHOG_UI_PORT:-8525}:8025"
+    networks:
+      - aspirepress-cdn
+      - application
+
 networks:
   aspirepress-cdn: ~
   application:
