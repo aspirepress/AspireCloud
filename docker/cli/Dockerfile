@@ -21,4 +21,3 @@ RUN sed -i 's/^/#/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 ################
 # FROM base AS prod
 # The cli container is strictly for dev at this time.
-

@@ -13,33 +13,33 @@ services:
       - .env
     networks:
       traefik: ~
-      aspirecloud: ~
+      aspirepress-cdn: ~
       application:
         aliases:
-          - 'cdn.aspirecloud.local'
+          - 'cdn.aspirepress.local'
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ap-api.rule=Host(`api.aspirecloud.local`)"
-      - "traefik.http.routers.ap-api-https.rule=Host(`api.aspirecloud.local`)"
+      - "traefik.http.routers.ap-api.rule=Host(`api.aspirepress.local`)"
+      - "traefik.http.routers.ap-api-https.rule=Host(`api.aspirepress.local`)"
       - "traefik.http.routers.ap-api-https.tls=true"
 
   redis:
     image: redis:latest
     networks:
-      - aspirecloud
+      - aspirepress-cdn
 
   postgres:
     image: postgres:latest
     environment:
       - POSTGRES_PASSWORD=password
       - PGDATA=/opt/pgdata
-      - POSTGRES_DB=aspirecloud
+      - POSTGRES_DB=aspirepress_cdn
     ports:
       - "${LOCAL_POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgresdata:/opt/pgdata
     networks:
-      - aspirecloud
+      - aspirepress-cdn
       - application
 
   cli:
@@ -53,11 +53,13 @@ services:
       - .env.dist
       - .env
     networks:
-      - aspirecloud
-      - application
+      aspirepress-cdn: ~
+      application:
+        aliases:
+          - 'cdn.aspirepress.local'
 
 networks:
-  aspirecloud: ~
+  aspirepress-cdn: ~
   application:
     driver: bridge
     name: wp-services

@@ -37,24 +37,24 @@ down: ## Stops the Docker containers
 	docker compose down
 
 unit: ## Run unit tests
-	docker compose run --rm cli bash -c "vendor/bin/phpunit --testsuite=unit ${OPTS}"
+	bin/dcrun vendor/bin/phpunit --testsuite=unit ${OPTS}
 
 functional: ## Run functional tests
-	docker compose run --rm cli bash -c "vendor/bin/phpunit --testsuite=functional ${OPTS}"
+	bin/dcrun vendor/bin/phpunit --testsuite=functional ${OPTS}
 
 test: unit functional acceptance ## Run all tests
 
 acceptance: ## Run acceptance tests
-	docker compose run --rm cli bash -c "vendor/bin/behat -vvv ${OPTS}"
+	bin/dcrun vendor/bin/behat -vvv ${OPTS}
 
 quality: ## Run all quality checks
-	docker compose run --rm cli bash -c "vendor/bin/phpstan ${OPTS}"
+	bin/dcrun vendor/bin/phpstan ${OPTS}
 
 quality-baseline: ## Run all static analysis checks with baseline
-	docker compose run --rm cli vendor/bin/phpstan analyse -b baseline.neon $(PHPSTAN_XDEBUG) src tests
+	bin/dcrun vendor/bin/phpstan analyse -b baseline.neon $(PHPSTAN_XDEBUG) src tests
 
 install-composer: ## Install composer dependencies
-	docker compose run --rm cli bash -c "composer install"
+	bin/dcrun composer install
 
 logs-%: ## View logs (follow mode) for the container where % is a service name (webapp, postgres, node, nginx, smtp, rabbitmq)
 	docker compose logs -f $*
@@ -62,63 +62,59 @@ logs-%: ## View logs (follow mode) for the container where % is a service name (
 sh-webapp: # webapp is alpine, so we need to use sh, not sh
 	docker compose exec webapp sh
 
-sh-cli: # webapp is alpine, so we need to use sh, not sh
-	docker compose run --rm cli sh
-
 sh-%: ## Execute shell for the container where % is a service name (webapp, postgres, node, nginx, smtp, rabbitmq)
 	docker compose exec $* sh || docker compose run --rm $* sh
 
 clear-cache: ## Clear cache
-	docker compose run --rm cli rm -f data/cache/config-cache.php
-	rm -rf public/build/
+	rm -f data/cache/config-cache.php public/build
 
 check: cs-fix quality test ## Check all quality and test elements
 
 cs: ## Run code style checks
-	docker compose run --rm cli bash -c "vendor/bin/phpcs ${OPTS}"
+	bin/dcrun vendor/bin/phpcs ${OPTS}
 
 cs-fix: ## Fix code style issues
-	docker compose run --rm cli bash -c "vendor/bin/phpcbf ${OPTS} && vendor/bin/phpcs ${OPTS}"
+	bin/dcrun vendor/bin/phpcbf ${OPTS} && vendor/bin/phpcs ${OPTS}
 
 create-migration: ## Create a new database migration
-	docker compose run --rm cli vendor/bin/phinx create ${OPTS} -c vendor/aspirepress/aspirecloud-migrations/phinx.php
+	bin/dcrun vendor/bin/phinx create ${OPTS} -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 create-seed: ##	Create a new database seed
-	docker compose run --rm cli vendor/bin/phinx seed:create ${OPTS} -c vendor/aspirepress/aspirecloud-migrations/phinx.php
+	bin/dcrun vendor/bin/phinx seed:create ${OPTS} -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 migrate: ## Run database migrations
-	docker compose run --rm cli vendor/bin/phinx migrate -c vendor/aspirepress/aspirecloud-migrations/phinx.php
+	bin/dcrun vendor/bin/phinx migrate -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 migration-rollback: ## Rollback database migrations
-	docker compose run --rm cli vendor/bin/phinx rollback -e development -c vendor/aspirepress/aspirecloud-migrations/phinx.php
+	bin/dcrun vendor/bin/phinx rollback -e development -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 seed: ## Run database seeds
-	docker compose run --rm cli vendor/bin/phinx seed:run -c vendor/aspirepress/aspirecloud-migrations/phinx.php
+	bin/dcrun vendor/bin/phinx seed:run -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 devmode-enable: ## Enable the PHP development mode
-	docker compose run --rm cli composer development-enable
+	bin/dcrun composer development-enable
 
 devmode-disable: ## Disable the PHP development mode
-	docker compose run --rm cli composer development-disable
+	bin/dcrun composer development-disable
 
 _empty-database: # internal target to empty database
-	docker compose run --rm cli vendor/bin/phinx migrate -c vendor/aspirepress/aspirecloud-migrations/phinx.php -t 0
+	bin/dcrun vendor/bin/phinx migrate -c vendor/aspirepress/aspirecloud-migrations/phinx.php -t 0
 
 migrate-testing: ## Run database migrations
-	docker compose run --rm cli vendor/bin/phinx migrate -e testing -c vendor/aspirepress/aspirecloud-migrations/phinx.php
+	bin/dcrun vendor/bin/phinx migrate -e testing -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 seed-testing: ## Run database seeds
-	docker compose run --rm cli vendor/bin/phinx seed:run -e testing -c vendor/aspirepress/aspirecloud-migrations/phinx.php
+	bin/dcrun vendor/bin/phinx seed:run -e testing -c vendor/aspirepress/aspirecloud-migrations/phinx.php
 
 _empty-testing-database: # internal target to empty database
-	docker compose run --rm cli vendor/bin/phinx migrate -e testing -c vendor/aspirepress/aspirecloud-migrations/phinx.php -t 0
+	bin/dcrun vendor/bin/phinx migrate -e testing -c vendor/aspirepress/aspirecloud-migrations/phinx.php -t 0
 
 reset-database: _empty-database migrate seed ## Clean database, run migrations and seeds
 
 reset-testing-database: _empty-testing-database migrate-testing seed-testing
 
 run-pgsql: ## Runs Postgres on the command line using the .env file variables
-	docker compose run --rm cli sh -c "export PGPASSWORD=${DB_PASS} && psql -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME}"
+	bin/dcrun sh -c "export PGPASSWORD=${DB_PASS} && psql -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME}"
 
 network: ## Create docker networks for app and traefik proxy (if they don't exist already)
 	bin/create-external-network.sh wp-services
