@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessWpOrgResponse;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -45,7 +46,7 @@ class CatchAllController extends Controller
 
         // Log request and response in DB
         $this->saveData($request, $response, $content);
-
+        ProcessWpOrgResponse::dispatchSync($content);
         // Forward response through
         return response($content, $statusCode)->header('Content-Type', $contentType);
     }
