@@ -20,7 +20,7 @@ endif
 list:
 	@grep -E '^[a-zA-Z%_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | perl -ne '/^(?:.*?:)?(.*?):.*##(.*$$)/ and printf "\033[36m%-30s\033[0m %s\n", $$1, $$2'
 
-init: check-env down clean build network up install-composer reset-database ## Initial configuration tasks
+init: check-env down clean build network up install-composer reset-database generate-key ## Initial configuration tasks
 
 check-env:
 	@[ -f .env ] || { echo "No .env file found.  Please run: cp .env.sample .env"; exit 1; }
@@ -99,6 +99,9 @@ migrate-testing: ## Run database migrations
 
 seed-testing: ## Run database seeds
 	bin/dcrun php artisan db:seed --database=test
+
+generate-key: ## Generate APP_KEY environment var
+	bin/dcrun php artisan key:generate
 
 drop-database:
 	bin/dcrun sh -c "export PGPASSWORD=${DB_ROOT_PASSWORD} && psql -U ${DB_ROOT_USERNAME} -h ${DB_HOST} -c 'drop database if exists ${DB_DATABASE}'"
