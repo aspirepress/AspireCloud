@@ -51,7 +51,7 @@ acceptance: ## Run acceptance tests
 	bin/dcrun vendor/bin/behat -vvv ${OPTS}
 
 quality: ## Run all quality checks
-	bin/dcrun vendor/bin/phpstan ${OPTS}
+	bin/dcrun vendor/bin/phpstan --memory-limit=1G analyse ${OPTS}
 
 quality-baseline: ## Run all static analysis checks with baseline
 	bin/dcrun vendor/bin/phpstan analyse -b baseline.neon $(PHPSTAN_XDEBUG) src tests
