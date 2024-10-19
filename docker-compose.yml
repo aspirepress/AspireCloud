@@ -19,8 +19,8 @@ services:
           - 'cdn.aspirepress.local'
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ap-api.rule=Host(`api.aspirepress.local`)"
-      - "traefik.http.routers.ap-api-https.rule=Host(`api.aspirepress.local`)"
+      - "traefik.http.routers.ap-api.rule=Host(`api.aspirecloud.local`)"
+      - "traefik.http.routers.ap-api-https.rule=Host(`api.aspirecloud.local`)"
       - "traefik.http.routers.ap-api-https.tls=true"
 
   redis:
