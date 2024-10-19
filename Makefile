@@ -40,10 +40,10 @@ down: ## Stops the Docker containers
 	docker compose down
 
 unit: ## Run unit tests
-	bin/dcrun vendor/bin/pest --testsuite=unit ${OPTS}
+	bin/dcrun vendor/bin/pest --testsuite=Unit ${OPTS}
 
 functional: ## Run functional tests
-	bin/dcrun vendor/bin/pest --testsuite=functional ${OPTS}
+	bin/dcrun vendor/bin/pest --testsuite=Feature ${OPTS}
 
 test: unit functional ## Run all tests
 
