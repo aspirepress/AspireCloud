@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Illuminate\Http\Response;
-use Illuminate\Support\Carbon;
 
 class CatchAllController extends Controller
 {
@@ -21,20 +21,21 @@ class CatchAllController extends Controller
 
         // If path is root, return a 200 OK empty response
         if ($path === '/') {
-            return response()->noContent(200); 
+            return response()->noContent(200);
         }
 
         try {
             $response = Http::withHeaders([
                 'User-Agent' => $ua,
-                'Accept' => '*/*'
-            ])->asForm()->send($request->getMethod(), 'https://api.wordpress.org/' . $path, [
+                'Accept' => '*/*',
+            ])->asForm()->send($request->getMethod(), 'https://api.wordpress.org/'.$path, [
                 'query' => $queryParams,
-                'form_params' => $requestData
+                'form_params' => $requestData,
             ]);
 
         } catch (RequestException $e) {
             $statusCode = $e->response ? $e->response->status() : 500;
+
             return response()->noContent($statusCode);
         }
 
@@ -53,7 +54,7 @@ class CatchAllController extends Controller
     private function saveData(Request $request, $response, string $content): void
     {
         DB::table('request_data')->insert([
-            'id' => Str::uuid()->toString(), 
+            'id' => Str::uuid()->toString(),
             'request_path' => $request->path(),
             'request_query_params' => json_encode($request->query()),
             'request_body' => json_encode($request->all()),
