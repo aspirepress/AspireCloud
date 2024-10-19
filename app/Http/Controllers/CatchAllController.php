@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response as ClientResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
@@ -12,7 +13,7 @@ use Illuminate\Support\Str;
 
 class CatchAllController extends Controller
 {
-    public function handle(Request $request)
+    public function handle(Request $request): Response
     {
         $requestData = $request->all();
         $ua = $request->header('User-Agent');
@@ -34,7 +35,7 @@ class CatchAllController extends Controller
             ]);
 
         } catch (RequestException $e) {
-            $statusCode = $e->response ? $e->response->status() : 500;
+            $statusCode = $e->response->status();
 
             return response()->noContent($statusCode);
         }
@@ -51,7 +52,7 @@ class CatchAllController extends Controller
         return response($content, $statusCode)->header('Content-Type', $contentType);
     }
 
-    private function saveData(Request $request, $response, string $content): void
+    private function saveData(Request $request, ClientResponse $response, string $content): void
     {
         DB::table('request_data')->insert([
             'id' => Str::uuid()->toString(),
