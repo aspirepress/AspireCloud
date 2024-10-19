@@ -4,12 +4,6 @@
     "description": "The skeleton application for the Laravel framework.",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/aspirepress/aspirecloud-migrations.git"
-        }
-    ],
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.9",
@@ -19,13 +13,10 @@
         "thecodingmachine/safe": "^2.5"
     },
     "require-dev": {
-        "aspirepress/aspirecloud-migrations": "dev-main",
         "fakerphp/faker": "^1.23",
         "friendsofphp/php-cs-fixer": "^3.64",
         "larastan/larastan": "^2.0",
         "laravel/pail": "^1.1",
-        "laravel/pint": "^1.18",
-        "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.1",
         "pestphp/pest": "^3.4",
