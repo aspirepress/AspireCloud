@@ -15,7 +15,8 @@
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "robmorgan/phinx": "^0.16.5",
-        "spatie/laravel-data": "^4.10"
+        "spatie/laravel-data": "^4.10",
+        "thecodingmachine/safe": "^2.5"
     },
     "require-dev": {
         "aspirepress/aspirecloud-migrations": "dev-main",
@@ -29,7 +30,8 @@
         "nunomaduro/collision": "^8.1",
         "pestphp/pest": "^3.4",
         "pestphp/pest-plugin-laravel": "^3.0",
-        "phpstan/phpstan": "^1.12"
+        "phpstan/phpstan": "^1.12",
+        "thecodingmachine/phpstan-safe-rule": "^1.2"
     },
     "autoload": {
         "psr-4": {

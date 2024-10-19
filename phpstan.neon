@@ -1,5 +1,6 @@
 includes:
     - vendor/larastan/larastan/extension.neon
+    - vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon
     - baseline.neon
 
 parameters:
