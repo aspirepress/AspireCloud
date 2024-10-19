@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class CatchAllController extends Controller
 {
-    public function handle(Request $request): Response
+    public function __invoke(Request $request): Response
     {
         $requestData = $request->all();
         $ua = $request->header('User-Agent');
