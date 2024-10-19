@@ -7,11 +7,12 @@ This project is designed to function as a CDN/API endpoint system for distributi
 ### Quick Start
 
 ```
-cp .env.dist .env
 make init
 ```
 
 Next configure WordPress to use your local version of AspireCloud, and you're good to go! 
+
+Note: you'll have to add `api.aspiredev.org` to your `/etc/hosts` file to point to `127.0.0.1`.
 
 ## XDebug Instructions for PHPStorm
 
@@ -24,7 +25,7 @@ Next configure WordPress to use your local version of AspireCloud, and you're go
 7. Refresh the page. It should stop at the first line of execution. If not, repeat the steps and use `xdebug_info()` to verify XDebug’s activity.
 8. Once debugging works, remove the "Break at first line..." setting from Step #1 to allow the program to progress until it hits breakpoints.
 
-## Using https://api.aspirepress.local instead of localhost
+## Using https://api.aspiredev.org instead of localhost
 
 The local dev instance can be reached this way by enabling a [traefik](https://hub.docker.com/_/traefik) proxy server:
 
@@ -32,15 +33,15 @@ The local dev instance can be reached this way by enabling a [traefik](https://h
 
 Next, add an entry to your `/etc/hosts` file (`C:\Windows\System32\drivers\etc\hosts` on Windows).  
 
-    127.0.0.1 api.aspirepress.local
-    ::1       api.aspirepress.local
+    127.0.0.1 api.aspiredev.org
+    ::1       api.aspiredev.org
 
 ### Note about SSL/TLS (https:// urls)
 
 Becase the proxy generates self-signed certs, you will get security warnings the first time you access the time your container after it is rebuilt.
 Any other access will also need to disable certificate validation.   
 
-Also note that plain old http://api.aspirepress.local always works. 
+Also note that plain old http://api.aspiredev.org always works. 
 
 ## Notes
 

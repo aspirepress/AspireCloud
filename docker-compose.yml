@@ -10,20 +10,20 @@ services:
       - .:/var/www/html
     networks:
       traefik: ~
-      aspirepress-cdn: ~
+      aspirecloud: ~
       application:
         aliases:
-          - 'cdn.aspirepress.local'
+          - 'api.aspiredev.org'
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ap-api.rule=Host(`api.aspirecloud.local`)"
-      - "traefik.http.routers.ap-api-https.rule=Host(`api.aspirecloud.local`)"
+      - "traefik.http.routers.ap-api.rule=Host(`api.aspiredev.org`)"
+      - "traefik.http.routers.ap-api-https.rule=Host(`api.aspiredev.org`)"
       - "traefik.http.routers.ap-api-https.tls=true"
 
   redis:
     image: redis:latest
     networks:
-      - aspirepress-cdn
+      - aspirecloud
 
   postgres:
     image: postgres:latest
@@ -36,7 +36,7 @@ services:
     volumes:
       - postgresdata:/opt/pgdata
     networks:
-      - aspirepress-cdn
+      - aspirecloud
       - application
 
   cli:
@@ -47,10 +47,8 @@ services:
     volumes:
       - .:/var/www/html
     networks:
-      aspirepress-cdn: ~
-      application:
-        aliases:
-          - 'cdn.aspirepress.local'
+      - aspirecloud
+      - application
 
   mailhog:
     restart: on-failure
@@ -59,11 +57,11 @@ services:
     ports:
       - "${LOCAL_MAILHOG_UI_PORT:-8525}:8025"
     networks:
-      - aspirepress-cdn
+      - aspirecloud
       - application
 
 networks:
-  aspirepress-cdn: ~
+  aspirecloud: ~
   application:
     driver: bridge
     name: wp-services
