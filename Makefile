@@ -23,7 +23,7 @@ list:
 init: check-env down clean build network up install-composer reset-database generate-key ## Initial configuration tasks
 
 check-env:
-	@[ -f .env ] || { cp .env.example .env && bin/dcrun ./artisan key:generate; }
+	@[ -f .env ] || { cp .env.example .env }
 
 build: ## Builds the Docker containers
 	docker compose build
