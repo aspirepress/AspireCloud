@@ -2,6 +2,7 @@
 
 // Note: api routes are not prefixed, i.e. all routes in here are from the root like web routes
 
+use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
 use App\Http\Controllers\CatchAllController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
@@ -10,8 +11,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('/')
     ->group(function (Router $r) {
-        $r->get('/secret-key/{version}', CatchAllController::class)->where(['version' => '1.[01]']);
-        $r->get('/secret-key/{version}/salt', CatchAllController::class)->where(['version' => '1.1']);
+        $r->get('/secret-key/{version}', [SecretKeyController::class, 'index'])->where(['version' => '1.[01]']);
+        $r->get('/secret-key/{version}/salt', [SecretKeyController::class, 'salt'])->where(['version' => '1.1']);
 
         $r->get('/stats/wordpress/{version}', CatchAllController::class)->where(['version' => '1.0']);
         $r->get('/stats/php/{version}', CatchAllController::class)->where(['version' => '1.0']);
