@@ -27,3 +27,6 @@ jobs:
         run: |
           vendor/bin/php-cs-fixer check
           vendor/bin/phpstan --memory-limit=1G analyse
+          php artisan test tests/Unit
+
+
