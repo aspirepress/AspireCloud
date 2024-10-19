@@ -15,6 +15,12 @@ jobs:
       - name: Install Composer dependencies
         run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-cli sh -c "composer install"
 
+      - name: Create .env file
+        run: cp .env.example .env
+
+      - name: Create App Key
+        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-cli sh -c "./artisan key:generate"
+
       - name: Run style checks
         run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-cli sh -c "./vendor/bin/pint --test"
 

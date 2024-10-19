@@ -23,7 +23,7 @@ list:
 init: check-env down clean build network up install-composer reset-database generate-key ## Initial configuration tasks
 
 check-env:
-	@[ -f .env ] || { echo "No .env file found.  Please run: cp .env.sample .env"; exit 1; }
+	@[ -f .env ] || { echo "No .env file found.  Please run: cp .env.example .env"; exit 1; }
 
 build: ## Builds the Docker containers
 	docker compose build
