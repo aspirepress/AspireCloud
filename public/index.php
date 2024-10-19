@@ -1,30 +1,17 @@
 <?php
 
-declare(strict_types=1);
+use Illuminate\Http\Request;
 
-// Delegate static file requests back to the PHP built-in webserver
-if (PHP_SAPI === 'cli-server' && $_SERVER['SCRIPT_FILENAME'] !== __FILE__) {
-    return false;
+define('LARAVEL_START', microtime(true));
+
+// Determine if the application is in maintenance mode...
+if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+    require $maintenance;
 }
 
+// Register the Composer autoloader...
+require __DIR__.'/../vendor/autoload.php';
 
-chdir(dirname(__DIR__ ));
-require 'vendor/autoload.php';
-/**
- * Self-called anonymous function that creates its own scope and keeps the global namespace clean.
- */
-(function () {
-    /** @var \Psr\Container\ContainerInterface $container */
-    $container = require 'config/container.php';
-
-    /** @var \Mezzio\Application $app */
-    $app = $container->get(\Mezzio\Application::class);
-    $factory = $container->get(\Mezzio\MiddlewareFactory::class);
-
-    // Execute programmatic/declarative middleware pipeline and routing
-    // configuration statements
-    (require 'config/pipeline.php')($app, $factory, $container);
-    (require 'config/routes.php')($app, $factory, $container);
-
-    $app->run();
-})();
+// Bootstrap Laravel and handle the request...
+(require_once __DIR__.'/../bootstrap/app.php')
+    ->handleRequest(Request::capture());

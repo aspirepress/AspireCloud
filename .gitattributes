@@ -1,3 +1,11 @@
-# Force LF only on files where CRLF is deadly; git defaults are fine for the rest.
-*.bash text=auto eol=lf
-*.sh text=auto eol=lf
+* text=auto eol=lf
+
+*.blade.php diff=html
+*.css diff=css
+*.html diff=html
+*.md diff=markdown
+*.php diff=php
+
+/.github export-ignore
+CHANGELOG.md export-ignore
+.styleci.yml export-ignore

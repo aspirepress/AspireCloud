@@ -1,9 +1,11 @@
 includes:
+    - vendor/larastan/larastan/extension.neon
     - baseline.neon
 
 parameters:
-    level: 6
+
     paths:
-        - src
-        - tests
-        - config
+        - app/
+
+    # Level 9 is the highest level
+    level: 6

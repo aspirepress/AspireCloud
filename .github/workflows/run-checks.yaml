@@ -10,16 +10,22 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build container
-        run: docker build --target dev -t aspirepress/aspirecloud-php -f ./docker/webapp/Dockerfile .
+        run: docker build --target dev -t aspirepress/aspirecloud-cli -f ./docker/webapp/Dockerfile .
 
       - name: Install Composer dependencies
-        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-php sh -c "composer install"
+        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-cli sh -c "composer install"
+
+      - name: Create .env file
+        run: cp .env.example .env
+
+      - name: Create App Key
+        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-cli sh -c "./artisan key:generate"
 
       - name: Run style checks
-        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-php sh -c "./vendor/bin/phpcs"
+        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-cli sh -c "./vendor/bin/pint --test"
 
       - name: Run quality check
-        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-php sh -c "./vendor/bin/phpstan --memory-limit=1G analyse"
+        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-cli sh -c "./vendor/bin/phpstan --memory-limit=1G analyse"
 
       - name: Run unit tests
-        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-php sh -c "./vendor/bin/phpunit --testsuite=unit"
+        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-cli sh -c "./vendor/bin/pest"

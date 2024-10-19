@@ -1,15 +1,9 @@
 {
-    "name": "aspirepress/aspirecloud",
-    "description": "AspireCloud is designed to act as an API server and passthrough for WP .org (where the endpoints are not implemented by us).",
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "composer/package-versions-deprecated": true,
-            "laminas/laminas-component-installer": true,
-            "ramsey/composer-repl": true
-        }
-    },
+    "name": "laravel/laravel",
+    "type": "project",
+    "description": "The skeleton application for the Laravel framework.",
+    "keywords": ["laravel", "framework"],
+    "license": "MIT",
     "repositories": [
         {
             "type": "vcs",
@@ -17,69 +11,71 @@
         }
     ],
     "require": {
-        "php": "^8.3",
-        "aura/sql": "^5.0",
-        "composer/package-versions-deprecated": "^1.10.99",
-        "guzzlehttp/guzzle": "^7.9",
-        "laminas/laminas-coding-standard": "^2.5",
-        "laminas/laminas-component-installer": "^3.2",
-        "laminas/laminas-config-aggregator": "^1.6",
-        "laminas/laminas-diactoros": "^2.7",
-        "laminas/laminas-servicemanager": "^3.4",
-        "laminas/laminas-stdlib": "^3.6",
-        "mezzio/mezzio": "^3.7",
-        "mezzio/mezzio-cors": "^1.12",
-        "mezzio/mezzio-fastroute": "^3.0.3",
-        "mezzio/mezzio-helpers": "^5.7",
-        "monolog/monolog": "^3.2",
-        "ramsey/composer-repl": "^1.4",
-        "ramsey/uuid": "^4.7",
-        "robmorgan/phinx": "^0.16.0",
-        "webmozart/assert": "^1.11",
-        "aspirepress/aspirecloud-migrations": "dev-main"
+        "php": "^8.2",
+        "laravel/framework": "^11.9",
+        "laravel/tinker": "^2.9",
+        "robmorgan/phinx": "^0.16.5"
     },
     "require-dev": {
-        "behat/behat": "^3.11",
-        "filp/whoops": "^2.7.1",
-        "laminas/laminas-development-mode": "^3.3.0",
-        "mezzio/mezzio-tooling": "^2.1",
-        "phpstan/phpstan": "^1.9",
-        "phpunit/phpunit": "^9.5.11",
-        "roave/behat-psr11extension": "^2.2",
-        "roave/security-advisories": "dev-master",
-        "slevomat/coding-standard": "^7.2"
+        "aspirepress/aspirecloud-migrations": "dev-main",
+        "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^2.0",
+        "laravel/pail": "^1.1",
+        "laravel/pint": "^1.18",
+        "laravel/sail": "^1.26",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.1",
+        "pestphp/pest": "^3.4",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "phpstan/phpstan": "^1.12"
     },
     "autoload": {
         "psr-4": {
-            "AspirePress\\AspireCloud\\": "src/"
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AspirePress\\AspireCloud\\Unit\\": "tests/unit/src",
-            "AspirePress\\AspireCloud\\Functional\\": "tests/functional/src",
-            "AspirePress\\AspireCloud\\Acceptance\\": "tests/acceptance/src",
-            "AspirePress\\AspireCloud\\Helpers\\" : "tests/helpers"
+            "Tests\\": "tests/"
         }
     },
     "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
         "post-create-project-cmd": [
-            "@development-enable"
+            "@php artisan key:generate --ansi",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+            "@php artisan migrate --graceful --ansi"
         ],
-        "development-disable": "laminas-development-mode disable",
-        "development-enable": "laminas-development-mode enable",
-        "development-status": "laminas-development-mode status",
-        "mezzio": "laminas --ansi",
-        "check": [
-            "@cs-check",
-            "@test"
-        ],
-        "clear-config-cache": "php bin/clear-config-cache.php",
-        "enable-codestandard": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run",
-        "cs-check": "phpcs",
-        "cs-fix": "phpcbf",
-        "serve": "php -S 0.0.0.0:8080 -t public/",
-        "test": "phpunit --colors=always",
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
-    }
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail\" \"npm run dev\" --names=server,queue,logs,vite"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }

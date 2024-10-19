@@ -18,9 +18,12 @@ ifneq (,$(wildcard ./.env))
 endif
 
 list:
-	@grep -E '^[a-zA-Z%_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z%_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | perl -ne '/^(?:.*?:)?(.*?):.*##(.*$$)/ and printf "\033[36m%-30s\033[0m %s\n", $$1, $$2'
 
-init: down clean build network up install-composer reset-database devmode-enable ## Initial configuration tasks
+init: check-env down clean build network up install-composer reset-database generate-key ## Initial configuration tasks
+
+check-env:
+	@[ -f .env ] || { cp .env.example .env && bin/dcrun ./artisan key:generate; }
 
 build: ## Builds the Docker containers
 	docker compose build
@@ -37,18 +40,18 @@ down: ## Stops the Docker containers
 	docker compose down
 
 unit: ## Run unit tests
-	bin/dcrun vendor/bin/phpunit --testsuite=unit ${OPTS}
+	bin/dcrun vendor/bin/pest --testsuite=unit ${OPTS}
 
 functional: ## Run functional tests
-	bin/dcrun vendor/bin/phpunit --testsuite=functional ${OPTS}
+	bin/dcrun vendor/bin/pest --testsuite=functional ${OPTS}
 
-test: unit functional acceptance ## Run all tests
+test: unit functional ## Run all tests
 
 acceptance: ## Run acceptance tests
 	bin/dcrun vendor/bin/behat -vvv ${OPTS}
 
 quality: ## Run all quality checks
-	bin/dcrun vendor/bin/phpstan ${OPTS}
+	bin/dcrun vendor/bin/phpstan --memory-limit=1G analyse ${OPTS}
 
 quality-baseline: ## Run all static analysis checks with baseline
 	bin/dcrun vendor/bin/phpstan analyse -b baseline.neon $(PHPSTAN_XDEBUG) src tests
@@ -66,55 +69,49 @@ sh-%: ## Execute shell for the container where % is a service name (webapp, post
 	docker compose exec $* sh || docker compose run --rm $* sh
 
 clear-cache: ## Clear cache
-	rm -f data/cache/config-cache.php public/build
+	bin/dcrun php artisan optimize:clear
 
-check: cs-fix quality test ## Check all quality and test elements
+check: cs quality test ## Check all quality and test elements
 
 cs: ## Run code style checks
-	bin/dcrun vendor/bin/phpcs ${OPTS}
-
-cs-fix: ## Fix code style issues
-	bin/dcrun vendor/bin/phpcbf ${OPTS} && vendor/bin/phpcs ${OPTS}
+	bin/dcrun vendor/bin/pint ${OPTS}
 
 create-migration: ## Create a new database migration
-	bin/dcrun vendor/bin/phinx create ${OPTS} -c vendor/aspirepress/aspirecloud-migrations/phinx.php
+	bin/dcrun php artisan make:migration
 
 create-seed: ##	Create a new database seed
-	bin/dcrun vendor/bin/phinx seed:create ${OPTS} -c vendor/aspirepress/aspirecloud-migrations/phinx.php
+	bin/dcrun php artisan make:seed
 
 migrate: ## Run database migrations
-	bin/dcrun vendor/bin/phinx migrate -c vendor/aspirepress/aspirecloud-migrations/phinx.php
+	bin/dcrun php artisan migrate --force --no-interaction
 
 migration-rollback: ## Rollback database migrations
-	bin/dcrun vendor/bin/phinx rollback -e development -c vendor/aspirepress/aspirecloud-migrations/phinx.php
+	bin/dcrun php artisan migrate --force --no-interaction
 
 seed: ## Run database seeds
-	bin/dcrun vendor/bin/phinx seed:run -c vendor/aspirepress/aspirecloud-migrations/phinx.php
-
-devmode-enable: ## Enable the PHP development mode
-	bin/dcrun composer development-enable
-
-devmode-disable: ## Disable the PHP development mode
-	bin/dcrun composer development-disable
-
-_empty-database: # internal target to empty database
-	bin/dcrun vendor/bin/phinx migrate -c vendor/aspirepress/aspirecloud-migrations/phinx.php -t 0
+	bin/dcrun php artisan db:seed
 
 migrate-testing: ## Run database migrations
-	bin/dcrun vendor/bin/phinx migrate -e testing -c vendor/aspirepress/aspirecloud-migrations/phinx.php
+	bin/dcrun php artisan migrate --database=test --force --no-interaction
 
 seed-testing: ## Run database seeds
-	bin/dcrun vendor/bin/phinx seed:run -e testing -c vendor/aspirepress/aspirecloud-migrations/phinx.php
+	bin/dcrun php artisan db:seed --database=test
 
-_empty-testing-database: # internal target to empty database
-	bin/dcrun vendor/bin/phinx migrate -e testing -c vendor/aspirepress/aspirecloud-migrations/phinx.php -t 0
+generate-key: ## Generate APP_KEY environment var
+	bin/dcrun php artisan key:generate
 
-reset-database: _empty-database migrate seed ## Clean database, run migrations and seeds
+drop-database:
+	bin/dcrun sh -c "export PGPASSWORD=${DB_ROOT_PASSWORD} && psql -U ${DB_ROOT_USERNAME} -h ${DB_HOST} -c 'drop database if exists ${DB_DATABASE}'"
 
-reset-testing-database: _empty-testing-database migrate-testing seed-testing
+create-database:
+	bin/dcrun sh -c "export PGPASSWORD=${DB_ROOT_PASSWORD} && psql -U ${DB_ROOT_USERNAME} -h ${DB_HOST} -c 'create database ${DB_DATABASE} owner ${DB_USERNAME}'"
 
-run-pgsql: ## Runs Postgres on the command line using the .env file variables
-	bin/dcrun sh -c "export PGPASSWORD=${DB_PASS} && psql -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME}"
+reset-database: drop-database create-database migrate seed ## run migrations and seeds
+
+reset-testing-database: migrate-testing seed-testing
+
+run-psql: ## Runs Postgres on the command line using the .env file variables
+	bin/dcrun sh -c "PGPASSWORD=${DB_PASSWORD} psql -U ${DB_USERNAME} -h ${DB_HOST} -p ${DB_PORT} -d ${DB_USERNAME}"
 
 network: ## Create docker networks for app and traefik proxy (if they don't exist already)
 	bin/create-external-network.sh wp-services
