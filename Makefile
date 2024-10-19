@@ -71,13 +71,10 @@ sh-%: ## Execute shell for the container where % is a service name (webapp, post
 clear-cache: ## Clear cache
 	bin/dcrun php artisan optimize:clear
 
-check: cs-fix quality test ## Check all quality and test elements
+check: cs quality test ## Check all quality and test elements
 
 cs: ## Run code style checks
-	bin/dcrun vendor/bin/phpcs ${OPTS}
-
-cs-fix: ## Fix code style issues
-	bin/dcrun vendor/bin/phpcbf ${OPTS} && vendor/bin/phpcs ${OPTS}
+	bin/dcrun vendor/bin/pint ${OPTS}
 
 create-migration: ## Create a new database migration
 	bin/dcrun php artisan make:migration

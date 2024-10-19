@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('plugins', function (Blueprint $table) {
@@ -63,13 +64,13 @@ return new class extends Migration {
         });
 
         Schema::create('themes', function (Blueprint $table) {
-           $table->uuid('id')->primary();
-           $table->string('name', 255);
-           $table->string('slug', 255);
-           $table->string('current_version', 255);
-           $table->dateTime('updated')->useCurrent();
-           $table->dateTime('pulled_at')->useCurrent();
-           $table->jsonb('metadata')->nullable();
+            $table->uuid('id')->primary();
+            $table->string('name', 255);
+            $table->string('slug', 255);
+            $table->string('current_version', 255);
+            $table->dateTime('updated')->useCurrent();
+            $table->dateTime('pulled_at')->useCurrent();
+            $table->jsonb('metadata')->nullable();
         });
 
         Schema::create('theme_files', function (Blueprint $table) {
