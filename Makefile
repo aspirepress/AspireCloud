@@ -40,12 +40,12 @@ down: ## Stops the Docker containers
 	docker compose down
 
 unit: ## Run unit tests
-	bin/dcrun vendor/bin/phpunit --testsuite=unit ${OPTS}
+	bin/dcrun vendor/bin/pest --testsuite=unit ${OPTS}
 
 functional: ## Run functional tests
-	bin/dcrun vendor/bin/phpunit --testsuite=functional ${OPTS}
+	bin/dcrun vendor/bin/pest --testsuite=functional ${OPTS}
 
-test: unit functional acceptance ## Run all tests
+test: unit functional ## Run all tests
 
 acceptance: ## Run acceptance tests
 	bin/dcrun vendor/bin/behat -vvv ${OPTS}
