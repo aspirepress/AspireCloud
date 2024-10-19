@@ -20,10 +20,13 @@ endif
 list:
 	@grep -E '^[a-zA-Z%_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | perl -ne '/^(?:.*?:)?(.*?):.*##(.*$$)/ and printf "\033[36m%-30s\033[0m %s\n", $$1, $$2'
 
-init: check-env down clean build network up install-composer reset-database generate-key ## Initial configuration tasks
+init: check-env dirs down clean build network up install-composer reset-database generate-key ## Initial configuration tasks
+
+dirs:
+	mkdir -p .cache
 
 check-env:
-	@[ -f .env ] || { cp .env.example .env && bin/dcrun ./artisan key:generate; }
+	@[ -f .env ] || { cp .env.example .env; }
 
 build: ## Builds the Docker containers
 	docker compose build
@@ -71,10 +74,17 @@ sh-%: ## Execute shell for the container where % is a service name (webapp, post
 clear-cache: ## Clear cache
 	bin/dcrun php artisan optimize:clear
 
-check: cs quality test ## Check all quality and test elements
+lint: style quality ## Check code standards conformance
 
-cs: ## Run code style checks
-	bin/dcrun vendor/bin/pint ${OPTS}
+check: lint test ## Run lint and unit tests
+
+fix: fix-style ## Run automated code fixes
+
+style: ## Run code style checks
+	bin/dcrun vendor/bin/php-cs-fixer check
+
+fix-style: ## Run code style fixes
+	bin/dcrun vendor/bin/php-cs-fixer fix
 
 create-migration: ## Create a new database migration
 	bin/dcrun php artisan make:migration

@@ -7,5 +7,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('/')
     ->group(function (Router $r) {
-        Route::get('/hello', fn () => ['message' => 'hello world']);
+        Route::get('/hello', fn() => ['message' => 'hello world']);
     });

@@ -9,23 +9,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build container
-        run: docker build --target dev -t aspirepress/aspirecloud-cli -f ./docker/webapp/Dockerfile .
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
 
       - name: Install Composer dependencies
-        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-cli sh -c "composer install"
+        run: composer install
 
       - name: Create .env file
         run: cp .env.example .env
 
       - name: Create App Key
-        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-cli sh -c "./artisan key:generate"
+        run: php artisan key:generate
 
-      - name: Run style checks
-        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-cli sh -c "./vendor/bin/pint --test"
+      - name: Run tests
+        run: |
+          vendor/bin/php-cs-fixer check
+          vendor/bin/phpstan --memory-limit=1G analyse
+          php artisan test tests/Unit
 
-      - name: Run quality check
-        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-cli sh -c "./vendor/bin/phpstan --memory-limit=1G analyse"
 
-      - name: Run unit tests
-        run: docker run --rm -v $(pwd):/var/www/html aspirepress/aspirecloud-cli sh -c "./vendor/bin/pest"

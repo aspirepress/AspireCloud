@@ -19,6 +19,7 @@
     "require-dev": {
         "aspirepress/aspirecloud-migrations": "dev-main",
         "fakerphp/faker": "^1.23",
+        "friendsofphp/php-cs-fixer": "^3.64",
         "larastan/larastan": "^2.0",
         "laravel/pail": "^1.1",
         "laravel/pint": "^1.18",
