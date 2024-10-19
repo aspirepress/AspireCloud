@@ -4,14 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class PluginFile extends BaseModel {
+class PluginFile extends BaseModel
+{
     use HasUuids;
 
     protected $table = 'plugin_files';
 
     protected $fillable = ['file_url', 'type', 'metadata', 'hash'];
 
-    protected function casts(): array {
+    protected function casts(): array
+    {
         return [
             'id' => 'string',
             'slug' => 'string',
