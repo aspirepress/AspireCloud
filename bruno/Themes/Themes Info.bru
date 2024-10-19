@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: https://{{API_URL}}/themes/info/:api_version/?action=query_themes | theme_information | hot_tags | feature_list&request[per_page]=100&request[fields][reviews_url]=1&request[slug]=adonay&browse=popular | featured |  updated | new&request[author]=x&request[page]=1
+  url: {{API_URL}}/themes/info/:api_version/?action=query_themes | theme_information | hot_tags | feature_list&request[per_page]=100&request[fields][reviews_url]=1&request[slug]=adonay&browse=popular | featured |  updated | new&request[author]=x&request[page]=1
   body: none
   auth: none
 }
@@ -23,9 +23,9 @@ params:query {
   ~request[tag][2]: four-columns
   ~request[locale]: en_US
   ~request[wp_version]: 6.2
-  ~request[search]: 
+  ~request[search]:
   ~request[fields ]: description: false
-  ~number: 
+  ~number:
 }
 
 params:path {
@@ -42,10 +42,10 @@ headers {
 
 docs {
   Note: You can find information about arguments and examples in the following blog articles:
-  
-  [v1.2](https://wplake.org/blog/wordpress-org-api/) 
-  
+
+  [v1.2](https://wplake.org/blog/wordpress-org-api/)
+
   [v1.0](http://wp.tutsplus.com/tutorials/plugins/communicating-with-the-wordpress-org-plugin-api/)
-  
+
   The source-code behind this API is [available](https://meta.trac.wordpress.org/browser/sites/trunk/wordpress.org/public_html/wp-content/plugins/theme-directory/class-themes-api.php).
 }

@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: https://{{API_URL}}/patterns/:api_version/?pattern-categories=2&wp-version=5.8&locale=en_US
+  url: {{API_URL}}/patterns/:api_version/?pattern-categories=2&wp-version=5.8&locale=en_US
   body: none
   auth: none
 }
@@ -14,7 +14,7 @@ params:query {
   pattern-categories: 2
   wp-version: 5.8
   locale: en_US
-  ~search: button 
+  ~search: button
   ~pattern-keywords: 11
 }
 
