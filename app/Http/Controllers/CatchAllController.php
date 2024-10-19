@@ -29,7 +29,7 @@ class CatchAllController extends Controller
             $response = Http::withHeaders([
                 'User-Agent' => $ua,
                 'Accept' => '*/*',
-            ])->asForm()->send($request->getMethod(), 'https://api.wordpress.org/'.$path, [
+            ])->asForm()->send($request->getMethod(), 'https://api.wordpress.org/' . $path, [
                 'query' => $queryParams,
                 'form_params' => $requestData,
             ]);
