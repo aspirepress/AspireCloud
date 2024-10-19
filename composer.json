@@ -14,7 +14,8 @@
         "php": "^8.2",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "robmorgan/phinx": "^0.16.5"
+        "robmorgan/phinx": "^0.16.5",
+        "spatie/laravel-data": "^4.10"
     },
     "require-dev": {
         "aspirepress/aspirecloud-migrations": "dev-main",
