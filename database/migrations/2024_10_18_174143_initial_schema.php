@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('current_version');
+            $table->string('current_version')->nullable();
             $table->dateTime('updated')->useCurrent();
             $table->string('status')->default('open');
             $table->dateTime('pulled_at')->useCurrent();
@@ -66,7 +66,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->string('name', 255);
             $table->string('slug', 255);
-            $table->string('current_version', 255);
+            $table->string('current_version', 255)->nullable();
             $table->dateTime('updated')->useCurrent();
             $table->dateTime('pulled_at')->useCurrent();
             $table->jsonb('metadata')->nullable();
