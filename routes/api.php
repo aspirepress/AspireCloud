@@ -8,9 +8,10 @@ use App\Http\Controllers\CatchAllController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
+// https://codex.wordpress.org/WordPress.org_API
+
 Route::prefix('/')
     ->group(function (Router $r) {
-        Route::get('/hello', fn() => ['message' => 'hello world']);
         $r->get('/secret-key/{version}', [SecretKeyController::class, 'index'])->where(['version' => '1.[01]']);
         $r->get('/secret-key/{version}/salt', [SecretKeyController::class, 'salt'])->where(['version' => '1.1']);
 
@@ -43,4 +44,5 @@ Route::prefix('/')
         $r->get('/patterns/{version}', CatchAllController::class)->where(['version' => '1.0']);
         $r->get('/events/{version}', CatchAllController::class)->where(['version' => '1.0']);
     });
-    
+
+// Route::any('{path}', CatchAllController::class)->where('path', '.*');

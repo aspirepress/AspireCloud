@@ -123,12 +123,12 @@ reset-testing-database: migrate-testing seed-testing
 run-psql: ## Runs Postgres on the command line using the .env file variables
 	bin/dcrun sh -c "PGPASSWORD=${DB_PASSWORD} psql -U ${DB_USERNAME} -h ${DB_HOST} -p ${DB_PORT} -d ${DB_USERNAME}"
 
-network: ## Create docker networks for app and traefik proxy (if they don't exist already)
-	bin/create-external-network.sh wp-services
+network: ## Create docker networks for aspire-net and traefik proxy (if they don't exist already)
+	bin/create-external-network.sh aspire-net
 	bin/create-external-network.sh traefik
 
-rm-network: ## Remove application docker network. (traefik
-	-bin/remove-external-network.sh wp-services
+rm-network: ## Remove aspire-net docker network. (traefik is not touched)
+	-bin/remove-external-network.sh aspire-net
 
 build-prod:
 	docker build --target prod -t aspirepress/aspirecloud-php -f ./docker/webapp/Dockerfile .
