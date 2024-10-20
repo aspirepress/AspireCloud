@@ -1,6 +1,10 @@
 name: Commit Pipeline
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
@@ -28,5 +32,3 @@ jobs:
           vendor/bin/php-cs-fixer check
           vendor/bin/phpstan --memory-limit=1G analyse
           php artisan test tests/Unit
-
-
