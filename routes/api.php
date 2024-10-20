@@ -3,6 +3,7 @@
 // Note: api routes are not prefixed, i.e. all routes in here are from the root like web routes
 
 use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
+use App\Http\Controllers\API\WpOrg\Themes\ThemeController;
 use App\Http\Controllers\CatchAllController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +35,7 @@ Route::prefix('/')
         $r->get('/translations/plugins/{version}', CatchAllController::class)->where(['version' => '1.0']);
         $r->get('/translations/themes/{version}', CatchAllController::class)->where(['version' => '1.0']);
 
-        $r->get('/themes/info/{version}', CatchAllController::class)->where(['version' => '1.[012]']);
+        $r->get('/themes/info/{version}', [ThemeController::class, 'info'])->where(['version' => '1.[012]']);
         $r->get('/themes/update-check/{version}', CatchAllController::class)->where(['version' => '1.[01]']);
 
         $r->get('/plugins/info/{version}', CatchAllController::class)->where(['version' => '1.[012]']);
