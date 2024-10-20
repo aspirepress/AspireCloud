@@ -44,7 +44,7 @@ class ApiResultsResponse implements \JsonSerializable
 
         return $data;
     }
-    public function jsonSerialize() : mixed
+    public function jsonSerialize(): mixed
     {
         return [
             'info' => $this->info(),

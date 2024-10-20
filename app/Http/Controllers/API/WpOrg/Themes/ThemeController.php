@@ -18,7 +18,7 @@ class ThemeController extends Controller
             if (is_object($data) && method_exists($data, 'toStdClass')) {
                 $data = $data->toStdClass();
             }
-            return response(serialize((object)$data), $statusCode);
+            return response(serialize((object) $data), $statusCode);
         }
         return response()->json($data, $statusCode);
     }
@@ -41,7 +41,8 @@ class ThemeController extends Controller
 
     private function doQueryThemes($requestData)
     {
-        $page = request()->input('page', 1); ;
+        $page = request()->input('page', 1);
+        ;
         $perPage = $requestData['per_page'];
         $skip = ($page - 1) * $perPage;
         $themes = \DB::table('themes')->skip($skip)->take($perPage)->get()->toArray();
