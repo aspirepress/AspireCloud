@@ -32,7 +32,7 @@ class ThemeController extends Controller
         $actionMethod = $this->actions[$action];
         $requestData = $request->query('request');
 
-        $response = $this->$actionMethod($requestData);
+        $response = $this->$actionMethod($request, $requestData);
 
         return $this->sendResponse($response);
     }
