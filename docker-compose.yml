@@ -10,8 +10,8 @@ services:
       - .:/var/www/html
     networks:
       traefik: ~
-      aspirecloud: ~
-      application:
+      app-net: ~
+      aspire-net:
         aliases:
           - 'api.aspiredev.org'
     labels:
@@ -23,7 +23,7 @@ services:
   redis:
     image: redis:latest
     networks:
-      - aspirecloud
+      - app-net
 
   postgres:
     image: postgres:latest
@@ -36,8 +36,10 @@ services:
     volumes:
       - postgresdata:/opt/pgdata
     networks:
-      - aspirecloud
-      - application
+      app-net: ~
+      aspire-net:
+        aliases:
+          - 'db.aspiredev.org'
 
   cli:
     build:
@@ -47,8 +49,8 @@ services:
     volumes:
       - .:/var/www/html
     networks:
-      - aspirecloud
-      - application
+      - app-net
+      - aspire-net
 
   mailhog:
     restart: on-failure
@@ -57,14 +59,12 @@ services:
     ports:
       - "${LOCAL_MAILHOG_UI_PORT:-8525}:8025"
     networks:
-      - aspirecloud
-      - application
+      - app-net
+      - aspire-net
 
 networks:
-  aspirecloud: ~
-  application:
-    driver: bridge
-    name: wp-services
+  app-net: ~
+  aspire-net:
     external: true
   traefik:
     external: true
