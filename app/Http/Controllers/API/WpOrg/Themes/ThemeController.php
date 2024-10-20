@@ -28,7 +28,7 @@ class ThemeController extends Controller
         // version is passed as route parameter
         $action = request()->query('action');
 
-        if (!isset($this->actions[$action])) {
+        if (!array_key_exists($action, $this->actions)) {
             return $this->sendResponse(['error' => 'Action not implemented. <a href="https://codex.wordpress.org/WordPress.org_API">API Docs</a>";}'], 404);
         }
         $actionMethod = $this->actions[$action];
@@ -41,7 +41,7 @@ class ThemeController extends Controller
 
     private function doQueryThemes($requestData)
     {
-        $page = $requestData['page'];
+        $page = request()->input('page', 1); ;
         $perPage = $requestData['per_page'];
         $skip = ($page - 1) * $perPage;
         $themes = \DB::table('themes')->skip($skip)->take($perPage)->get()->toArray();

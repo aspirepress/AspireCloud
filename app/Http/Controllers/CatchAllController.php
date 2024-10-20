@@ -13,6 +13,10 @@ use Illuminate\Support\Str;
 
 class CatchAllController extends Controller
 {
+    public function __invoke(Request $request): Response
+    {
+       return $this->handle($request);
+    }
     public function handle(Request $request): Response
     {
         $requestData = $request->all();

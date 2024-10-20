@@ -43,3 +43,4 @@ Route::prefix('/')
         $r->get('/patterns/{version}', CatchAllController::class)->where(['version' => '1.0']);
         $r->get('/events/{version}', CatchAllController::class)->where(['version' => '1.0']);
     });
+    
