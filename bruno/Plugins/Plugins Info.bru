@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: https://{{API_URL}}/plugins/info/:api_version/?action=query_plugins&request%5Bpage%5D=1&request%5Bper_page%5D=36&request%5Blocale%5D=en_US&request%5Bbrowse%5D=popular&request%5Bwp_version%5D=6.2
+  url: {{API_URL}}/plugins/info/:api_version/?action=query_plugins&request%5Bpage%5D=1&request%5Bper_page%5D=36&request%5Blocale%5D=en_US&request%5Bbrowse%5D=popular&request%5Bwp_version%5D=6.2
   body: none
   auth: none
 }
@@ -33,10 +33,10 @@ headers {
 
 docs {
   Note: You can find information about arguments and examples in the following blog articles:
-  
+
   [v1.2](https://wplake.org/blog/wordpress-org-api/)
-  
+
   [v1.0](http://wp.tutsplus.com/tutorials/plugins/communicating-with-the-wordpress-org-plugin-api/)
-  
+
   [v1.0](http://dd32.id.au/projects/wordpressorg-plugin-information-api-docs/)
 }

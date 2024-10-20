@@ -1,6 +1,6 @@
 <?php
 
-$finder = (new PhpCsFixer\Finder)
+$finder = (new PhpCsFixer\Finder())
     ->in(__DIR__)
     ->exclude([
         'vendor',
@@ -12,10 +12,10 @@ $finder = (new PhpCsFixer\Finder)
         // 'src/exception_file.php',
     ]);
 
-return (new PhpCsFixer\Config)
+return (new PhpCsFixer\Config())
     ->setRules([
         '@PER-CS' => true,
         '@PHP83Migration' => true,
     ])
     ->setFinder($finder)
-    ->setCacheFile(__DIR__.'/.cache/.php_cs.cache');
+    ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache');
