@@ -25,7 +25,6 @@ return new class extends Migration {
                 ->on('plugins')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->string('slug')->unique();
             $table->string('file_url')->nullable();
             $table->string('type');
             $table->string('version');

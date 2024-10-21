@@ -16,7 +16,6 @@ class PluginFile extends BaseModel
     {
         return [
             'id' => 'string',
-            'slug' => 'string',
             'file_url' => 'string',
             'type' => 'string',
             'version' => 'string',
