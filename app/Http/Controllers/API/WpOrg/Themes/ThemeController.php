@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\WpOrg\Themes;
 
 use App\Http\Controllers\Controller;
-use App\DTOs\ApiResultsResponse;
+use App\DTO\ApiResultsResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;

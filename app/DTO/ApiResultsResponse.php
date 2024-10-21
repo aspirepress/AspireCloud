@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTOs;
+namespace App\DTO;
 
 use function Safe\json_decode;
 
