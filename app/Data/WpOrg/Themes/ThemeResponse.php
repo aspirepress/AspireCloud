@@ -15,7 +15,7 @@ class ThemeResponse extends Data
      * @param string $preview_url
      * @param Author $author
      * @param string $screenshot_url
-     * @param array{1:int, 2:int, 3:int, 4:int} $ratings
+     * @param array{1:int, 2:int, 3:int, 4:int, 5:int} $ratings
      * @param int $rating
      * @param int $num_ratings
      * @param string $reviews_url
