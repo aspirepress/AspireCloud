@@ -7,8 +7,6 @@ use Spatie\LaravelData\Attributes\MapOutputName;
 use Spatie\LaravelData\Data;
 use stdClass;
 
-// WORK IN PROGRESS: ThemeController is still using
-
 class QueryThemesResponse extends Data
 {
     /**
