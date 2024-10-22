@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\WpOrg\Themes;
 
-use App\Data\WpOrg\Themes\HotTagsRequest;
 use App\Data\WpOrg\Themes\QueryThemesRequest;
 use App\Data\WpOrg\Themes\ThemeInformationRequest;
 use App\Http\Controllers\Controller;
@@ -39,16 +38,19 @@ class ThemeController extends Controller
         return new ApiResultsResponse('themes', $themes, $page, $perPage, $total);
     }
 
+    /** @return array<string, mixed> */
     private function doThemeInformation(ThemeInformationRequest $req): array
     {
         return ['req' => $req];
     }
 
+    /** @return array<string, mixed> */
     private function doHotTags(Request $request): array
     {
         return ['error' => 'not implemented'];
     }
 
+    /** @return array<string, mixed> */
     private function doFeatureList(Request $request): array
     {
         return ['error' => 'not implemented'];
