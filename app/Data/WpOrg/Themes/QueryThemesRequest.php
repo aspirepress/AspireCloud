@@ -9,23 +9,6 @@ class QueryThemesRequest extends Data
 {
     public const ACTION = 'query_themes';
 
-    public const FIELDS_DEFAULT = [
-        'description' => false,
-        'sections' => false,
-        'rating' => true,
-        'ratings' => false,
-        'downloaded' => true,
-        'download_link' => true,
-        'last_updated' => true,
-        'homepage' => true,
-        'tags' => true,
-        'template' => true,
-        'parent' => false,
-        'versions' => false,
-        'screenshot_url' => true,
-        'active_installs' => false,
-    ];
-
     /**
      * @param ?string $search
      * @param ?string[] $tags
@@ -42,7 +25,7 @@ class QueryThemesRequest extends Data
         public readonly ?string $theme = null,  // slug of a specific theme
         public readonly ?string $author = null, // wp.org username of author
         public readonly ?string $browse = null, // one of popular|featured|updated|new
-        public readonly ?array $fields = self::FIELDS_DEFAULT,
+        public readonly ?array $fields = null,
         public readonly int $page = 1,
         public readonly int $per_page = 24,
     ) {}
@@ -58,4 +41,19 @@ class QueryThemesRequest extends Data
     }
 }
 
-// api.wordpress.org/themes/info/1.1/?action=query_themes&request[tag]=sticky-post&request[tag]=two-columns&request[search]=food&request[page]=2
+// public const FIELDS_DEFAULT = [
+//     'description' => false,
+//     'sections' => false,
+//     'rating' => true,
+//     'ratings' => false,
+//     'downloaded' => true,
+//     'download_link' => true,
+//     'last_updated' => true,
+//     'homepage' => true,
+//     'tags' => true,
+//     'template' => true,
+//     'parent' => false,
+//     'versions' => false,
+//     'screenshot_url' => true,
+//     'active_installs' => false,
+// ];
