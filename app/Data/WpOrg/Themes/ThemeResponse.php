@@ -6,6 +6,8 @@ use App\Data\WpOrg\Author;
 use Carbon\CarbonImmutable;
 use Spatie\LaravelData\Data;
 
+// WORK IN PROGRESS: not used yet.  many fields need to be made nullable or Optional.
+
 class ThemeResponse extends Data
 {
     /**
