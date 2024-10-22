@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\DB;
 
 class ThemeController extends Controller
 {
-
     public function info(Request $request): JsonResponse|Response
     {
         $action = $request->query('action');
@@ -58,8 +57,10 @@ class ThemeController extends Controller
 
     private function unknownAction(): Response
     {
-        return $this->sendResponse(['error' => 'Action not implemented. <a href="https://codex.wordpress.org/WordPress.org_API">API Docs</a>";}'],
-            404);
+        return $this->sendResponse(
+            ['error' => 'Action not implemented. <a href="https://codex.wordpress.org/WordPress.org_API">API Docs</a>";}'],
+            404
+        );
     }
 
 
@@ -77,7 +78,7 @@ class ThemeController extends Controller
             if (is_object($data) && method_exists($data, 'toStdClass')) {
                 $data = $data->toStdClass();
             }
-            return response(serialize((object)$data), $statusCode);
+            return response(serialize((object) $data), $statusCode);
         }
         return response()->json($data, $statusCode);
     }

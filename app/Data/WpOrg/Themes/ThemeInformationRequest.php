@@ -23,4 +23,3 @@ class ThemeInformationRequest extends Data
         return static::from($request->query('request'));
     }
 }
-

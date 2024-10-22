@@ -37,4 +37,3 @@ class ThemeResponse extends Data
         public readonly string $external_repository_url,
     ) {}
 }
-

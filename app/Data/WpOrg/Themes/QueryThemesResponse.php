@@ -10,7 +10,5 @@ class QueryThemesResponse extends Data
     public function __construct(
         public readonly PageInfo $pageInfo,
         // TODO
-    )
-    {
-    }
+    ) {}
 }

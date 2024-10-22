@@ -4,7 +4,8 @@ namespace App\Data\WpOrg;
 
 use Spatie\LaravelData\Data;
 
-class Author extends Data {
+class Author extends Data
+{
     public function __construct(
         public readonly string $user_nicename,
         public readonly string $profile,
