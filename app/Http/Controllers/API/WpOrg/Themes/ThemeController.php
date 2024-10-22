@@ -44,7 +44,7 @@ class ThemeController extends Controller
 
         $total = DB::table('themes')->count();
 
-        $pageInfo = ['page' => $page, 'pages' => (int)ceil($total / $perPage), 'results' => $total];
+        $pageInfo = ['page' => $page, 'pages' => (int) ceil($total / $perPage), 'results' => $total];
         return QueryThemesResponse::from(['pageInfo' => $pageInfo, 'themes' => $themes]);
     }
 

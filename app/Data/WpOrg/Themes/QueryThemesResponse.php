@@ -22,7 +22,8 @@ class QueryThemesResponse extends Data
     ) {}
 
     /** for API version 1.0 responses only -- do not use this otherwise! */
-    public function toStdClass(): stdClass {
+    public function toStdClass(): stdClass
+    {
         return (object) ['info' => $this->pageInfo->toArray(), 'themes' => $this->themes];
     }
 }
