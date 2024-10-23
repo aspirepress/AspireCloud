@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Sync;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class Plugin extends BaseModel
+class SyncPlugin extends BaseModel
 {
     use HasUuids;
 
-    protected $table = 'plugins';
+    protected $table = 'sync_plugins';
 
     protected $fillable = ['name', 'slug', 'current_version', 'status', 'metadata'];
 

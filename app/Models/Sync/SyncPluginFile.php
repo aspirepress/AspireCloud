@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Sync;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class ThemeFile extends BaseModel
+class SyncPluginFile extends BaseModel
 {
     use HasUuids;
 
-    protected $table = 'theme_files';
+    protected $table = 'sync_plugin_files';
 
     protected $fillable = ['file_url', 'type', 'metadata', 'hash'];
 
@@ -18,11 +19,11 @@ class ThemeFile extends BaseModel
             'id' => 'string',
             'file_url' => 'string',
             'type' => 'string',
+            'version' => 'string',
             'metadata' => 'array',
             'created' => 'immutable_datetime',
             'processed' => 'immutable_datetime',
             'hash' => 'string',
         ];
     }
-
 }
