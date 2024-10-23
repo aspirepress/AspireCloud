@@ -51,5 +51,6 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('themes');
+        Schema::dropIfExists('authors');
     }
 };
