@@ -1,0 +1,16 @@
+meta {
+  name: Theme Info for 100-bytes
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{API_URL}}/themes/info/1.2/?action=theme_information&request[slug]=100-bytes
+  body: none
+  auth: none
+}
+
+params:query {
+  action: theme_information
+  request[slug]: 100-bytes
+}

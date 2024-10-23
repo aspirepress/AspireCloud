@@ -1,0 +1,30 @@
+meta {
+  name: Theme Info for 100-bytes (all fields)
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{API_URL}}/themes/info/1.2/?action=theme_information&request[slug]=100-bytes&request[fields][description]=1&request[fields][sections]=1&request[fields][rating]=1&request[fields][ratings]=1&request[fields][downloaded]=1&request[fields][download_link]=1&request[fields][last_updated]=1&request[fields][homepage]=1&request[fields][tags]=1&request[fields][template]=1&request[fields][parent]=1&request[fields][versions]=1&request[fields][screenshot_url]=1&request[fields][active_installs]=1
+  body: none
+  auth: none
+}
+
+params:query {
+  action: theme_information
+  request[slug]: 100-bytes
+  request[fields][description]: 1
+  request[fields][sections]: 1
+  request[fields][rating]: 1
+  request[fields][ratings]: 1
+  request[fields][downloaded]: 1
+  request[fields][download_link]: 1
+  request[fields][last_updated]: 1
+  request[fields][homepage]: 1
+  request[fields][tags]: 1
+  request[fields][template]: 1
+  request[fields][parent]: 1
+  request[fields][versions]: 1
+  request[fields][screenshot_url]: 1
+  request[fields][active_installs]: 1
+}
