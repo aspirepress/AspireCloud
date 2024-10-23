@@ -30,7 +30,7 @@ return new class extends Migration {
             $table->datetime('creation_time');
             $table->string('preview_url')->nullable();
             $table->string('screenshot_url')->nullable();
-            $table->json('ratings')->nullable();
+            $table->jsonb('ratings')->nullable();
             $table->unsignedSmallInteger('rating')->default(0);
             $table->unsignedInteger('num_ratings')->default(0);
             $table->string('reviews_url')->nullable();
