@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\WpOrg;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 /**
- * 
+ *
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Theme newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Theme newQuery()
