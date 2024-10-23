@@ -19,7 +19,7 @@ return new class extends Migration {
 
         Schema::create('themes', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('sync_id')->references('id')->on('sync_themes');
+            $table->foreignUuid('sync_id')->nullable()->references('id')->on('sync_themes');
             $table->string('slug');
             $table->string('name');
             $table->string('version');

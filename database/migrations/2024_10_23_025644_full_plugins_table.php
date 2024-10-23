@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('plugins', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('sync_id')->references('id')->on('sync_plugins');
+            $table->foreignUuid('sync_id')->nullable()->references('id')->on('sync_plugins');
             $table->string('slug')->index();
             $table->string('name')->index();
             $table->string('short_description', 150)->fulltext();
