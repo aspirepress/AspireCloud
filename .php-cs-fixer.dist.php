@@ -8,8 +8,8 @@ $finder = (new PhpCsFixer\Finder())
         'bootstrap',
     ])
     ->notPath([
-        // 'dump.php',
-        // 'src/exception_file.php',
+        '_ide_helper.php',
+        '.phpstorm.meta.php',
     ]);
 
 return (new PhpCsFixer\Config())
