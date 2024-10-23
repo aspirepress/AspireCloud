@@ -3,11 +3,37 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 /**
  *
  *
+ * @property string $id
+ * @property string $slug
+ * @property string $name
+ * @property string $version
+ * @property string $download_link
+ * @property string $requires_php
+ * @property CarbonImmutable $last_updated
+ * @property CarbonImmutable $creation_time
+ * @property string $preview_url
+ * @property string $screenshot_url
+ * @property array $ratings
+ * @property int $rating
+ * @property int $num_ratings
+ * @property string $reviews_url
+ * @property int $downloaded
+ * @property int $active_installs
+ * @property string $homepage
+ * @property array $sections
+ * @property array $tags
+ * @property array $versions
+ * @property array $requires
+ * @property bool $is_commercial
+ * @property string $external_support_url
+ * @property bool $is_community
+ * @property string $external_repository_url
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Theme newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Theme newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Theme query()

@@ -6,7 +6,7 @@ use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 /**
- * 
+ *
  *
  * @property string $id
  * @property string $theme_id
