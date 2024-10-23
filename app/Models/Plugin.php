@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class Plugin extends BaseModel {
+class Plugin extends BaseModel
+{
     use HasUuids;
 
     protected $table = 'plugins';

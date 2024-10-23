@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class Theme extends BaseModel {
+class Theme extends BaseModel
+{
     use HasUuids;
 
     protected $table = 'themes';
