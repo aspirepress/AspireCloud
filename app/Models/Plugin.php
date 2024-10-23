@@ -4,6 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
+/**
+ * 
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Plugin newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Plugin newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Plugin query()
+ * @mixin \Eloquent
+ */
 class Plugin extends BaseModel
 {
     use HasUuids;
