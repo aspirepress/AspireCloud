@@ -1,0 +1,5 @@
+# https://symfony.com/bundles/DoctrineMigrationsBundle/current/index.html
+doctrine_migrations:
+    migrations_paths:
+        'DoctrineMigrations': '%kernel.project_dir%/migrations'
+    enable_profiler: false
