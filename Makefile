@@ -74,6 +74,11 @@ sh-%: ## Execute shell for the container where % is a service name (webapp, post
 clear-cache: ## Clear cache
 	bin/dcrun php artisan optimize:clear
 
+helpers: ## Generate Laravel IDE helpers
+	bin/dcrun php artisan ide-helper:generate
+	bin/dcrun php artisan ide-helper:meta
+	bin/dcrun php artisan ide-helper:models --write --smart-reset
+
 lint: style quality ## Check code standards conformance
 
 check: lint test ## Run lint and unit tests
