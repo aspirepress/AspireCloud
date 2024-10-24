@@ -49,20 +49,36 @@ final class Version20241023234555 extends AbstractMigration
           )
       SQL;
 
+    const string ADD_SYNC_STATS_PGSQL = <<<'SQL'
+        create table sync_stats (
+            id uuid not null,
+            command varchar(255) not null,
+            stats jsonb not null,
+            created_at timestamp without time zone default current_timestamp
+        )
+    SQL;
+
+
     const string ADD_INDEXES_PGSQL = <<<'SQL'
         create index idx_sync_plugins_name on sync_plugins(name);
         create index idx_sync_plugin_files_hash on sync_plugin_files using hash (hash);
     SQL;
 
     const string DROP_TABLES_SQL = <<<'SQL'
+        drop table if exists sync_stats;
         drop table if exists sync_plugin_files;
         drop table if exists sync_plugins;
     SQL;
 
     public function up(Schema $schema): void
     {
-        foreach ([self::ADD_SYNC_PLUGINS_PGSQL, self::ADD_SYNC_PLUGIN_FILES_PGSQL, self::ADD_INDEXES_PGSQL] as $section) {
-            foreach (preg_split('/;\n/s', $section) as $statement) {
+        foreach ([
+                     self::ADD_SYNC_PLUGINS_PGSQL,
+                     self::ADD_SYNC_PLUGIN_FILES_PGSQL,
+                     self::ADD_SYNC_STATS_PGSQL,
+                     self::ADD_INDEXES_PGSQL,
+                 ] as $section) {
+            foreach (preg_split('/;\n/', $section) as $statement) {
                 $this->addSql($statement);
             }
         }
@@ -71,7 +87,7 @@ final class Version20241023234555 extends AbstractMigration
     public function down(Schema $schema): void
     {
         foreach ([self::DROP_TABLES_SQL] as $section) {
-            foreach (preg_split('/;\n/s', $section) as $statement) {
+            foreach (preg_split('/;\n/', $section) as $statement) {
                 $this->addSql($statement);
             }
         }
