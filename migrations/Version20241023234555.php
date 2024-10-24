@@ -53,7 +53,7 @@ final class Version20241023234555 extends AbstractMigration
             name varchar(1024) not null,
             slug varchar(255) not null,
             current_version varchar(32) default null,
-            updated_at timestamp without time zone default current_timestamp,
+            updated timestamp without time zone default current_timestamp,
             pulled_at timestamp without time zone default null,
             metadata jsonb default null,
             primary key (id)
