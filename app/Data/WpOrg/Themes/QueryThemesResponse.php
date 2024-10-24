@@ -15,8 +15,10 @@ class QueryThemesResponse extends Data
      * @param array<string,mixed> $themes   // TODO: use Collection<ThemeResponse>
      */
     public function __construct(
-        #[MapOutputName('info')] public readonly PageInfo $pageInfo,
-        #[Present] public readonly array $themes,
+        #[MapOutputName('info')]
+        public readonly PageInfo $pageInfo,
+        #[Present]
+        public readonly array $themes,
     ) {}
 
     /** for API version 1.0 responses only -- do not use this otherwise! */
