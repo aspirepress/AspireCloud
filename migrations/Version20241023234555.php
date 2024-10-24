@@ -24,7 +24,6 @@ final class Version20241023234555 extends AbstractMigration
               status varchar(32) not null default 'open',
               pulled_at timestamp without time zone default current_timestamp,
               metadata jsonb default null,
-
               primary key(id)
           )
       SQL;
@@ -111,7 +110,11 @@ final class Version20241023234555 extends AbstractMigration
 
     const string ADD_INDEXES_PGSQL = <<<'SQL'
         create index idx_sync_plugins_name on sync_plugins(name);
+        create index idx_sync_plugins_slug on sync_plugins(slug);
+        create index idx_sync_themes_name on sync_themes(name);
+        create index idx_sync_themes_slug on sync_themes(slug);
         create index idx_sync_plugin_files_hash on sync_plugin_files using hash (hash);
+        create index idx_sync_theme_files_hash on sync_theme_files using hash (hash);
     SQL;
 
     const string DROP_TABLES_SQL = <<<'SQL'
