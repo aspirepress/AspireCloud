@@ -15,6 +15,7 @@
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.1.*",
         "symfony/runtime": "7.1.*",
+        "symfony/uid": "7.1.*",
         "symfony/yaml": "7.1.*"
     },
     "require-dev": {

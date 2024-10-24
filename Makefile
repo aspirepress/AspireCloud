@@ -17,10 +17,12 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
+CONSOLE = bin/dcrun bin/console
+
 list:
 	@grep -E '^[a-zA-Z%_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | perl -ne '/^(?:.*?:)?(.*?):.*##(.*$$)/ and printf "\033[36m%-30s\033[0m %s\n", $$1, $$2'
 
-init: check-env dirs down clean build network up install-composer reset-database generate-key ## Initial configuration tasks
+init: check-env dirs down clean build network up install-composer reset-database ## Initial configuration tasks
 
 dirs:
 	mkdir -p .cache
@@ -72,7 +74,7 @@ sh-%: ## Execute shell for the container where % is a service name (webapp, post
 	docker compose exec $* sh || docker compose run --rm $* sh
 
 clear-cache: ## Clear cache
-	bin/dcrun php artisan optimize:clear
+	$(CONSOLE) cache:clear
 
 lint: style quality ## Check code standards conformance
 
@@ -87,28 +89,13 @@ fix-style: ## Run code style fixes
 	bin/dcrun vendor/bin/php-cs-fixer fix
 
 create-migration: ## Create a new database migration
-	bin/dcrun php artisan make:migration
-
-create-seed: ##	Create a new database seed
-	bin/dcrun php artisan make:seed
+	$(CONSOLE) make:migration --formatted
 
 migrate: ## Run database migrations
-	bin/dcrun php artisan migrate --force --no-interaction
+	$(CONSOLE) doctrine:migrations:migrate --no-interaction --allow-no-migration
 
 migration-rollback: ## Rollback database migrations
-	bin/dcrun php artisan migrate --force --no-interaction
-
-seed: ## Run database seeds
-	bin/dcrun php artisan db:seed
-
-migrate-testing: ## Run database migrations
-	bin/dcrun php artisan migrate --database=test --force --no-interaction
-
-seed-testing: ## Run database seeds
-	bin/dcrun php artisan db:seed --database=test
-
-generate-key: ## Generate APP_KEY environment var
-	bin/dcrun php artisan key:generate
+	$(CONSOLE) doctrine:migrations:migrate prev --no-interaction
 
 drop-database:
 	bin/dcrun sh -c "export PGPASSWORD=${DB_ROOT_PASSWORD} && psql -U ${DB_ROOT_USERNAME} -h ${DB_HOST} -c 'drop database if exists ${DB_DATABASE}'"
@@ -116,9 +103,7 @@ drop-database:
 create-database:
 	bin/dcrun sh -c "export PGPASSWORD=${DB_ROOT_PASSWORD} && psql -U ${DB_ROOT_USERNAME} -h ${DB_HOST} -c 'create database ${DB_DATABASE} owner ${DB_USERNAME}'"
 
-reset-database: drop-database create-database migrate seed ## run migrations and seeds
-
-reset-testing-database: migrate-testing seed-testing
+reset-database: drop-database create-database migrate ## recreate database
 
 run-psql: ## Runs Postgres on the command line using the .env file variables
 	bin/dcrun sh -c "PGPASSWORD=${DB_PASSWORD} psql -U ${DB_USERNAME} -h ${DB_HOST} -p ${DB_PORT} -d ${DB_USERNAME}"
