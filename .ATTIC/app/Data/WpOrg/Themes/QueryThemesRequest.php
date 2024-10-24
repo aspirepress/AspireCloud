@@ -15,7 +15,7 @@ class QueryThemesRequest extends Data
      * @param ?string $theme
      * @param ?string $author
      * @param ?string $browse
-     * @param ?array<string,bool> $fields
+     * @param array<string,bool>|null $fields
      * @param int $page
      * @param int $per_page
      */
