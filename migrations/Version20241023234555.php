@@ -90,6 +90,14 @@ final class Version20241023234555 extends AbstractMigration
         )
     SQL;
 
+    const string ADD_SYNC_REVISIONS_PGSQL = <<<'SQL'
+        create table sync_revisions (
+            action varchar(255) not null,
+            revision varchar(255) not null,
+            added_at timestamp without time zone default current_timestamp
+        )
+    SQL;
+
     // TODO: give this the sync_ prefix treatment (needs a PR in AspireSync)
     const string ADD_SYNC_NOT_FOUND_ITEMS_PGSQL = <<<'SQL'
         create table not_found_items (
@@ -112,6 +120,7 @@ final class Version20241023234555 extends AbstractMigration
         drop table if exists sync_plugins;
         drop table if exists sync_theme_files;
         drop table if exists sync_themes;
+        drop table if exists sync_revisons;
         drop table if exists not_found_items;
     SQL;
 
@@ -123,6 +132,7 @@ final class Version20241023234555 extends AbstractMigration
                      self::ADD_SYNC_THEMES_PGSQL,
                      self::ADD_SYNC_THEME_FILES_PGSQL,
                      self::ADD_SYNC_STATS_PGSQL,
+                     self::ADD_SYNC_REVISIONS_PGSQL,
                      self::ADD_SYNC_NOT_FOUND_ITEMS_PGSQL,
                      self::ADD_INDEXES_PGSQL,
                  ] as $section) {
