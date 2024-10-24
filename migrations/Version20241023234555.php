@@ -38,7 +38,7 @@ final class Version20241023234555 extends AbstractMigration
               metadata jsonb default null,
               created timestamp without time zone default current_timestamp,
               processed timestamp without time zone default null,
-              hash varchar(255) not null,
+              hash varchar(255) default null,
               primary key (id),
               constraint fk_sync_plugin_id
                   foreign key(plugin_id)
@@ -70,7 +70,7 @@ final class Version20241023234555 extends AbstractMigration
               metadata jsonb default null,
               created timestamp without time zone default current_timestamp,
               processed timestamp without time zone default null,
-              hash varchar(255) not null,
+              hash varchar(255) default null,
               primary key (id),
               constraint fk_sync_theme_id
                   foreign key(theme_id)
