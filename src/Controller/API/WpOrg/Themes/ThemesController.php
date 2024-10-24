@@ -6,12 +6,11 @@ use App\Controller\BaseController;
 use App\Data\WpOrg\PageInfo;
 use App\Data\WpOrg\Themes\QueryThemesRequest;
 use App\Data\WpOrg\Themes\QueryThemesResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Data\WpOrg\Themes\ThemeInformationRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
-use function Safe\json_decode;
 
 class ThemesController extends BaseController {
 
@@ -24,9 +23,9 @@ class ThemesController extends BaseController {
     {
         $response = match ($action) {
             'query_themes' => $this->doQueryThemes(QueryThemesRequest::fromRequest($request)),
-            // 'theme_information' => $this->doThemeInformation(ThemeInformationRequest::fromRequest($request)),
-            // 'hot_tags' => $this->doHotTags(),
-            // 'feature_list' => $this->doFeatureList(),
+            'theme_information' => $this->doThemeInformation(ThemeInformationRequest::fromRequest($request)),
+            'hot_tags' => $this->doHotTags(),
+            'feature_list' => $this->doFeatureList(),
             default => $this->unknownAction()
         };
         return $this->sendResponse($response, $version);
@@ -50,28 +49,26 @@ class ThemesController extends BaseController {
         // $total = DB::table('themes')->count();
 
         $pageInfo = new PageInfo(page: $page, pages: (int) ceil($total / $perPage), results: $total);
-
         return new QueryThemesResponse($pageInfo, $themes);
     }
 
-    // /** @return array<string, mixed> */
-    // private function doThemeInformation(ThemeInformationRequest $req): array
-    // {
-    //     return ['req' => $req];
-    // }
-    //
-    // /** @return array<string, mixed> */
-    // private function doHotTags(): array
-    // {
-    //     return ['error' => 'not implemented'];
-    // }
-    //
-    // /** @return array<string, mixed> */
-    // private function doFeatureList(): array
-    // {
-    //     return ['error' => 'not implemented'];
-    // }
+    /** @return array<string, mixed> */
+    private function doThemeInformation(ThemeInformationRequest $req): array
+    {
+        return ['req' => $req];
+    }
 
+    /** @return array<string, mixed> */
+    private function doHotTags(): array
+    {
+        return ['error' => 'not implemented'];
+    }
+
+    /** @return array<string, mixed> */
+    private function doFeatureList(): array
+    {
+        return ['error' => 'not implemented'];
+    }
 
     private function unknownAction(): Response
     {
