@@ -7,12 +7,17 @@ use App\Data\WpOrg\PageInfo;
 use App\Data\WpOrg\Themes\QueryThemesRequest;
 use App\Data\WpOrg\Themes\QueryThemesResponse;
 use App\Data\WpOrg\Themes\ThemeInformationRequest;
+use App\Repository\SyncThemeRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ThemesController extends BaseController {
+
+    public function __construct(private SyncThemeRepository $repository, private EntityManagerInterface $em) {}
+
 
     #[Route('/themes/info/{version}')]
     public function info(
@@ -38,7 +43,17 @@ class ThemesController extends BaseController {
         $skip = ($page - 1) * $perPage;
 
         $themes = []; // TODO
-        $total = 0;   // TODO
+        $total = $this->repository->count();
+        $dql = <<<'DQL'
+            SELECT t FROM App\Entity\SyncTheme t
+        DQL;
+
+        $themes = $this->em->createQuery($dql)
+            ->setFirstResult($skip)
+            ->setMaxResults($perPage)
+            ->execute();
+
+        dd($themes);
 
         // $themes = DB::table('themes')
         //     ->skip($skip)

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 
 #[ORM\Entity(repositoryClass: SyncThemeFileRepository::class)]
+#[ORM\Table(name: 'sync_theme_files')]
 class SyncThemeFile
 {
     //region properties

@@ -12,6 +12,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: SyncThemeRepository::class)]
+#[ORM\Table(name: 'sync_themes')]
 class SyncTheme
 {
     //region properties
