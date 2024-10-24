@@ -88,6 +88,9 @@ style: ## Run code style checks
 fix-style: ## Run code style fixes
 	bin/dcrun vendor/bin/php-cs-fixer fix
 
+create-entity: ## Create a new Doctrine entity
+	$(CONSOLE) make:entity --uuid
+
 create-migration: ## Create a new database migration
 	$(CONSOLE) make:migration --formatted
 
