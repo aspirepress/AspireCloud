@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 
 #[ORM\Entity(repositoryClass: SyncPluginFileRepository::class)]
+#[ORM\Table(name: 'sync_plugin_files')]
 class SyncPluginFile
 {
     #[ORM\Id]
@@ -24,10 +25,10 @@ class SyncPluginFile
     #[ORM\Column(length: 1024, nullable: true)]
     private ?string $file_url;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 32)]
     private string $type;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 32)]
     private string $version;
 
     #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
