@@ -7,8 +7,6 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 /**
- *
- *
  * @property string $id
  * @property string $slug
  * @property string $name
@@ -48,10 +46,6 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
  * @property array $sections
  * @property array $versions
  * @property array $upgrade_notice
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Plugin newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Plugin newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Plugin query()
- * @mixin \Eloquent
  */
 class Plugin extends BaseModel
 {

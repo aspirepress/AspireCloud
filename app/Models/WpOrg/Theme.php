@@ -7,8 +7,6 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 /**
- *
- *
  * @property string $id
  * @property string $slug
  * @property string $name
@@ -34,10 +32,6 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
  * @property string $external_support_url
  * @property bool $is_community
  * @property string $external_repository_url
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Theme newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Theme newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Theme query()
- * @mixin \Eloquent
  */
 class Theme extends BaseModel
 {
