@@ -46,7 +46,6 @@ class Plugin_1_2_Controller extends Controller
 
     private function queryPlugins(Request $request): JsonResponse
     {
-        // Get query parameters
         $page = max(1, (int) $request->query('page', '1'));
         $perPage = (int) $request->query('per_page', '23');
         $search = $request->query('search');
@@ -57,7 +56,7 @@ class Plugin_1_2_Controller extends Controller
         $query = Plugin::query()
             ->when($search, function (Builder $query, string $search) {
                 $query->where(function (Builder $q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
+                    $q->where('name', 'ilike', "%{$search}%")
                       ->orWhere('short_description', 'like', "%{$search}%")
                       ->orWhere('description', 'like', "%{$search}%");
                 });

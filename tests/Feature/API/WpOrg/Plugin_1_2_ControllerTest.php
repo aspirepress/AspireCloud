@@ -6,8 +6,20 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    // Run migrations
-    $this->artisan('migrate');
+    Plugin::factory()->create([
+        'name' => 'JWT Auth',
+        'slug' => 'jwt-auth',
+        'tags' => ['authentication', 'jwt', 'api'],
+    ]);
+
+    Plugin::factory()->create([
+        'name' => 'JWT Authentication for WP-API',
+        'slug' => 'jwt-authentication-for-wp-rest-api',
+        'tags' => ['jwt', 'api', 'rest-api'],
+        'author' => 'tmeister',
+    ]);
+
+    Plugin::factory()->count(8)->create();
 });
 
 it('returns 400 when slug is missing', function () {
@@ -28,60 +40,94 @@ it('returns 404 when plugin does not exist', function () {
         ]);
 });
 
-it('returns plugin information in wordpress.org format', function () {
-    $plugin = Plugin::factory()->create([
-        'name' => 'JWT Authentication for WP REST API',
-        'slug' => 'jwt-authentication-for-wp-rest-api',
-    ]);
-
+it('returns plugin information in wp.org format', function () {
     $response = $this->getJson('/plugins/info/1.2?action=plugin_information&slug=jwt-authentication-for-wp-rest-api');
 
     $response->assertStatus(200)
-        ->assertJsonStructure([
-            'name',
-            'slug',
-            'version',
-            'author',
-            'author_profile',
-            'requires',
-            'tested',
-            'requires_php',
-            'rating',
-            'ratings' => [
-                5,
-                4,
-                3,
-                2,
-                1,
-            ],
-            'num_ratings',
-            'support_threads',
-            'support_threads_resolved',
-            'active_installs',
-            'downloaded',
-            'last_updated',
-            'added',
-            'homepage',
-            'sections' => [
-                'description',
-                'installation',
-                'changelog',
-                'reviews',
-            ],
-            'download_link',
-            'tags' => [],
-            'versions',
-            'donate_link',
-            'contributors' => [
-                '*' => [
-                    'profile',
-                    'avatar',
-                    'display_name',
-                ],
-            ],
-            'screenshots',
-        ])
         ->assertJson([
-            'name' => 'JWT Authentication for WP REST API',
+            'name' => 'JWT Authentication for WP-API',
         ]);
+
+    assertWpPluginAPIStructure($response);
+});
+
+it('returns search results by tag in wp.org format', function () {
+    $tag = 'jwt';
+
+    expect(Plugin::query()->count())->toBe(10);
+
+    $jwtPlugins = Plugin::query()->where('tags', 'ilike', '%' . $tag . '%')->count();
+    expect($jwtPlugins)->toBe(2);
+
+    $response = $this->getJson('/plugins/info/1.2?action=query_plugins&tag=' . $tag);
+
+    $response->assertStatus(200);
+    assertWpPluginAPIStructureForSearch($response);
+
+    // Get the response data
+    $responseData = $response->json();
+    expect(count($responseData['plugins']))
+        ->toBe(2)
+        ->and($responseData['info'])->toHaveKeys([
+            'page',
+            'pages',
+            'results',
+        ])
+        ->and($responseData['info']['page'])->toBe(1)
+        ->and($responseData['info']['pages'])->toBe(1)
+        ->and($responseData['info']['results'])->toBe(2);
+
+
+    // Assert that each plugin has the 'jwt' tag
+    foreach ($responseData['plugins'] as $plugin) {
+        expect($plugin['tags'])->toContain($tag);
+    }
+});
+
+it('returns search results by query string in wp.org format', function () {
+    // Set the query string to search for
+    $query = 'jwt';
+    expect(Plugin::query()->count())->toBe(10);
+
+    $response = $this->getJson('/plugins/info/1.2?action=query_plugins&search=' . $query);
+
+    $response->assertStatus(200);
+    assertWpPluginAPIStructureForSearch($response);
+
+    // Get the response data
+    $responseData = $response->json();
+    expect(count($responseData['plugins']))->toBe(2)
+        ->and($responseData['info'])->toHaveKeys([
+            'page',
+            'pages',
+            'results',
+        ])
+        ->and($responseData['info']['page'])->toBe(1)
+        ->and($responseData['info']['pages'])->toBe(1)
+        ->and($responseData['info']['results'])->toBe(2);
+});
+
+it('returns search results by tag and author in wp.org format', function () {
+    // Set the query string to search for
+    $tag = 'jwt';
+    $author = 'tmeister';
+
+    expect(Plugin::query()->count())->toBe(10);
+
+    $response = $this->getJson('/plugins/info/1.2?action=query_plugins&tag=' . $tag . '&author=' . $author);
+
+    $response->assertStatus(200);
+    assertWpPluginAPIStructureForSearch($response);
+
+    // Get the response data
+    $responseData = $response->json();
+    expect(count($responseData['plugins']))->toBe(1)
+        ->and($responseData['info'])->toHaveKeys([
+            'page',
+            'pages',
+            'results',
+        ])
+        ->and($responseData['info']['page'])->toBe(1)
+        ->and($responseData['info']['pages'])->toBe(1)
+        ->and($responseData['info']['results'])->toBe(1);
 });
