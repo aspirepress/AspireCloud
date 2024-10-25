@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 class PluginResource extends JsonResource
 {
@@ -25,8 +26,7 @@ class PluginResource extends JsonResource
             'requires_php' => $this->resource->requires_php,
             'rating' => $this->resource->rating,
             'num_ratings' => $this->resource->num_ratings,
-            'ratings' => collect($this->resource->ratings)
-                        ->mapWithKeys(fn($value, $key) => [(string) $key => $value]),
+            'ratings' => $this->mapRatings($this->resource->ratings),
             'support_threads' => $this->resource->support_threads,
             'support_threads_resolved' => $this->resource->support_threads_resolved,
             'active_installs' => $this->resource->active_installs,
@@ -56,5 +56,15 @@ class PluginResource extends JsonResource
         }
 
         return $data;
+    }
+
+    /**
+     * @param array<int> $ratings
+     * @return Collection<string, int>
+      */
+    private function mapRatings(array $ratings): Collection
+    {
+        return collect($ratings)
+            ->mapWithKeys(fn($value, $key) => [(string) $key => $value]);
     }
 }
