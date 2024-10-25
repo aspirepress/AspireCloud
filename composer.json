@@ -13,6 +13,7 @@
         "thecodingmachine/safe": "^2.5"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.2",
         "fakerphp/faker": "^1.23",
         "friendsofphp/php-cs-fixer": "^3.64",
         "larastan/larastan": "^2.0",

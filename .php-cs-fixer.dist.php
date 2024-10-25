@@ -8,9 +8,10 @@ $finder = (new PhpCsFixer\Finder())
         'bootstrap',
     ])
     ->notPath([
-        // 'dump.php',
-        // 'src/exception_file.php',
-    ]);
+        '_ide_helper.php',
+        '.phpstorm.meta.php',
+    ])
+;
 
 return (new PhpCsFixer\Config())
     ->setRules([
@@ -18,4 +19,5 @@ return (new PhpCsFixer\Config())
         '@PHP83Migration' => true,
     ])
     ->setFinder($finder)
-    ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache');
+    ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')
+    ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect());
