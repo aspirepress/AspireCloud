@@ -151,12 +151,12 @@ class PluginFactory extends Factory
         return [
             'description' => $this->faker->paragraphs(3, true),
             'installation' => $this->faker->paragraphs(2, true),
-            'faq' => $this->generateFAQ(),
+            'reviews' => $this->generateReviews(),
             'changelog' => $this->generateChangelog(),
         ];
     }
 
-    protected function generateFAQ(): string
+    protected function generateReviews(): string
     {
         $faq = "";
         $count = $this->faker->numberBetween(3, 6);

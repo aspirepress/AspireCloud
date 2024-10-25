@@ -24,8 +24,9 @@ class PluginResource extends JsonResource
             'tested' => $this->resource->tested,
             'requires_php' => $this->resource->requires_php,
             'rating' => $this->resource->rating,
-            'ratings' => $this->resource->ratings,
             'num_ratings' => $this->resource->num_ratings,
+            'ratings' => collect($this->resource->ratings)
+                        ->mapWithKeys(fn($value, $key) => [(string) $key => $value]),
             'support_threads' => $this->resource->support_threads,
             'support_threads_resolved' => $this->resource->support_threads_resolved,
             'active_installs' => $this->resource->active_installs,
