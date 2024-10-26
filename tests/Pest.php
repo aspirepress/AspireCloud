@@ -12,36 +12,103 @@
 */
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+  ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
-
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
-
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
-*/
-
-function something()
+function assertWpPluginAPIStructure($response)
 {
-    // ..
+    return $response->assertJsonStructure([
+        'name',
+        'slug',
+        'version',
+        'author',
+        'author_profile',
+        'requires',
+        'tested',
+        'requires_php',
+        'rating',
+        'ratings' => [
+            5,
+            4,
+            3,
+            2,
+            1,
+        ],
+        'num_ratings',
+        'support_threads',
+        'support_threads_resolved',
+        'active_installs',
+        'downloaded',
+        'last_updated',
+        'added',
+        'homepage',
+        'sections' => [
+            'description',
+            'installation',
+            'changelog',
+            'reviews',
+        ],
+        'download_link',
+        'tags' => [],
+        'versions',
+        'donate_link',
+        'contributors' => [
+            '*' => [
+                'profile',
+                'avatar',
+                'display_name',
+            ],
+        ],
+        'screenshots',
+    ]);
+}
+
+
+function assertWpPluginAPIStructureForSearch($response)
+{
+    return $response->assertJsonStructure([
+        'info'    => [
+            'page',
+            'pages',
+            'results',
+        ],
+        'plugins' => [
+            '*' => [
+                'name',
+                'slug',
+                'version',
+                'author',
+                'author_profile',
+                'requires',
+                'tested',
+                'requires_php',
+                'rating',
+                'num_ratings',
+                'ratings' => [
+                    '1',
+                    '2',
+                    '3',
+                    '4',
+                    '5',
+                ],
+                'support_threads',
+                'support_threads_resolved',
+                'active_installs',
+                'downloaded',
+                'last_updated',
+                'added',
+                'homepage',
+                'download_link',
+                'tags',
+                'donate_link',
+                'short_description',
+                'description',
+                'icons'   => [
+                    '1x',
+                    '2x',
+                ],
+                'requires_plugins',
+            ],
+        ],
+    ]);
 }
