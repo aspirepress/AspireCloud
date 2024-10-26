@@ -4,6 +4,7 @@ namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
 use Carbon\CarbonImmutable;
+use Database\Factories\WpOrg\PluginFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -51,6 +52,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Plugin extends BaseModel
 {
     use HasUuids;
+
+    /** @use HasFactory<PluginFactory> */
     use HasFactory;
 
     protected $table = 'plugins';

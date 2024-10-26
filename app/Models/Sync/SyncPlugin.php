@@ -4,6 +4,7 @@ namespace App\Models\Sync;
 
 use App\Models\BaseModel;
 use Carbon\CarbonImmutable;
+use Database\Factories\Sync\SyncPluginFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class SyncPlugin extends BaseModel
 {
     use HasUuids;
-
+    /** @use HasFactory<SyncPluginFactory> */
     use HasFactory;
 
     protected $table = 'sync_plugins';
