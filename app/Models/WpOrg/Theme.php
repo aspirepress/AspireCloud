@@ -3,8 +3,13 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
+use App\Models\Sync\SyncTheme;
+use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use InvalidArgumentException;
 
 /**
  * @property string $id
@@ -35,6 +40,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
  */
 class Theme extends BaseModel
 {
+    //region Model Definition
+
     use HasUuids;
 
     protected $table = 'themes';
@@ -69,4 +76,62 @@ class Theme extends BaseModel
             'external_repository_url' => 'string',
         ];
     }
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(Author::class);
+    }
+
+    public function syncTheme(): BelongsTo
+    {
+        return $this->belongsTo(SyncTheme::class, 'sync_id', 'id');
+    }
+
+    //endregion
+
+    //region Constructors
+
+    public static function getOrCreateFromSyncTheme(SyncTheme $syncTheme): static
+    {
+        return static::where('sync_id', $syncTheme->id)->first() ?? static::createFromSyncTheme($syncTheme);
+    }
+
+    public static function createFromSyncTheme(SyncTheme $syncTheme): static
+    {
+        $data = $syncTheme->metadata or throw new InvalidArgumentException("SyncTheme instance has no metadata");
+        $authorData = $data['author'] ?? throw new InvalidArgumentException("SyncTheme metadata has no author");
+        $author = Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
+
+        return static::create([
+            'sync_id' => $syncTheme->id,
+            'author_id' => $author->id,
+            'slug' => $syncTheme->slug,
+            'name' => $syncTheme->name,
+            'version' => $syncTheme->current_version,
+            'download_link' => $data['download_link'],
+            'requires_php' => $data['requires_php'],
+            'last_updated' => Carbon::parse($data['last_updated']),
+            'creation_time' => Carbon::parse($data['creation_time']),
+            // All fields below are optional
+            'preview_url' => $data['preview_url'] ?? null,
+            'screenshot_url' => $data['screenshot_url'] ?? null,
+            'ratings' => $data['ratings'] ?? null,
+            'rating' => $data['rating'] ?? 0,
+            'num_ratings' => $data['num_ratings'] ?? 0,
+            'reviews_url' => $data['reviews_url'] ?? null,
+            'downloaded' => $data['downloaded'] ?? 0,
+            'active_installs' => $data['active_installs'] ?? 0,
+            'homepage' => $data['homepage'] ?? null,
+            'sections' => $data['sections'] ?? null,
+            'tags' => $data['tags'] ?? null,
+            'versions' => $data['versions'] ?? null,
+            'requires' => $data['requires'] ?? null,
+            'is_commercial' => $data['is_commercial'] ?? false,
+            'external_support_url' => $data['external_support_url'] ?? null,
+            'is_community' => $data['is_community'] ?? false,
+            'external_repository_url' => $data['external_repository_url'] ?? null,
+        ]);
+    }
+
+    //endregion
 }
