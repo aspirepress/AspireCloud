@@ -47,7 +47,7 @@ class Plugin_1_2_Controller extends Controller
     private function queryPlugins(Request $request): JsonResponse
     {
         $page = max(1, (int) $request->query('page', '1'));
-        $perPage = (int) $request->query('per_page', '23');
+        $perPage = (int) $request->query('per_page', '24');
         $search = $request->query('search');
         $tag = $request->query('tag');
         $author = $request->query('author');
