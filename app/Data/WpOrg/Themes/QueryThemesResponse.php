@@ -4,6 +4,7 @@ namespace App\Data\WpOrg\Themes;
 
 use App\Data\WpOrg\PageInfo;
 use Spatie\LaravelData\Attributes\MapOutputName;
+use Spatie\LaravelData\Attributes\Validation\Present;
 use Spatie\LaravelData\Data;
 use stdClass;
 
@@ -16,6 +17,7 @@ class QueryThemesResponse extends Data
     public function __construct(
         #[MapOutputName('info')]
         public readonly PageInfo $pageInfo,
+        #[Present]
         public readonly array $themes,
     ) {}
 

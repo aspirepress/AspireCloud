@@ -74,6 +74,16 @@ sh-%: ## Execute shell for the container where % is a service name (webapp, post
 clear-cache: ## Clear cache
 	bin/dcrun php artisan optimize:clear
 
+helpers: ## Generate Laravel IDE helpers
+	@if [ -z $(FORCE) ]; then \
+		echo "*** laravel-ide-helper generates incorrect code for Laravel 11, and is not recommended at this time."; \
+		echo "*** if you wish to generate helpers anyway, run 'make helpers FORCE=1'"; \
+		exit 1; \
+	fi
+	bin/dcrun php artisan ide-helper:generate
+	bin/dcrun php artisan ide-helper:meta
+	bin/dcrun php artisan ide-helper:models --write --smart-reset
+
 lint: style quality ## Check code standards conformance
 
 check: lint test ## Run lint and unit tests

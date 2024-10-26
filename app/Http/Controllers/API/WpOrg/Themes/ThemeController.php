@@ -35,7 +35,7 @@ class ThemeController extends Controller
         $skip = ($page - 1) * $perPage;
 
         // TODO: process search and other filters
-        $themes = DB::table('themes')
+        $themes = DB::table('sync_themes')
             ->skip($skip)
             ->take($perPage)
             ->get()
