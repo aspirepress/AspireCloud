@@ -54,17 +54,17 @@ class ThemeController extends Controller
 
         // TODO: process search and other filters
         $themes = DB::table('sync_themes')
-        ->when($req->search, function ($query, $search) {
-            $query->where('name', 'ilike', "%{$search}%")
-                  ->orWhere('short_description', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
-        })->when($req->theme, function ($query, $search) {
-            $query->where('slug', 'ilike', $search);
-        })->when($req->author, function (Builder $query, string $author) {
-            $query->where('author', 'like', "%{$author}%");
-        })->when($req->tags, function (Builder $query, array $tags) {
-            $query->whereJsonContains('tags', $tags);
-        })
+            ->when($req->search, function ($query, $search) {
+                $query->where('name', 'ilike', "%{$search}%")
+                    ->orWhere('short_description', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            })->when($req->theme, function ($query, $search) {
+                $query->where('slug', 'ilike', $search);
+            })->when($req->author, function (Builder $query, string $author) {
+                $query->where('author', 'like', "%{$author}%");
+            })->when($req->tags, function (Builder $query, array $tags) {
+                $query->whereJsonContains('tags', $tags);
+            })
             ->skip($skip)
             ->take($perPage)
             ->get()

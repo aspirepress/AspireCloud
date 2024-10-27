@@ -63,19 +63,3 @@ class QueryThemesRequest extends Data
     }
 }
 
-// public const FIELDS_DEFAULT = [
-//     'description' => false,
-//     'sections' => false,
-//     'rating' => true,
-//     'ratings' => false,
-//     'downloaded' => true,
-//     'download_link' => true,
-//     'last_updated' => true,
-//     'homepage' => true,
-//     'tags' => true,
-//     'template' => true,
-//     'parent' => false,
-//     'versions' => false,
-//     'screenshot_url' => true,
-//     'active_installs' => false,
-// ];
