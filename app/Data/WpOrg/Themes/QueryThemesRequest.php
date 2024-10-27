@@ -7,6 +7,8 @@ use Spatie\LaravelData\Data;
 
 class QueryThemesRequest extends Data
 {
+    use ThemeFields;
+
     public const ACTION = 'query_themes';
 
     /**
@@ -33,10 +35,30 @@ class QueryThemesRequest extends Data
     public static function fromRequest(Request $request): self
     {
         $req = $request->query('request');
-        if (array_key_exists('tag', $req)) {
+
+        if (is_array($req) && array_key_exists('tag', $req)) {
             $req['tags'] = is_array($req['tag']) ? $req['tag'] : [$req['tag']];
             unset($req['tag']);
         }
+        $defaultFields = [
+            'description' => true,
+            'rating'      => true,
+            'homepage'    => true,
+            'template'    => true,
+        ];
+        if (version_compare($request->route('version'), '1.2', '>=')) {
+            $defaultFields['extended_author'] = true;
+            $defaultFields['num_ratings'] = true;
+            $defaultFields['parent'] = true;
+            $defaultFields['requires'] = true;
+            $defaultFields['requires_php'] = true;
+            $defaultFields['is_commercial'] = true;
+            $defaultFields['is_community'] = true;
+            $defaultFields['external_repository_url'] = true;
+            $defaultFields['external_support_url'] = true;
+        }
+
+        $req['fields'] = self::getFields($request, $defaultFields);
         return static::from($req);
     }
 }
