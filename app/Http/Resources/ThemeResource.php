@@ -134,7 +134,7 @@ class ThemeResource extends JsonResource
         $include = false;
         $includedFields = $this->additional['fields'] ?? [];
         $include = $includedFields[$fieldName] ?? false;
-        return $this->when($include, $value, $default);
+        return $this->when(true, $value, $default);
     }
 
     /**
@@ -145,22 +145,22 @@ class ThemeResource extends JsonResource
     private function getSections()
     {
         $sections = [];
-        if (preg_match_all('|--theme-data-(.+?)-->(.*?)<!|ims', $this->resource->content, $matches)) {
+        if (preg_match_all('|--theme-data-(.+?)-->(.*?)<!|ims', $this->resource->content ?? "", $matches)) {
             foreach ($matches[1] as $i => $section) {
                 $sections[$section] = trim($matches[2][$i]);
             }
         } else {
-            $sections['description'] = $this->fixMangledDescription(trim($this->resource->content));
+            $sections['description'] = $this->fixMangledDescription(trim($this->resource->content ?? ""));
         }
         return $sections;
     }
 
 
     /**
-    * @param array<int> $ratings
+    * @param array<int>|null $ratings
     * @return Collection<string, int>
      */
-    private function mapRatings(array $ratings): Collection
+    private function mapRatings(array|null $ratings = []): Collection
     {
         return collect($ratings)
             ->mapWithKeys(fn($value, $key) => [(string) $key => $value]);
@@ -172,7 +172,7 @@ class ThemeResource extends JsonResource
      */
     private function getDescription()
     {
-        return strpos($this->resource->content, '<!--') !== false
+        return strpos($this->resource->content ?? "", '<!--') !== false
             ? trim(substr($this->resource->content, 0, strpos($this->resource->content, '<!--')))
             : trim($this->resource->content);
     }
