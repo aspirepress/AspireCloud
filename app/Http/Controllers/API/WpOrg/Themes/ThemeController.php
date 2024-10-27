@@ -10,7 +10,7 @@ use App\Http\Resources\ThemeCollection;
 use App\Http\Resources\ThemeResource;
 use App\Models\WpOrg\Theme;
 use App\Models\WpOrg\SyncTheme;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -53,24 +53,26 @@ class ThemeController extends Controller
         $skip = ($page - 1) * $perPage;
 
         // TODO: process search and other filters
-        $themes = DB::table('sync_themes')
+        $themes = Theme::query()
             ->when($req->search, function ($query, $search) {
-                $query->where('name', 'ilike', "%{$search}%")
-                    ->orWhere('short_description', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
+                $query->where('name', 'ilike', "%{$search}%");
+                //->orWhere('description', 'like', "%{$search}%");
             })->when($req->theme, function ($query, $search) {
                 $query->where('slug', 'ilike', $search);
             })->when($req->author, function (Builder $query, string $author) {
-                $query->where('author', 'like', "%{$author}%");
+                $query->whereHas('author', function (Builder $query) use ($author) {
+                    $query->where('user_nicename', 'like', "%{$author}%");
+                });
             })->when($req->tags, function (Builder $query, array $tags) {
-                $query->whereJsonContains('tags', $tags);
+                collect($tags)->each(function ($tag) use ($query) {
+                    $query->whereJsonContains('tags', $tag);
+                });
             })
             ->skip($skip)
             ->take($perPage)
-            ->get()
-            ->map(fn($theme) => json_decode($theme->metadata))
-            ->toArray();
-        $total = DB::table('sync_themes')->count();
+            ->with('author')
+            ->get();
+        $total = DB::table('themes')->count();
 
         $collection = collect($themes)->map(fn($theme) => (new ThemeResource($theme))->additional(['fields' => $req->fields]));
 

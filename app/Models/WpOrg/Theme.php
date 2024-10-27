@@ -5,6 +5,7 @@ namespace App\Models\WpOrg;
 use App\Models\BaseModel;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $id
@@ -68,5 +69,14 @@ class Theme extends BaseModel
             'is_community' => 'boolean',
             'external_repository_url' => 'string',
         ];
+    }
+
+    /**
+    * Define the relationship to the author
+    * @return BelongsTo<Author, $this>
+    */
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(Author::class, 'author_id'); // Use the foreign key column here
     }
 }
