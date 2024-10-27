@@ -9,7 +9,7 @@ use App\Models\WpOrg\Theme;
 
 class PopulateThemesCommand extends Command
 {
-    protected $signature = 'db:themes:populate';
+    protected $signature = 'db:populate:themes';
 
     protected $description = 'Loads themes from AspireSync metadata';
 

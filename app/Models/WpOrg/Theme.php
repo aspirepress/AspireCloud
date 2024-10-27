@@ -111,7 +111,6 @@ class Theme extends BaseModel
             'name' => $syncTheme->name,
             'version' => $syncTheme->current_version,
             'download_link' => $data['download_link'],
-            'requires_php' => $data['requires_php'],
             'last_updated' => Carbon::parse($data['last_updated']),
             'creation_time' => Carbon::parse($data['creation_time']),
         ]);
@@ -143,7 +142,7 @@ class Theme extends BaseModel
             'name' => $data['name'],
             'version' => $data['version'],
             'download_link' => $data['download_link'],
-            'requires_php' => $data['requires_php'],
+            'requires_php' => $data['requires_php'] ?? null,
             'last_updated' => Carbon::parse($data['last_updated']),
             'creation_time' => Carbon::parse($data['creation_time']),
             // All fields below are optional
