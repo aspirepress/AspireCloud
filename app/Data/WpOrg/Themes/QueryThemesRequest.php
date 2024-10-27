@@ -62,4 +62,3 @@ class QueryThemesRequest extends Data
         return static::from($req);
     }
 }
-
