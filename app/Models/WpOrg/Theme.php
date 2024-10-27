@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 /**
@@ -99,15 +99,49 @@ class Theme extends BaseModel
     public static function createFromSyncTheme(SyncTheme $syncTheme): static
     {
         $data = $syncTheme->metadata or throw new InvalidArgumentException("SyncTheme instance has no metadata");
+
+        DB::beginTransaction();
         $authorData = $data['author'] ?? throw new InvalidArgumentException("SyncTheme metadata has no author");
         $author = Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
 
-        return static::create([
+        $instance = static::create([
             'sync_id' => $syncTheme->id,
             'author_id' => $author->id,
             'slug' => $syncTheme->slug,
             'name' => $syncTheme->name,
             'version' => $syncTheme->current_version,
+            'download_link' => $data['download_link'],
+            'requires_php' => $data['requires_php'],
+            'last_updated' => Carbon::parse($data['last_updated']),
+            'creation_time' => Carbon::parse($data['creation_time']),
+        ]);
+        $instance->fillFromMetadata($data, $author);
+        $instance->save();
+        DB::commit();
+        return $instance;
+    }
+
+    //endregion
+
+    //region Utilities
+
+    /**
+     * @param array<string,mixed> $data
+     * @return $this
+     */
+    public function fillFromMetadata(array $data, ?Author $author = null): static
+    {
+        if ($data['slug'] !== $this->slug) {
+            throw new InvalidArgumentException("Metatada slug does not match [{$data['slug']} !== $this->slug]");
+        }
+
+        $authorData = $data['author'] ?? throw new InvalidArgumentException("SyncTheme metadata has no author");
+        $author ??= Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
+
+        return $this->fill([
+            'author_id' => $author->id,
+            'name' => $data['name'],
+            'version' => $data['version'],
             'download_link' => $data['download_link'],
             'requires_php' => $data['requires_php'],
             'last_updated' => Carbon::parse($data['last_updated']),
@@ -133,5 +167,10 @@ class Theme extends BaseModel
         ]);
     }
 
+    /** @return $this */
+    public function updateFromSyncTheme(): static
+    {
+        return $this->fillFromMetadata($this->syncTheme->metadata);
+    }
     //endregion
 }
