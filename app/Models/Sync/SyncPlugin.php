@@ -7,6 +7,7 @@ use Carbon\CarbonImmutable;
 use Database\Factories\Sync\SyncPluginFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property string $id
@@ -26,6 +27,10 @@ class SyncPlugin extends BaseModel
 
     protected $table = 'sync_plugins';
 
+    public function files(): HasMany {
+        return $this->hasMany(SyncPluginFile::class, 'plugin_id');
+    }
+
     protected function casts(): array
     {
         return [
@@ -39,5 +44,4 @@ class SyncPlugin extends BaseModel
             'metadata' => 'array',
         ];
     }
-
 }

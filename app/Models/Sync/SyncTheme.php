@@ -4,6 +4,7 @@ namespace App\Models\Sync;
 
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property string $id
@@ -20,6 +21,10 @@ class SyncTheme extends BaseModel
 
     protected $table = 'sync_themes';
 
+    public function files(): HasMany {
+        return $this->hasMany(SyncThemeFile::class, 'theme_id');
+    }
+
     protected function casts(): array
     {
         return [
@@ -34,5 +39,4 @@ class SyncTheme extends BaseModel
             'hash' => 'string',
         ];
     }
-
 }
