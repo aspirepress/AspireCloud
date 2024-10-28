@@ -54,6 +54,13 @@ class ThemeController extends Controller
 
         // TODO: process search and other filters
         $themes = Theme::query()
+            ->when($req->browse, function ($query, $browse) {
+                if ($browse === 'popular') {
+                    $query->orderBy('rating', 'desc');
+                } else {
+                    $query->orderBy('last_updated', 'desc');
+                }
+            })
             ->when($req->search, function ($query, $search) {
                 $query->where('name', 'ilike', "%{$search}%");
                 //->orWhere('description', 'like', "%{$search}%");
@@ -87,7 +94,7 @@ class ThemeController extends Controller
         if (!$theme) {
             return $this->sendResponse(['error' => 'Theme not found'], 404);
         }
-        return $this->sendResponse(new ThemeResource($theme));
+        return $this->sendResponse((new ThemeResource($theme))->additional(['fields' => $request->fields]));
     }
 
     /** @return JsonResponse|Response */

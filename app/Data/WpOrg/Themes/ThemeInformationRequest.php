@@ -8,6 +8,7 @@ use Spatie\LaravelData\Data;
 
 class ThemeInformationRequest extends Data
 {
+    use ThemeFields;
     public const ACTION = 'theme_information';
 
     /**
@@ -22,8 +23,22 @@ class ThemeInformationRequest extends Data
 
     public static function fromRequest(Request $request): self
     {
-        $payload = ($request->query('request') != null) ? static::from($request->query('request')) : static::from($request->all());
-        self::validate($payload);
-        return self::from($payload);
+        $req = $request->query('request') ?? $request->all();
+
+
+        $defaultFields = [
+            'sections'     => true,
+            'rating'       => true,
+            'downloaded'   => true,
+            'downloadlink' => true,
+            'last_updated' => true,
+            'homepage'     => true,
+            'tags'         => true,
+            'template'     => true,
+        ];
+
+        $req['fields'] = self::getFields($request, $defaultFields);
+        self::validate($req);
+        return static::from($req);
     }
 }

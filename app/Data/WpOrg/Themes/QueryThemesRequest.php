@@ -46,17 +46,7 @@ class QueryThemesRequest extends Data
             'homepage'    => true,
             'template'    => true,
         ];
-        if (version_compare($request->route('version'), '1.2', '>=')) {
-            $defaultFields['extended_author'] = true;
-            $defaultFields['num_ratings'] = true;
-            $defaultFields['parent'] = true;
-            $defaultFields['requires'] = true;
-            $defaultFields['requires_php'] = true;
-            $defaultFields['is_commercial'] = true;
-            $defaultFields['is_community'] = true;
-            $defaultFields['external_repository_url'] = true;
-            $defaultFields['external_support_url'] = true;
-        }
+
 
         $req['fields'] = self::getFields($request, $defaultFields);
         return static::from($req);

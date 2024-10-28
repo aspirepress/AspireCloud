@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use App\Data\WpOrg\Author;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\Resources\MissingValue;
 
 use function Safe\preg_match_all;
 
@@ -52,9 +53,9 @@ class ThemeResource extends JsonResource
             'name' => $this->resource->name,
             'slug' => $this->resource->slug,
             'version' => $this->resource->version,
+            'tesdt' => $this->when(false, 'test'),
             'preview_url' => $this->resource->preview_url,
             'author' => $this->whenField('extended_author', $this->resource->author, $this->resource->author->user_nicename),
-            'author_profile' => null, // TODO: $this->resource->author_profile,
             'screenshot_url' => $this->whenField('screenshot_url', function () {
                 $screenshots = $this->resource->screenshots;
                 return $this->whenField(
@@ -86,7 +87,7 @@ class ThemeResource extends JsonResource
                 return $installs < 10 ? 0 : ($installs >= 3000000 ? 3000000 : str_pad(substr($installs, 0, 1), strlen($installs), '0'));
             }),
             'last_updated' => $this->whenField('last_updated', fn() => new CarbonImmutable($this->resource->last_updated)),
-            'last_updated_time' => $this->whenField('last_updated_time', fn() => new CarbonImmutable($this->resource->last_updated_time)),
+            'last_updated_time' => $this->whenField('last_updated', fn() => new CarbonImmutable($this->resource->last_updated_time)),
             'creation_time' => $this->whenField('creation_time', fn() => new CarbonImmutable($this->resource->creation_time)),
             'homepage' => $this->whenField('homepage', fn() => "https://wordpress.org/themes/{$this->resource->slug}/"),
             'download_link' => $this->whenField('downloadlink', fn() => $this->getDownloadUrl($this->resource->version)),
@@ -104,7 +105,7 @@ class ThemeResource extends JsonResource
                     'slug' => $parent->slug,
                     'name' => $parent->name,
                     'homepage' => "https://wordpress.org/themes/{$parent->slug}/",
-                ] : null;
+                ] : new MissingValue();
             }),
             'sections' => $this->whenField('sections', fn() => $this->getSections()),
             'description' => $this->whenField('description', fn() => $this->getDescription()),
@@ -134,7 +135,10 @@ class ThemeResource extends JsonResource
         $include = false;
         $includedFields = $this->additional['fields'] ?? [];
         $include = $includedFields[$fieldName] ?? false;
-        return $this->when(true, $value, $default);
+        if (func_num_args() === 3) {
+            return $this->when($include, $value, $default);
+        }
+        return $this->when($include, $value);
     }
 
     /**
