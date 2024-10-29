@@ -225,7 +225,8 @@ class Plugin extends BaseModel
     }
     //endregion
 
-    private static function truncate(string|null $str, int $len) {
+    private static function truncate(string|null $str, int $len)
+    {
         return  $str === null ? $str : substr($str, 0, $len);
     }
 }

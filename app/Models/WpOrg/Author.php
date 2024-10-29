@@ -25,7 +25,8 @@ class Author extends BaseModel
 
     protected $table = 'authors';
 
-    protected function casts(): array {
+    protected function casts(): array
+    {
         return [
             'id' => 'string',
             'user_nicename' => 'string',
@@ -33,7 +34,7 @@ class Author extends BaseModel
             'avatar' => 'string',
             'display_name' => 'string',
             'author' => 'string',
-            'author_url' => 'string'
+            'author_url' => 'string',
         ];
     }
 }

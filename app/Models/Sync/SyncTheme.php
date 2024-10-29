@@ -21,7 +21,8 @@ class SyncTheme extends BaseModel
 
     protected $table = 'sync_themes';
 
-    public function files(): HasMany {
+    public function files(): HasMany
+    {
         return $this->hasMany(SyncThemeFile::class, 'theme_id');
     }
 
