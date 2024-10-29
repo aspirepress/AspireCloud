@@ -16,7 +16,7 @@ class PopulateThemesCommand extends Command
     public function handle(): void
     {
         $create_only = $this->option('create-only');
-        $days = (int)$this->option('days');
+        $days = (int) $this->option('days');
 
         if ($this->option('delete')) {
             $query = DB::table('themes')->whereNotNull('sync_id');
