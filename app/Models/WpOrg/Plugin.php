@@ -54,7 +54,7 @@ use InvalidArgumentException;
  * @property array $versions
  * @property array $upgrade_notice
  */
-class Plugin extends BaseModel
+final class Plugin extends BaseModel
 {
     //region Definition
 
@@ -110,6 +110,7 @@ class Plugin extends BaseModel
         ];
     }
 
+    /** @return BelongsTo<SyncPlugin, covariant static> */
     public function syncPlugin(): BelongsTo
     {
         return $this->belongsTo(SyncPlugin::class, 'sync_id', 'id');
@@ -119,30 +120,17 @@ class Plugin extends BaseModel
 
     //region Constructors
 
-    public static function getOrCreateFromSyncPlugin(SyncPlugin $syncPlugin): static
+    public static function getOrCreateFromSyncPlugin(SyncPlugin $syncPlugin): self
     {
         return static::where('sync_id', $syncPlugin->id)->first() ?? static::createFromSyncPlugin($syncPlugin);
     }
 
-    public static function createFromSyncPlugin(SyncPlugin $syncPlugin): static
+    public static function createFromSyncPlugin(SyncPlugin $syncPlugin): self
     {
         $data = $syncPlugin->metadata or throw new InvalidArgumentException("SyncPlugin instance has no metadata");
 
         DB::beginTransaction();
 
-        // $instance = static::create([
-        //     'sync_id' => $syncPlugin->id,
-        //     'slug' => $syncPlugin->slug,
-        //     'name' => $syncPlugin->name,
-        //     'short_description' => self::truncate($data['short_description'] ?? '', 150),
-        //     'description' => $data['description'] ?? '',
-        //     'version' => $syncPlugin->current_version,
-        //     'author' => $data['author'] ?? '',
-        //     'requires' => $data['requires'] ?? '',
-        //     'tested' => $data['tested'] ?? '',
-        //     'download_link' => self::truncate($data['download_link'] ?? '', 1024),
-        //     'added' => Carbon::parse($data['added']),
-        // ]);
         $instance = static::create([
             'sync_id' => $syncPlugin->id,
             'slug' => $syncPlugin->slug,
@@ -171,7 +159,7 @@ class Plugin extends BaseModel
      * @param array<string,mixed> $data
      * @return $this
      */
-    public function fillFromMetadata(array $data): static
+    public function fillFromMetadata(array $data): self
     {
         if ($data['slug'] !== $this->slug) {
             throw new InvalidArgumentException("Metatada slug does not match [{$data['slug']} !== $this->slug]");
@@ -219,13 +207,13 @@ class Plugin extends BaseModel
     }
 
     /** @return $this */
-    public function updateFromSyncPlugin(): static
+    public function updateFromSyncPlugin(): self
     {
         return $this->fillFromMetadata($this->syncPlugin->metadata);
     }
     //endregion
 
-    private static function truncate(string|null $str, int $len)
+    private static function truncate(string|null $str, int $len): string|null
     {
         return  $str === null ? $str : substr($str, 0, $len);
     }

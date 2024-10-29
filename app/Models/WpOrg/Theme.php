@@ -38,7 +38,7 @@ use InvalidArgumentException;
  * @property bool $is_community
  * @property string $external_repository_url
  */
-class Theme extends BaseModel
+final class Theme extends BaseModel
 {
     //region Model Definition
 
@@ -77,11 +77,13 @@ class Theme extends BaseModel
         ];
     }
 
+    /** @return BelongsTo<Author, covariant self> */
     public function author(): BelongsTo
     {
         return $this->belongsTo(Author::class);
     }
 
+    /** @return BelongsTo<SyncTheme, covariant self> */
     public function syncTheme(): BelongsTo
     {
         return $this->belongsTo(SyncTheme::class, 'sync_id', 'id');
@@ -91,12 +93,12 @@ class Theme extends BaseModel
 
     //region Constructors
 
-    public static function getOrCreateFromSyncTheme(SyncTheme $syncTheme): static
+    public static function getOrCreateFromSyncTheme(SyncTheme $syncTheme): self
     {
-        return static::where('sync_id', $syncTheme->id)->first() ?? static::createFromSyncTheme($syncTheme);
+        return self::where('sync_id', $syncTheme->id)->first() ?? self::createFromSyncTheme($syncTheme);
     }
 
-    public static function createFromSyncTheme(SyncTheme $syncTheme): static
+    public static function createFromSyncTheme(SyncTheme $syncTheme): self
     {
         $data = $syncTheme->metadata or throw new InvalidArgumentException("SyncTheme instance has no metadata");
 
@@ -104,7 +106,7 @@ class Theme extends BaseModel
         $authorData = $data['author'] ?? throw new InvalidArgumentException("SyncTheme metadata has no author");
         $author = Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
 
-        $instance = static::create([
+        $instance = self::create([
             'sync_id' => $syncTheme->id,
             'author_id' => $author->id,
             'slug' => $syncTheme->slug,
@@ -128,7 +130,7 @@ class Theme extends BaseModel
      * @param array<string,mixed> $data
      * @return $this
      */
-    public function fillFromMetadata(array $data, ?Author $author = null): static
+    public function fillFromMetadata(array $data, ?Author $author = null): self
     {
         if ($data['slug'] !== $this->slug) {
             throw new InvalidArgumentException("Metatada slug does not match [{$data['slug']} !== $this->slug]");
@@ -167,7 +169,7 @@ class Theme extends BaseModel
     }
 
     /** @return $this */
-    public function updateFromSyncTheme(): static
+    public function updateFromSyncTheme(): self
     {
         return $this->fillFromMetadata($this->syncTheme->metadata);
     }

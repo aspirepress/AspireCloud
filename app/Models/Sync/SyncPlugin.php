@@ -27,6 +27,7 @@ class SyncPlugin extends BaseModel
 
     protected $table = 'sync_plugins';
 
+    /** @return HasMany<SyncPluginFile, covariant static> */
     public function files(): HasMany
     {
         return $this->hasMany(SyncPluginFile::class, 'plugin_id');
