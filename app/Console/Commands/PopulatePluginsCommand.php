@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class PopulatePluginsCommand extends Command
 {
-    protected $signature = 'db:populate:plugins {--create-only} {--days=}';
+    protected $signature = 'db:populate:plugins {--days=} {--create-only} {--delete}';
 
     protected $description = 'Loads plugins from AspireSync metadata';
 
