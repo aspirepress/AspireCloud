@@ -5,6 +5,7 @@
 use App\Http\Controllers\API\WpOrg\Plugins\Plugin_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
 use App\Http\Controllers\API\WpOrg\Themes\ThemeController;
+use App\Http\Controllers\API\WpOrg\Themes\ThemeUpdatesController;
 use App\Http\Controllers\CatchAllController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
@@ -37,7 +38,7 @@ Route::prefix('/')
         $router->get('/translations/themes/{version}', CatchAllController::class)->where(['version' => '1.0']);
 
         $router->get('/themes/info/{version}', [ThemeController::class, 'info'])->where(['version' => '1.[012]']);
-        $router->get('/themes/update-check/{version}', CatchAllController::class)->where(['version' => '1.[01]']);
+        $router->any('/themes/update-check/{version}', ThemeUpdatesController::class)->where(['version' => '1.[01]']);
 
         $router->get('/plugins/info/1.2', Plugin_1_2_Controller::class);
         $router->get('/plugins/info/{version}', CatchAllController::class)->where(['version' => '1.[01]']);
