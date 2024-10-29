@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Testing\Fluent\AssertableJson;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -14,6 +16,106 @@
 pest()->extend(Tests\TestCase::class)
   ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
+function assertWpThemeBaseStructure($json)
+{
+    return $json
+        ->has('name')
+        ->has('slug')
+        ->has('version')
+        ->has('author')
+        ->has('preview_url')
+        ->has('screenshot_url')
+        ->has('rating')
+        ->has('num_ratings')
+        ->has('homepage')
+        ->has('description');
+}
+function assertWpThemeInfoBaseStructure($json)
+{
+    return $json
+    ->has('name')
+    ->has('slug')
+    ->has('version')
+    ->has('preview_url')
+    ->has('screenshot_url')
+    ->has('rating')
+    ->has('num_ratings')
+    ->has('homepage')
+    ->has('sections')
+    ->has('tags')
+    ->has('download_link')
+    ->has('last_updated')
+    ->has('downloaded')
+    ->has('last_updated_time')
+    ->has('author');
+}
+function assertWpThemeAPIStructure1_1_query_themes($response)
+{
+    return $response->assertJson(
+        fn(AssertableJson $json) =>
+        $json->has('info')->has(
+            'themes',
+            fn($json) =>
+            $json->each(
+                fn($theme) =>
+                assertWpThemeBaseStructure($theme)
+                    ->whereType('author', 'string')
+            )
+        )
+    );
+
+}
+
+
+function assertWpThemeAPIStructure1_2_query_themes($response)
+{
+    return $response->assertJson(
+        fn(AssertableJson $json) =>
+        $json->has('info')->has(
+            'themes',
+            fn($json) =>
+            $json->each(
+                fn($theme) =>
+                assertWpThemeBaseStructure($theme)
+                    ->has('requires')
+                    ->has('requires_php')
+                    ->has('is_commercial')
+                    ->has('external_support_url')
+                    ->has('is_community')
+                    ->has('external_repository_url')
+                    ->whereType('author', 'array')
+            )
+        )
+    );
+
+}
+
+
+function assertWpThemeAPIStructure1_1_theme_information($response)
+{
+    return $response->assertJson(
+        fn(AssertableJson $json) =>
+        assertWpThemeInfoBaseStructure($json)
+        ->whereType('author', 'string')
+    );
+}
+
+function assertWpThemeAPIStructure1_2_theme_information($response)
+{
+
+    return $response->assertJson(
+        fn(AssertableJson $json) =>
+        assertWpThemeInfoBaseStructure($json)
+        ->has('requires')
+        ->has('requires_php')
+        ->has('is_commercial')
+        ->has('external_support_url')
+        ->has('is_community')
+        ->has('external_repository_url')
+        ->whereType('author', 'array')
+    );
+
+}
 
 function assertWpPluginAPIStructure($response)
 {

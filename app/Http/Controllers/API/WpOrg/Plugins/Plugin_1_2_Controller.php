@@ -51,6 +51,7 @@ class Plugin_1_2_Controller extends Controller
         $search = $request->query('search');
         $tag = $request->query('tag');
         $author = $request->query('author');
+        $browse = $request->query('browse', 'popular');
 
         // Build query
         $query = Plugin::query()
@@ -68,13 +69,21 @@ class Plugin_1_2_Controller extends Controller
                 $query->where('author', 'like', "%{$author}%");
             });
 
+        // Apply sorting based on the browse parameter
+        match ($browse) {
+            'new' => $query->orderBy('added', 'desc'),
+            'updated' => $query->orderBy('last_updated', 'desc'),
+            // TODO: Implement a better top-rated sorting?
+            'top-rated' => $query->orderBy('rating', 'desc'),
+            // TODO: Implement a better popular sorting, active_installs, downloaded?
+            default => $query->orderBy('active_installs', 'desc')
+        };
         // Get total count for pagination
         $total = $query->count();
         $totalPages = (int) ceil($total / $perPage);
 
         // Get paginated results
         $plugins = $query
-            ->orderBy('last_updated', 'desc')
             ->offset(($page - 1) * $perPage)
             ->limit($perPage)
             ->get();

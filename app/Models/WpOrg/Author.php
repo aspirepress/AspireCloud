@@ -3,7 +3,9 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
+use Database\Factories\WpOrg\PluginFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property-read string $id
@@ -18,6 +20,9 @@ class Author extends BaseModel
 {
     use HasUuids;
 
+    /** @use HasFactory<PluginFactory> */
+    use HasFactory;
+
     protected $table = 'authors';
 
     protected function casts(): array {
@@ -31,7 +36,4 @@ class Author extends BaseModel
             'author_url' => 'string'
         ];
     }
-
-
-
 }
