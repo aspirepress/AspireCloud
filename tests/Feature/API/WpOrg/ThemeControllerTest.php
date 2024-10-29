@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\WpOrg\Author;
-use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\Theme;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

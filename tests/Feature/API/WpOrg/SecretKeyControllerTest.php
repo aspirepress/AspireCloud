@@ -3,7 +3,6 @@
 namespace Tests\Feature\API\WpOrg;
 
 use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
-use Exception;
 
 $validKeys = SecretKeyController::VALID_KEY_CHARACTERS;
 

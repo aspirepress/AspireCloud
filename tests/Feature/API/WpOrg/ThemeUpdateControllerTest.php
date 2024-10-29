@@ -1,11 +1,9 @@
 <?php
 
-use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\Theme;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Illuminate\Testing\Fluent\AssertableJson;
 
 use function Safe\json_encode;
 

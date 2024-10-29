@@ -4,7 +4,6 @@ namespace App\Data\WpOrg\Themes;
 
 use App\Models\WpOrg\Theme;
 use Illuminate\Support\Collection;
-use Spatie\LaravelData\Attributes\DataProperty;
 use Spatie\LaravelData\Data;
 
 class ThemeUpdateData extends Data

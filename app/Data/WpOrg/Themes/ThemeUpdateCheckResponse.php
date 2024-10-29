@@ -5,7 +5,6 @@ namespace App\Data\WpOrg\Themes;
 use App\Models\WpOrg\Theme;
 use Spatie\LaravelData\Data;
 use Illuminate\Support\Collection;
-use App\Data\WpOrg\Themes\ThemeUpdateData;
 
 class ThemeUpdateCheckResponse extends Data
 {
