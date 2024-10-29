@@ -38,7 +38,7 @@ Route::prefix('/')
         $router->get('/translations/themes/{version}', CatchAllController::class)->where(['version' => '1.0']);
 
         $router->get('/themes/info/{version}', [ThemeController::class, 'info'])->where(['version' => '1.[012]']);
-        $router->any('/themes/update-check/{version}', ThemeUpdatesController::class)->where(['version' => '1.[01]']);
+        $router->match(['get', 'post'], '/themes/update-check/{version}', ThemeUpdatesController::class)->where(['version' => '1.[01]']);
 
         $router->get('/plugins/info/1.2', Plugin_1_2_Controller::class);
         $router->get('/plugins/info/{version}', CatchAllController::class)->where(['version' => '1.[01]']);
