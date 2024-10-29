@@ -28,9 +28,13 @@ return (new PhpCsFixer\Config())
             'control_structures_opening_brace' => 'same_line',
             'functions_opening_brace' => 'next_line_unless_newline_at_signature_end',
         ],
-        'class_attributes_separation' => [
-            'elements' => ['method' => 'one']
-        ],
+        'class_attributes_separation' => ['elements' => ['method' => 'one']],
+        'class_definition' => ['single_line' => true],
+        'class_reference_name_casing' => true,
+        'declare_parentheses' => true,
+        'empty_loop_body' => ['style' => 'braces'],
+        'empty_loop_condition' => ['style' => 'while'],
+        'fully_qualified_strict_types' => ['import_symbols' => true],
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')

@@ -4,6 +4,7 @@ namespace App\Models\Sync;
 
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Carbon\CarbonImmutable;
 
 /**
  * @property string $id
@@ -12,8 +13,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
  * @property string $type
  * @property string $version
  * @property array|null $metadata
- * @property \Carbon\CarbonImmutable $created
- * @property \Carbon\CarbonImmutable|null $processed
+ * @property CarbonImmutable $created
+ * @property CarbonImmutable|null $processed
  * @property string|null $hash
  */
 class SyncPluginFile extends BaseModel
