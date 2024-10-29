@@ -17,6 +17,7 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@PER-CS' => true,
         '@PHP83Migration' => true,
+        'no_unused_imports' => true,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')
