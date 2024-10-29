@@ -159,7 +159,6 @@ class ThemeResource extends JsonResource
         return $sections;
     }
 
-
     /**
     * @param array<int>|null $ratings
     * @return Collection<string, int>
@@ -169,6 +168,7 @@ class ThemeResource extends JsonResource
         return collect($ratings)
             ->mapWithKeys(fn($value, $key) => [(string) $key => $value]);
     }
+
     /**
      * Get the description of the theme.
      *
@@ -201,5 +201,4 @@ class ThemeResource extends JsonResource
         return 'downloadurl_placeholder' . $version;
         //return $this->resource->repo_package->download_url($version);
     }
-
 }

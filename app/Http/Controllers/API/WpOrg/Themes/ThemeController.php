@@ -248,7 +248,6 @@ class ThemeController extends Controller
         return $this->sendResponse($tags);
     }
 
-
     private function unknownAction(): Response
     {
         return $this->sendResponse(
