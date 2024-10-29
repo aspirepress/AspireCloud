@@ -48,6 +48,9 @@ unit: ## Run unit tests
 functional: reset-testing-database ## Run functional tests
 	bin/dcrun vendor/bin/pest --testsuite=Feature ${OPTS}
 
+test-bruno: ## Run bruno tests (npm install -g @usebruno/cli)
+	cd bruno && bru run -r . --env 'Local API'
+
 test: unit functional ## Run all tests
 
 acceptance: ## Run acceptance tests
