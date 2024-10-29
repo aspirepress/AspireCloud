@@ -1,0 +1,35 @@
+meta {
+  name: Query Themes for twenty-four
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{API_URL}}/themes/info/1.2/?action=query_themes&request[search]=twenty-four
+  body: none
+  auth: none
+}
+
+params:query {
+  action: query_themes
+  request[search]: twenty-four
+}
+
+vars:post-response {
+  info: res.body.info
+  themes: res.body.themes
+}
+
+assert {
+  info.page: eq 1
+  info.pages: eq 1
+  info.results: eq 2
+  themes[0].name: eq "Twenty Twenty-Four"
+  themes[0].slug: eq "twentytwentyfour"
+  themes[0].author.user_nicename: eq "wordpressdotorg"
+  themes[0].requires_php: eq "7.0"
+  themes[0].is_commercial: eq false
+  themes[0].is_community: eq true
+  themes[1].slug: eq "hariko"
+  themes[1].description: contains "Twenty Twenty-Four comes with style variations"
+}

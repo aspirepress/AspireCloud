@@ -24,6 +24,7 @@
         "pestphp/pest-plugin-laravel": "^3.0",
         "phpstan/phpstan": "^1.12",
         "roave/security-advisories": "dev-latest",
+        "spatie/laravel-web-tinker": "^1.9",
         "thecodingmachine/phpstan-safe-rule": "^1.2"
     },
     "autoload": {

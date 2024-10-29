@@ -2,28 +2,14 @@
 
 namespace App\Http\Controllers\API\WpOrg\Themes;
 
-use App\Data\WpOrg\Themes\QueryThemesRequest;
-use App\Data\WpOrg\Themes\QueryThemesResponse;
-use App\Data\WpOrg\Themes\ThemeInformationRequest;
 use App\Data\WpOrg\Themes\ThemeUpdateCheckRequest;
 use App\Data\WpOrg\Themes\ThemeUpdateCheckResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ThemeCollection;
-use App\Http\Resources\ThemeUpdateCollection;
-use App\Http\Resources\ThemeUpdateResource;
-use App\Http\Resources\TranslationResource;
 use App\Models\WpOrg\Theme;
-use App\Models\WpOrg\SyncTheme;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
-
-use function Safe\json_decode;
-use function Safe\preg_match;
 
 class ThemeUpdatesController extends Controller
 {

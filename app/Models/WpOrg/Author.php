@@ -3,19 +3,18 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
-use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\PluginFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * @property string $id
+ * @property-read string $id
  * @property string $user_nicename
- * @property string $profile
- * @property string $avatar
- * @property string $display_name
- * @property string $author
- * @property string $author_url
+ * @property string|null $profile
+ * @property string|null $avatar
+ * @property string|null $display_name
+ * @property string|null $author
+ * @property string|null $author_url
  */
 class Author extends BaseModel
 {
@@ -26,5 +25,16 @@ class Author extends BaseModel
 
     protected $table = 'authors';
 
-
+    protected function casts(): array
+    {
+        return [
+            'id' => 'string',
+            'user_nicename' => 'string',
+            'profile' => 'string',
+            'avatar' => 'string',
+            'display_name' => 'string',
+            'author' => 'string',
+            'author_url' => 'string',
+        ];
+    }
 }

@@ -45,8 +45,11 @@ down: ## Stops the Docker containers
 unit: ## Run unit tests
 	bin/dcrun vendor/bin/pest --testsuite=Unit ${OPTS}
 
-functional: ## Run functional tests
+functional: reset-testing-database ## Run functional tests
 	bin/dcrun vendor/bin/pest --testsuite=Feature ${OPTS}
+
+test-bruno: ## Run bruno tests (npm install -g @usebruno/cli)
+	cd bruno && bru run -r . --env 'Local API'
 
 test: unit functional ## Run all tests
 
@@ -128,7 +131,13 @@ create-database:
 
 reset-database: drop-database create-database migrate seed ## run migrations and seeds
 
-reset-testing-database: migrate-testing seed-testing
+reset-testing-database: drop-testing-database create-testing-database migrate-testing seed-testing
+
+drop-testing-database:
+	bin/dcrun sh -c "export PGPASSWORD=${DB_ROOT_PASSWORD} && psql -U ${DB_ROOT_USERNAME} -h ${DB_HOST} -c 'drop database if exists aspirecloud_testing'"
+
+create-testing-database:
+	bin/dcrun sh -c "export PGPASSWORD=${DB_ROOT_PASSWORD} && psql -U ${DB_ROOT_USERNAME} -h ${DB_HOST} -c 'create database aspirecloud_testing owner ${DB_USERNAME}'"
 
 run-psql: ## Runs Postgres on the command line using the .env file variables
 	bin/dcrun sh -c "PGPASSWORD=${DB_PASSWORD} psql -U ${DB_USERNAME} -h ${DB_HOST} -p ${DB_PORT} -d ${DB_USERNAME}"

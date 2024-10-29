@@ -3,9 +3,13 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
+use App\Models\Sync\SyncTheme;
+use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
 /**
  * @property string $id
@@ -34,8 +38,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $is_community
  * @property string $external_repository_url
  */
-class Theme extends BaseModel
+final class Theme extends BaseModel
 {
+    //region Model Definition
+
     use HasUuids;
 
     protected $table = 'themes';
@@ -71,12 +77,101 @@ class Theme extends BaseModel
         ];
     }
 
-    /**
-    * Define the relationship to the author
-    * @return BelongsTo<Author, $this>
-    */
+    /** @return BelongsTo<Author, covariant self> */
     public function author(): BelongsTo
     {
-        return $this->belongsTo(Author::class, 'author_id'); // Use the foreign key column here
+        return $this->belongsTo(Author::class);
     }
+
+    /** @return BelongsTo<SyncTheme, covariant self> */
+    public function syncTheme(): BelongsTo
+    {
+        return $this->belongsTo(SyncTheme::class, 'sync_id', 'id');
+    }
+
+    //endregion
+
+    //region Constructors
+
+    public static function getOrCreateFromSyncTheme(SyncTheme $syncTheme): self
+    {
+        return self::where('sync_id', $syncTheme->id)->first() ?? self::createFromSyncTheme($syncTheme);
+    }
+
+    public static function createFromSyncTheme(SyncTheme $syncTheme): self
+    {
+        $data = $syncTheme->metadata or throw new InvalidArgumentException("SyncTheme instance has no metadata");
+
+        DB::beginTransaction();
+        $authorData = $data['author'] ?? throw new InvalidArgumentException("SyncTheme metadata has no author");
+        $author = Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
+
+        $instance = self::create([
+            'sync_id' => $syncTheme->id,
+            'author_id' => $author->id,
+            'slug' => $syncTheme->slug,
+            'name' => $syncTheme->name,
+            'version' => $syncTheme->current_version,
+            'download_link' => $data['download_link'],
+            'last_updated' => Carbon::parse($data['last_updated']),
+            'creation_time' => Carbon::parse($data['creation_time']),
+        ]);
+        $instance->fillFromMetadata($data, $author);
+        $instance->save();
+        DB::commit();
+        return $instance;
+    }
+
+    //endregion
+
+    //region Utilities
+
+    /**
+     * @param array<string,mixed> $data
+     * @return $this
+     */
+    public function fillFromMetadata(array $data, ?Author $author = null): self
+    {
+        if ($data['slug'] !== $this->slug) {
+            throw new InvalidArgumentException("Metatada slug does not match [{$data['slug']} !== $this->slug]");
+        }
+
+        $authorData = $data['author'] ?? throw new InvalidArgumentException("SyncTheme metadata has no author");
+        $author ??= Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
+
+        return $this->fill([
+            'author_id' => $author->id,
+            'name' => $data['name'],
+            'version' => $data['version'],
+            'download_link' => $data['download_link'],
+            'requires_php' => $data['requires_php'] ?? null,
+            'last_updated' => Carbon::parse($data['last_updated']),
+            'creation_time' => Carbon::parse($data['creation_time']),
+            // All fields below are optional
+            'preview_url' => $data['preview_url'] ?? null,
+            'screenshot_url' => $data['screenshot_url'] ?? null,
+            'ratings' => $data['ratings'] ?? null,
+            'rating' => $data['rating'] ?? 0,
+            'num_ratings' => $data['num_ratings'] ?? 0,
+            'reviews_url' => $data['reviews_url'] ?? null,
+            'downloaded' => $data['downloaded'] ?? 0,
+            'active_installs' => $data['active_installs'] ?? 0,
+            'homepage' => $data['homepage'] ?? null,
+            'sections' => $data['sections'] ?? null,
+            'tags' => $data['tags'] ?? null,
+            'versions' => $data['versions'] ?? null,
+            'requires' => $data['requires'] ?? null,
+            'is_commercial' => $data['is_commercial'] ?? false,
+            'external_support_url' => $data['external_support_url'] ?? null,
+            'is_community' => $data['is_community'] ?? false,
+            'external_repository_url' => $data['external_repository_url'] ?? null,
+        ]);
+    }
+
+    /** @return $this */
+    public function updateFromSyncTheme(): self
+    {
+        return $this->fillFromMetadata($this->syncTheme->metadata);
+    }
+    //endregion
 }
