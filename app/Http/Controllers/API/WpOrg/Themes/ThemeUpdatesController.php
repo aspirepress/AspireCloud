@@ -6,6 +6,7 @@ use App\Data\WpOrg\Themes\QueryThemesRequest;
 use App\Data\WpOrg\Themes\QueryThemesResponse;
 use App\Data\WpOrg\Themes\ThemeInformationRequest;
 use App\Data\WpOrg\Themes\ThemeUpdateCheckRequest;
+use App\Data\WpOrg\Themes\ThemeUpdateCheckResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ThemeCollection;
 use App\Http\Resources\ThemeUpdateCollection;
@@ -38,24 +39,13 @@ class ThemeUpdatesController extends Controller
             $updateRequest = ThemeUpdateCheckRequest::fromRequest($request);
 
 
-            $themesToUpdate = Theme::query()
-            ->when($updateRequest->themes, function ($query, $themes) {
-                collect(array_keys($themes))->each(function ($slug) use ($query, $themes) {
-                    $query->orWhere('slug', $slug)->where('version', '>', $themes[$slug]['Version']);
-                });
-            })->get();
-            $themesNoUpdates = Theme::query()
-            ->when($updateRequest->themes, function ($query, $themes) {
-                collect(array_keys($themes))->each(function ($slug) use ($query, $themes) {
-                    $query->orWhere('slug', $slug)->where('version', '<=', $themes[$slug]['Version']);
-                });
-            })->get();
-            return $this->sendResponse([
-                'themes' => new ThemeUpdateCollection(ThemeUpdateResource::collection($themesToUpdate)),
-                'no_update' => new ThemeUpdateCollection(ThemeUpdateResource::collection($themesNoUpdates)),
-                'translations' => TranslationResource::collection([]),
-
-            ]);
+            $themes = Theme::query()
+            ->whereIn('slug', array_keys($updateRequest->themes))
+            ->get()
+            ->partition(function ($theme) use ($updateRequest) {
+                return version_compare($theme->version, $updateRequest->themes[$theme->slug]['Version'], '>');
+            });
+            return $this->sendResponse(ThemeUpdateCheckResponse::fromData($themes[0], $themes[1]));
         } catch (ValidationException $e) {
 
             // Handle validation errors and return a custom response
@@ -68,11 +58,11 @@ class ThemeUpdatesController extends Controller
     /**
      * Send response based on API version.
      *
-     * @param array<string,mixed>|AnonymousResourceCollection $response
+     * @param array<string,mixed>|ThemeUpdateCheckResponse $response
      * @param int $statusCode
      * @return Response|JsonResponse
      */
-    private function sendResponse(array|AnonymousResourceCollection $response, int $statusCode = 200): JsonResponse|Response
+    private function sendResponse(array|ThemeUpdateCheckResponse $response, int $statusCode = 200): JsonResponse|Response
     {
         $version = request()->route('version');
         if ($version === '1.0') {
