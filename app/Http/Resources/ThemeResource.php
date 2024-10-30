@@ -17,33 +17,33 @@ class ThemeResource extends JsonResource
      * Transform the resource into an array.
      *
      * @return array{
-    *     name: string,
-    *     slug: string,
-    *     version: string,
-    *     preview_url: string,
-    *     author: Author,
-    *     screenshot_url: string,
-    *     ratings: array{1:int, 2:int, 3:int, 4:int, 5:int},
-    *     rating: int,
-    *     num_ratings: int,
-    *     reviews_url: string,
-    *     downloaded: int,
-    *     active_installs: int,
-    *     last_updated: CarbonImmutable,
-    *     last_updated_time: CarbonImmutable,
-    *     creation_time: CarbonImmutable,
-    *     homepage: string,
-    *     sections: array<string, string>,
-    *     download_link: string,
-    *     tags: array<string, string>,
-    *     versions: array<string, string>,
-    *     requires: bool,
-    *     requires_php: string,
-    *     is_commercial: bool,
-    *     external_support_url: string|bool,
-    *     is_community: bool,
-    *     external_repository_url: string
-    * }
+     *     name: string,
+     *     slug: string,
+     *     version: string,
+     *     preview_url: string,
+     *     author: Author,
+     *     screenshot_url: string,
+     *     ratings: array{1:int, 2:int, 3:int, 4:int, 5:int},
+     *     rating: int,
+     *     num_ratings: int,
+     *     reviews_url: string,
+     *     downloaded: int,
+     *     active_installs: int,
+     *     last_updated: CarbonImmutable,
+     *     last_updated_time: CarbonImmutable,
+     *     creation_time: CarbonImmutable,
+     *     homepage: string,
+     *     sections: array<string, string>,
+     *     download_link: string,
+     *     tags: array<string, string>,
+     *     versions: array<string, string>,
+     *     requires: bool,
+     *     requires_php: string,
+     *     is_commercial: bool,
+     *     external_support_url: string|bool,
+     *     is_community: bool,
+     *     external_repository_url: string
+     * }
      */
     public function toArray(Request $request): array
     {
@@ -156,8 +156,8 @@ class ThemeResource extends JsonResource
     }
 
     /**
-    * @param array<int>|null $ratings
-    * @return Collection<string, int>
+     * @param array<int>|null $ratings
+     * @return Collection<string, int>
      */
     private function mapRatings(?array $ratings = []): Collection
     {

@@ -61,7 +61,7 @@ class PluginResource extends JsonResource
     /**
      * @param array<int> $ratings
      * @return Collection<string, int>
-      */
+     */
     private function mapRatings(array $ratings): Collection
     {
         return collect($ratings)

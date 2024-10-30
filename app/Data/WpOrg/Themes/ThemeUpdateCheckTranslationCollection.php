@@ -11,9 +11,9 @@ class ThemeUpdateCheckTranslationCollection extends Data
 {
     /**
 
-        * @param ?array<string,mixed> $themes
-        * @param ?array<string,mixed> $translations
-        * @param ?string[] $locale
+     * @param ?array<string,mixed> $themes
+     * @param ?array<string,mixed> $translations
+     * @param ?string[] $locale
      */
     public function __construct(
         public readonly ?string $active = null, // text to search

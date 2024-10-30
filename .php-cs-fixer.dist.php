@@ -83,6 +83,9 @@ return (new Config())
         'object_operator_without_whitespace' => true,
         'operator_linebreak' => ['only_booleans' => true],
         'ordered_imports' => ['imports_order' => ['class', 'function', 'const'], 'sort_algorithm' => 'alpha'],
+        'ordered_types' => ['null_adjustment' => 'always_last', 'sort_algorithm' => 'none'],
+        // 'phpdoc_align' => true, // align phpdoc yourself or don't, but we don't enforce it
+        'phpdoc_indent' => true,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')
