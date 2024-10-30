@@ -37,7 +37,7 @@ class ThemeController extends Controller
         } catch (ValidationException $e) {
             // Handle validation errors and return a custom response
             $firstErrorMessage = collect($e->errors())->flatten()->first();
-            return  $this->sendResponse(['error' => $firstErrorMessage], 400);
+            return $this->sendResponse(['error' => $firstErrorMessage], 400);
         }
     }
 

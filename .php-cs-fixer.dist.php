@@ -95,6 +95,14 @@ return (new Config())
         'phpdoc_scalar' => true,
         'phpdoc_single_line_var_spacing' => true,
         'phpdoc_trim' => true,
+        'phpdoc_trim_consecutive_blank_line_separation' => true,
+        'phpdoc_types' => true,
+        'phpdoc_types_order' => ['null_adjustment' => 'always_last', 'sort_algorithm' => 'none'],
+        'phpdoc_var_without_name' => true,
+        'single_class_element_per_statement' => true,
+        'single_import_per_statement' => true,
+        // 'single_quote' => true, // not a terrible rule, but we prefer having no opinion
+        'single_space_around_construct' => true,
 
     ])
     ->setFinder($finder)
