@@ -8,3 +8,7 @@ parameters:
     paths:
         - app/
     checkModelProperties: true
+    checkOctaneCompatibility: true
+    noEnvCallsOutsideOfConfig: true
+    checkModelAppends: true
+
