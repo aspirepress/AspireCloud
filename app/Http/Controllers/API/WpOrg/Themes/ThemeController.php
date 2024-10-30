@@ -166,26 +166,26 @@ class ThemeController extends Controller
 
         // Pre 3.8 installs get width tags instead of layout tags.
         if (isset($wpVersion) && version_compare($wpVersion, '3.7.999', '<')) {
-            unset($tags[ __('Layout') ]);
-            $tags[ __('Width') ] = [
+            unset($tags[__('Layout')]);
+            $tags[__('Width')] = [
                 'fixed-width'    => __('Fixed Width'),
                 'flexible-width' => __('Flexible Width'),
             ];
 
-            if (array_key_exists('accessibility-ready', $tags[ __('Features') ])) {
-                unset($tags[ __('Features') ]['accessibility-ready']);
+            if (array_key_exists('accessibility-ready', $tags[__('Features')])) {
+                unset($tags[__('Features')]['accessibility-ready']);
             }
         }
 
         if (! isset($wpVersion) || version_compare($wpVersion, '3.9-beta', '>')) {
-            $tags[ __('Layout') ] = array_merge($tags[ __('Layout') ], $tags[ __('Columns') ]);
-            unset($tags[ __('Columns') ]);
+            $tags[__('Layout')] = array_merge($tags[__('Layout')], $tags[__('Columns')]);
+            unset($tags[__('Columns')]);
         }
 
         // See https://core.trac.wordpress.org/ticket/33407.
         if (! isset($wpVersion) || version_compare($wpVersion, '4.6-alpha', '>')) {
-            unset($tags[ __('Colors') ]);
-            $tags[ __('Layout') ] = [
+            unset($tags[__('Colors')]);
+            $tags[__('Layout')] = [
                 'grid-layout'   => __('Grid Layout'),
                 'one-column'    => __('One Column'),
                 'two-columns'   => __('Two Columns'),
@@ -195,12 +195,12 @@ class ThemeController extends Controller
                 'right-sidebar' => __('Right Sidebar'),
             ];
 
-            unset($tags[ __('Features') ]['blavatar']);
-            $tags[ __('Features') ]['footer-widgets'] = __('Footer Widgets');
-            $tags[ __('Features') ]['custom-logo']    = __('Custom Logo');
-            asort($tags[ __('Features') ]); // To move footer-widgets to the right place.
+            unset($tags[__('Features')]['blavatar']);
+            $tags[__('Features')]['footer-widgets'] = __('Footer Widgets');
+            $tags[__('Features')]['custom-logo']    = __('Custom Logo');
+            asort($tags[__('Features')]); // To move footer-widgets to the right place.
 
-            $tags[ __('Subject') ] = [
+            $tags[__('Subject')] = [
                 'blog'           => __('Blog'),
                 'e-commerce'     => __('E-Commerce'),
                 'education'      => __('Education'),
@@ -215,33 +215,33 @@ class ThemeController extends Controller
 
         // See https://core.trac.wordpress.org/ticket/46272.
         if (! isset($wpVersion) || version_compare($wpVersion, '5.2-alpha', '>=')) {
-            $tags[ __('Layout') ]['wide-blocks']    = __('Wide Blocks');
-            $tags[ __('Features') ]['block-styles'] = __('Block Editor Styles');
-            asort($tags[ __('Features') ]); // To move block-styles to the right place.
+            $tags[__('Layout')]['wide-blocks']    = __('Wide Blocks');
+            $tags[__('Features')]['block-styles'] = __('Block Editor Styles');
+            asort($tags[__('Features')]); // To move block-styles to the right place.
         }
 
         // See https://core.trac.wordpress.org/ticket/50164.
         if (! isset($wpVersion) || version_compare($wpVersion, '5.5-alpha', '>=')) {
-            $tags[ __('Features') ]['block-patterns']    = __('Block Editor Patterns');
-            $tags[ __('Features') ]['full-site-editing'] = __('Full Site Editing');
-            asort($tags[ __('Features') ]);
+            $tags[__('Features')]['block-patterns']    = __('Block Editor Patterns');
+            $tags[__('Features')]['full-site-editing'] = __('Full Site Editing');
+            asort($tags[__('Features')]);
         }
 
         // See https://core.trac.wordpress.org/ticket/53556.
         if (! isset($wpVersion) || version_compare($wpVersion, '5.8.1-alpha', '>=')) {
-            $tags[ __('Features') ]['template-editing'] = __('Template Editing');
-            asort($tags[ __('Features') ]);
+            $tags[__('Features')]['template-editing'] = __('Template Editing');
+            asort($tags[__('Features')]);
         }
 
         // See https://core.trac.wordpress.org/ticket/56869.
         if (! isset($wpVersion) || version_compare($wpVersion, '6.0-alpha', '>=')) {
-            $tags[ __('Features') ]['style-variations'] = __('Style Variations');
-            asort($tags[ __('Features') ]);
+            $tags[__('Features')]['style-variations'] = __('Style Variations');
+            asort($tags[__('Features')]);
         }
 
         // Only return tag slugs, to stay compatible with bbpress-version of Themes API.
         foreach ($tags as $title => $group) {
-            $tags[ $title ] = array_keys($group);
+            $tags[$title] = array_keys($group);
         }
 
         return $this->sendResponse($tags);

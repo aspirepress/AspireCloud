@@ -65,6 +65,10 @@ return (new Config())
         'no_leading_namespace_whitespace' => true,
         'no_mixed_echo_print' => ['use' => 'echo'],
         'no_multiline_whitespace_around_double_arrow' => true,
+        'no_null_property_initialization' => true,
+        'no_short_bool_cast' => true,
+        'no_singleline_whitespace_before_semicolons' => true,
+        'no_spaces_around_offset' => true,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')
