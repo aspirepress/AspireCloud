@@ -37,5 +37,4 @@ class SyncThemeFile extends BaseModel
             'hash' => 'string',
         ];
     }
-
 }

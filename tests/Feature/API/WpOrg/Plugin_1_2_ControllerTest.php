@@ -74,7 +74,6 @@ it('returns search results by tag in wp.org format', function () {
         ->and($responseData['info']['pages'])->toBe(1)
         ->and($responseData['info']['results'])->toBe(2);
 
-
     // Assert that each plugin has the 'jwt' tag
     foreach ($responseData['plugins'] as $plugin) {
         expect($plugin['tags'])->toContain($tag);

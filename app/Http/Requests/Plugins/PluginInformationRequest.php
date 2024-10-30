@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Plugins;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class PluginInformationRequest extends FormRequest
@@ -28,7 +28,7 @@ class PluginInformationRequest extends FormRequest
     /**
      * Get the plugin slug from the request
      */
-    public function getSlug(): string | null
+    public function getSlug(): ?string
     {
         return $this->query('slug');
     }

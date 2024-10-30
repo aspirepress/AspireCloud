@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\WpOrg\Author;
-use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\Theme;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -26,7 +25,7 @@ beforeEach(function () {
         'creation_time' => '2021-01-01 12:00:00',
         'preview_url' => 'https://wp-themes.com/my-theme',
         'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
-        'ratings' => [5,4,3,2,1,2],
+        'ratings' => [5, 4, 3, 2, 1, 2],
         'rating' => 5,
         'num_ratings' => 6,
         'reviews_url' => 'https://wp-themes.com/my-theme/reviews',
@@ -34,9 +33,9 @@ beforeEach(function () {
         'active_installs' => 100,
         'homepage' => 'https://wp-themes.com/my-theme',
         'sections' => [],
-        'tags' => ['black','white','red','blue'],
-        'versions' => ['1.2.1','1.2.0','1.1.0'],
-        'requires' => ['php' => '5.6','wp' => '5.0'],
+        'tags' => ['black', 'white', 'red', 'blue'],
+        'versions' => ['1.2.1', '1.2.0', '1.1.0'],
+        'requires' => ['php' => '5.6', 'wp' => '5.0'],
         'is_commercial' => false,
         'external_support_url' => null,
         'is_community' => true,

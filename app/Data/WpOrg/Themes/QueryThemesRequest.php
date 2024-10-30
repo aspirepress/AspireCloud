@@ -12,14 +12,8 @@ class QueryThemesRequest extends Data
     public const ACTION = 'query_themes';
 
     /**
-     * @param ?string $search
      * @param ?string[] $tags
-     * @param ?string $theme
-     * @param ?string $author
-     * @param ?string $browse
      * @param ?array<string,bool> $fields
-     * @param int $page
-     * @param int $per_page
      */
     public function __construct(
         public readonly ?string $search = null, // text to search
@@ -46,7 +40,6 @@ class QueryThemesRequest extends Data
             'homepage'    => true,
             'template'    => true,
         ];
-
 
         $req['fields'] = self::getFields($request, $defaultFields);
         return static::from($req);

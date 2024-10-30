@@ -190,5 +190,4 @@ class SyncPluginFactory extends Factory
         }
         return $dependencies;
     }
-
 }

@@ -35,7 +35,6 @@ class CatchAllController extends Controller
                 'query' => $queryParams,
                 'form_params' => $requestData,
             ]);
-
         } catch (RequestException $e) {
             $statusCode = $e->response->status();
 

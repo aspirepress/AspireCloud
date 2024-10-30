@@ -41,7 +41,6 @@ trait ThemeFields
     /**
      * Get the fields to be returned in the response.
      *
-     * @param Request $request
      * @param array<string,bool> $defaultFields
      * @return array<string,bool>
      */

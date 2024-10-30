@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Sync\SyncPlugin;
 use App\Models\WpOrg\Plugin;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 class PopulatePluginsCommand extends Command

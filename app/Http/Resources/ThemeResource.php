@@ -2,12 +2,12 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Collection;
 use App\Data\WpOrg\Author;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
+use Illuminate\Support\Collection;
 
 use function Safe\preg_match_all;
 
@@ -17,33 +17,33 @@ class ThemeResource extends JsonResource
      * Transform the resource into an array.
      *
      * @return array{
-    *     name: string,
-    *     slug: string,
-    *     version: string,
-    *     preview_url: string,
-    *     author: Author,
-    *     screenshot_url: string,
-    *     ratings: array{1:int, 2:int, 3:int, 4:int, 5:int},
-    *     rating: int,
-    *     num_ratings: int,
-    *     reviews_url: string,
-    *     downloaded: int,
-    *     active_installs: int,
-    *     last_updated: CarbonImmutable,
-    *     last_updated_time: CarbonImmutable,
-    *     creation_time: CarbonImmutable,
-    *     homepage: string,
-    *     sections: array<string, string>,
-    *     download_link: string,
-    *     tags: array<string, string>,
-    *     versions: array<string, string>,
-    *     requires: bool,
-    *     requires_php: string,
-    *     is_commercial: bool,
-    *     external_support_url: string|bool,
-    *     is_community: bool,
-    *     external_repository_url: string
-    * }
+     *     name: string,
+     *     slug: string,
+     *     version: string,
+     *     preview_url: string,
+     *     author: Author,
+     *     screenshot_url: string,
+     *     ratings: array{1:int, 2:int, 3:int, 4:int, 5:int},
+     *     rating: int,
+     *     num_ratings: int,
+     *     reviews_url: string,
+     *     downloaded: int,
+     *     active_installs: int,
+     *     last_updated: CarbonImmutable,
+     *     last_updated_time: CarbonImmutable,
+     *     creation_time: CarbonImmutable,
+     *     homepage: string,
+     *     sections: array<string, string>,
+     *     download_link: string,
+     *     tags: array<string, string>,
+     *     versions: array<string, string>,
+     *     requires: bool,
+     *     requires_php: string,
+     *     is_commercial: bool,
+     *     external_support_url: string|bool,
+     *     is_community: bool,
+     *     external_repository_url: string
+     * }
      */
     public function toArray(Request $request): array
     {
@@ -124,13 +124,10 @@ class ThemeResource extends JsonResource
     /**
      * When the given field is included, the value is returned.
      * Otherwise, the default value is returned.
-     *
-     * @param string $fieldName
      * @param mixed $value
-     * @param mixed $default
-     * @return mixed
+     * @param mixed|null $default
      */
-    private function whenField(string $fieldName, $value, $default = null)
+    private function whenField(string $fieldName, $value, $default = null): mixed
     {
         $include = false;
         $includedFields = $this->additional['fields'] ?? [];
@@ -159,16 +156,16 @@ class ThemeResource extends JsonResource
         return $sections;
     }
 
-
     /**
-    * @param array<int>|null $ratings
-    * @return Collection<string, int>
+     * @param array<int>|null $ratings
+     * @return Collection<string, int>
      */
-    private function mapRatings(array|null $ratings = []): Collection
+    private function mapRatings(?array $ratings = []): Collection
     {
         return collect($ratings)
             ->mapWithKeys(fn($value, $key) => [(string) $key => $value]);
     }
+
     /**
      * Get the description of the theme.
      *
@@ -201,5 +198,4 @@ class ThemeResource extends JsonResource
         return 'downloadurl_placeholder' . $version;
         //return $this->resource->repo_package->download_url($version);
     }
-
 }

@@ -19,17 +19,17 @@ class ThemeUpdateCheckRequest extends Data
      */
 
     /**
-        * @param string $active                    // Active theme slug
-        * @param array<string,array{
-        *     "Version": string,
-        * }> $themes                               // Array of theme slugs and their current versions
-        * @param array<string,array<string,array{
+     * @param string $active                    // Active theme slug
+     * @param array<string,array{
+     *     "Version": string,
+     * }> $themes                               // Array of theme slugs and their current versions
+     * @param array<string,array<string,array{
      *     POT-Creation-Date: string,
      *     PO-Revision-Date: string,
      *     Project-Id-Version: string,
      *     X-Generator: string
      * }>> $translations
-        * @param string[] $locale             // Array of locale strings
+     * @param string[] $locale             // Array of locale strings
      */
     public function __construct(
         public readonly ?string $active = null, // text to search

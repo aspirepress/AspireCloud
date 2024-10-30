@@ -14,29 +14,29 @@ class PluginInformationService
     }
 
     /**
-      * Query plugins with filters and pagination
-      *
-      * @return array{
-      *    plugins: Collection<int, Plugin>,
-      *    page: int,
-      *    totalPages: int,
-      *    total: int
-      * }
-      */
+     * Query plugins with filters and pagination
+     *
+     * @return array{
+     *    plugins: Collection<int, Plugin>,
+     *    page: int,
+     *    totalPages: int,
+     *    total: int
+     * }
+     */
     public function queryPlugins(
         int $page,
         int $perPage,
         ?string $search = null,
         ?string $tag = null,
         ?string $author = null,
-        string $browse = 'popular'
+        string $browse = 'popular',
     ): array {
         $query = Plugin::query()
             ->when($search, function (Builder $query, string $search) {
                 $query->where(function (Builder $q) use ($search) {
                     $q->where('name', 'ilike', "%{$search}%")
-                      ->orWhere('short_description', 'like', "%{$search}%")
-                      ->orWhere('description', 'like', "%{$search}%");
+                        ->orWhere('short_description', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
                 });
             })
             ->when($tag, function (Builder $query, string $tag) {
@@ -65,17 +65,17 @@ class PluginInformationService
     }
 
     /**
-    * Apply sorting based on browse parameter
-    *
-    * @param Builder<Plugin> $query
-    */
+     * Apply sorting based on browse parameter
+     *
+     * @param Builder<Plugin> $query
+     */
     private function applyBrowseSort(Builder $query, string $browse): void
     {
         match ($browse) {
             'new' => $query->orderBy('added', 'desc'),
             'updated' => $query->orderBy('last_updated', 'desc'),
             'top-rated' => $query->orderBy('rating', 'desc'),
-            default => $query->orderBy('active_installs', 'desc')
+            default => $query->orderBy('active_installs', 'desc'),
         };
     }
 }
