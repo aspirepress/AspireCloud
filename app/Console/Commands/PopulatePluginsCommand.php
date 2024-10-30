@@ -19,7 +19,7 @@ class PopulatePluginsCommand extends Command
         $days = (int) $this->option('days');
 
         if ($this->option('delete')) {
-            $query = DB::table('themes')->whereNotNull('sync_id');
+            $query = DB::table('plugins')->whereNotNull('sync_id');
             $days and $query->whereDate('pulled_at', '>=', now()->subDays($days));
             $query->delete();
         }
