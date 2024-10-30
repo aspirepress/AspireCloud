@@ -1,9 +1,6 @@
 <?php
 
 use App\Models\WpOrg\Plugin;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Plugin::factory()->create([
@@ -130,4 +127,28 @@ it('returns search results by tag and author in wp.org format', function () {
         ->and($responseData['info']['page'])->toBe(1)
         ->and($responseData['info']['pages'])->toBe(1)
         ->and($responseData['info']['results'])->toBe(1);
+});
+
+it('returns a valid pagination', function () {
+    $perPage = 2;
+    $page = 2;
+
+    expect(Plugin::query()->count())->toBe(10);
+
+    $response = $this->getJson('/plugins/info/1.2?action=query_plugins&per_page=' . $perPage . '&page=' . $page);
+
+    $response->assertStatus(200);
+    assertWpPluginAPIStructureForSearch($response);
+
+    // Get the response data
+    $responseData = $response->json();
+    expect(count($responseData['plugins']))->toBe(2)
+        ->and($responseData['info'])->toHaveKeys([
+            'page',
+            'pages',
+            'results',
+        ])
+        ->and($responseData['info']['page'])->toBe(2)
+        ->and($responseData['info']['pages'])->toBe(5)
+        ->and($responseData['info']['results'])->toBe(10);
 });
