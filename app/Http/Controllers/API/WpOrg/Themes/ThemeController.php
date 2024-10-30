@@ -20,7 +20,6 @@ use function Safe\preg_match;
 class ThemeController extends Controller
 {
     /**
-     *
      * @return JsonResponse
      */
     public function info(Request $request): JsonResponse|Response

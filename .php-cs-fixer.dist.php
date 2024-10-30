@@ -86,6 +86,16 @@ return (new Config())
         'ordered_types' => ['null_adjustment' => 'always_last', 'sort_algorithm' => 'none'],
         // 'phpdoc_align' => true, // align phpdoc yourself or don't, but we don't enforce it
         'phpdoc_indent' => true,
+        'phpdoc_inline_tag_normalizer' => true,
+        'phpdoc_no_access' => true,
+        'phpdoc_no_package' => true,
+        'phpdoc_no_useless_inheritdoc' => true,
+        'phpdoc_order' => ['order' => ['param', 'return', 'throws']],
+        'phpdoc_return_self_reference' => true,
+        'phpdoc_scalar' => true,
+        'phpdoc_single_line_var_spacing' => true,
+        'phpdoc_trim' => true,
+
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')

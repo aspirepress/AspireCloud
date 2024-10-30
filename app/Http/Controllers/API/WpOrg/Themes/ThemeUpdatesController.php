@@ -14,7 +14,6 @@ use Illuminate\Validation\ValidationException;
 class ThemeUpdatesController extends Controller
 {
     /**
-     *
      * @return JsonResponse
      */
     public function __invoke(Request $request): JsonResponse|Response

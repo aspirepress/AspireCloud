@@ -10,7 +10,6 @@ use function Safe\json_decode;
 class ThemeUpdateCheckTranslationCollection extends Data
 {
     /**
-
      * @param ?array<string,mixed> $themes
      * @param ?array<string,mixed> $translations
      * @param ?string[] $locale
