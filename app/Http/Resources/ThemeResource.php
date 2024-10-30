@@ -124,6 +124,8 @@ class ThemeResource extends JsonResource
     /**
      * When the given field is included, the value is returned.
      * Otherwise, the default value is returned.
+     * @param mixed $value
+     * @param mixed|null $default
      */
     private function whenField(string $fieldName, $value, $default = null)
     {
