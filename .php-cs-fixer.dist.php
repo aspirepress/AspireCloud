@@ -115,6 +115,7 @@ return (new Config())
         'single_space_around_construct' => true,
         'space_after_semicolon' => ['remove_in_empty_for_expressions' => true],
         'standardize_not_equals' => true,
+        'string_implicit_backslashes' => true,
         'switch_continue_to_break' => true,
         'trailing_comma_in_multiline' => [
             'after_heredoc' => true,

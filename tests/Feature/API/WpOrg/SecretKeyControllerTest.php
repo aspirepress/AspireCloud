@@ -10,7 +10,7 @@ $validKeys = SecretKeyController::VALID_KEY_CHARACTERS;
 function validateKeys(string $content, array $expectedKeyNames, string $validKeys): void
 {
     foreach ($expectedKeyNames as $keyName) {
-        preg_match("/define\('$keyName',\s+'([^']+)'\);/", $content, $matches);
+        preg_match("/define\\('$keyName',\\s+'([^']+)'\\);/", $content, $matches);
 
         // Ensure we have a match and a captured group
         expect($matches)->toHaveCount(2);
