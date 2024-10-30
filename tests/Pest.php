@@ -16,7 +16,7 @@ use Tests\TestCase;
 */
 
 pest()->extend(TestCase::class)
-  ->use(RefreshDatabase::class)
+    ->use(RefreshDatabase::class)
     ->in('Feature');
 function assertWpThemeBaseStructure($json)
 {
@@ -35,21 +35,21 @@ function assertWpThemeBaseStructure($json)
 function assertWpThemeInfoBaseStructure($json)
 {
     return $json
-    ->has('name')
-    ->has('slug')
-    ->has('version')
-    ->has('preview_url')
-    ->has('screenshot_url')
-    ->has('rating')
-    ->has('num_ratings')
-    ->has('homepage')
-    ->has('sections')
-    ->has('tags')
-    ->has('download_link')
-    ->has('last_updated')
-    ->has('downloaded')
-    ->has('last_updated_time')
-    ->has('author');
+        ->has('name')
+        ->has('slug')
+        ->has('version')
+        ->has('preview_url')
+        ->has('screenshot_url')
+        ->has('rating')
+        ->has('num_ratings')
+        ->has('homepage')
+        ->has('sections')
+        ->has('tags')
+        ->has('download_link')
+        ->has('last_updated')
+        ->has('downloaded')
+        ->has('last_updated_time')
+        ->has('author');
 }
 function assertWpThemeAPIStructure1_1_query_themes($response)
 {
@@ -87,7 +87,7 @@ function assertWpThemeAPIStructure1_1_theme_information($response)
 {
     return $response->assertJson(
         fn(AssertableJson $json) => assertWpThemeInfoBaseStructure($json)
-        ->whereType('author', 'string')
+            ->whereType('author', 'string')
     );
 }
 
@@ -95,13 +95,13 @@ function assertWpThemeAPIStructure1_2_theme_information($response)
 {
     return $response->assertJson(
         fn(AssertableJson $json) => assertWpThemeInfoBaseStructure($json)
-        ->has('requires')
-        ->has('requires_php')
-        ->has('is_commercial')
-        ->has('external_support_url')
-        ->has('is_community')
-        ->has('external_repository_url')
-        ->whereType('author', 'array')
+            ->has('requires')
+            ->has('requires_php')
+            ->has('is_commercial')
+            ->has('external_support_url')
+            ->has('is_community')
+            ->has('external_repository_url')
+            ->whereType('author', 'array')
     );
 }
 

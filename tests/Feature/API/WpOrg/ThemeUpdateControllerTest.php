@@ -109,38 +109,38 @@ it('returns theme updates', function () {
 
     $response->assertStatus(200);
     $response->assertJsonCount(1, 'themes')
-         ->assertJsonCount(1, 'no_update')
-         ->assertJsonStructure([
-             'themes' => [
-                 'my-theme' => [
-                     'name',
-                     'new_version',
-                     'package',
-                     'requires',
-                     'requires_php',
-                     'theme',
-                     'url',
-                 ],
-             ],
-             'no_update' => [
-                 'my-theme2' => [
-                     'name',
-                     'new_version',
-                     'package',
-                     'requires',
-                     'requires_php',
-                     'theme',
-                     'url',
-                 ],
-             ],
-             'translations',
-         ])
-         ->assertJsonPath('themes.my-theme.name', 'My Theme')
-         ->assertJsonPath('themes.my-theme.new_version', '1.2.1')
-         ->assertJsonPath('themes.my-theme.theme', 'my-theme')
-         ->assertJsonPath('no_update.my-theme2.name', 'My Theme2')
-         ->assertJsonPath('no_update.my-theme2.new_version', '2.9')
-         ->assertJsonPath('no_update.my-theme2.theme', 'my-theme2');
+        ->assertJsonCount(1, 'no_update')
+        ->assertJsonStructure([
+            'themes' => [
+                'my-theme' => [
+                    'name',
+                    'new_version',
+                    'package',
+                    'requires',
+                    'requires_php',
+                    'theme',
+                    'url',
+                ],
+            ],
+            'no_update' => [
+                'my-theme2' => [
+                    'name',
+                    'new_version',
+                    'package',
+                    'requires',
+                    'requires_php',
+                    'theme',
+                    'url',
+                ],
+            ],
+            'translations',
+        ])
+        ->assertJsonPath('themes.my-theme.name', 'My Theme')
+        ->assertJsonPath('themes.my-theme.new_version', '1.2.1')
+        ->assertJsonPath('themes.my-theme.theme', 'my-theme')
+        ->assertJsonPath('no_update.my-theme2.name', 'My Theme2')
+        ->assertJsonPath('no_update.my-theme2.new_version', '2.9')
+        ->assertJsonPath('no_update.my-theme2.theme', 'my-theme2');
 });
 
 it('returns theme updates - no_updates', function () {
@@ -177,35 +177,35 @@ it('returns theme updates - no_updates', function () {
 
     $response->assertStatus(200);
     $response->assertJsonCount(0, 'themes')
-         ->assertJsonCount(2, 'no_update')
-         ->assertJsonStructure([
-             'themes',
-             'no_update' => [
-                 'my-theme' => [
-                     'name',
-                     'new_version',
-                     'package',
-                     'requires',
-                     'requires_php',
-                     'theme',
-                     'url',
-                 ],
-                 'my-theme2' => [
-                     'name',
-                     'new_version',
-                     'package',
-                     'requires',
-                     'requires_php',
-                     'theme',
-                     'url',
-                 ],
-             ],
-             'translations',
-         ])
-         ->assertJsonPath('no_update.my-theme.name', 'My Theme')
-         ->assertJsonPath('no_update.my-theme.new_version', '1.2.1')
-         ->assertJsonPath('no_update.my-theme.theme', 'my-theme')
-         ->assertJsonPath('no_update.my-theme2.name', 'My Theme2')
-         ->assertJsonPath('no_update.my-theme2.new_version', '2.9')
-         ->assertJsonPath('no_update.my-theme2.theme', 'my-theme2');
+        ->assertJsonCount(2, 'no_update')
+        ->assertJsonStructure([
+            'themes',
+            'no_update' => [
+                'my-theme' => [
+                    'name',
+                    'new_version',
+                    'package',
+                    'requires',
+                    'requires_php',
+                    'theme',
+                    'url',
+                ],
+                'my-theme2' => [
+                    'name',
+                    'new_version',
+                    'package',
+                    'requires',
+                    'requires_php',
+                    'theme',
+                    'url',
+                ],
+            ],
+            'translations',
+        ])
+        ->assertJsonPath('no_update.my-theme.name', 'My Theme')
+        ->assertJsonPath('no_update.my-theme.new_version', '1.2.1')
+        ->assertJsonPath('no_update.my-theme.theme', 'my-theme')
+        ->assertJsonPath('no_update.my-theme2.name', 'My Theme2')
+        ->assertJsonPath('no_update.my-theme2.new_version', '2.9')
+        ->assertJsonPath('no_update.my-theme2.theme', 'my-theme2');
 });

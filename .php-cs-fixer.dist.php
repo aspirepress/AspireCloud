@@ -40,6 +40,7 @@ return (new Config())
         'declare_parentheses' => true,
         'empty_loop_body' => ['style' => 'braces'],
         'empty_loop_condition' => ['style' => 'while'],
+        'explicit_indirect_variable' => true,
         'fully_qualified_strict_types' => ['import_symbols' => true],
         'general_phpdoc_tag_rename' => ['replacements' => ['inheritDocs' => 'inheritDoc']],
         'global_namespace_import' => ['import_classes' => true, 'import_constants' => true, 'import_functions' => false],
@@ -48,6 +49,7 @@ return (new Config())
         'magic_constant_casing' => true,
         'magic_method_casing' => true,
         'method_argument_space' => ['on_multiline' => 'ignore'],
+        'method_chaining_indentation' => true,
         'native_function_casing' => true,
         'native_type_declaration_casing' => true,
         'no_alias_language_construct_call' => true,
@@ -116,7 +118,7 @@ return (new Config())
         'types_spaces' => ['space' => 'none'],
         'unary_operator_spaces' => true,
         'whitespace_after_comma_in_array' => ['ensure_single_space' => true],
-
+        'yoda_style' => false,  // official opinion on yoda style we do not have
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')

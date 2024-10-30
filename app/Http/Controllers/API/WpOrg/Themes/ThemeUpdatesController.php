@@ -22,11 +22,11 @@ class ThemeUpdatesController extends Controller
             $updateRequest = ThemeUpdateCheckRequest::fromRequest($request);
 
             $themes = Theme::query()
-            ->whereIn('slug', array_keys($updateRequest->themes))
-            ->get()
-            ->partition(function ($theme) use ($updateRequest) {
-                return version_compare($theme->version, $updateRequest->themes[$theme->slug]['Version'], '>');
-            });
+                ->whereIn('slug', array_keys($updateRequest->themes))
+                ->get()
+                ->partition(function ($theme) use ($updateRequest) {
+                    return version_compare($theme->version, $updateRequest->themes[$theme->slug]['Version'], '>');
+                });
             return $this->sendResponse(ThemeUpdateCheckResponse::fromData($themes[0], $themes[1]));
         } catch (ValidationException $e) {
             // Handle validation errors and return a custom response

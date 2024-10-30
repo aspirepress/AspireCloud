@@ -53,8 +53,8 @@ class Plugin_1_2_Controller extends Controller
             ->when($search, function (Builder $query, string $search) {
                 $query->where(function (Builder $q) use ($search) {
                     $q->where('name', 'ilike', "%{$search}%")
-                      ->orWhere('short_description', 'like', "%{$search}%")
-                      ->orWhere('description', 'like', "%{$search}%");
+                        ->orWhere('short_description', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
                 });
             })
             ->when($tag, function (Builder $query, string $tag) {
