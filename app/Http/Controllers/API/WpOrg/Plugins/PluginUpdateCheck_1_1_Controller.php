@@ -13,7 +13,7 @@ use function Safe\json_decode;
 class PluginUpdateCheck_1_1_Controller extends Controller
 {
     public function __construct(
-        private readonly PluginUpdateService $pluginService
+        private readonly PluginUpdateService $pluginService,
     ) {}
 
     public function __invoke(PluginUpdateRequest $request): JsonResponse

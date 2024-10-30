@@ -8,14 +8,14 @@ use Illuminate\Support\Collection;
 class PluginUpdateService
 {
     /**
-      * Process the plugins and check for updates
-      *
-      * @param array<string, array{Version?: string}> $plugins
-      * @return array{
-      *     updates: Collection<string, array<string, mixed>>,
-      *     no_updates: Collection<string, array<string, mixed>>
-      * }
-      */
+     * Process the plugins and check for updates
+     *
+     * @param array<string, array{Version?: string}> $plugins
+     * @return array{
+     *     updates: Collection<string, array<string, mixed>>,
+     *     no_updates: Collection<string, array<string, mixed>>
+     * }
+     */
     public function processPlugins(array $plugins, bool $includeAll): array
     {
         $updates = collect();
@@ -45,10 +45,10 @@ class PluginUpdateService
     }
 
     /**
-      * Find a plugin by its file path and data
-      *
-      * @param array{Version?: string} $pluginData
-      */
+     * Find a plugin by its file path and data
+     *
+     * @param array{Version?: string} $pluginData
+     */
     private function findPlugin(string $pluginFile, array $pluginData): ?Plugin
     {
         $slug = $this->extractSlug($pluginFile);

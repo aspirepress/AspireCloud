@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 class PluginInformation_1_2_Controller extends Controller
 {
     public function __construct(
-        private readonly PluginInformationService $pluginService
+        private readonly PluginInformationService $pluginService,
     ) {}
 
     public function __invoke(Request $request): JsonResponse
@@ -22,7 +22,7 @@ class PluginInformation_1_2_Controller extends Controller
         return match ($request->query('action')) {
             'query_plugins' => $this->queryPlugins(new QueryPluginsRequest($request->all())),
             'plugin_information' => $this->pluginInformation(new PluginInformationRequest($request->all())),
-            default => response()->json(['error' => 'Invalid action'], 400)
+            default => response()->json(['error' => 'Invalid action'], 400),
         };
     }
 
