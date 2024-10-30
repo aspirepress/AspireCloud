@@ -112,6 +112,9 @@ return (new Config())
             'elements' => ['array_destructuring', 'arrays', 'match', 'parameters'],
         ],
         'trim_array_spaces' => true,
+        'type_declaration_spaces' =>  true,
+        'types_spaces' => ['space' => 'none'],
+        'unary_operator_spaces' => true,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')
