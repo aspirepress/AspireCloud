@@ -14,7 +14,6 @@ use Illuminate\Validation\ValidationException;
 class ThemeUpdatesController extends Controller
 {
     /**
-    * @param Request $request
     *
     * @return JsonResponse
     */
@@ -41,8 +40,6 @@ class ThemeUpdatesController extends Controller
      * Send response based on API version.
      *
      * @param array<string,mixed>|ThemeUpdateCheckResponse $response
-     * @param int $statusCode
-     * @return Response|JsonResponse
      */
     private function sendResponse(array|ThemeUpdateCheckResponse $response, int $statusCode = 200): JsonResponse|Response
     {

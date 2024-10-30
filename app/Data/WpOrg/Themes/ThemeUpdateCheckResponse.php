@@ -11,7 +11,6 @@ class ThemeUpdateCheckResponse extends Data
     /**
      * @param Collection<string,ThemeUpdateData> $themes
      * @param Collection<string,ThemeUpdateData> $no_update
-     * @param mixed $translations
      */
     public function __construct(
         public Collection $themes,

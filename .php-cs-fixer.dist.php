@@ -69,6 +69,7 @@ return (new Config())
         'no_short_bool_cast' => true,
         'no_singleline_whitespace_before_semicolons' => true,
         'no_spaces_around_offset' => true,
+        'no_superfluous_phpdoc_tags' => ['remove_inheritdoc' => true]
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')

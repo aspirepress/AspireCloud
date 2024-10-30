@@ -12,11 +12,6 @@ use Illuminate\Http\Request;
 
 class Plugin_1_2_Controller extends Controller
 {
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function __invoke(Request $request): JsonResponse
     {
         $action = $request->query('action');

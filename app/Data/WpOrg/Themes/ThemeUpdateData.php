@@ -20,8 +20,6 @@ class ThemeUpdateData extends Data
 
     /**
     * Static method to create an instance from a Theme model.
-    * @param Theme $theme
-    * @return ThemeUpdateData
     */
     public static function fromModel(Theme $theme): self
     {

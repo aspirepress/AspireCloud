@@ -20,7 +20,6 @@ use function Safe\preg_match;
 class ThemeController extends Controller
 {
     /**
-    * @param Request $request
     *
     * @return JsonResponse
     */
@@ -93,13 +92,11 @@ class ThemeController extends Controller
         return $this->sendResponse((new ThemeResource($theme))->additional(['fields' => $request->fields]));
     }
 
-    /** @return JsonResponse|Response */
     private function doHotTags(): JsonResponse|Response
     {
         return $this->sendResponse(['error' => 'Not Implemented'], 400);
     }
 
-    /** @return JsonResponse|Response */
     private function doFeatureList(): JsonResponse|Response
     {
         $request = request();
@@ -259,8 +256,6 @@ class ThemeController extends Controller
      * Send response based on API version.
      *
      * @param array<string,mixed>|ThemeCollection $response
-     * @param int $statusCode
-     * @return Response|JsonResponse
      */
     private function sendResponse(array|ThemeCollection|ThemeResource $response, int $statusCode = 200): JsonResponse|Response
     {

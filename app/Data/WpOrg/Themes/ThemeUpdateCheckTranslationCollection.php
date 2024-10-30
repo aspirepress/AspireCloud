@@ -11,7 +11,6 @@ class ThemeUpdateCheckTranslationCollection extends Data
 {
     /**
 
-        * @param ?string $active
         * @param ?array<string,mixed> $themes
         * @param ?array<string,mixed> $translations
         * @param ?string[] $locale
