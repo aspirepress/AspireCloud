@@ -62,6 +62,9 @@ return (new Config())
                 'extra', 'parenthesis_brace_block', 'return', 'square_brace_block', 'switch', 'throw', 'use',
             ],
         ],
+        'no_leading_namespace_whitespace' => true,
+        'no_mixed_echo_print' => ['use' => 'echo'],
+        'no_multiline_whitespace_around_double_arrow' => true,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')

@@ -54,13 +54,10 @@ function assertWpThemeInfoBaseStructure($json)
 function assertWpThemeAPIStructure1_1_query_themes($response)
 {
     return $response->assertJson(
-        fn(AssertableJson $json) =>
-        $json->has('info')->has(
+        fn(AssertableJson $json) => $json->has('info')->has(
             'themes',
-            fn($json) =>
-            $json->each(
-                fn($theme) =>
-                assertWpThemeBaseStructure($theme)
+            fn($json) => $json->each(
+                fn($theme) => assertWpThemeBaseStructure($theme)
                     ->whereType('author', 'string')
             )
         )
@@ -70,13 +67,10 @@ function assertWpThemeAPIStructure1_1_query_themes($response)
 function assertWpThemeAPIStructure1_2_query_themes($response)
 {
     return $response->assertJson(
-        fn(AssertableJson $json) =>
-        $json->has('info')->has(
+        fn(AssertableJson $json) => $json->has('info')->has(
             'themes',
-            fn($json) =>
-            $json->each(
-                fn($theme) =>
-                assertWpThemeBaseStructure($theme)
+            fn($json) => $json->each(
+                fn($theme) => assertWpThemeBaseStructure($theme)
                     ->has('requires')
                     ->has('requires_php')
                     ->has('is_commercial')
@@ -92,8 +86,7 @@ function assertWpThemeAPIStructure1_2_query_themes($response)
 function assertWpThemeAPIStructure1_1_theme_information($response)
 {
     return $response->assertJson(
-        fn(AssertableJson $json) =>
-        assertWpThemeInfoBaseStructure($json)
+        fn(AssertableJson $json) => assertWpThemeInfoBaseStructure($json)
         ->whereType('author', 'string')
     );
 }
@@ -101,8 +94,7 @@ function assertWpThemeAPIStructure1_1_theme_information($response)
 function assertWpThemeAPIStructure1_2_theme_information($response)
 {
     return $response->assertJson(
-        fn(AssertableJson $json) =>
-        assertWpThemeInfoBaseStructure($json)
+        fn(AssertableJson $json) => assertWpThemeInfoBaseStructure($json)
         ->has('requires')
         ->has('requires_php')
         ->has('is_commercial')
