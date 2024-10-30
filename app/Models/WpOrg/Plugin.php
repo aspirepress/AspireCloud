@@ -122,7 +122,7 @@ final class Plugin extends BaseModel
 
     public static function getOrCreateFromSyncPlugin(SyncPlugin $syncPlugin): self
     {
-        return static::where('sync_id', $syncPlugin->id)->first() ?? static::createFromSyncPlugin($syncPlugin);
+        return self::where('sync_id', $syncPlugin->id)->first() ?? self::createFromSyncPlugin($syncPlugin);
     }
 
     public static function createFromSyncPlugin(SyncPlugin $syncPlugin): self
@@ -131,7 +131,7 @@ final class Plugin extends BaseModel
 
         DB::beginTransaction();
 
-        $instance = static::create([
+        $instance = self::create([
             'sync_id' => $syncPlugin->id,
             'slug' => $syncPlugin->slug,
             'name' => $syncPlugin->name,
