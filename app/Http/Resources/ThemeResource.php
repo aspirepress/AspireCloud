@@ -127,7 +127,7 @@ class ThemeResource extends JsonResource
      * @param mixed $value
      * @param mixed|null $default
      */
-    private function whenField(string $fieldName, $value, $default = null)
+    private function whenField(string $fieldName, $value, $default = null): mixed
     {
         $include = false;
         $includedFields = $this->additional['fields'] ?? [];
