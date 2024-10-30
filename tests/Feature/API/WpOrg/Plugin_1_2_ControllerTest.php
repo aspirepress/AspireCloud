@@ -1,9 +1,6 @@
 <?php
 
 use App\Models\WpOrg\Plugin;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Plugin::factory()->create([
