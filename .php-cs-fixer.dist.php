@@ -23,7 +23,7 @@ return (new Config())
         // Most rules below come from @Symfony and @PhpCsFixer, but there are a few differences in configuration,
         // as well as some rules we just don't take at all because we have no official opinion on the style.
         'backtick_to_shell_exec' => true,
-        // 'binary_operator_spaces' => true, // not ideal.  this takes a _lot_ of options.  TODO.
+        'binary_operator_spaces' => ['default' => 'at_least_single_space'], // leaves existing alignments alone
         'braces_position' => [
             // these are all defaults, but it's good to spell them out here
             'allow_single_line_anonymous_functions' => true,
@@ -61,8 +61,8 @@ return (new Config())
         'no_empty_statement' => true,
         'no_extra_blank_lines' => [
             'tokens' => [
-                'attribute', 'break', 'case', 'continue', 'curly_brace_block', 'default',
-                'extra', 'parenthesis_brace_block', 'return', 'square_brace_block', 'switch', 'throw', 'use',
+                'attribute', 'break', 'case', 'continue', 'curly_brace_block', 'default', 'extra',
+                'parenthesis_brace_block', 'return', 'square_brace_block', 'switch', 'throw', 'use',
             ],
         ],
         'no_leading_namespace_whitespace' => true,
@@ -76,7 +76,9 @@ return (new Config())
         'no_trailing_comma_in_singleline' => true,
         'no_unneeded_braces' => ['namespaces' => true],
         'no_unneeded_control_parentheses' => [
-            'statements' => ['break', 'clone', 'continue', 'echo_print', 'others', 'return', 'switch_case', 'yield', 'yield_from'],
+            'statements' => [
+                'break', 'clone', 'continue', 'echo_print', 'others', 'return', 'switch_case', 'yield', 'yield_from',
+            ],
         ],
         'no_unneeded_import_alias' => true,
         'no_unused_imports' => true,
@@ -89,7 +91,7 @@ return (new Config())
         'ordered_imports' => ['imports_order' => ['class', 'function', 'const'], 'sort_algorithm' => 'alpha'],
         'ordered_types' => ['null_adjustment' => 'always_last', 'sort_algorithm' => 'none'],
         'phpdoc_add_missing_param_annotation' => true,
-        // 'phpdoc_align' => true, // align phpdoc yourself or don't, but we don't enforce it
+        'phpdoc_align' => false, // align phpdoc yourself or don't, but we don't enforce it
         'phpdoc_indent' => true,
         'phpdoc_inline_tag_normalizer' => true,
         'phpdoc_no_access' => true,
@@ -111,19 +113,17 @@ return (new Config())
         'self_static_accessor' => true,
         'single_class_element_per_statement' => true,
         'single_import_per_statement' => true,
-        // 'single_quote' => true, // not a terrible rule, but we prefer having no opinion
+        'single_quote' => false, // we have no opinion on single quote use
         'single_space_around_construct' => true,
         'space_after_semicolon' => ['remove_in_empty_for_expressions' => true],
         'standardize_not_equals' => true,
         'string_implicit_backslashes' => true,
         'switch_continue_to_break' => true,
-        'trailing_comma_in_multiline' => [
-            'after_heredoc' => true,
-            // 'elements' => ['arguments', 'array_destructuring', 'arrays', 'match', 'parameters'],
+        'trailing_comma_in_multiline' => ['after_heredoc' => true,
             'elements' => ['array_destructuring', 'arrays', 'match', 'parameters'],
         ],
         'trim_array_spaces' => true,
-        'type_declaration_spaces' =>  true,
+        'type_declaration_spaces' => true,
         'types_spaces' => ['space' => 'none'],
         'unary_operator_spaces' => true,
         'whitespace_after_comma_in_array' => ['ensure_single_space' => true],
