@@ -108,8 +108,10 @@ return (new Config())
         'switch_continue_to_break' => true,
         'trailing_comma_in_multiline' => [
             'after_heredoc' => true,
+            // 'elements' => ['arguments', 'array_destructuring', 'arrays', 'match', 'parameters'],
             'elements' => ['array_destructuring', 'arrays', 'match', 'parameters'],
         ],
+        'trim_array_spaces' => true,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')

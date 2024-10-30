@@ -41,8 +41,8 @@ it(
             ->and($response->headers->get('Content-Type'))->toContain('text/plain');
 
         $expectedKeyNames = match ($version) {
-            '1.0' => [ 'SECRET_KEY' ],
-            '1.1' => [ 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY' ],
+            '1.0' => ['SECRET_KEY'],
+            '1.1' => ['AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY'],
         };
 
         $content = $response->getContent();
@@ -53,8 +53,8 @@ it(
         validateKeys($content, $expectedKeyNames, $validKeys);
     }
 )->with([
-    '1.0 version' => [ '1.0', 1 ],
-    '1.1 version' => [ '1.1', 4 ],
+    '1.0 version' => ['1.0', 1],
+    '1.1 version' => ['1.1', 4],
 ]);
 
 it('can generate a secret keys with salt for version 1.1', function () use ($validKeys) {
