@@ -16,7 +16,6 @@ beforeEach(function () {
         'user_nicename' => 'author-name',
         'display_name' => 'Author Name',
         'author' => 'author@example.com',
-
     ]);
     Theme::create([
         'slug' => 'my-theme',
@@ -143,8 +142,6 @@ it('returns theme updates', function () {
          ->assertJsonPath('no_update.my-theme2.new_version', '2.9')
          ->assertJsonPath('no_update.my-theme2.theme', 'my-theme2');
 });
-
-
 
 it('returns theme updates - no_updates', function () {
     $response = $this->post('/themes/update-check/1.1', [

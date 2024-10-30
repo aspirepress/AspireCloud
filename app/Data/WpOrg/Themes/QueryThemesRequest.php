@@ -47,7 +47,6 @@ class QueryThemesRequest extends Data
             'template'    => true,
         ];
 
-
         $req['fields'] = self::getFields($request, $defaultFields);
         return static::from($req);
     }

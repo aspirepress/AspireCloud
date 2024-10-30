@@ -6,7 +6,6 @@ use Spatie\WebTinker\Http\Middleware\Authorize;
 use Spatie\WebTinker\OutputModifiers\PrefixDateTime;
 
 return [
-
     /*
      * The web tinker page will be available on this path.
      */

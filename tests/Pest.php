@@ -65,9 +65,7 @@ function assertWpThemeAPIStructure1_1_query_themes($response)
             )
         )
     );
-
 }
-
 
 function assertWpThemeAPIStructure1_2_query_themes($response)
 {
@@ -89,9 +87,7 @@ function assertWpThemeAPIStructure1_2_query_themes($response)
             )
         )
     );
-
 }
-
 
 function assertWpThemeAPIStructure1_1_theme_information($response)
 {
@@ -104,7 +100,6 @@ function assertWpThemeAPIStructure1_1_theme_information($response)
 
 function assertWpThemeAPIStructure1_2_theme_information($response)
 {
-
     return $response->assertJson(
         fn(AssertableJson $json) =>
         assertWpThemeInfoBaseStructure($json)
@@ -116,7 +111,6 @@ function assertWpThemeAPIStructure1_2_theme_information($response)
         ->has('external_repository_url')
         ->whereType('author', 'array')
     );
-
 }
 
 function assertWpPluginAPIStructure($response)
@@ -166,7 +160,6 @@ function assertWpPluginAPIStructure($response)
         'screenshots',
     ]);
 }
-
 
 function assertWpPluginAPIStructureForSearch($response)
 {

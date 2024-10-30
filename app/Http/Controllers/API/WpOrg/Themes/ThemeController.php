@@ -244,7 +244,6 @@ class ThemeController extends Controller
             $tags[ $title ] = array_keys($group);
         }
 
-
         return $this->sendResponse($tags);
     }
 

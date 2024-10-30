@@ -25,7 +25,6 @@ class ThemeInformationRequest extends Data
     {
         $req = $request->query('request') ?? $request->all();
 
-
         $defaultFields = [
             'sections'     => true,
             'rating'       => true,

@@ -20,10 +20,8 @@ class ThemeUpdatesController extends Controller
     */
     public function __invoke(Request $request): JsonResponse|Response
     {
-
         try {
             $updateRequest = ThemeUpdateCheckRequest::fromRequest($request);
-
 
             $themes = Theme::query()
             ->whereIn('slug', array_keys($updateRequest->themes))
@@ -33,12 +31,10 @@ class ThemeUpdatesController extends Controller
             });
             return $this->sendResponse(ThemeUpdateCheckResponse::fromData($themes[0], $themes[1]));
         } catch (ValidationException $e) {
-
             // Handle validation errors and return a custom response
             $firstErrorMessage = collect($e->errors())->flatten()->first();
             return  $this->sendResponse(['error' => $firstErrorMessage], 400);
         }
-
     }
 
     /**
