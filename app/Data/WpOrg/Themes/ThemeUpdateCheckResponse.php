@@ -3,8 +3,8 @@
 namespace App\Data\WpOrg\Themes;
 
 use App\Models\WpOrg\Theme;
-use Spatie\LaravelData\Data;
 use Illuminate\Support\Collection;
+use Spatie\LaravelData\Data;
 
 class ThemeUpdateCheckResponse extends Data
 {

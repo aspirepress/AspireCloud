@@ -3,8 +3,8 @@
 namespace App\Models\Sync;
 
 use App\Models\BaseModel;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 /**
  * @property string $id

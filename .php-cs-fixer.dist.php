@@ -19,7 +19,7 @@ $finder = (new Finder())
 return (new Config())
     ->setRules([
         '@PER-CS2.0' => true,
-        '@PHP83Migration' => true,
+        '@PHP84Migration' => true,
         // Most rules below come from @Symfony and @PhpCsFixer, but there are a few differences in configuration,
         // as well as some rules we just don't take at all because we have no official opinion on the style.
         'backtick_to_shell_exec' => true,
@@ -80,6 +80,9 @@ return (new Config())
         'no_useless_concat_operator' => ['juggle_simple_strings' => true],
         'no_useless_nullsafe_operator' => true,
         'nullable_type_declaration' => ['syntax' => 'question_mark'],
+        'object_operator_without_whitespace' => true,
+        'operator_linebreak' => ['only_booleans' => true],
+        'ordered_imports' => ['imports_order' => ['class', 'function', 'const'], 'sort_algorithm' => 'alpha'],
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')
