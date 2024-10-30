@@ -31,7 +31,7 @@ class ThemeController extends Controller
                 'theme_information' => $this->doThemeInformation(ThemeInformationRequest::fromRequest($request)),
                 'hot_tags' => $this->doHotTags(),
                 'feature_list' => $this->doFeatureList(),
-                default => $this->unknownAction()
+                default => $this->unknownAction(),
             };
             return $response;
         } catch (ValidationException $e) {

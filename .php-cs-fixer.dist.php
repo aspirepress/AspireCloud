@@ -103,7 +103,13 @@ return (new Config())
         'single_import_per_statement' => true,
         // 'single_quote' => true, // not a terrible rule, but we prefer having no opinion
         'single_space_around_construct' => true,
-
+        'space_after_semicolon' => ['remove_in_empty_for_expressions' => true],
+        'standardize_not_equals' => true,
+        'switch_continue_to_break' => true,
+        'trailing_comma_in_multiline' => [
+            'after_heredoc' => true,
+            'elements' => ['array_destructuring', 'arrays', 'match', 'parameters'],
+        ],
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')

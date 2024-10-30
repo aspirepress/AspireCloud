@@ -20,7 +20,7 @@ class Plugin_1_2_Controller extends Controller
         return match ($action) {
             'query_plugins' => $this->queryPlugins($request),
             'plugin_information' => $this->pluginInformation($slug),
-            default => response()->json(['error' => 'Invalid action'], 400)
+            default => response()->json(['error' => 'Invalid action'], 400),
         };
     }
 
@@ -71,7 +71,7 @@ class Plugin_1_2_Controller extends Controller
             // TODO: Implement a better top-rated sorting?
             'top-rated' => $query->orderBy('rating', 'desc'),
             // TODO: Implement a better popular sorting, active_installs, downloaded?
-            default => $query->orderBy('active_installs', 'desc')
+            default => $query->orderBy('active_installs', 'desc'),
         };
         // Get total count for pagination
         $total = $query->count();
