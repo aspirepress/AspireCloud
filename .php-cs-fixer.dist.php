@@ -115,6 +115,8 @@ return (new Config())
         'type_declaration_spaces' =>  true,
         'types_spaces' => ['space' => 'none'],
         'unary_operator_spaces' => true,
+        'whitespace_after_comma_in_array' => ['ensure_single_space' => true],
+
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')
