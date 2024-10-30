@@ -159,7 +159,7 @@ class ThemeResource extends JsonResource
     * @param array<int>|null $ratings
     * @return Collection<string, int>
      */
-    private function mapRatings(array|null $ratings = []): Collection
+    private function mapRatings(?array $ratings = []): Collection
     {
         return collect($ratings)
             ->mapWithKeys(fn($value, $key) => [(string) $key => $value]);

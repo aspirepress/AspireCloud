@@ -69,7 +69,17 @@ return (new Config())
         'no_short_bool_cast' => true,
         'no_singleline_whitespace_before_semicolons' => true,
         'no_spaces_around_offset' => true,
-        'no_superfluous_phpdoc_tags' => ['remove_inheritdoc' => true]
+        'no_superfluous_phpdoc_tags' => ['allow_mixed' => true, 'remove_inheritdoc' => true],
+        'no_trailing_comma_in_singleline' => true,
+        'no_unneeded_braces' => ['namespaces' => true],
+        'no_unneeded_control_parentheses' => [
+            'statements' => ['break', 'clone', 'continue', 'echo_print', 'others', 'return', 'switch_case', 'yield', 'yield_from'],
+        ],
+        'no_unneeded_import_alias' => true,
+        'no_unused_imports' => true,
+        'no_useless_concat_operator' => ['juggle_simple_strings' => true],
+        'no_useless_nullsafe_operator' => true,
+        'nullable_type_declaration' => ['syntax' => 'question_mark'],
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/.cache/.php_cs.cache')

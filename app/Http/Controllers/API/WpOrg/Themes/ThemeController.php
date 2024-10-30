@@ -266,7 +266,7 @@ class ThemeController extends Controller
         return response()->json($response, $statusCode);
     }
 
-    private function getWpVersion(Request $request): string|null
+    private function getWpVersion(Request $request): ?string
     {
         $version = $request->route('version');
         if (version_compare($version, '1.2', '>=')) {
