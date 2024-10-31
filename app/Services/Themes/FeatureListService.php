@@ -4,6 +4,7 @@ namespace App\Services\Themes;
 
 class FeatureListService
 {
+    /** @return array<string, array<string,string>> */
     public function getFeatureList(?string $wpVersion = null): array
     {
         $tags = [
