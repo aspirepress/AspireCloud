@@ -37,6 +37,7 @@ class QueryThemesRequest extends Data
             $req['tags'] = is_array($req['tag']) ? $req['tag'] : [$req['tag']];
             unset($req['tag']);
         }
+
         $defaultFields = [
             'description' => true,
             'rating'      => true,

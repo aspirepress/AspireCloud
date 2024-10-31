@@ -10,6 +10,7 @@ use Database\Factories\WpOrg\PluginFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -110,6 +111,14 @@ final class Plugin extends BaseModel
         ];
     }
 
+
+    /** @return HasMany<PluginTag, covariant self> */
+    public function pluginTags(): HasMany
+    {
+        return $this->hasMany(PluginTag::class, "plugin_id", "id");
+    }
+
+
     /** @return BelongsTo<SyncPlugin, covariant static> */
     public function syncPlugin(): BelongsTo
     {
@@ -165,6 +174,14 @@ final class Plugin extends BaseModel
             throw new InvalidArgumentException("Metatada slug does not match [{$data['slug']} !== $this->slug]");
         }
 
+        if (isset($data['tags']) && is_array($data['tags'])) {
+            $pluginTags = [];
+            $this->pluginTags()->delete();
+            foreach (array_keys($data['tags']) as $tagSlug) {
+                $pluginTags[] = new PluginTag(['slug' => $tagSlug]);
+            }
+            $this->pluginTags()->saveMany($pluginTags);
+        }
         return $this->fill([
             'name' => $data['name'],
             'short_description' => self::truncate($data['short_description'] ?? '', 149),
