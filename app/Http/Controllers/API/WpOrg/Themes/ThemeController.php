@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ThemeCollection;
 use App\Http\Resources\ThemeResource;
 use App\Models\WpOrg\Theme;
+use App\Services\HotTagsService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,16 +20,15 @@ use function Safe\preg_match;
 
 class ThemeController extends Controller
 {
-    /**
-     * @return JsonResponse
-     */
+    public function __construct(private HotTagsService $hotTags) {}
+
     public function info(Request $request): JsonResponse|Response
     {
         try {
             return match ($request->query('action')) {
                 'query_themes' => $this->doQueryThemes(QueryThemesRequest::from($request)),
                 'theme_information' => $this->doThemeInformation(ThemeInformationRequest::from($request)),
-                'hot_tags' => $this->doHotTags(),
+                'hot_tags' => $this->doHotTags($request),
                 'feature_list' => $this->doFeatureList(),
                 default => $this->unknownAction(),
             };
@@ -44,7 +44,6 @@ class ThemeController extends Controller
         $page = $req->page;
         $perPage = $req->per_page;
         $skip = ($page - 1) * $perPage;
-
 
         $themes = Theme::query()
             ->orderBy('last_updated', 'desc')   // default sort
@@ -79,7 +78,7 @@ class ThemeController extends Controller
         $collection = collect($themes)->map(fn($theme,
         ) => (new ThemeResource($theme))->additional(['fields' => $req->fields]));
 
-        return $this->sendResponse(new ThemeCollection($collection, $page, (int)ceil($total / $perPage), $total));
+        return $this->sendResponse(new ThemeCollection($collection, $page, (int) ceil($total / $perPage), $total));
     }
 
     private function doThemeInformation(ThemeInformationRequest $request): JsonResponse|Response
@@ -92,9 +91,10 @@ class ThemeController extends Controller
         return $this->sendResponse((new ThemeResource($theme))->additional(['fields' => $request->fields]));
     }
 
-    private function doHotTags(): JsonResponse|Response
+    private function doHotTags(Request $request): JsonResponse
     {
-        return $this->sendResponse(['error' => 'Not Implemented'], 400);
+        $tags = $this->hotTags->getHotTags($request->query('number', -1));
+        return $this->sendResponse($tags);
     }
 
     private function doFeatureList(): JsonResponse|Response
@@ -263,7 +263,7 @@ class ThemeController extends Controller
     ): JsonResponse|Response {
         $version = request()->route('version');
         if ($version === '1.0') {
-            return response(serialize((object)$response), $statusCode);
+            return response(serialize((object) $response), $statusCode);
         }
         return response()->json($response, $statusCode);
     }
