@@ -63,7 +63,7 @@ class ThemeController extends Controller
 
     private function doHotTags(Request $request): JsonResponse|Response
     {
-        $tags = $this->hotTags->getHotTags((int)$request->query('number', '-1'));
+        $tags = $this->hotTags->getHotTags((int) $request->query('number', '-1'));
         return $this->sendResponse($tags);
     }
 
