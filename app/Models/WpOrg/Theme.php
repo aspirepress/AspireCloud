@@ -142,6 +142,7 @@ final class Theme extends BaseModel
         return $this->fill([
             'author_id' => $author->id,
             'name' => $data['name'],
+            'description' => $data['sections']['description'] ?? null,
             'version' => $data['version'],
             'download_link' => $data['download_link'],
             'requires_php' => $data['requires_php'] ?? null,
