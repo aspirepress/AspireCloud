@@ -25,15 +25,13 @@ class ThemeController extends Controller
     public function info(Request $request): JsonResponse|Response
     {
         try {
-            $action = $request->query('action');
-            $response = match ($action) {
-                'query_themes' => $this->doQueryThemes(QueryThemesRequest::fromRequest($request)),
-                'theme_information' => $this->doThemeInformation(ThemeInformationRequest::fromRequest($request)),
+            return match ($request->query('action')) {
+                'query_themes' => $this->doQueryThemes(QueryThemesRequest::from($request)),
+                'theme_information' => $this->doThemeInformation(ThemeInformationRequest::from($request)),
                 'hot_tags' => $this->doHotTags(),
                 'feature_list' => $this->doFeatureList(),
                 default => $this->unknownAction(),
             };
-            return $response;
         } catch (ValidationException $e) {
             // Handle validation errors and return a custom response
             $firstErrorMessage = collect($e->errors())->flatten()->first();
