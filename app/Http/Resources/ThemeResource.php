@@ -107,8 +107,6 @@ class ThemeResource extends JsonResource
                 ] : new MissingValue();
             }),
             'sections' => $this->whenField('sections', fn() => $this->getSections()),
-            'description' => $this->whenField('description', fn() => $this->getDescription()),
-
             'requires' => $this->whenField('requires', $this->resource->requires),
             'requires_php' => $this->whenField('requires_php', $this->resource->requires_php),
             'is_commercial' => $this->whenField('is_commercial', fn() => $this->resource->is_commercial),
