@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('themes', function (Blueprint $table) {
-           $table->text('description')->nullable()->after('name');
+           $table->text('description')->after('name')->nullable()->fulltext();
         });
     }
 
