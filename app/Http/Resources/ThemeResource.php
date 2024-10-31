@@ -54,7 +54,7 @@ class ThemeResource extends JsonResource
             'tesdt' => $this->when(false, 'test'),
             'preview_url' => $this->resource->preview_url,
             'author' => $this->whenField('extended_author', $this->resource->author, $this->resource->author->user_nicename),
-            'screenshot_url' => $this->whenField('screenshot_url', fn () => $this->resource->screenshot_url),
+            'screenshot_url' => $this->whenField('screenshot_url', fn() => $this->resource->screenshot_url),
             // 'screenshot_url' => $this->whenField('screenshot_url', function () {
             //     $screenshots = $this->resource->screenshots;
             //     return $this->whenField(
@@ -68,7 +68,7 @@ class ThemeResource extends JsonResource
                 $screenshotCount = max($this->resource->screenshot_count ?? 1, 1);
                 return collect(range(1, $screenshotCount))->map(fn($i) => "{$screenshotBase}-{$i}.png");
             }),
-            'ratings' => $this->whenField('ratings', fn() => (object)$this->resource->ratings),  // need the object cast when all keys are numeric
+            'ratings' => $this->whenField('ratings', fn() => (object) $this->resource->ratings),  // need the object cast when all keys are numeric
             'rating' => $this->whenField('rating', fn() => $this->resource->rating * 20),
             'num_ratings' => $this->whenField('rating', fn() => $this->resource->num_ratings),
             'reviews_url' => $this->whenField('reviews_url', fn() => 'https://wordpress.org/support/theme/' . $this->resource->slug . '/reviews/'),

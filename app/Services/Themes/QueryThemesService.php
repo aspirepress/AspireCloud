@@ -9,7 +9,8 @@ use App\Models\WpOrg\Theme;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
-class QueryThemesService {
+class QueryThemesService
+{
     public function queryThemes(QueryThemesRequest $req): ThemeCollection
     {
         $page = $req->page;
