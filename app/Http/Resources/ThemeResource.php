@@ -9,8 +9,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Collection;
 
-use function Safe\preg_match_all;
-
 class ThemeResource extends JsonResource
 {
     /**
@@ -56,20 +54,21 @@ class ThemeResource extends JsonResource
             'tesdt' => $this->when(false, 'test'),
             'preview_url' => $this->resource->preview_url,
             'author' => $this->whenField('extended_author', $this->resource->author, $this->resource->author->user_nicename),
-            'screenshot_url' => $this->whenField('screenshot_url', function () {
-                $screenshots = $this->resource->screenshots;
-                return $this->whenField(
-                    'photon_screenshots',
-                    isset($screenshots[$this->resource->version]) ? sprintf('https://i0.wp.com/themes.svn.wordpress.org/%1$s/%2$s/%3$s', $this->resource->slug, $this->resource->version, $screenshots[$this->resource->version]) : null,
-                    isset($screenshots[$this->resource->version]) ? sprintf('//ts.w.org/wp-content/themes/%1$s/%2$s?ver=%3$s', $this->resource->slug, $screenshots[$this->resource->version], $this->resource->version) : null
-                );
-            }),
+            'screenshot_url' => $this->whenField('screenshot_url', fn () => $this->resource->screenshot_url),
+            // 'screenshot_url' => $this->whenField('screenshot_url', function () {
+            //     $screenshots = $this->resource->screenshots;
+            //     return $this->whenField(
+            //         'photon_screenshots',
+            //         isset($screenshots[$this->resource->version]) ? sprintf('https://i0.wp.com/themes.svn.wordpress.org/%1$s/%2$s/%3$s', $this->resource->slug, $this->resource->version, $screenshots[$this->resource->version]) : null,
+            //         isset($screenshots[$this->resource->version]) ? sprintf('//ts.w.org/wp-content/themes/%1$s/%2$s?ver=%3$s', $this->resource->slug, $screenshots[$this->resource->version], $this->resource->version) : null
+            //     );
+            // }),
             'screenshot_count' => $this->whenField('screenshot_count', fn() => max($this->resource->screenshot_count ?? 1, 1)),
             'screenshots' => $this->whenField('screenshots', function () use ($screenshotBase) {
                 $screenshotCount = max($this->resource->screenshot_count ?? 1, 1);
                 return collect(range(1, $screenshotCount))->map(fn($i) => "{$screenshotBase}-{$i}.png");
             }),
-            'ratings' => $this->whenField('ratings', fn() => $this->mapRatings($this->resource->ratings)),
+            'ratings' => $this->whenField('ratings', fn() => (object)$this->resource->ratings),  // need the object cast when all keys are numeric
             'rating' => $this->whenField('rating', fn() => $this->resource->rating * 20),
             'num_ratings' => $this->whenField('rating', fn() => $this->resource->num_ratings),
             'reviews_url' => $this->whenField('reviews_url', fn() => 'https://wordpress.org/support/theme/' . $this->resource->slug . '/reviews/'),
@@ -138,22 +137,20 @@ class ThemeResource extends JsonResource
         return $this->when($include, $value);
     }
 
-    /**
-     * Gets the sections of the theme.
-     *
-     * @return array<string, string>
-     */
-    private function getSections()
+    /** @return array<string, string> */
+    private function getSections(): array
     {
-        $sections = [];
-        if (preg_match_all('|--theme-data-(.+?)-->(.*?)<!|ims', $this->resource->content ?? "", $matches)) {
-            foreach ($matches[1] as $i => $section) {
-                $sections[$section] = trim($matches[2][$i]);
-            }
-        } else {
-            $sections['description'] = $this->fixMangledDescription(trim($this->resource->content ?? ""));
-        }
-        return $sections;
+        return $this->resource->sections ?? [];
+        // upstream code -- we get sections already processed.  Leaving for later reference.
+        // $sections = [];
+        // if (preg_match_all('|--theme-data-(.+?)-->(.*?)<!|ims', $this->resource->content ?? "", $matches)) {
+        //     foreach ($matches[1] as $i => $section) {
+        //         $sections[$section] = trim($matches[2][$i]);
+        //     }
+        // } else {
+        //     $sections['description'] = $this->fixMangledDescription(trim($this->resource->content ?? ""));
+        // }
+        // return $sections;
     }
 
     /**
@@ -166,36 +163,25 @@ class ThemeResource extends JsonResource
             ->mapWithKeys(fn($value, $key) => [(string) $key => $value]);
     }
 
-    /**
-     * Get the description of the theme.
-     *
-     * @return string
-     */
-    private function getDescription()
+    private function getDescription(): string
     {
-        return strpos($this->resource->content ?? "", '<!--') !== false
-            ? trim(substr($this->resource->content, 0, strpos($this->resource->content, '<!--')))
-            : trim($this->resource->content);
+        return $this->resource->description;
+        // upstream code -- we have description processed already.  leaving for reference
+        // return strpos($this->resource->content ?? "", '<!--') !== false
+        //     ? trim(substr($this->resource->content, 0, strpos($this->resource->content, '<!--')))
+        //     : trim($this->resource->content);
     }
 
-    /**
-     * Fixes mangled descriptions.
-     *
-     * @param string $description
-     * @return string
-     */
-    private function fixMangledDescription($description)
-    {
-        return str_replace(['[br]', '[p]'], ["\n", "\n\n"], $description);
-    }
+    // upstream needs to do this -- leaving for reference
+    // private function fixMangledDescription(string $description): string
+    // {
+    //     return str_replace(['[br]', '[p]'], ["\n", "\n\n"], $description);
+    // }
 
-    /**
-     * @param string $version
-     * @return string
-     */
-    private function getDownloadUrl($version)
+    private function getDownloadUrl(string $version): string
     {
-        return 'downloadurl_placeholder' . $version;
+        return $this->resource->download_link ?? '';
+        // return 'downloadurl_placeholder' . $version;
         //return $this->resource->repo_package->download_url($version);
     }
 }
