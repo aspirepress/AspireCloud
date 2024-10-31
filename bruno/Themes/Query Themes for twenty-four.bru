@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{API_URL}}/themes/info/1.2/?action=query_themes&request[search]=twenty-four&request[fields][sections]=1&request[fields][ratings]=1
+  url: {{API_URL}}/themes/info/1.2/?action=query_themes&request[search]=twenty-four&request[browse]=updated&request[fields][sections]=1&request[fields][ratings]=1
   body: none
   auth: none
 }
@@ -13,6 +13,7 @@ get {
 params:query {
   action: query_themes
   request[search]: twenty-four
+  request[browse]: updated
   request[fields][sections]: 1
   request[fields][ratings]: 1
 }

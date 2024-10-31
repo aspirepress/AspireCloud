@@ -36,7 +36,7 @@ class PluginInformationService
                 $query->where(function (Builder $q) use ($search) {
                     $q->where('name', 'ilike', "%{$search}%")
                         ->orWhere('short_description', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%");
+                        ->orWhereFullText('description', $search);
                 });
             })
             ->when($tag, function (Builder $query, string $tag) {
