@@ -7,7 +7,6 @@ use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
-use Illuminate\Support\Collection;
 
 class ThemeResource extends JsonResource
 {
@@ -89,7 +88,7 @@ class ThemeResource extends JsonResource
             'last_updated_time' => $this->whenField('last_updated', fn() => new CarbonImmutable($this->resource->last_updated_time)),
             'creation_time' => $this->whenField('creation_time', fn() => new CarbonImmutable($this->resource->creation_time)),
             'homepage' => $this->whenField('homepage', fn() => "https://wordpress.org/themes/{$this->resource->slug}/"),
-            'download_link' => $this->whenField('downloadlink', fn() => $this->getDownloadUrl($this->resource->version)),
+            'download_link' => $this->whenField('downloadlink', fn() => $this->resource->download_link ?? ''),
             'tags' => $this->whenField('tags', function () {
                 return [];
                 // TODO: return collect($this->resource->tags)->mapWithKeys(fn($tag) => [$tag->slug => $tag->name]);
@@ -106,7 +105,7 @@ class ThemeResource extends JsonResource
                     'homepage' => "https://wordpress.org/themes/{$parent->slug}/",
                 ] : new MissingValue();
             }),
-            'sections' => $this->whenField('sections', fn() => $this->getSections()),
+            'sections' => $this->whenField('sections', fn() => $this->resource->sections),
             'requires' => $this->whenField('requires', $this->resource->requires),
             'requires_php' => $this->whenField('requires_php', $this->resource->requires_php),
             'is_commercial' => $this->whenField('is_commercial', fn() => $this->resource->is_commercial),
@@ -135,51 +134,42 @@ class ThemeResource extends JsonResource
         return $this->when($include, $value);
     }
 
-    /** @return array<string, string> */
-    private function getSections(): array
-    {
-        return $this->resource->sections ?? [];
-        // upstream code -- we get sections already processed.  Leaving for later reference.
-        // $sections = [];
-        // if (preg_match_all('|--theme-data-(.+?)-->(.*?)<!|ims', $this->resource->content ?? "", $matches)) {
-        //     foreach ($matches[1] as $i => $section) {
-        //         $sections[$section] = trim($matches[2][$i]);
-        //     }
-        // } else {
-        //     $sections['description'] = $this->fixMangledDescription(trim($this->resource->content ?? ""));
-        // }
-        // return $sections;
-    }
+    // upstream code below -- we get sections and ratings and such already processed.  Leaving commented for later reference.
 
-    /**
-     * @param array<int>|null $ratings
-     * @return Collection<string, int>
-     */
-    private function mapRatings(?array $ratings = []): Collection
-    {
-        return collect($ratings)
-            ->mapWithKeys(fn($value, $key) => [(string) $key => $value]);
-    }
-
-    private function getDescription(): string
-    {
-        return $this->resource->description;
-        // upstream code -- we have description processed already.  leaving for reference
-        // return strpos($this->resource->content ?? "", '<!--') !== false
-        //     ? trim(substr($this->resource->content, 0, strpos($this->resource->content, '<!--')))
-        //     : trim($this->resource->content);
-    }
-
-    // upstream needs to do this -- leaving for reference
+    // /** @return array<string, string> */
+    // private function getSections(): array
+    // {
+    //     return $this->resource->sections ?? [];
+    //     $sections = [];
+    //     if (preg_match_all('|--theme-data-(.+?)-->(.*?)<!|ims', $this->resource->content ?? "", $matches)) {
+    //         foreach ($matches[1] as $i => $section) {
+    //             $sections[$section] = trim($matches[2][$i]);
+    //         }
+    //     } else {
+    //         $sections['description'] = $this->fixMangledDescription(trim($this->resource->content ?? ""));
+    //     }
+    //     return $sections;
+    // }
+    //
+    // /**
+    //  * @param array<int>|null $ratings
+    //  * @return Collection<string, int>
+    //  */
+    // private function mapRatings(?array $ratings = []): Collection
+    // {
+    //     return collect($ratings)
+    //         ->mapWithKeys(fn($value, $key) => [(string) $key => $value]);
+    // }
+    //
+    // private function getDescription(): string
+    // {
+    //     return strpos($this->resource->content ?? "", '<!--') !== false
+    //         ? trim(substr($this->resource->content, 0, strpos($this->resource->content, '<!--')))
+    //         : trim($this->resource->content);
+    // }
+    //
     // private function fixMangledDescription(string $description): string
     // {
     //     return str_replace(['[br]', '[p]'], ["\n", "\n\n"], $description);
     // }
-
-    private function getDownloadUrl(string $version): string
-    {
-        return $this->resource->download_link ?? '';
-        // return 'downloadurl_placeholder' . $version;
-        //return $this->resource->repo_package->download_url($version);
-    }
 }
