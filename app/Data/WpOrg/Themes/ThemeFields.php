@@ -59,12 +59,6 @@ trait ThemeFields
         }
         $specifiedFields = $request->query('fields');
         if ($specifiedFields == null) {
-            $requestData = $request->query('request');
-            if ($requestData !== null && isset($requestData['fields'])) {
-                $specifiedFields = $requestData['fields'];
-            }
-        }
-        if ($specifiedFields == null) {
             return array_merge(self::allFields, $defaultFields);
         }
 

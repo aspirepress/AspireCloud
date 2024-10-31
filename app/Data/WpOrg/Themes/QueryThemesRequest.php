@@ -28,8 +28,11 @@ class QueryThemesRequest extends Data
 
     public static function fromRequest(Request $request): self
     {
-        $req = $request->query('request');
+        $req = $request->query();
 
+        // 'tag' is the query parameter, but we store it on the 'tags' field
+        // we could probably do this with a mapping and cast instead, but this works too,
+        // and we have to do custom processing on fields anyway.
         if (is_array($req) && array_key_exists('tag', $req)) {
             $req['tags'] = is_array($req['tag']) ? $req['tag'] : [$req['tag']];
             unset($req['tag']);
