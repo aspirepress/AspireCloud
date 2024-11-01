@@ -90,8 +90,7 @@ class ThemeResource extends JsonResource
             'homepage' => $this->whenField('homepage', fn() => "https://wordpress.org/themes/{$this->resource->slug}/"),
             'download_link' => $this->whenField('downloadlink', fn() => $this->resource->download_link ?? ''),
             'tags' => $this->whenField('tags', function () {
-                return [];
-                // TODO: return collect($this->resource->tags)->mapWithKeys(fn($tag) => [$tag->slug => $tag->name]);
+                return $this->resource->tags;
             }),
             'versions' => $this->whenField('versions', function () {
                 return [];

@@ -7,7 +7,6 @@ use App\Http\Resources\ThemeCollection;
 use App\Http\Resources\ThemeResource;
 use App\Models\WpOrg\Theme;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
 class QueryThemesService
 {
@@ -17,7 +16,7 @@ class QueryThemesService
         $perPage = $req->per_page;
         $skip = ($page - 1) * $perPage;
 
-        $themes = Theme::query()
+        $themesBaseQuery = Theme::query()
             ->orderBy('last_updated', 'desc')   // default sort
             ->when($req->browse, function ($query, $browse) {
                 // TODO: replicate 'featured' browse (currently it's identical to 'popular')
@@ -37,15 +36,16 @@ class QueryThemesService
                     $query->where('user_nicename', 'like', "%{$author}%");
                 });
             })->when($req->tags, function (Builder $query, array $tags) {
-                collect($tags)->each(function ($tag) use ($query) {
-                    $query->whereJsonContains('tags', $tag);
+                $query->whereHas('tags', function (Builder $tagQuery) use ($tags) {
+                    $tagQuery->whereIn('slug', $tags);
                 });
-            })
+            });
+        $themes = $themesBaseQuery
             ->skip($skip)
             ->take($perPage)
             ->with('author')
             ->get();
-        $total = DB::table('themes')->count();
+        $total = $themesBaseQuery->count();
 
         $collection = collect($themes)->map(fn($theme,
         ) => (new ThemeResource($theme))->additional(['fields' => $req->fields]));
