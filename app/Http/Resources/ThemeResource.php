@@ -81,14 +81,15 @@ class ThemeResource extends JsonResource
             'download_link' => $this->whenField('downloadlink', fn() => $resource->download_link ?? ''),
             'tags' => $this->whenField('tags', fn() => $tags),
             'versions' => $this->whenField('versions', fn() => $resource->versions),
-            'parent' => $this->whenField('parent', function () use ($resource) {
-                $parent = $resource->parent_theme;
-                return $parent ? [
-                    'slug' => $parent->slug,
-                    'name' => $parent->name,
-                    'homepage' => "https://wordpress.org/themes/{$parent->slug}/",
-                ] : new MissingValue();
-            }),
+            // TODO: support parent
+            // 'parent' => $this->whenField('parent', function () use ($resource) {
+            //     $parent = $resource->parent_theme;
+            //     return $parent ? [
+            //         'slug' => $parent->slug,
+            //         'name' => $parent->name,
+            //         'homepage' => "https://wordpress.org/themes/{$parent->slug}/",
+            //     ] : new MissingValue();
+            // }),
             'requires' => $this->whenField('requires', $resource->requires),
             'requires_php' => $this->whenField('requires_php', $resource->requires_php),
             'is_commercial' => $this->whenField('is_commercial', fn() => $resource->is_commercial),
