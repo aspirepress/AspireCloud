@@ -14,7 +14,6 @@ test('api tokens can be created', function () {
         'name' => 'Test Token',
         'permissions' => [
             'read',
-            'update',
         ],
     ]);
 

@@ -76,7 +76,7 @@ beforeEach(function () {
 });
 
 it('returns theme updates', function () {
-    $response = $this->post('/themes/update-check/1.1', [
+    $response = makeApiRequest('POST', '/themes/update-check/1.1', [
         'themes' => json_encode([
             "active" => "my-theme",
             "themes" => [
@@ -106,6 +106,8 @@ it('returns theme updates', function () {
     ], [
         'Accept' => 'application/json',
     ]);
+
+
 
     $response->assertStatus(200);
     $response->assertJsonCount(1, 'themes')
@@ -144,7 +146,7 @@ it('returns theme updates', function () {
 });
 
 it('returns theme updates - no_updates', function () {
-    $response = $this->post('/themes/update-check/1.1', [
+    $response = makeApiRequest('POST', '/themes/update-check/1.1', [
         'themes' => json_encode([
             "active" => "my-theme",
             "themes" => [

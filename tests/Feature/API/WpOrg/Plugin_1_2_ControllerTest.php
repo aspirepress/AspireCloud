@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\WpOrg\Plugin;
+use App\Models\User;
+use Illuminate\Support\Facades\Config;
 
 beforeEach(function () {
     Plugin::factory()->create([
@@ -20,7 +22,7 @@ beforeEach(function () {
 });
 
 it('returns 400 when slug is missing', function () {
-    $response = $this->getJson('/plugins/info/1.2?action=plugin_information');
+    $response = makeApiRequest('GET', '/plugins/info/1.2?action=plugin_information');
 
     $response->assertStatus(400)
         ->assertJson([
@@ -29,7 +31,7 @@ it('returns 400 when slug is missing', function () {
 });
 
 it('returns 404 when plugin does not exist', function () {
-    $response = $this->getJson('/plugins/info/1.2?action=plugin_information&slug=non-existent-plugin');
+    $response = makeApiRequest('GET', '/plugins/info/1.2?action=plugin_information&slug=non-existent-plugin');
 
     $response->assertStatus(404)
         ->assertJson([
@@ -38,7 +40,7 @@ it('returns 404 when plugin does not exist', function () {
 });
 
 it('returns plugin information in wp.org format', function () {
-    $response = $this->getJson('/plugins/info/1.2?action=plugin_information&slug=jwt-authentication-for-wp-rest-api');
+    $response = makeApiRequest('GET', '/plugins/info/1.2?action=plugin_information&slug=jwt-authentication-for-wp-rest-api');
 
     $response->assertStatus(200)
         ->assertJson([
@@ -56,12 +58,11 @@ it('returns search results by tag in wp.org format', function () {
     $jwtPlugins = Plugin::query()->where('tags', 'ilike', '%' . $tag . '%')->count();
     expect($jwtPlugins)->toBe(2);
 
-    $response = $this->getJson('/plugins/info/1.2?action=query_plugins&tag=' . $tag);
+    $response = makeApiRequest('GET', '/plugins/info/1.2?action=query_plugins&tag=' . $tag);
 
     $response->assertStatus(200);
     assertWpPluginAPIStructureForSearch($response);
 
-    // Get the response data
     $responseData = $response->json();
     expect(count($responseData['plugins']))
         ->toBe(2)
@@ -74,23 +75,20 @@ it('returns search results by tag in wp.org format', function () {
         ->and($responseData['info']['pages'])->toBe(1)
         ->and($responseData['info']['results'])->toBe(2);
 
-    // Assert that each plugin has the 'jwt' tag
     foreach ($responseData['plugins'] as $plugin) {
         expect($plugin['tags'])->toContain($tag);
     }
 });
 
 it('returns search results by query string in wp.org format', function () {
-    // Set the query string to search for
     $query = 'jwt';
     expect(Plugin::query()->count())->toBe(10);
 
-    $response = $this->getJson('/plugins/info/1.2?action=query_plugins&search=' . $query);
+    $response = makeApiRequest('GET', '/plugins/info/1.2?action=query_plugins&search=' . $query);
 
     $response->assertStatus(200);
     assertWpPluginAPIStructureForSearch($response);
 
-    // Get the response data
     $responseData = $response->json();
     expect(count($responseData['plugins']))->toBe(2)
         ->and($responseData['info'])->toHaveKeys([
@@ -104,18 +102,16 @@ it('returns search results by query string in wp.org format', function () {
 });
 
 it('returns search results by tag and author in wp.org format', function () {
-    // Set the query string to search for
     $tag = 'jwt';
     $author = 'tmeister';
 
     expect(Plugin::query()->count())->toBe(10);
 
-    $response = $this->getJson('/plugins/info/1.2?action=query_plugins&tag=' . $tag . '&author=' . $author);
+    $response = makeApiRequest('GET', '/plugins/info/1.2?action=query_plugins&tag=' . $tag . '&author=' . $author);
 
     $response->assertStatus(200);
     assertWpPluginAPIStructureForSearch($response);
 
-    // Get the response data
     $responseData = $response->json();
     expect(count($responseData['plugins']))->toBe(1)
         ->and($responseData['info'])->toHaveKeys([
@@ -134,12 +130,11 @@ it('returns a valid pagination', function () {
 
     expect(Plugin::query()->count())->toBe(10);
 
-    $response = $this->getJson('/plugins/info/1.2?action=query_plugins&per_page=' . $perPage . '&page=' . $page);
+    $response = makeApiRequest('GET', '/plugins/info/1.2?action=query_plugins&per_page=' . $perPage . '&page=' . $page);
 
     $response->assertStatus(200);
     assertWpPluginAPIStructureForSearch($response);
 
-    // Get the response data
     $responseData = $response->json();
     expect(count($responseData['plugins']))->toBe(2)
         ->and($responseData['info'])->toHaveKeys([

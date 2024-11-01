@@ -34,7 +34,7 @@ function validateKeys(string $content, array $expectedKeyNames, string $validKey
 it(
     'can generate a secret keys for version 1.0 and 1.1',
     function (string $version, int $expectedKeys) use ($validKeys) {
-        $response = $this->getJson("/secret-key/$version");
+        $response =  makeApiRequest('GET', '/secret-key/' . $version);
 
         expect($response->getStatusCode())
             ->toBe(200)
@@ -58,7 +58,7 @@ it(
 ]);
 
 it('can generate a secret keys with salt for version 1.1', function () use ($validKeys) {
-    $response = $this->getJson('/secret-key/1.1/salt');
+    $response = makeApiRequest('GET', '/secret-key/1.1/salt');
 
     expect($response->getStatusCode())
         ->toBe(200)
@@ -84,11 +84,11 @@ it('can generate a secret keys with salt for version 1.1', function () use ($val
 });
 
 it('returns 404 for unsupported salt versions', function () {
-    $response = $this->getJson('/secret-key/1.0/salt');
+    $response = makeApiRequest('GET', '/secret-key/1.0/salt');
     expect($response->getStatusCode())->toBe(404);
 });
 
 it('returns 404 for unsupported secret key versions', function () {
-    $response = $this->getJson('/secret-key/2.0');
+    $response = makeApiRequest('GET', '/secret-key/2.0');
     expect($response->getStatusCode())->toBe(404);
 });

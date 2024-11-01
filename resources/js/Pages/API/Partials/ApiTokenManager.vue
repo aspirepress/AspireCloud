@@ -99,7 +99,7 @@ const deleteApiToken = () => {
                 </div>
 
                 <!-- Token Permissions -->
-                <div v-if="availablePermissions.length > 0" class="col-span-6">
+                <div v-if="availablePermissions.length > 0" class="col-span-6 hidden">
                     <InputLabel for="permissions" value="Permissions" />
 
                     <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -151,13 +151,14 @@ const deleteApiToken = () => {
                                         Last used {{ token.last_used_ago }}
                                     </div>
 
-                                    <button
-                                        v-if="availablePermissions.length > 0"
-                                        class="cursor-pointer ms-6 text-sm text-gray-400 underline"
-                                        @click="manageApiTokenPermissions(token)"
-                                    >
-                                        Permissions
-                                    </button>
+                                    <!-- We don't need to show the permissions for now -->
+                                    <!-- <button -->
+                                    <!--     v-if="availablePermissions.length > 0" -->
+                                    <!--     class="cursor-pointer ms-6 text-sm text-gray-400 underline" -->
+                                    <!--     @click="manageApiTokenPermissions(token)" -->
+                                    <!-- > -->
+                                    <!--     Permissions -->
+                                    <!-- </button> -->
 
                                     <button class="cursor-pointer ms-6 text-sm text-red-500" @click="confirmApiTokenDeletion(token)">
                                         Delete
