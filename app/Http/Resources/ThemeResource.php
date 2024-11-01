@@ -61,11 +61,12 @@ class ThemeResource extends JsonResource
             'preview_url' => $resource->preview_url,
             'author' => $this->whenField('extended_author', $author, $resource->author->user_nicename),
             'screenshot_url' => $this->whenField('screenshot_url', fn() => $resource->screenshot_url),
-            'screenshot_count' => $this->whenField('screenshot_count', fn() => max($resource->screenshot_count ?? 1, 1)),
-            'screenshots' => $this->whenField('screenshots', function () use ($screenshotBase) {
-                $screenshotCount = max($resource->screenshot_count ?? 1, 1);
-                return collect(range(1, $screenshotCount))->map(fn($i) => "{$screenshotBase}-{$i}.png");
-            }),
+            // TODO: support screenshots metadata once I can track it down
+            // 'screenshot_count' => $this->whenField('screenshot_count', fn() => max($resource->screenshot_count ?? 1, 1)),
+            // 'screenshots' => $this->whenField('screenshots', function () use ($screenshotBase) {
+            //     $screenshotCount = max($resource->screenshot_count ?? 1, 1);
+            //     return collect(range(1, $screenshotCount))->map(fn($i) => "{$screenshotBase}-{$i}.png");
+            // }),
             'ratings' => $this->whenField('ratings', fn() => (object) $resource->ratings),  // need the object cast when all keys are numeric
             'rating' => $this->whenField('rating', fn() => $resource->rating * 20),
             'num_ratings' => $this->whenField('rating', fn() => $resource->num_ratings),
