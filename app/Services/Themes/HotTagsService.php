@@ -23,9 +23,9 @@ class HotTagsService
             ->get(['slug', 'name', 'themes_count'])
             ->map(function ($tag) {
                 return [
-                    'name' => (string) $tag->name, 
+                    'name' => (string) $tag->name,
                     'slug' => (string) $tag->slug,
-                    'count' => (int) $tag->themes_count, 
+                    'count' => (int) $tag->themes_count,
                 ];
             });
         return HotTagsResponse::fromCollection($hotTags)->toArray();
