@@ -11,11 +11,11 @@ trait ThemeFields
         'downloaded'              => false,
         'downloadlink'            => false,
         'last_updated'            => false,
-        'creation_time'           => false,
+        'creation_time'           => true,
         'parent'                  => false,
         'rating'                  => false,
         'ratings'                 => false,
-        'reviews_url'             => false,
+        'reviews_url'             => true,
         'screenshot_count'        => false,
         'screenshot_url'          => true,
         'screenshots'             => false,
@@ -58,12 +58,6 @@ trait ThemeFields
             $defaultFields['external_support_url'] = true;
         }
         $specifiedFields = $request->query('fields');
-        if ($specifiedFields == null) {
-            $requestData = $request->query('request');
-            if ($requestData !== null && isset($requestData['fields'])) {
-                $specifiedFields = $requestData['fields'];
-            }
-        }
         if ($specifiedFields == null) {
             return array_merge(self::allFields, $defaultFields);
         }

@@ -8,12 +8,14 @@ use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
 use App\Http\Controllers\API\WpOrg\Themes\ThemeController;
 use App\Http\Controllers\API\WpOrg\Themes\ThemeUpdatesController;
 use App\Http\Controllers\CatchAllController;
+use App\Http\Middleware\NormalizeWpOrgRequest;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
 // https://codex.wordpress.org/WordPress.org_API
 
 Route::prefix('/')
+    ->middleware([NormalizeWpOrgRequest::class])
     ->group(function (Router $router) {
         $router->get('/secret-key/{version}', [SecretKeyController::class, 'index'])->where(['version' => '1.[01]']);
         $router->get('/secret-key/{version}/salt', [SecretKeyController::class, 'salt'])->where(['version' => '1.1']);

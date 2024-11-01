@@ -23,7 +23,7 @@ class ThemeInformationRequest extends Data
 
     public static function fromRequest(Request $request): self
     {
-        $req = $request->query('request') ?? $request->all();
+        $req = $request->all();
 
         $defaultFields = [
             'sections'     => true,
