@@ -17,15 +17,15 @@ class HotTagsService
      * }> */
     public function getHotTags(int $count = -1): array
     {
-        $hotTags = ThemeTag::withCount('themes') // Count associated themes for each tag
-            ->orderBy('themes_count', 'desc') // Order by the count of themes in descending order
-            ->limit($count >= 0 ? $count : 100) // Limit to the top 100 tags
-            ->get(['slug', 'name', 'themes_count']) // Select only slug and themes_count
+        $hotTags = ThemeTag::withCount('themes')
+            ->orderBy('themes_count', 'desc')
+            ->limit($count >= 0 ? $count : 100)
+            ->get(['slug', 'name', 'themes_count'])
             ->map(function ($tag) {
                 return [
-                    'name' => (string) $tag->name, // Format name from slug
+                    'name' => (string) $tag->name, 
                     'slug' => (string) $tag->slug,
-                    'count' => (int) $tag->themes_count, // Use themes_count from withCount
+                    'count' => (int) $tag->themes_count, 
                 ];
             });
         return HotTagsResponse::fromCollection($hotTags)->toArray();
