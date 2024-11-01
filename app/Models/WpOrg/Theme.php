@@ -162,7 +162,7 @@ final class Theme extends BaseModel
             'version' => $data['version'],
             'download_link' => $data['download_link'],
             'requires_php' => $data['requires_php'] ?? null,
-            'last_updated' => Carbon::parse($data['last_updated']),
+            'last_updated' => Carbon::parse($data['last_updated_time']),
             'creation_time' => Carbon::parse($data['creation_time']),
             // All fields below are optional
             'preview_url' => $data['preview_url'] ?? null,
