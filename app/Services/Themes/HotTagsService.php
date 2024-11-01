@@ -2,82 +2,32 @@
 
 namespace App\Services\Themes;
 
+use App\Data\WpOrg\Themes\HotTagsResponse;
+use App\Models\WpOrg\ThemeTag;
+
 class HotTagsService
 {
-    public const HARDWIRED_RESPONSE = [
-        "custom-menu" => ["name" => "Custom menu", "slug" => "custom-menu", "count" => 11180],
-        "featured-images" => ["name" => "Featured images", "slug" => "featured-images", "count" => 10676],
-        "threaded-comments" => ["name" => "Threaded comments", "slug" => "threaded-comments", "count" => 10388],
-        "translation-ready" => ["name" => "Translation ready", "slug" => "translation-ready", "count" => 10220],
-        "two-columns" => ["name" => "Two columns", "slug" => "two-columns", "count" => 9955],
-        "right-sidebar" => ["name" => "Right sidebar", "slug" => "right-sidebar", "count" => 9642],
-        "custom-background" => ["name" => "Custom background", "slug" => "custom-background", "count" => 9329],
-        "theme-options" => ["name" => "Theme options", "slug" => "theme-options", "count" => 8576],
-        "blog" => ["name" => "Blog", "slug" => "blog", "count" => 8275],
-        "one-column" => ["name" => "One column", "slug" => "one-column", "count" => 7858],
-        "custom-logo" => ["name" => "Custom logo", "slug" => "custom-logo", "count" => 7756],
-        "custom-header" => ["name" => "Custom header", "slug" => "custom-header", "count" => 7386],
-        "full-width-template" => ["name" => "Full width template", "slug" => "full-width-template", "count" => 6822],
-        "custom-colors" => ["name" => "Custom colors", "slug" => "custom-colors", "count" => 6766],
-        "sticky-post" => ["name" => "Sticky post", "slug" => "sticky-post", "count" => 6642],
-        "footer-widgets" => ["name" => "Footer widgets", "slug" => "footer-widgets", "count" => 6258],
-        "editor-style" => ["name" => "Editor style", "slug" => "editor-style", "count" => 5842],
-        "left-sidebar" => ["name" => "Left sidebar", "slug" => "left-sidebar", "count" => 5684],
-        "rtl-language-support" => ["name" => "RTL language support", "slug" => "rtl-language-support", "count" => 4268],
-        "flexible-header" => ["name" => "Flexible header", "slug" => "flexible-header", "count" => 3979],
-        "grid-layout" => ["name" => "Grid layout", "slug" => "grid-layout", "count" => 3807],
-        "portfolio" => ["name" => "Portfolio", "slug" => "portfolio", "count" => 3773],
-        "post-formats" => ["name" => "Post formats", "slug" => "post-formats", "count" => 3644],
-        "e-commerce" => ["name" => "E-commerce", "slug" => "e-commerce", "count" => 3481],
-        "three-columns" => ["name" => "Three columns", "slug" => "three-columns", "count" => 3169],
-        "news" => ["name" => "News", "slug" => "news", "count" => 2519],
-        "wide-blocks" => ["name" => "Wide blocks", "slug" => "wide-blocks", "count" => 2403],
-        "featured-image-header" => ["name" => "Featured image header", "slug" => "featured-image-header", "count" => 2299],
-        "block-styles" => ["name" => "Block editor styles", "slug" => "block-styles", "count" => 2088],
-        "photography" => ["name" => "Photography", "slug" => "photography", "count" => 1473],
-        "entertainment" => ["name" => "Entertainment", "slug" => "entertainment", "count" => 1435],
-        "white" => ["name" => "White", "slug" => "white", "count" => 1312],
-        "four-columns" => ["name" => "Four columns", "slug" => "four-columns", "count" => 1267],
-        "block-patterns" => ["name" => "Block editor patterns", "slug" => "block-patterns", "count" => 1245],
-        "full-site-editing" => ["name" => "Block themes", "slug" => "full-site-editing", "count" => 1057],
-        "light" => ["name" => "Light", "slug" => "light", "count" => 1056],
-        "fixed-width" => ["name" => "Fixed Width", "slug" => "fixed-width", "count" => 1008],
-        "microformats" => ["name" => "Microformats", "slug" => "microformats", "count" => 995],
-        "education" => ["name" => "Education", "slug" => "education", "count" => 856],
-        "blue" => ["name" => "Blue", "slug" => "blue", "count" => 781],
-        "black" => ["name" => "Black", "slug" => "black", "count" => 753],
-        "responsive-layout" => ["name" => "Responsive Layout", "slug" => "responsive-layout", "count" => 699],
-        "food-and-drink" => ["name" => "Food & drink", "slug" => "food-and-drink", "count" => 520],
-        "gray" => ["name" => "Gray", "slug" => "gray", "count" => 465],
-        "green" => ["name" => "Green", "slug" => "green", "count" => 432],
-        "dark" => ["name" => "Dark", "slug" => "dark", "count" => 379],
-        "template-editing" => ["name" => "Template editing", "slug" => "template-editing", "count" => 359],
-        "red" => ["name" => "Red", "slug" => "red", "count" => 356],
-        "fluid-layout" => ["name" => "Fluid Layout", "slug" => "fluid-layout", "count" => 320],
-        "style-variations" => ["name" => "Style variations", "slug" => "style-variations", "count" => 311],
-        "orange" => ["name" => "Orange", "slug" => "orange", "count" => 285],
-        "flexible-width" => ["name" => "Flexible Width", "slug" => "flexible-width", "count" => 257],
-        "accessibility-ready" => ["name" => "Accessibility ready", "slug" => "accessibility-ready", "count" => 250],
-        "brown" => ["name" => "Brown", "slug" => "brown", "count" => 208],
-        "fixed-layout" => ["name" => "Fixed Layout", "slug" => "fixed-layout", "count" => 202],
-        "holiday" => ["name" => "Holiday", "slug" => "holiday", "count" => 197],
-        "yellow" => ["name" => "Yellow", "slug" => "yellow", "count" => 154],
-        "silver" => ["name" => "Silver", "slug" => "silver", "count" => 149],
-        "buddypress" => ["name" => "BuddyPress", "slug" => "buddypress", "count" => 147],
-        "pink" => ["name" => "Pink", "slug" => "pink", "count" => 142],
-        "front-page-post-form" => ["name" => "Front page posting", "slug" => "front-page-post-form", "count" => 133],
-        "purple" => ["name" => "Purple", "slug" => "purple", "count" => 133],
-        "photoblogging" => ["name" => "Photoblogging", "slug" => "photoblogging", "count" => 128],
-        "tan" => ["name" => "Tan", "slug" => "tan", "count" => 99],
-        "seasonal" => ["name" => "Seasonal", "slug" => "seasonal", "count" => 43],
-        "blavatar" => ["name" => "Blavatar", "slug" => "blavatar", "count" => 11],
-        "testing" => ["name" => "testing", "slug" => "testing", "count" => 0],
-        "none" => ["name" => "none", "slug" => "none", "count" => 0],
-    ];
-
-    /** @return array<string, array{name:string, slug:string, count:int}> */
+    /**
+     * Gets the top tags by theme count
+     *
+     * @return array<string, array{
+     *   name: string,
+     *  slug: string,
+     *  count: int,
+     * }> */
     public function getHotTags(int $count = -1): array
     {
-        return $count > 0 ? array_slice(self::HARDWIRED_RESPONSE, 0, $count) : self::HARDWIRED_RESPONSE;
+        $hotTags = ThemeTag::withCount('themes') // Count associated themes for each tag
+            ->orderBy('themes_count', 'desc') // Order by the count of themes in descending order
+            ->limit($count >= 0 ? $count : 100) // Limit to the top 100 tags
+            ->get(['slug', 'name', 'themes_count']) // Select only slug and themes_count
+            ->map(function ($tag) {
+                return [
+                    'name' => (string) $tag->name, // Format name from slug
+                    'slug' => (string) $tag->slug,
+                    'count' => (int) $tag->themes_count, // Use themes_count from withCount
+                ];
+            });
+        return HotTagsResponse::fromCollection($hotTags)->toArray();
     }
 }

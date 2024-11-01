@@ -3,18 +3,12 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
-use App\Models\Sync\SyncTheme;
-use Carbon\Carbon;
-use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\DB;
-use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property string $id
- * @property string $theme_id
+ * @property string $plugi
  * @property string $slug
  */
 final class PluginTag extends BaseModel
@@ -30,16 +24,23 @@ final class PluginTag extends BaseModel
         return [
             'id' => 'string',
             'slug' => 'string',
-            'plugin_id' => 'string',
+            'name' => 'string',
         ];
-    }
-
-    /** @return BelongsTo<Plugin, covariant self> */
-    public function plugin(): BelongsTo
-    {
-        return $this->belongsTo(Plugin::class);
     }
 
     //endregion
 
+    //region Relationships
+
+    /**
+     * Define the relationship to plugins.
+     *
+     * @return BelongsToMany<Plugin, covariant self>
+     */
+    public function plugins(): BelongsToMany
+    {
+        return $this->belongsToMany(Plugin::class, 'plugin_plugin_tags', 'tag_id', 'plugin_id');
+    }
+
+    //endregion
 }

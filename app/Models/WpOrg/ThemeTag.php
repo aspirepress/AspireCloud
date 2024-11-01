@@ -3,13 +3,8 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
-use App\Models\Sync\SyncTheme;
-use Carbon\Carbon;
-use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\DB;
-use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property string $id
@@ -29,16 +24,23 @@ final class ThemeTag extends BaseModel
         return [
             'id' => 'string',
             'slug' => 'string',
-            'theme_id' => 'string',
+            'name' => 'string',
         ];
-    }
-
-    /** @return BelongsTo<Theme, covariant self> */
-    public function theme(): BelongsTo
-    {
-        return $this->belongsTo(Theme::class);
     }
 
     //endregion
 
+    //region Relationships
+
+    /**
+     * Define the relationship to themes.
+     *
+     * @return BelongsToMany<Theme, covariant self>
+     */
+    public function themes(): BelongsToMany
+    {
+        return $this->belongsToMany(Theme::class, 'theme_theme_tags', 'theme_tag_id', 'theme_id');
+    }
+
+    //endregion
 }

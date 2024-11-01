@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -84,10 +84,10 @@ final class Theme extends BaseModel
         return $this->belongsTo(Author::class);
     }
 
-    /** @return HasMany<ThemeTag, covariant self> */
-    public function themeTags(): HasMany
+    /** @return BelongsToMany<ThemeTag, covariant self> */
+    public function tags(): BelongsToMany
     {
-        return $this->hasMany(ThemeTag::class, "theme_id", "id");
+        return $this->belongsToMany(ThemeTag::class, 'theme_theme_tags', 'theme_id', 'theme_tag_id', 'id', 'id');
     }
 
     /** @return BelongsTo<SyncTheme, covariant self> */
@@ -146,14 +146,13 @@ final class Theme extends BaseModel
         $authorData = $data['author'] ?? throw new InvalidArgumentException("SyncTheme metadata has no author");
         $author ??= Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
 
-
         if (isset($data['tags']) && is_array($data['tags'])) {
             $themeTags = [];
-            $this->themeTags()->delete();
-            foreach (array_keys($data['tags']) as $tagSlug) {
-                $themeTags[] = new ThemeTag(['slug' => $tagSlug]);
+            $this->tags()->detach();
+            foreach ($data['tags'] as $tagSlug => $name) {
+                $themeTags[] = ThemeTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
             }
-            $this->themeTags()->saveMany($themeTags);
+            $this->tags()->saveMany($themeTags);
         }
 
         return $this->fill([

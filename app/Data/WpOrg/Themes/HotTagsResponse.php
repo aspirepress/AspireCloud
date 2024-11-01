@@ -14,14 +14,14 @@ class HotTagsResponse extends Data
     ) {}
 
     /**
-    * Static method to create an instance from a Theme model.
-    * @param Collection<string|int,covariant array{
-    *   slug: string,
-    *   name: string,
-    *   count: int,
-    * }> $themeTags
-    * @return Collection<string, covariant HotTagsResponse>
-    */
+     * Static method to create an instance from a Theme model.
+     * @param Collection<int,covariant array{
+     *   slug: string,
+     *   name: string,
+     *   count: int,
+     * }> $themeTags
+     * @return Collection<string, covariant HotTagsResponse>
+     */
     public static function fromCollection(Collection $themeTags): Collection
     {
         return $themeTags->mapWithKeys(fn($theme) => [
