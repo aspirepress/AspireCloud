@@ -53,7 +53,6 @@ class ThemeResource extends JsonResource
         $tags = $resource->tags;
         ksort($tags);
 
-
         $screenshotBase = "https://wp-themes.com/wp-content/themes/{$resource->slug}/screenshot";
         return [
             'name' => $resource->name,
