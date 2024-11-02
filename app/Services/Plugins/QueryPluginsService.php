@@ -29,7 +29,7 @@ class QueryPluginsService
         $query = Plugin::query()
             ->when($browse, self::applyBrowse(...))
             ->when($search, self::applySearch(...))
-            ->when($tag, self::applyTags(...))
+            ->when($tag, self::applyTag(...))
             ->when($author, self::applyAuthor(...));
 
         $total = $query->count();
@@ -60,24 +60,17 @@ class QueryPluginsService
     }
 
     /** @param Builder<Plugin> $query */
-    private static function applyPlugin(Builder $query, string $theme): void
-    {
-        $query->where('slug', 'like', "%$theme%");
-    }
-
-    /** @param Builder<Plugin> $query */
     private static function applyAuthor(Builder $query, string $author): void
     {
         $query->whereLike('author', $author);
     }
 
-    /**
-     * @param Builder<Plugin> $query
-     * @param string[] $tags
-     */
-    private static function applyTags(Builder $query, array $tags): void
+    /** @param Builder<Plugin> $query */
+    private static function applyTag(Builder $query, string $tag): void
     {
-        $query->whereHas('tags', fn(Builder $q) => $q->whereIn('slug', $tags));
+        $query->whereJsonContains('tags', $tag);
+        // TODO: make this work
+        // $query->whereHas('tags', fn(Builder $q) => $q->whereIn('slug', [$tag]));
     }
 
     /**
