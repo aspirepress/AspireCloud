@@ -17,94 +17,101 @@ use Tests\TestCase;
 |
 */
 
-pest()->extend( TestCase::class )
-      ->use( RefreshDatabase::class )
-      ->in( 'Feature' );
-function assertWpThemeBaseStructure( $json ) {
+pest()->extend(TestCase::class)
+    ->use(RefreshDatabase::class)
+    ->in('Feature');
+function assertWpThemeBaseStructure($json)
+{
     return $json
-        ->has( 'name' )
-        ->has( 'slug' )
-        ->has( 'version' )
-        ->has( 'author' )
-        ->has( 'preview_url' )
-        ->has( 'screenshot_url' )
-        ->has( 'rating' )
-        ->has( 'num_ratings' )
-        ->has( 'homepage' )
-        ->has( 'description' );
+        ->has('name')
+        ->has('slug')
+        ->has('version')
+        ->has('author')
+        ->has('preview_url')
+        ->has('screenshot_url')
+        ->has('rating')
+        ->has('num_ratings')
+        ->has('homepage')
+        ->has('description');
 }
 
-function assertWpThemeInfoBaseStructure( $json ) {
+function assertWpThemeInfoBaseStructure($json)
+{
     return $json
-        ->has( 'name' )
-        ->has( 'slug' )
-        ->has( 'version' )
-        ->has( 'preview_url' )
-        ->has( 'screenshot_url' )
-        ->has( 'rating' )
-        ->has( 'num_ratings' )
-        ->has( 'homepage' )
-        ->has( 'sections' )
-        ->has( 'tags' )
-        ->has( 'download_link' )
-        ->has( 'last_updated' )
-        ->has( 'downloaded' )
-        ->has( 'last_updated_time' )
-        ->has( 'author' );
+        ->has('name')
+        ->has('slug')
+        ->has('version')
+        ->has('preview_url')
+        ->has('screenshot_url')
+        ->has('rating')
+        ->has('num_ratings')
+        ->has('homepage')
+        ->has('sections')
+        ->has('tags')
+        ->has('download_link')
+        ->has('last_updated')
+        ->has('downloaded')
+        ->has('last_updated_time')
+        ->has('author');
 }
 
-function assertWpThemeAPIStructure1_1_query_themes( $response ) {
+function assertWpThemeAPIStructure1_1_query_themes($response)
+{
     return $response->assertJson(
-        fn( AssertableJson $json ) => $json->has( 'info' )->has(
+        fn(AssertableJson $json) => $json->has('info')->has(
             'themes',
-            fn( $json ) => $json->each(
-                fn( $theme ) => assertWpThemeBaseStructure( $theme )
-                    ->whereType( 'author', 'string' )
+            fn($json) => $json->each(
+                fn($theme) => assertWpThemeBaseStructure($theme)
+                    ->whereType('author', 'string')
             )
         )
     );
 }
 
-function assertWpThemeAPIStructure1_2_query_themes( $response ) {
+function assertWpThemeAPIStructure1_2_query_themes($response)
+{
     return $response->assertJson(
-        fn( AssertableJson $json ) => $json->has( 'info' )->has(
+        fn(AssertableJson $json) => $json->has('info')->has(
             'themes',
-            fn( $json ) => $json->each(
-                fn( $theme ) => assertWpThemeBaseStructure( $theme )
-                    ->has( 'requires' )
-                    ->has( 'requires_php' )
-                    ->has( 'is_commercial' )
-                    ->has( 'external_support_url' )
-                    ->has( 'is_community' )
-                    ->has( 'external_repository_url' )
-                    ->whereType( 'author', 'array' )
+            fn($json) => $json->each(
+                fn($theme) => assertWpThemeBaseStructure($theme)
+                    ->has('requires')
+                    ->has('requires_php')
+                    ->has('is_commercial')
+                    ->has('external_support_url')
+                    ->has('is_community')
+                    ->has('external_repository_url')
+                    ->whereType('author', 'array')
             )
         )
     );
 }
 
-function assertWpThemeAPIStructure1_1_theme_information( $response ) {
+function assertWpThemeAPIStructure1_1_theme_information($response)
+{
     return $response->assertJson(
-        fn( AssertableJson $json ) => assertWpThemeInfoBaseStructure( $json )
-            ->whereType( 'author', 'string' )
+        fn(AssertableJson $json) => assertWpThemeInfoBaseStructure($json)
+            ->whereType('author', 'string')
     );
 }
 
-function assertWpThemeAPIStructure1_2_theme_information( $response ) {
+function assertWpThemeAPIStructure1_2_theme_information($response)
+{
     return $response->assertJson(
-        fn( AssertableJson $json ) => assertWpThemeInfoBaseStructure( $json )
-            ->has( 'requires' )
-            ->has( 'requires_php' )
-            ->has( 'is_commercial' )
-            ->has( 'external_support_url' )
-            ->has( 'is_community' )
-            ->has( 'external_repository_url' )
-            ->whereType( 'author', 'array' )
+        fn(AssertableJson $json) => assertWpThemeInfoBaseStructure($json)
+            ->has('requires')
+            ->has('requires_php')
+            ->has('is_commercial')
+            ->has('external_support_url')
+            ->has('is_community')
+            ->has('external_repository_url')
+            ->whereType('author', 'array')
     );
 }
 
-function assertWpPluginAPIStructure( $response ) {
-    return $response->assertJsonStructure( [
+function assertWpPluginAPIStructure($response)
+{
+    return $response->assertJsonStructure([
         'name',
         'slug',
         'version',
@@ -147,11 +154,12 @@ function assertWpPluginAPIStructure( $response ) {
             ],
         ],
         'screenshots',
-    ] );
+    ]);
 }
 
-function assertWpPluginAPIStructureForSearch( $response ) {
-    return $response->assertJsonStructure( [
+function assertWpPluginAPIStructureForSearch($response)
+{
+    return $response->assertJsonStructure([
         'info'    => [
             'page',
             'pages',
@@ -195,25 +203,30 @@ function assertWpPluginAPIStructureForSearch( $response ) {
                 'requires_plugins',
             ],
         ],
-    ] );
+    ]);
 }
 
 /**
  * Helper function to make an authenticated request or not
  * based on the configuration.
+ * @param mixed $method
+ * @param mixed $uri
+ * @param mixed $data
+ * @param mixed $headers
  */
-function makeApiRequest( $method, $uri, $data = [], $headers = [] ) {
-    $isAuthEnabled = config( 'app.aspire_press.api_authentication_enable' );
+function makeApiRequest($method, $uri, $data = [], $headers = [])
+{
+    $isAuthEnabled = config('app.aspire_press.api_authentication_enable');
     $testCase      = test();
 
-    if ( $isAuthEnabled ) {
+    if ($isAuthEnabled) {
         $user     = User::factory()->create();
-        $testCase = $testCase->actingAs( $user );
+        $testCase = $testCase->actingAs($user);
     }
 
-    if ( Str::lower( $method ) === 'post' ) {
-        return $testCase->post( $uri, $data, $headers );
+    if (Str::lower($method) === 'post') {
+        return $testCase->post($uri, $data, $headers);
     }
 
-    return $testCase->$method( $uri );
+    return $testCase->{$method}($uri);
 }

@@ -107,8 +107,6 @@ it('returns theme updates', function () {
         'Accept' => 'application/json',
     ]);
 
-
-
     $response->assertStatus(200);
     $response->assertJsonCount(1, 'themes')
         ->assertJsonCount(1, 'no_update')

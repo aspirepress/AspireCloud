@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\WpOrg\Plugin;
-use App\Models\User;
-use Illuminate\Support\Facades\Config;
 
 beforeEach(function () {
     Plugin::factory()->create([
