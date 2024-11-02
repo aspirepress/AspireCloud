@@ -19,7 +19,7 @@ class ThemeUpdatesController extends Controller
     public function __invoke(Request $request): JsonResponse|Response
     {
         try {
-            $updateRequest = ThemeUpdateCheckRequest::from($request);
+            $updateRequest = ThemeUpdateCheckRequest::fromRequest($request);
 
             $themes = Theme::query()
                 ->whereIn('slug', array_keys($updateRequest->themes))

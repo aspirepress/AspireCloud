@@ -18,6 +18,7 @@ beforeEach(function () {
     Theme::create([
         'slug' => 'my-theme',
         'name' => 'My Theme',
+        'description' => 'My Theme',
         'version' => '1.2.1',
         'download_link' => 'https://downloads.wp/my-theme',
         'requires_php' => '5.6',
