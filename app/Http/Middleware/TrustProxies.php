@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
-class TrustProxies extends \Illuminate\Http\Middleware\TrustProxies {
+class TrustProxies extends \Illuminate\Http\Middleware\TrustProxies
+{
     protected $proxies = "*";
 }
