@@ -88,10 +88,10 @@ class QueryPluginsService
     {
         // TODO: replicate 'featured' browse (currently it's identical to 'popular')
         match ($browse) {
-            'new' => $query->orderBy('added', 'desc'),
-            'updated' => $query->orderBy('last_updated', 'desc'),
-            'top-rated', 'popular', 'featured' => $query->orderBy('rating', 'desc'),
-            default => $query->orderBy('active_installs', 'desc'),
+            'new' => $query->reorder('added', 'desc'),
+            'updated' => $query->reorder('last_updated', 'desc'),
+            'top-rated', 'popular', 'featured' => $query->reorder('rating', 'desc'),
+            default => $query->reorder('active_installs', 'desc'),
         };
     }
 }
