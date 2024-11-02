@@ -105,6 +105,8 @@ function assertWpThemeAPIStructure1_2_theme_information($response)
             ->has('external_support_url')
             ->has('is_community')
             ->has('external_repository_url')
+            ->has('reviews_url')
+            ->has('creation_time')
             ->whereType('author', 'array')
     );
 }

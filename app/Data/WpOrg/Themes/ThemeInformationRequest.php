@@ -26,15 +26,20 @@ class ThemeInformationRequest extends Data
         $req = $request->all();
 
         $defaultFields = [
-            'sections'     => true,
-            'rating'       => true,
-            'downloaded'   => true,
-            'downloadlink' => true,
-            'last_updated' => true,
-            'homepage'     => true,
-            'tags'         => true,
-            'template'     => true,
+            'sections'      => true,
+            'rating'        => true,
+            'downloaded'    => true,
+            'downloadlink'  => true,
+            'last_updated'  => true,
+            'homepage'      => true,
+            'tags'          => true,
+            'template'      => true,
         ];
+
+        if (version_compare($request->route('version'), '1.2', '>=')) {
+            $defaultFields['reviews_url']   = true;
+            $defaultFields['creation_time'] = true;
+        }
 
         $req['fields'] = self::getFields($request, $defaultFields);
         self::validate($req);

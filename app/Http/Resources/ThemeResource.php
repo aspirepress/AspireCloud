@@ -60,6 +60,7 @@ class ThemeResource extends JsonResource
             'version' => $resource->version,
             'preview_url' => $resource->preview_url,
             'author' => $this->whenField('extended_author', $author, $resource->author->user_nicename),
+            'description' => $this->whenField('description', fn() => $resource->description),
             'screenshot_url' => $this->whenField('screenshot_url', fn() => $resource->screenshot_url),
             // TODO: support screenshots metadata once I can track it down
             // 'screenshot_count' => $this->whenField('screenshot_count', fn() => max($resource->screenshot_count ?? 1, 1)),
