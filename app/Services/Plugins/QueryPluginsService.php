@@ -22,7 +22,7 @@ class QueryPluginsService
         int $page,
         int $perPage,
         ?string $search = null,
-        ?string $tag = null,
+        ?string $tag = null, // TODO: make this work with more than one tag, the way Themes do
         ?string $author = null,
         string $browse = 'popular',
     ): array {
@@ -68,9 +68,7 @@ class QueryPluginsService
     /** @param Builder<Plugin> $query */
     private static function applyTag(Builder $query, string $tag): void
     {
-        $query->whereJsonContains('tags', $tag);
-        // TODO: make this work
-        // $query->whereHas('tags', fn(Builder $q) => $q->whereIn('slug', [$tag]));
+        $query->whereHas('tags', fn(Builder $q) => $q->whereIn('slug', [$tag]));
     }
 
     /**
