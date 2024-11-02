@@ -10,6 +10,7 @@ use Database\Factories\WpOrg\PluginFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -110,6 +111,12 @@ final class Plugin extends BaseModel
         ];
     }
 
+    /** @return BelongsToMany<PluginTag, covariant self> */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(PluginTag::class, 'plugin_plugin_tags', 'plugin_id', 'plugin_tag_id', 'id', 'id');
+    }
+
     /** @return BelongsTo<SyncPlugin, covariant static> */
     public function syncPlugin(): BelongsTo
     {
@@ -165,6 +172,14 @@ final class Plugin extends BaseModel
             throw new InvalidArgumentException("Metatada slug does not match [{$data['slug']} !== $this->slug]");
         }
 
+        if (isset($data['tags']) && is_array($data['tags'])) {
+            $pluginTags = [];
+            $this->tags()->detach();
+            foreach ($data['tags'] as $tagSlug => $name) {
+                $themeTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
+            }
+            $this->tags()->saveMany($pluginTags);
+        }
         return $this->fill([
             'name' => $data['name'],
             'short_description' => self::truncate($data['short_description'] ?? '', 149),

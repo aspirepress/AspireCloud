@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -83,6 +84,12 @@ final class Theme extends BaseModel
         return $this->belongsTo(Author::class);
     }
 
+    /** @return BelongsToMany<ThemeTag, covariant self> */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(ThemeTag::class, 'theme_theme_tags', 'theme_id', 'theme_tag_id', 'id', 'id');
+    }
+
     /** @return BelongsTo<SyncTheme, covariant self> */
     public function syncTheme(): BelongsTo
     {
@@ -139,13 +146,23 @@ final class Theme extends BaseModel
         $authorData = $data['author'] ?? throw new InvalidArgumentException("SyncTheme metadata has no author");
         $author ??= Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
 
+        if (isset($data['tags']) && is_array($data['tags'])) {
+            $themeTags = [];
+            $this->tags()->detach();
+            foreach ($data['tags'] as $tagSlug => $name) {
+                $themeTags[] = ThemeTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
+            }
+            $this->tags()->saveMany($themeTags);
+        }
+
         return $this->fill([
             'author_id' => $author->id,
             'name' => $data['name'],
+            'description' => $data['sections']['description'] ?? null,
             'version' => $data['version'],
             'download_link' => $data['download_link'],
             'requires_php' => $data['requires_php'] ?? null,
-            'last_updated' => Carbon::parse($data['last_updated']),
+            'last_updated' => Carbon::parse($data['last_updated_time']),
             'creation_time' => Carbon::parse($data['creation_time']),
             // All fields below are optional
             'preview_url' => $data['preview_url'] ?? null,

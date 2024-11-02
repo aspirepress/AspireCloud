@@ -1,0 +1,16 @@
+meta {
+  name: Hot Tags
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{API_URL}}/themes/info/1.2/?action=hot_tags&number=5
+  body: none
+  auth: none
+}
+
+params:query {
+  action: hot_tags
+  number: 5
+}
