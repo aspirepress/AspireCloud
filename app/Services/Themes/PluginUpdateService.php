@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Themes;
 
 use App\Models\WpOrg\Plugin;
 use Illuminate\Support\Collection;
