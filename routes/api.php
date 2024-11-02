@@ -14,14 +14,15 @@ use Illuminate\Support\Facades\Route;
 
 // https://codex.wordpress.org/WordPress.org_API
 
+$middlewares = [NormalizeWpOrgRequest::class];
 $routeDefinition = Route::prefix('/');
 
 if (config('app.aspire_press.api_authentication_enable')) {
-    $routeDefinition->middleware(['auth:sanctum']);
+    $middlewares[] = 'auth:sanctum';
 }
 
 $routeDefinition
-    ->middleware([NormalizeWpOrgRequest::class])
+    ->middleware($middlewares)
     ->group(function (Router $router) {
         $router->get('/secret-key/{version}', [SecretKeyController::class, 'index'])->where(['version' => '1.[01]']);
         $router->get('/secret-key/{version}/salt', [SecretKeyController::class, 'salt'])->where(['version' => '1.1']);
