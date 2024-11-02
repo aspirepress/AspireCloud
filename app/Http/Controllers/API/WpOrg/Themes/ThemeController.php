@@ -4,10 +4,10 @@ namespace App\Http\Controllers\API\WpOrg\Themes;
 
 use App\Data\WpOrg\Themes\QueryThemesRequest;
 use App\Data\WpOrg\Themes\ThemeInformationRequest;
+use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ThemeCollection;
 use App\Http\Resources\ThemeResource;
-use App\NotFoundException;
 use App\Services\Themes\FeatureListService;
 use App\Services\Themes\HotTagsService;
 use App\Services\Themes\QueryThemesService;
