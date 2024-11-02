@@ -121,4 +121,15 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | AspirePress Configuration
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'aspire_press' => [
+        'api_authentication_enable' => env('API_AUTHENTICATION_ENABLED', false),
+    ],
 ];
