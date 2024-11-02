@@ -27,21 +27,10 @@ class QueryPluginsService
         string $browse = 'popular',
     ): array {
         $query = Plugin::query()
-            ->when($search, function (Builder $query, string $search) {
-                $query->where(function (Builder $q) use ($search) {
-                    $q->where('name', 'ilike', "%{$search}%")
-                        ->orWhere('short_description', 'like', "%{$search}%")
-                        ->orWhereFullText('description', $search);
-                });
-            })
-            ->when($tag, function (Builder $query, string $tag) {
-                $query->whereJsonContains('tags', $tag);
-            })
-            ->when($author, function (Builder $query, string $author) {
-                $query->where('author', 'like', "%{$author}%");
-            });
-
-        $this->applyBrowseSort($query, $browse);
+            ->when($browse, self::applyBrowse(...))
+            ->when($search, self::applySearch(...))
+            ->when($tag, self::applyTags(...))
+            ->when($author, self::applyAuthor(...));
 
         $total = $query->count();
         $totalPages = (int) ceil($total / $perPage);
@@ -59,17 +48,49 @@ class QueryPluginsService
         ];
     }
 
+    /** @param Builder<Plugin> $query */
+    private static function applySearch(Builder $query, string $search): void
+    {
+        $query->where(function (Builder $q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+                ->orWhere('short_description', 'like', "%{$search}%")
+                ->orWhereFullText('description', $search);
+        });
+    }
+
+    /** @param Builder<Plugin> $query */
+    private static function applyPlugin(Builder $query, string $theme): void
+    {
+        $query->where('slug', 'like', "%$theme%");
+    }
+
+    /** @param Builder<Plugin> $query */
+    private static function applyAuthor(Builder $query, string $author): void
+    {
+        $query->whereLike('author', $author);
+    }
+
+    /**
+     * @param Builder<Plugin> $query
+     * @param string[] $tags
+     */
+    private static function applyTags(Builder $query, array $tags): void
+    {
+        $query->whereHas('tags', fn(Builder $q) => $q->whereIn('slug', $tags));
+    }
+
     /**
      * Apply sorting based on browse parameter
      *
      * @param Builder<Plugin> $query
      */
-    private function applyBrowseSort(Builder $query, string $browse): void
+    private static function applyBrowse(Builder $query, string $browse): void
     {
+        // TODO: replicate 'featured' browse (currently it's identical to 'popular')
         match ($browse) {
             'new' => $query->orderBy('added', 'desc'),
             'updated' => $query->orderBy('last_updated', 'desc'),
-            'top-rated' => $query->orderBy('rating', 'desc'),
+            'top-rated', 'popular', 'featured' => $query->orderBy('rating', 'desc'),
             default => $query->orderBy('active_installs', 'desc'),
         };
     }
