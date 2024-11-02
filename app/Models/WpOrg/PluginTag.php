@@ -39,7 +39,7 @@ final class PluginTag extends BaseModel
      */
     public function plugins(): BelongsToMany
     {
-        return $this->belongsToMany(Plugin::class, 'plugin_plugin_tags', 'tag_id', 'plugin_id');
+        return $this->belongsToMany(Plugin::class, 'plugin_plugin_tags', 'plugin_tag_id', 'plugin_id');
     }
 
     //endregion

@@ -5,7 +5,7 @@ namespace App\Data\WpOrg\Themes;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
 
-class HotTagsResponse extends Data
+class ThemeHotTagsResponse extends Data
 {
     public function __construct(
         public string $slug,
@@ -20,7 +20,7 @@ class HotTagsResponse extends Data
      *   name: string,
      *   count: int,
      * }> $themeTags
-     * @return Collection<string, covariant HotTagsResponse>
+     * @return Collection<string, covariant ThemeHotTagsResponse>
      */
     public static function fromCollection(Collection $themeTags): Collection
     {

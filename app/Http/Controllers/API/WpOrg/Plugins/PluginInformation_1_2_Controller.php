@@ -7,6 +7,7 @@ use App\Http\Requests\Plugins\PluginInformationRequest;
 use App\Http\Requests\Plugins\QueryPluginsRequest;
 use App\Http\Resources\Plugins\PluginCollection;
 use App\Http\Resources\Plugins\PluginResource;
+use App\Services\Plugins\PluginHotTagsService;
 use App\Services\Plugins\PluginInformationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ class PluginInformation_1_2_Controller extends Controller
 {
     public function __construct(
         private readonly PluginInformationService $pluginService,
+        private readonly PluginHotTagsService $hotTags,
     ) {}
 
     public function __invoke(Request $request): JsonResponse
@@ -22,6 +24,7 @@ class PluginInformation_1_2_Controller extends Controller
         return match ($request->query('action')) {
             'query_plugins' => $this->queryPlugins(new QueryPluginsRequest($request->all())),
             'plugin_information' => $this->pluginInformation(new PluginInformationRequest($request->all())),
+            'hot_tags', 'popular_tags' => $this->hotTags($request),
             default => response()->json(['error' => 'Invalid action'], 400),
         };
     }
@@ -59,5 +62,11 @@ class PluginInformation_1_2_Controller extends Controller
             $result['totalPages'],
             $result['total']
         ));
+    }
+
+    private function hotTags(Request $request): JsonResponse
+    {
+        $tags = $this->hotTags->getHotTags((int) $request->query('number', '-1'));
+        return response()->json($tags);
     }
 }

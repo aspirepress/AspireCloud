@@ -2,10 +2,10 @@
 
 namespace App\Services\Themes;
 
-use App\Data\WpOrg\Themes\HotTagsResponse;
+use App\Data\WpOrg\Themes\ThemeHotTagsResponse;
 use App\Models\WpOrg\ThemeTag;
 
-class HotTagsService
+class ThemeHotTagsService
 {
     /**
      * Gets the top tags by theme count
@@ -28,6 +28,6 @@ class HotTagsService
                     'count' => (int) $tag->themes_count,
                 ];
             });
-        return HotTagsResponse::fromCollection($hotTags)->toArray();
+        return ThemeHotTagsResponse::fromCollection($hotTags)->toArray();
     }
 }
