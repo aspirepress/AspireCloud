@@ -29,7 +29,7 @@ class PluginResource extends BasePluginResource
             'support_threads_resolved' => $plugin->support_threads_resolved,
             'active_installs' => $plugin->active_installs,
             'last_updated' => $plugin->last_updated?->format(self::LAST_UPDATED_DATE_FORMAT),
-            'added' => $plugin->added?->format('Y-m-d'),
+            'added' => $plugin->added->format('Y-m-d'),
             'homepage' => $plugin->homepage,
             'tags' => $plugin->tags,
             'donate_link' => $plugin->donate_link,

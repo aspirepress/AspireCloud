@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 /**
- * @property string $id
+ * @property-read string $id
  * @property string $slug
  * @property string $name
  * @property string $short_description
@@ -23,37 +23,37 @@ use InvalidArgumentException;
  * @property string $version
  * @property string $author
  * @property string $requires
- * @property string $requires_php
+ * @property string|null $requires_php
  * @property string $tested
  * @property string $download_link
  * @property CarbonImmutable $added
- * @property CarbonImmutable $last_updated
- * @property string $author_profile
+ * @property CarbonImmutable|null $last_updated
+ * @property string|null $author_profile
  * @property int $rating
- * @property array $ratings
+ * @property array|null $ratings
  * @property int $num_ratings
  * @property int $support_threads
  * @property int $support_threads_resolved
  * @property int $active_installs
  * @property int $downloaded
- * @property string $homepage
- * @property array $banners
- * @property array $tags
- * @property string $donate_link
- * @property array $contributors
- * @property array $icons
- * @property array $source
- * @property string $business_model
- * @property string $commercial_support_url
- * @property string $support_url
- * @property string $preview_link
- * @property string $repository_url
- * @property array $requires_plugins
- * @property array $compatibility
- * @property array $screenshots
- * @property array $sections
- * @property array $versions
- * @property array $upgrade_notice
+ * @property string|null $homepage
+ * @property array|null $banners
+ * @property array|null $tags
+ * @property string|null $donate_link
+ * @property array|null $contributors
+ * @property array|null $icons
+ * @property array|null $source
+ * @property string|null $business_model
+ * @property string|null $commercial_support_url
+ * @property string|null $support_url
+ * @property string|null $preview_link
+ * @property string|null $repository_url
+ * @property array|null $requires_plugins
+ * @property array|null $compatibility
+ * @property array|null $screenshots
+ * @property array|null $sections
+ * @property array|null $versions
+ * @property array|null $upgrade_notice
  */
 final class Plugin extends BaseModel
 {
