@@ -69,7 +69,7 @@ class ThemeResource extends JsonResource
             //     return collect(range(1, $screenshotCount))->map(fn($i) => "{$screenshotBase}-{$i}.png");
             // }),
             'ratings' => $this->whenField('ratings', fn() => (object) $resource->ratings),  // need the object cast when all keys are numeric
-            'rating' => $this->whenField('rating', fn() => $resource->rating * 20),
+            'rating' => $this->whenField('rating', fn() => $resource->rating),
             'num_ratings' => $this->whenField('rating', fn() => $resource->num_ratings),
             'reviews_url' => $this->whenField('reviews_url', $resource->reviews_url),
             'downloaded' => $this->whenField('downloaded', fn() => $resource->downloaded),
