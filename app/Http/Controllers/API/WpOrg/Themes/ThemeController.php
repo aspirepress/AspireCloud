@@ -4,13 +4,13 @@ namespace App\Http\Controllers\API\WpOrg\Themes;
 
 use App\Data\WpOrg\Themes\QueryThemesRequest;
 use App\Data\WpOrg\Themes\ThemeInformationRequest;
+use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ThemeCollection;
 use App\Http\Resources\ThemeResource;
-use App\NotFoundException;
 use App\Services\Themes\FeatureListService;
-use App\Services\Themes\HotTagsService;
 use App\Services\Themes\QueryThemesService;
+use App\Services\Themes\ThemeHotTagsService;
 use App\Services\Themes\ThemeInformationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,7 +24,7 @@ class ThemeController extends Controller
     public function __construct(
         private readonly QueryThemesService $queryThemes,
         private readonly ThemeInformationService $themeInfo,
-        private readonly HotTagsService $hotTags,
+        private readonly ThemeHotTagsService $hotTags,
         private readonly FeatureListService $featureList,
     ) {}
 

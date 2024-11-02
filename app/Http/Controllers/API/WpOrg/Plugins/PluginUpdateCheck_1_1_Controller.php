@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\WpOrg\Plugins;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Plugins\PluginUpdateRequest;
 use App\Http\Resources\Plugins\PluginUpdateCollection;
-use App\Services\PluginUpdateService;
+use App\Services\Plugins\PluginUpdateService;
 use Illuminate\Http\JsonResponse;
 
 use function Safe\json_decode;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Plugins;
 
+use App\Models\WpOrg\Plugin;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
@@ -14,14 +15,17 @@ abstract class BasePluginResource extends JsonResource
      */
     protected function getCommonAttributes(): array
     {
+        $plugin = $this->resource;
+        assert($plugin instanceof Plugin);
+
         return [
-            'name' => $this->resource->name,
-            'slug' => $this->resource->slug,
-            'version' => $this->resource->version,
-            'requires' => $this->resource->requires,
-            'tested' => $this->resource->tested,
-            'requires_php' => $this->resource->requires_php,
-            'download_link' => $this->resource->download_link,
+            'name' => $plugin->name,
+            'slug' => $plugin->slug,
+            'version' => $plugin->version,
+            'requires' => $plugin->requires,
+            'tested' => $plugin->tested,
+            'requires_php' => $plugin->requires_php,
+            'download_link' => $plugin->download_link,
         ];
     }
 

@@ -4,6 +4,7 @@ namespace Database\Factories\WpOrg;
 
 use App\Models\Sync\SyncPlugin;
 use App\Models\WpOrg\Plugin;
+use App\Models\WpOrg\PluginTag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -50,7 +51,6 @@ class PluginFactory extends Factory
                 'low' => $this->faker->imageUrl(772, 250),
                 'high' => $this->faker->imageUrl(1544, 500),
             ],
-            'tags' => $this->generateTags(),
             'donate_link' => $this->faker->optional()->url(),
             'contributors' => $this->generateContributors(),
             'icons' => [
@@ -73,14 +73,6 @@ class PluginFactory extends Factory
             'versions' => $this->generateVersions(),
             'upgrade_notice' => $this->generateUpgradeNotices(),
         ];
-    }
-
-    protected function generateTags(): array
-    {
-        $possibleTags = ['seo', 'security', 'social-media', 'woocommerce', 'forms', 'widgets',
-            'admin', 'marketing', 'analytics', 'backup', 'cache', 'performance'];
-
-        return $this->faker->randomElements($possibleTags, $this->faker->numberBetween(2, 6));
     }
 
     protected function generateContributors(): array
@@ -255,5 +247,39 @@ class PluginFactory extends Factory
             'num_ratings' => $this->faker->numberBetween(500, 1000),
             'active_installs' => $this->faker->numberBetween(100000, 1000000),
         ]);
+    }
+
+    /**
+     * Configure the model factory to create a plugin with tags
+     */
+    public function withTags(int $count = 3): static
+    {
+        return $this->afterCreating(function (Plugin $plugin) use ($count) {
+            $tags = PluginTag::factory()->count($count)->create();
+            $plugin->tags()->attach($tags->pluck('id'));
+        });
+    }
+
+    /**
+     * Configure the model factory to create a plugin with specific tags
+     * If tags already exist, they will be reused instead of creating duplicates
+     */
+    public function withSpecificTags(array $tagNames): static
+    {
+        return $this->afterCreating(function (Plugin $plugin) use ($tagNames) {
+            $tags = collect($tagNames)->map(function ($tagName) {
+                $slug = Str::slug($tagName);
+
+                return PluginTag::query()->firstOrCreate(
+                    ['slug' => $slug],
+                    [
+                        'id' => $this->faker->uuid(),
+                        'name' => $tagName,
+                    ]
+                );
+            });
+
+            $plugin->tags()->attach($tags->pluck('id'));
+        });
     }
 }

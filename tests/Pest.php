@@ -134,7 +134,6 @@ function assertWpPluginAPIStructure($response)
         'support_threads',
         'support_threads_resolved',
         'active_installs',
-        'downloaded',
         'last_updated',
         'added',
         'homepage',

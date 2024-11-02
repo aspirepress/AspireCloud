@@ -2,6 +2,7 @@
 
 // Note: api routes are not prefixed, i.e. all routes in here are from the root like web routes
 
+use App\Http\Controllers\API\WpOrg\Core\ImportersController;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
 use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
@@ -38,7 +39,7 @@ $routeDefinition
         $router->get('/core/checksums/{version}', CatchAllController::class)->where(['version' => '1.0']);
         $router->get('/core/credits/{version}', CatchAllController::class)->where(['version' => '1.[01]']);
         $router->get('/core/handbook/{version}', CatchAllController::class)->where(['version' => '1.0']);
-        $router->get('/core/importers/{version}', CatchAllController::class)->where(['version' => '1.[01]']);
+        $router->get('/core/importers/{version}', ImportersController::class)->where(['version' => '1.[01]']);
         $router->get('/core/serve-happy/{version}', CatchAllController::class)->where(['version' => '1.0']);
         $router->get('/core/stable-check/{version}', CatchAllController::class)->where(['version' => '1.0']);
         $router->get('/core/version-check/{version}', CatchAllController::class)->where(['version' => '1.[67]']);

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 /**
- * @property string $id
+ * @property-read string $id
  * @property string $slug
  * @property string $name
  * @property string $short_description
@@ -23,37 +23,37 @@ use InvalidArgumentException;
  * @property string $version
  * @property string $author
  * @property string $requires
- * @property string $requires_php
+ * @property string|null $requires_php
  * @property string $tested
  * @property string $download_link
  * @property CarbonImmutable $added
- * @property CarbonImmutable $last_updated
- * @property string $author_profile
+ * @property CarbonImmutable|null $last_updated
+ * @property string|null $author_profile
  * @property int $rating
- * @property array $ratings
+ * @property array|null $ratings
  * @property int $num_ratings
  * @property int $support_threads
  * @property int $support_threads_resolved
  * @property int $active_installs
  * @property int $downloaded
- * @property string $homepage
- * @property array $banners
- * @property array $tags
- * @property string $donate_link
- * @property array $contributors
- * @property array $icons
- * @property array $source
- * @property string $business_model
- * @property string $commercial_support_url
- * @property string $support_url
- * @property string $preview_link
- * @property string $repository_url
- * @property array $requires_plugins
- * @property array $compatibility
- * @property array $screenshots
- * @property array $sections
- * @property array $versions
- * @property array $upgrade_notice
+ * @property string|null $homepage
+ * @property array|null $banners
+ * @property string|null $donate_link
+ * @property array|null $contributors
+ * @property array|null $icons
+ * @property array|null $source
+ * @property string|null $business_model
+ * @property string|null $commercial_support_url
+ * @property string|null $support_url
+ * @property string|null $preview_link
+ * @property string|null $repository_url
+ * @property array|null $requires_plugins
+ * @property array|null $compatibility
+ * @property array|null $screenshots
+ * @property array|null $sections
+ * @property array|null $versions
+ * @property array|null $upgrade_notice
+ * @property array<string, string> $tags
  */
 final class Plugin extends BaseModel
 {
@@ -65,6 +65,9 @@ final class Plugin extends BaseModel
     use HasFactory;
 
     protected $table = 'plugins';
+
+    /** @phpstan-ignore-next-line */
+    protected $appends = ['tags'];
 
     protected function casts(): array
     {
@@ -129,7 +132,7 @@ final class Plugin extends BaseModel
 
     public static function getOrCreateFromSyncPlugin(SyncPlugin $syncPlugin): self
     {
-        return self::where('sync_id', $syncPlugin->id)->first() ?? self::createFromSyncPlugin($syncPlugin);
+        return self::query()->firstWhere('sync_id', $syncPlugin->id) ?? self::createFromSyncPlugin($syncPlugin);
     }
 
     public static function createFromSyncPlugin(SyncPlugin $syncPlugin): self
@@ -176,10 +179,11 @@ final class Plugin extends BaseModel
             $pluginTags = [];
             $this->tags()->detach();
             foreach ($data['tags'] as $tagSlug => $name) {
-                $themeTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
+                $pluginTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
             }
             $this->tags()->saveMany($pluginTags);
         }
+
         return $this->fill([
             'name' => $data['name'],
             'short_description' => self::truncate($data['short_description'] ?? '', 149),
@@ -202,7 +206,7 @@ final class Plugin extends BaseModel
             'downloaded' => $data['downloaded'] ?? '',
             'homepage' => $data['homepage'] ?? null,
             'banners' => $data['banners'] ?? null,
-            'tags' => $data['tags'] ?? null,
+            //            'tags' => $data['tags'] ?? null,
             'donate_link' => self::truncate($data['donate_link'] ?? null, 1024),
             'contributors' => $data['contributors'] ?? null,
             'icons' => $data['icons'] ?? null,
@@ -231,5 +235,18 @@ final class Plugin extends BaseModel
     private static function truncate(?string $str, int $len): ?string
     {
         return $str === null ? $str : mb_substr($str, 0, $len, 'utf8');
+    }
+
+    /**
+     * Get the tags attribute.
+     *
+     * @return array<string, string>
+     */
+    public function getTagsAttribute(): array
+    {
+        return $this->tags()
+            ->get()
+            ->pluck('name', 'slug')
+            ->toArray();
     }
 }

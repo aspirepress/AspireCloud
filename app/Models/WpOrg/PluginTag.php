@@ -3,19 +3,26 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
+use Database\Factories\WpOrg\PluginTagFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * @property string $id
- * @property string $plugi
+ * @property-read string $id
  * @property string $slug
+ * @property string $name
+ * @property Collection<Plugin> $plugins
  */
 final class PluginTag extends BaseModel
 {
     //region Model Definition
 
     use HasUuids;
+
+    /** @use HasFactory<PluginTagFactory> */
+    use HasFactory;
 
     protected $table = 'plugin_tags';
 
@@ -39,7 +46,7 @@ final class PluginTag extends BaseModel
      */
     public function plugins(): BelongsToMany
     {
-        return $this->belongsToMany(Plugin::class, 'plugin_plugin_tags', 'tag_id', 'plugin_id');
+        return $this->belongsToMany(Plugin::class, 'plugin_plugin_tags', 'plugin_tag_id', 'plugin_id');
     }
 
     //endregion

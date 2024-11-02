@@ -1,0 +1,6 @@
+grumphp:
+    tasks:
+        phpcsfixer:
+            config: .php-cs-fixer.dist.php
+
+

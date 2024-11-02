@@ -2,24 +2,8 @@
 
 use App\Models\WpOrg\Plugin;
 
-beforeEach(function () {
-    Plugin::factory()->create([
-        'name' => 'JWT Auth',
-        'slug' => 'jwt-auth',
-        'tags' => ['authentication', 'jwt', 'api'],
-    ]);
-
-    Plugin::factory()->create([
-        'name' => 'JWT Authentication for WP-API',
-        'slug' => 'jwt-authentication-for-wp-rest-api',
-        'tags' => ['jwt', 'api', 'rest-api'],
-        'author' => 'tmeister',
-    ]);
-
-    Plugin::factory()->count(8)->create();
-});
-
 it('returns 400 when slug is missing', function () {
+    Plugin::factory(10)->create();
     $response = makeApiRequest('GET', '/plugins/info/1.2?action=plugin_information');
 
     $response->assertStatus(400)
@@ -29,6 +13,7 @@ it('returns 400 when slug is missing', function () {
 });
 
 it('returns 404 when plugin does not exist', function () {
+    Plugin::factory(10)->create();
     $response = makeApiRequest('GET', '/plugins/info/1.2?action=plugin_information&slug=non-existent-plugin');
 
     $response->assertStatus(404)
@@ -38,6 +23,12 @@ it('returns 404 when plugin does not exist', function () {
 });
 
 it('returns plugin information in wp.org format', function () {
+    Plugin::factory()->create([
+        'name' => 'JWT Authentication for WP-API',
+        'slug' => 'jwt-authentication-for-wp-rest-api',
+    ]);
+    Plugin::factory(9)->create();
+
     $response = makeApiRequest('GET', '/plugins/info/1.2?action=plugin_information&slug=jwt-authentication-for-wp-rest-api');
 
     $response->assertStatus(200)
@@ -49,14 +40,15 @@ it('returns plugin information in wp.org format', function () {
 });
 
 it('returns search results by tag in wp.org format', function () {
-    $tag = 'jwt';
+    $tags = ['jwt', 'authentication', 'rest api'];
+    $tagToQuery = 'jwt';
+
+    Plugin::factory(8)->create();
+    Plugin::factory()->count(2)->withSpecificTags($tags)->create();
 
     expect(Plugin::query()->count())->toBe(10);
 
-    $jwtPlugins = Plugin::query()->where('tags', 'ilike', '%' . $tag . '%')->count();
-    expect($jwtPlugins)->toBe(2);
-
-    $response = makeApiRequest('GET', '/plugins/info/1.2?action=query_plugins&tag=' . $tag);
+    $response = makeApiRequest('GET', '/plugins/info/1.2?action=query_plugins&tag=' . $tagToQuery);
 
     $response->assertStatus(200);
     assertWpPluginAPIStructureForSearch($response);
@@ -74,12 +66,19 @@ it('returns search results by tag in wp.org format', function () {
         ->and($responseData['info']['results'])->toBe(2);
 
     foreach ($responseData['plugins'] as $plugin) {
-        expect($plugin['tags'])->toContain($tag);
+        expect($plugin['tags'])->toContain($tagToQuery);
     }
 });
 
 it('returns search results by query string in wp.org format', function () {
     $query = 'jwt';
+    Plugin::factory()->create([
+        'name' => 'JWT Authentication for WP-API',
+        'slug' => 'jwt-authentication-for-wp-rest-api',
+    ]);
+
+    Plugin::factory(9)->create();
+
     expect(Plugin::query()->count())->toBe(10);
 
     $response = makeApiRequest('GET', '/plugins/info/1.2?action=query_plugins&search=' . $query);
@@ -88,7 +87,7 @@ it('returns search results by query string in wp.org format', function () {
     assertWpPluginAPIStructureForSearch($response);
 
     $responseData = $response->json();
-    expect(count($responseData['plugins']))->toBe(2)
+    expect(count($responseData['plugins']))->toBe(1)
         ->and($responseData['info'])->toHaveKeys([
             'page',
             'pages',
@@ -96,16 +95,23 @@ it('returns search results by query string in wp.org format', function () {
         ])
         ->and($responseData['info']['page'])->toBe(1)
         ->and($responseData['info']['pages'])->toBe(1)
-        ->and($responseData['info']['results'])->toBe(2);
+        ->and($responseData['info']['results'])->toBe(1);
 });
 
 it('returns search results by tag and author in wp.org format', function () {
-    $tag = 'jwt';
+    $tags = ['jwt', 'authentication', 'rest api'];
+    $tagToQuery = 'jwt';
     $author = 'tmeister';
+
+    Plugin::factory(9)->create();
+    Plugin::factory()->count(1)
+        ->withSpecificTags($tags)->create([
+            'author' => $author,
+        ]);
 
     expect(Plugin::query()->count())->toBe(10);
 
-    $response = makeApiRequest('GET', '/plugins/info/1.2?action=query_plugins&tag=' . $tag . '&author=' . $author);
+    $response = makeApiRequest('GET', '/plugins/info/1.2?action=query_plugins&tag=' . $tagToQuery . '&author=' . $author);
 
     $response->assertStatus(200);
     assertWpPluginAPIStructureForSearch($response);
@@ -126,6 +132,7 @@ it('returns a valid pagination', function () {
     $perPage = 2;
     $page = 2;
 
+    Plugin::factory(10)->create();
     expect(Plugin::query()->count())->toBe(10);
 
     $response = makeApiRequest('GET', '/plugins/info/1.2?action=query_plugins&per_page=' . $perPage . '&page=' . $page);
