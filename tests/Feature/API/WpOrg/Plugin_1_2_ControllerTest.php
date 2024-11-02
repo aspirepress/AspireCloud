@@ -106,8 +106,8 @@ it('returns search results by tag and author in wp.org format', function () {
     Plugin::factory(9)->create();
     Plugin::factory()->count(1)
         ->withSpecificTags($tags)->create([
-                         'author' => $author,
-                     ]);
+            'author' => $author,
+        ]);
 
     expect(Plugin::query()->count())->toBe(10);
 
