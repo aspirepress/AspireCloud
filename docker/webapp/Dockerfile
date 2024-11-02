@@ -15,6 +15,8 @@ WORKDIR /var/www/html
 ################
 FROM base AS dev
 
+RUN apk add nodejs npm
+
 RUN install-php-extensions xdebug
 
 ################

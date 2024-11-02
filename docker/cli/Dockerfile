@@ -14,6 +14,8 @@ WORKDIR /var/www/html
 ################
 FROM base AS dev
 
+RUN apk add nodejs npm
+
 # Xdebug exists, but is explicitly disabled for cli.  Use docker-compose.override.yml to enable.
 RUN install-php-extensions xdebug
 RUN sed -i 's/^/#/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
