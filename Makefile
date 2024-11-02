@@ -20,7 +20,7 @@ endif
 list:
 	@grep -E '^[a-zA-Z%_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | perl -ne '/^(?:.*?:)?(.*?):.*##(.*$$)/ and printf "\033[36m%-30s\033[0m %s\n", $$1, $$2'
 
-init: check-env dirs down clean build network up install-composer reset-database generate-key ## Initial configuration tasks
+init: check-env dirs down clean build-containers network up build reset-database generate-key ## Initial configuration tasks
 
 dirs:
 	mkdir -p .cache
@@ -28,16 +28,18 @@ dirs:
 check-env:
 	@[ -f .env ] || { cp .env.example .env; }
 
-build: ## Builds the Docker containers
+build-containers: ## Builds the Docker containers
 	docker compose build
 
 clean: ## Remove all Docker containers, volumes, etc
 	docker compose down -v --remove-orphans
 	docker compose rm -f
-	rm -fr ./vendor
+	rm -fr ./vendor ./node_modules
 
 up: ## Starts the Docker containers
 	docker compose up -d
+
+build: install-composer install-npm build-js
 
 down: ## Stops the Docker containers
 	docker compose down
@@ -64,6 +66,12 @@ quality-baseline: ## Run all static analysis checks with baseline
 
 install-composer: ## Install composer dependencies
 	bin/dcrun composer install
+
+install-npm:
+	bin/dcrun npm ci
+
+build-js:
+	bin/dcrun npm run build
 
 logs-%: ## View logs (follow mode) for the container where % is a service name (webapp, postgres, node, nginx, smtp, rabbitmq)
 	docker compose logs -f $*
