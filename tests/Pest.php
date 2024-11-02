@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
@@ -32,6 +34,7 @@ function assertWpThemeBaseStructure($json)
         ->has('homepage')
         ->has('description');
 }
+
 function assertWpThemeInfoBaseStructure($json)
 {
     return $json
@@ -51,6 +54,7 @@ function assertWpThemeInfoBaseStructure($json)
         ->has('last_updated_time')
         ->has('author');
 }
+
 function assertWpThemeAPIStructure1_1_query_themes($response)
 {
     return $response->assertJson(
@@ -117,7 +121,7 @@ function assertWpPluginAPIStructure($response)
         'tested',
         'requires_php',
         'rating',
-        'ratings' => [
+        'ratings'      => [
             5,
             4,
             3,
@@ -132,14 +136,14 @@ function assertWpPluginAPIStructure($response)
         'last_updated',
         'added',
         'homepage',
-        'sections' => [
+        'sections'     => [
             'description',
             'installation',
             'changelog',
             'reviews',
         ],
         'download_link',
-        'tags' => [],
+        'tags'         => [],
         'versions',
         'donate_link',
         'contributors' => [
@@ -200,4 +204,29 @@ function assertWpPluginAPIStructureForSearch($response)
             ],
         ],
     ]);
+}
+
+/**
+ * Helper function to make an authenticated request or not
+ * based on the configuration.
+ * @param mixed $method
+ * @param mixed $uri
+ * @param mixed $data
+ * @param mixed $headers
+ */
+function makeApiRequest($method, $uri, $data = [], $headers = [])
+{
+    $isAuthEnabled = config('app.aspire_press.api_authentication_enable');
+    $testCase      = test();
+
+    if ($isAuthEnabled) {
+        $user     = User::factory()->create();
+        $testCase = $testCase->actingAs($user);
+    }
+
+    if (Str::lower($method) === 'post') {
+        return $testCase->post($uri, $data, $headers);
+    }
+
+    return $testCase->{$method}($uri);
 }
