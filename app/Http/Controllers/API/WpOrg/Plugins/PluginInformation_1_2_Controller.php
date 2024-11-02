@@ -9,13 +9,15 @@ use App\Http\Resources\Plugins\PluginCollection;
 use App\Http\Resources\Plugins\PluginResource;
 use App\Services\Plugins\PluginHotTagsService;
 use App\Services\Plugins\PluginInformationService;
+use App\Services\Plugins\QueryPluginsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PluginInformation_1_2_Controller extends Controller
 {
     public function __construct(
-        private readonly PluginInformationService $pluginService,
+        private readonly PluginInformationService $pluginInfo,
+        private readonly QueryPluginsService $queryPlugins,
         private readonly PluginHotTagsService $hotTags,
     ) {}
 
@@ -36,7 +38,7 @@ class PluginInformation_1_2_Controller extends Controller
             return response()->json(['error' => 'Slug is required'], 400);
         }
 
-        $plugin = $this->pluginService->findBySlug($request->getSlug());
+        $plugin = $this->pluginInfo->findBySlug($request->getSlug());
 
         if (!$plugin) {
             return response()->json(['error' => 'Plugin not found'], 404);
@@ -47,7 +49,7 @@ class PluginInformation_1_2_Controller extends Controller
 
     private function queryPlugins(QueryPluginsRequest $request): JsonResponse
     {
-        $result = $this->pluginService->queryPlugins(
+        $result = $this->queryPlugins->queryPlugins(
             page: $request->getPage(),
             perPage: $request->getPerPage(),
             search: $request->query('search'),
