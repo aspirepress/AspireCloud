@@ -7,7 +7,7 @@ use App\Http\Requests\Plugins\PluginInformationRequest;
 use App\Http\Requests\Plugins\QueryPluginsRequest;
 use App\Http\Resources\Plugins\PluginCollection;
 use App\Http\Resources\Plugins\PluginResource;
-use App\Services\Themes\PluginInformationService;
+use App\Services\Plugins\PluginInformationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
