@@ -52,7 +52,8 @@ class QueryPluginsService
     private static function applySearch(Builder $query, string $search): void
     {
         $query->where(function (Builder $q) use ($search) {
-            $q->where('name', 'like', "%{$search}%")
+            $q->where('slug', 'like', "%{$search}%")
+                ->orWhere('name', 'like', "%{$search}%")
                 ->orWhere('short_description', 'like', "%{$search}%")
                 ->orWhereFullText('description', $search);
         });
