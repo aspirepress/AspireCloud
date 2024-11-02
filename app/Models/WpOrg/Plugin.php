@@ -132,7 +132,7 @@ final class Plugin extends BaseModel
 
     public static function getOrCreateFromSyncPlugin(SyncPlugin $syncPlugin): self
     {
-        return self::query()->where('sync_id', $syncPlugin->id)->first() ?? self::createFromSyncPlugin($syncPlugin);
+        return self::query()->firstWhere('sync_id', $syncPlugin->id) ?? self::createFromSyncPlugin($syncPlugin);
     }
 
     public static function createFromSyncPlugin(SyncPlugin $syncPlugin): self
@@ -141,7 +141,7 @@ final class Plugin extends BaseModel
 
         DB::beginTransaction();
 
-        $instance = self::query()->create([
+        $instance = self::create([
             'sync_id' => $syncPlugin->id,
             'slug' => $syncPlugin->slug,
             'name' => $syncPlugin->name,
@@ -179,7 +179,7 @@ final class Plugin extends BaseModel
             $pluginTags = [];
             $this->tags()->detach();
             foreach ($data['tags'] as $tagSlug => $name) {
-                $pluginTags[] = PluginTag::query()->firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
+                $pluginTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
             }
             $this->tags()->saveMany($pluginTags);
         }
