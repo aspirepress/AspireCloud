@@ -27,6 +27,7 @@
         "nunomaduro/collision": "^8.1",
         "pestphp/pest": "^3.4",
         "pestphp/pest-plugin-laravel": "^3.0",
+        "phpro/grumphp": "^2.9",
         "phpstan/phpstan": "^1.12",
         "roave/security-advisories": "dev-latest",
         "spatie/laravel-web-tinker": "^1.9",
@@ -76,7 +77,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "phpro/grumphp": true
         }
     },
     "minimum-stability": "stable",
