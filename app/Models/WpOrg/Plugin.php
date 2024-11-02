@@ -38,7 +38,6 @@ use InvalidArgumentException;
  * @property int $downloaded
  * @property string|null $homepage
  * @property array|null $banners
- * @property array|null $tags
  * @property string|null $donate_link
  * @property array|null $contributors
  * @property array|null $icons
@@ -54,6 +53,7 @@ use InvalidArgumentException;
  * @property array|null $sections
  * @property array|null $versions
  * @property array|null $upgrade_notice
+ * @property array<string, string> $tags
  */
 final class Plugin extends BaseModel
 {
@@ -65,6 +65,9 @@ final class Plugin extends BaseModel
     use HasFactory;
 
     protected $table = 'plugins';
+
+    /** @phpstan-ignore-next-line */
+    protected $appends = ['tags'];
 
     protected function casts(): array
     {
@@ -129,7 +132,7 @@ final class Plugin extends BaseModel
 
     public static function getOrCreateFromSyncPlugin(SyncPlugin $syncPlugin): self
     {
-        return self::where('sync_id', $syncPlugin->id)->first() ?? self::createFromSyncPlugin($syncPlugin);
+        return self::query()->where('sync_id', $syncPlugin->id)->first() ?? self::createFromSyncPlugin($syncPlugin);
     }
 
     public static function createFromSyncPlugin(SyncPlugin $syncPlugin): self
@@ -138,7 +141,7 @@ final class Plugin extends BaseModel
 
         DB::beginTransaction();
 
-        $instance = self::create([
+        $instance = self::query()->create([
             'sync_id' => $syncPlugin->id,
             'slug' => $syncPlugin->slug,
             'name' => $syncPlugin->name,
@@ -176,7 +179,7 @@ final class Plugin extends BaseModel
             $pluginTags = [];
             $this->tags()->detach();
             foreach ($data['tags'] as $tagSlug => $name) {
-                $pluginTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
+                $pluginTags[] = PluginTag::query()->firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
             }
             $this->tags()->saveMany($pluginTags);
         }
@@ -203,7 +206,7 @@ final class Plugin extends BaseModel
             'downloaded' => $data['downloaded'] ?? '',
             'homepage' => $data['homepage'] ?? null,
             'banners' => $data['banners'] ?? null,
-            'tags' => $data['tags'] ?? null,
+            //            'tags' => $data['tags'] ?? null,
             'donate_link' => self::truncate($data['donate_link'] ?? null, 1024),
             'contributors' => $data['contributors'] ?? null,
             'icons' => $data['icons'] ?? null,
@@ -232,5 +235,18 @@ final class Plugin extends BaseModel
     private static function truncate(?string $str, int $len): ?string
     {
         return $str === null ? $str : mb_substr($str, 0, $len, 'utf8');
+    }
+
+    /**
+     * Get the tags attribute.
+     *
+     * @return array<string, string>
+     */
+    public function getTagsAttribute(): array
+    {
+        return $this->tags()
+            ->get()
+            ->pluck('name', 'slug')
+            ->toArray();
     }
 }
