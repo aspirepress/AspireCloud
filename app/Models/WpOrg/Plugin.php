@@ -176,10 +176,11 @@ final class Plugin extends BaseModel
             $pluginTags = [];
             $this->tags()->detach();
             foreach ($data['tags'] as $tagSlug => $name) {
-                $themeTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
+                $pluginTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
             }
             $this->tags()->saveMany($pluginTags);
         }
+
         return $this->fill([
             'name' => $data['name'],
             'short_description' => self::truncate($data['short_description'] ?? '', 149),
