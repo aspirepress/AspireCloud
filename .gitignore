@@ -25,3 +25,6 @@ yarn-error.log
 # helper files would not normally be ignored, but they're currently broken, so it's a local decision to use them
 _ide_helper.php
 .phpstorm.meta.php
+
+grumphp.yml
+π
