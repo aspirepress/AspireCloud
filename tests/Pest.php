@@ -229,5 +229,10 @@ function makeApiRequest($method, $uri, $data = [], $headers = [])
         return $testCase->post($uri, $data, $headers);
     }
 
+    // sent the header on get request too
+    if (!empty($headers)) {
+        return $testCase->withHeaders($headers)->get($uri);
+    }
+
     return $testCase->{$method}($uri);
 }
