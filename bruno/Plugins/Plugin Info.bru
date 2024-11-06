@@ -22,3 +22,12 @@ headers {
   Accept-Encoding: deflate, gzip
   Connection: Keep-Alive
 }
+
+vars:pre-request {
+  API_URL: api.wordpress.org
+}
+
+assert {
+  Object.keys(res.body): length 26
+  Object.keys(res.body.plugins[0]): contains sections
+}
