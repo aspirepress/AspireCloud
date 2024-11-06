@@ -31,10 +31,6 @@ headers {
   Connection: Keep-Alive
 }
 
-vars:pre-request {
-  API_URL: wordpress.org
-}
-
 assert {
   res.status: eq 200
   res.body.plugins.length: gte 20
