@@ -84,7 +84,8 @@ class CacheApiResponse
         // Include relevant request data in ETag generation
         $etagData = [
             'path' => $request->path(),
-            'query' => $request->query(),
+            // Sort the query parameters to ensure consistent ETag
+            'query' => collect($request->query())->sortKeys()->all(),
         ];
 
         // For POST requests, include the request body in the ETag
