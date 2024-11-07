@@ -3,6 +3,10 @@
 // Note: api routes are not prefixed, i.e. all routes in here are from the root like web routes
 
 use App\Http\Controllers\API\WpOrg\Core\ImportersController;
+use App\Http\Controllers\API\WpOrg\Downloads\DownloadAssetController;
+use App\Http\Controllers\API\WpOrg\Downloads\DownloadCoreController;
+use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginController;
+use App\Http\Controllers\API\WpOrg\Downloads\DownloadThemeController;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
 use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
@@ -25,6 +29,24 @@ if (config('app.aspire_press.api_authentication_enable')) {
 $routeDefinition
     ->middleware($middlewares)
     ->group(function (Router $router) {
+        // Download routes
+        // Core WordPress: wordpress.org/wordpress-6.6.2.zip
+        $router->get('/wordpress-{version}.zip', DownloadCoreController::class)->where('version', '[\d.]+');
+
+        // Plugins: downloads.wordpress.org/plugin/elementor.3.25.4.zip
+        $router->get('/plugin/{file}', DownloadPluginController::class)->where('file', '.+\.zip');
+
+        // Themes: downloads.wordpress.org/theme/linnet.1.0.15.zip
+        $router->get('/theme/{file}', DownloadThemeController::class)->where('file', '.+\.zip');
+
+        // Assets: ps.w.org/elementor/assets/screenshot-1.gif?rev=3005087
+        // Assets: ps.w.org/elementor/assets/banner-1544x500.png?rev=3164133
+        $router->get('{slug}/assets/{file}', DownloadAssetController::class)
+            ->where([
+                'slug' => '[a-zA-Z0-9-]+',
+                'file' => '.+',
+            ]);
+
         $router->get('/secret-key/{version}', [SecretKeyController::class, 'index'])->where(['version' => '1.[01]']);
         $router->get('/secret-key/{version}/salt', [SecretKeyController::class, 'salt'])->where(['version' => '1.1']);
 
