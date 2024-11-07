@@ -22,3 +22,8 @@ headers {
   Accept-Encoding: deflate, gzip
   Connection: Keep-Alive
 }
+
+assert {
+  Object.keys(res.body): length 26
+  Object.keys(res.body.plugins[0]): contains sections
+}

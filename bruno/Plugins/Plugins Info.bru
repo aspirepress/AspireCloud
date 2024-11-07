@@ -31,6 +31,39 @@ headers {
   Connection: Keep-Alive
 }
 
+assert {
+  res.status: eq 200
+  res.body.plugins.length: gte 20
+  res.body.info.page: eq 1
+  Object.keys(res.body.plugins[0]): length 25
+  res.body.plugins[0].name: isString
+  res.body.plugins[0].slug: isString
+  res.body.plugins[0].version: isString
+  res.body.plugins[0].slug: isString
+  res.body.plugins[0].version: isString
+  res.body.plugins[0].author: isString
+  res.body.plugins[0].author_profile: isString
+  res.body.plugins[0].requires: isString
+  res.body.plugins[0].requires_php: isString
+  res.body.plugins[0].requires_plugins: isArray
+  res.body.plugins[0].rating: isNumber
+  res.body.plugins[0].ratings: isJson
+  res.body.plugins[0].num_ratings: isNumber
+  res.body.plugins[0].support_threads: isNumber
+  res.body.plugins[0].support_threads_resolved: isNumber
+  res.body.plugins[0].active_installs: isNumber
+  res.body.plugins[0].downloaded: isNumber
+  Date.parse(res.body.plugins[0].last_updated.substring(0,10)): gt 1234567890
+  Date.parse(res.body.plugins[0].added): gt 1234567890
+  res.body.plugins[0].homepage: isString
+  res.body.plugins[0].short_description: isString
+  res.body.plugins[0].description: isString
+  res.body.plugins[0].download_link: isString
+  res.body.plugins[0].tags: isJson
+  res.body.plugins[0].icons: isJson
+  res.body.plugins[0].donate_link: isString
+}
+
 docs {
   Note: You can find information about arguments and examples in the following blog articles:
 
