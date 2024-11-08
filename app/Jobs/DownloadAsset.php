@@ -20,11 +20,11 @@ class DownloadAsset implements ShouldQueue
     use SerializesModels;
 
     public function __construct(
-        private readonly AssetType $type,
-        private readonly string $slug,
-        private readonly string $file,
-        private readonly string $upstreamUrl,
-        private readonly ?string $revision = null,
+        public readonly AssetType $type,
+        public readonly string $slug,
+        public readonly string $file,
+        public readonly string $upstreamUrl,
+        public readonly ?string $revision = null,
     ) {}
 
     public function handle(): void
