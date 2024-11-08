@@ -27,7 +27,7 @@ Note: you'll have to add `api.aspiredev.org` to your `/etc/hosts` file to point 
 
 ## Using https://api.aspiredev.org instead of localhost
 
-The local dev instance can be reached this way by enabling a [traefik](https://hub.docker.com/_/traefik) proxy server:
+The local dev instance can be reached this way by enabling a [Traefik](https://hub.docker.com/_/traefik) proxy server:
 
     make traefik-up
 
@@ -38,7 +38,7 @@ Next, add an entry to your `/etc/hosts` file (`C:\Windows\System32\drivers\etc\h
 
 ### Note about SSL/TLS (https:// urls)
 
-Becase the proxy generates self-signed certs, you will get security warnings the first time you access the time your container after it is rebuilt.
+Because the proxy generates self-signed certs, you will get security warnings the first time you access the container after it is rebuilt.
 Any other access will also need to disable certificate validation.   
 
 Also note that plain old http://api.aspiredev.org always works. 
