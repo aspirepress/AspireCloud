@@ -12,11 +12,14 @@ class DownloadAssetController
         private readonly DownloadService $downloadService,
     ) {}
 
-    public function __invoke(string $slug, string $file, ?string $rev = null): Response
+    public function __invoke(string $slug, string $file): Response
     {
         $assetType = str_contains($file, 'screenshot-')
             ? AssetType::SCREENSHOT
             : AssetType::BANNER;
+
+        // get the revision from the query string if it exists
+        $rev = request()->query('rev') ?: null;
 
         return $this->downloadService->download(
             $assetType,

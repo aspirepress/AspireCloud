@@ -29,7 +29,6 @@ class DownloadAsset implements ShouldQueue
 
     public function handle(): void
     {
-        logger()->info("Downloading asset: {$this->slug}/{$this->file}");
         $response = Http::withHeaders([
             'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept' => '*/*',
@@ -38,22 +37,17 @@ class DownloadAsset implements ShouldQueue
         ])->get($this->upstreamUrl);
 
         if (!$response->successful()) {
-            logger()->error("Failed to download asset: {$this->slug}/{$this->file}");
             return;
         }
 
         // Generate a storage path
         $localPath = $this->generateLocalPath();
 
-        logger()->info("Storing asset: {$this->slug}/{$this->file} at {$localPath}");
-
         // Store the file
         Storage::put($localPath, $response->body());
 
-        $version = $this->extractVersion();
-
         // Create or update record
-        $asset = Asset::create([
+        Asset::create([
             'asset_type' => $this->type->value,
             'slug' => $this->slug,
             'version' => $this->extractVersion(),
@@ -61,11 +55,9 @@ class DownloadAsset implements ShouldQueue
             'upstream_path' => $this->upstreamUrl,
             'local_path' => $localPath,
         ]);
-
-        logger()->info('Asser Created ' . $asset->id);
     }
 
-    private function generateLocalPath(): string
+    public function generateLocalPath(): string
     {
         $basePath = match ($this->type) {
             AssetType::CORE_ZIP => 'core',
