@@ -31,7 +31,10 @@ $routeDefinition
     ->group(function (Router $router) {
         // Download routes
         // Core WordPress: wordpress.org/wordpress-6.6.2.zip
-        $router->get('/wordpress-{version}.zip', DownloadCoreController::class)->where('version', '[\d.]+');
+        $router->get('/wordpress-{version}.{extension}', DownloadCoreController::class)->where([
+            'version' => '[\d.]+',
+            'extension' => 'zip|tar\.gz',
+        ]);
 
         // Plugins: downloads.wordpress.org/plugin/elementor.3.25.4.zip
         $router->get('/plugin/{file}', DownloadPluginController::class)->where('file', '.+\.zip');

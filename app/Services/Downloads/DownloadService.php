@@ -3,6 +3,7 @@
 namespace App\Services\Downloads;
 
 use App\Enums\AssetType;
+use App\Jobs\DownloadAsset;
 use App\Models\WpOrg\Asset;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -39,7 +40,14 @@ class DownloadService
         // If we don't have it, proxy from WordPress.org and queue download
         $upstreamUrl = $this->buildUpstreamUrl($type, $slug, $file, $revision);
 
-        // TODO: Queue download job
+        // Queue the download job and delay it by 10 seconds
+        DownloadAsset::dispatch(
+            $type,
+            $slug,
+            $file,
+            $upstreamUrl,
+            $revision
+        )->delay(now()->addSeconds(10));
 
         return $this->proxyUpstreamFile($upstreamUrl, $file);
     }
@@ -51,11 +59,17 @@ class DownloadService
     {
         $filename = basename($asset->local_path);
         $mimeType = $this->getMimeType($filename);
+        $shouldDisplay = in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif']);
+
+        $headers = [
+            'Content-Type'        => $mimeType,
+            'Content-Disposition' => $shouldDisplay ? 'inline' : 'attachment; filename="' . $filename . '"',
+        ];
 
         return Storage::download(
             $asset->local_path,
             $filename,
-            ['Content-Type' => $mimeType]
+            $headers
         );
     }
 
@@ -65,22 +79,36 @@ class DownloadService
     private function proxyUpstreamFile(string $upstreamUrl, string $filename): Response
     {
         $response = Http::withHeaders([
-            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'User-Agent'      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept'          => '*/*',
+            'Accept-Encoding' => 'gzip, deflate, br',
+            'Connection'      => 'keep-alive',
         ])->get($upstreamUrl);
 
         if (!$response->successful()) {
             throw new NotFoundHttpException("File not found at upstream source");
         }
 
+        $mimeType = $this->getMimeType($filename);
+        $headers  = [
+            'Content-Type'   => $mimeType,
+            'Content-Length' => $response->header('Content-Length'),
+        ];
+
+        // For images (assets), display them instead of downloading
+        if (in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif'])) {
+            return response($response->body(), 200, $headers);
+        }
+
+        // For other files (zip, tar.gz), force download
         return response($response->body(), 200, [
-            'Content-Type'        => $this->getMimeType($filename),
+            ...$headers,
             'Content-Disposition' => 'attachment; filename="' . basename($filename) . '"',
-            'Content-Length'      => $response->header('Content-Length'),
         ]);
     }
 
     /**
-     * Build the WordPress.org upstream URL based on asset type
+     * Build the WordPress.org upstream URL based on an asset type
      */
     private function buildUpstreamUrl(
         AssetType $type,
