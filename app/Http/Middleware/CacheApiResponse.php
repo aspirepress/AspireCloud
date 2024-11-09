@@ -16,6 +16,7 @@ class CacheApiResponse
      */
     protected array $excludedRoutes = [
         'secret-key/*',
+        'download/*',
     ];
 
     /**

@@ -12,6 +12,8 @@
         "laravel/jetstream": "^5.3",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "league/flysystem-aws-s3-v3": "^3.29",
+        "predis/predis": "^2.0",
         "robmorgan/phinx": "^0.16.5",
         "spatie/laravel-data": "^4.10",
         "thecodingmachine/safe": "^2.5",
