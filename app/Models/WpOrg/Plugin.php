@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 /**
@@ -141,17 +142,19 @@ final class Plugin extends BaseModel
 
         DB::beginTransaction();
 
+        $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
+
         $instance = self::create([
             'sync_id' => $syncPlugin->id,
-            'slug' => $syncPlugin->slug,
-            'name' => $syncPlugin->name,
-            'short_description' => self::truncate($data['short_description'] ?? '', 150),
+            'slug' => $trunc($syncPlugin->slug),
+            'name' => $trunc($syncPlugin->name),
+            'short_description' => $trunc($data['short_description'] ?? '', 150),
             'description' => $data['description'] ?? '',
             'version' => $syncPlugin->current_version,
-            'author' => self::truncate($data['author'] ?? '', 255),
+            'author' => $trunc($data['author'] ?? ''),
             'requires' => $data['requires'] ?? '',
             'tested' => $data['tested'] ?? '',
-            'download_link' => self::truncate($data['download_link'] ?? '', 1024),
+            'download_link' => $trunc($data['download_link'] ?? '', 1024),
             'added' => Carbon::parse($data['added']),
         ]);
         $instance->fillFromMetadata($data);
@@ -184,16 +187,18 @@ final class Plugin extends BaseModel
             $this->tags()->saveMany($pluginTags);
         }
 
+        $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
+
         return $this->fill([
-            'name' => $data['name'],
-            'short_description' => self::truncate($data['short_description'] ?? '', 149),
+            'name' => $trunc($data['name'] ?? ''),
+            'short_description' => $trunc($data['short_description'] ?? '', 150),
             'description' => $data['description'] ?? '',
             'version' => $data['version'],
-            'author' => self::truncate($data['author'] ?? '', 255),
+            'author' => $trunc($data['author'] ?? ''),
             'requires' => $data['requires'],
             'requires_php' => $data['requires_php'] ?? null,
             'tested' => $data['tested'] ?? '',
-            'download_link' => self::truncate($data['download_link'] ?? '', 1024),
+            'download_link' => $trunc($data['download_link'] ?? '', 1024),
             'added' => Carbon::parse($data['added']),
             'last_updated' => ($data['last_updated'] ?? null) ? Carbon::parse($data['last_updated']) : null,
             'author_profile' => $data['author_profile'] ?? null,
@@ -206,16 +211,15 @@ final class Plugin extends BaseModel
             'downloaded' => $data['downloaded'] ?? '',
             'homepage' => $data['homepage'] ?? null,
             'banners' => $data['banners'] ?? null,
-            //            'tags' => $data['tags'] ?? null,
-            'donate_link' => self::truncate($data['donate_link'] ?? null, 1024),
+            'donate_link' => $trunc($data['donate_link'] ?? null, 1024),
             'contributors' => $data['contributors'] ?? null,
             'icons' => $data['icons'] ?? null,
             'source' => $data['source'] ?? null,
             'business_model' => $data['business_model'] ?? null,
-            'commercial_support_url' => self::truncate($data['commercial_support_url'] ?? null, 1024),
-            'support_url' => self::truncate($data['support_url'] ?? null, 1024),
-            'preview_link' => self::truncate($data['preview_link'] ?? null, 1024),
-            'repository_url' => self::truncate($data['repository_url'] ?? null, 1024),
+            'commercial_support_url' => $trunc($data['commercial_support_url'] ?? null, 1024),
+            'support_url' => $trunc($data['support_url'] ?? null, 1024),
+            'preview_link' => $trunc($data['preview_link'] ?? null, 1024),
+            'repository_url' => $trunc($data['repository_url'] ?? null, 1024),
             'requires_plugins' => $data['requires_plugins'] ?? null,
             'compatibility' => $data['compatibility'] ?? null,
             'screenshots' => $data['screenshots'] ?? null,
@@ -231,11 +235,6 @@ final class Plugin extends BaseModel
         return $this->fillFromMetadata($this->syncPlugin->metadata);
     }
     //endregion
-
-    private static function truncate(?string $str, int $len): ?string
-    {
-        return $str === null ? $str : mb_substr($str, 0, $len, 'utf8');
-    }
 
     /**
      * Get the tags attribute.
