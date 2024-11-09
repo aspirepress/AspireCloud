@@ -14,6 +14,19 @@ Next configure WordPress to use your local version of AspireCloud, and you're go
 
 Note: you'll have to add `api.aspiredev.org` to your `/etc/hosts` file to point to `127.0.0.1`.
 
+### Importing Plugins and Themes from AspireSync
+
+* Check out and build [AspireSync](https://github.com/aspirepress/AspireSync).  
+
+* **In AspireSync:** 
+  * `aspiresync plugins:meta:dump > /path/to/plugins.jsonl`
+  * `aspiresync themes:meta:dump > /path/to/themes.jsonl`
+
+* **In AspireCloud** 
+  * `php artisan sync:plugins:load /path/to/plugins.jsonl`
+  * `php artisan sync:themes:load /path/to/themes.jsonl`
+
+
 ## XDebug Instructions for PHPStorm
 
 1. Go to **Settings > PHP > Debug** and check "Break at first line of PHP scripts."
