@@ -38,6 +38,7 @@ class AssetFactory extends Factory
             'revision' => $this->faker->randomNumber(7),
             'upstream_path' => $this->generateUpstreamPath($assetType, $slug, $version),
             'local_path' => $this->generateLocalPath($assetType, $slug, $version),
+            'repository' => 'wp_org',
         ];
     }
 
@@ -47,7 +48,7 @@ class AssetFactory extends Factory
     public function plugin(): static
     {
         return $this->state(fn(array $attributes) => [
-            'asset_type' => AssetType::PLUGIN_ZIP->value,
+            'asset_type' => AssetType::PLUGIN->value,
         ]);
     }
 
@@ -57,7 +58,7 @@ class AssetFactory extends Factory
     public function theme(): static
     {
         return $this->state(fn(array $attributes) => [
-            'asset_type' => AssetType::THEME_ZIP->value,
+            'asset_type' => AssetType::THEME->value,
         ]);
     }
 
@@ -67,7 +68,7 @@ class AssetFactory extends Factory
     public function core(): static
     {
         return $this->state(fn(array $attributes) => [
-            'asset_type' => AssetType::CORE_ZIP->value,
+            'asset_type' => AssetType::CORE->value,
         ]);
     }
 
@@ -99,9 +100,9 @@ class AssetFactory extends Factory
     private function generateUpstreamPath(AssetType $type, string $slug, string $version): string
     {
         return match ($type) {
-            AssetType::CORE_ZIP => "https://wordpress.org/wordpress-{$version}.zip",
-            AssetType::PLUGIN_ZIP => "https://downloads.wordpress.org/plugin/{$slug}.{$version}.zip",
-            AssetType::THEME_ZIP => "https://downloads.wordpress.org/theme/{$slug}.{$version}.zip",
+            AssetType::CORE => "https://wordpress.org/wordpress-{$version}.zip",
+            AssetType::PLUGIN => "https://downloads.wordpress.org/plugin/{$slug}.{$version}.zip",
+            AssetType::THEME => "https://downloads.wordpress.org/theme/{$slug}.{$version}.zip",
             AssetType::SCREENSHOT => "https://ps.w.org/{$slug}/assets/screenshot-1.png",
             AssetType::BANNER => "https://ps.w.org/{$slug}/assets/banner-772x250.jpg",
         };
@@ -113,9 +114,9 @@ class AssetFactory extends Factory
     private function generateLocalPath(AssetType $type, string $slug, string $version): string
     {
         return match ($type) {
-            AssetType::CORE_ZIP => "core/wordpress-{$version}.zip",
-            AssetType::PLUGIN_ZIP => "plugins/{$slug}/{$slug}.{$version}.zip",
-            AssetType::THEME_ZIP => "themes/{$slug}/{$slug}.{$version}.zip",
+            AssetType::CORE => "core/wordpress-{$version}.zip",
+            AssetType::PLUGIN => "plugins/{$slug}/{$slug}.{$version}.zip",
+            AssetType::THEME => "themes/{$slug}/{$slug}.{$version}.zip",
             AssetType::SCREENSHOT => "assets/{$slug}/screenshot-1.png",
             AssetType::BANNER => "assets/{$slug}/banner-772x250.jpg",
         };

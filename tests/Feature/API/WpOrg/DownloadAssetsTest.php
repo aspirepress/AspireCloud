@@ -4,11 +4,10 @@ use App\Enums\AssetType;
 use App\Jobs\DownloadAsset;
 use App\Models\WpOrg\Asset;
 use App\Services\Downloads\DownloadService;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 beforeEach(function () {
     Storage::fake('local');
@@ -17,10 +16,10 @@ beforeEach(function () {
 });
 
 describe('DownloadService on local storage', function () {
-    it('streams local file when asset exists in storage', function () {
+    it('download local file when asset exists in storage', function () {
         // Arrange
         $asset = Asset::factory()->create([
-            'asset_type' => AssetType::PLUGIN_ZIP->value,
+            'asset_type' => AssetType::PLUGIN->value,
             'slug'       => 'test-plugin',
             'local_path' => 'plugins/test-plugin/test-plugin.1.0.0.zip',
         ]);
@@ -31,72 +30,69 @@ describe('DownloadService on local storage', function () {
 
         // Act
         $response = $service->download(
-            AssetType::PLUGIN_ZIP,
+            AssetType::PLUGIN,
             'test-plugin',
             'test-plugin.1.0.0.zip'
         );
 
         // Assert
         expect($response)
-            ->toBeInstanceOf(StreamedResponse::class)
-            ->and($response->headers->get('Content-Type'))->toBe('application/zip')
-            ->and($response->headers->get('Content-Disposition'))->toContain('attachment');
+            ->toBeInstanceOf(RedirectResponse::class)
+            ->and($response->getStatusCode())->toBe(302);
     });
 
     it('proxies and queues download when asset does not exist locally', function () {
         // Arrange
-        Http::fake([
-            'wordpress.org/*' => Http::response('remote content', 200, [
-                'Content-Type'   => 'application/zip',
-                'Content-Length' => 13,
-            ]),
-        ]);
-
         $service = new DownloadService();
 
         // Act
         $response = $service->download(
-            AssetType::PLUGIN_ZIP,
+            AssetType::PLUGIN,
             'test-plugin',
             'test-plugin.1.0.0.zip'
         );
 
         // Assert
-        Http::assertSent(function (Request $request) {
-            return str_contains($request->url(), 'wordpress.org');
-        });
-
         Queue::assertPushed(DownloadAsset::class, function ($job) {
-            return $job->slug === 'test-plugin'
-                   && $job->file === 'test-plugin.1.0.0.zip';
+            $expectedUrl = 'https://downloads.wordpress.org/plugin/test-plugin.1.0.0.zip';
+
+            return $job->type === AssetType::PLUGIN
+                && $job->slug === 'test-plugin'
+                && $job->file === 'test-plugin.1.0.0.zip'
+                && $job->upstreamUrl === $expectedUrl
+                && $job->revision === null;
         });
 
-        expect($response->getStatusCode())->toBe(200)
-            ->and($response->headers->get('Content-Type'))->toBe('application/zip')
-            ->and($response->headers->get('Content-Disposition'))->toContain('attachment');
+        expect($response)
+            ->toBeInstanceOf(RedirectResponse::class)
+            ->and($response->getTargetUrl())
+            ->toBe('https://downloads.wordpress.org/plugin/test-plugin.1.0.0.zip');
     });
 
-    it('handles images differently from zip files', function () {
+    it('redirects to temporary URL when asset exists locally', function () {
         // Arrange
-        Http::fake([
-            'ps.w.org/*' => Http::response('image content', 200, [
-                'Content-Type'   => 'image/png',
-                'Content-Length' => 12,
-            ]),
+        $asset = Asset::factory()->create([
+            'asset_type' => AssetType::PLUGIN->value,
+            'slug' => 'test-plugin',
+            'local_path' => 'plugins/test-plugin.1.0.0.zip',
         ]);
+        Storage::fake('s3');
+        Storage::put($asset->local_path, 'test content');
 
         $service = new DownloadService();
 
         // Act
         $response = $service->download(
-            AssetType::SCREENSHOT,
+            AssetType::PLUGIN,
             'test-plugin',
-            'screenshot-1.png'
+            'test-plugin.1.0.0.zip'
         );
 
         // Assert
-        expect($response->headers->get('Content-Type'))->toBe('image/png')
-            ->and($response->headers->get('Content-Disposition'))->toBeNull();
+        expect($response)
+            ->toBeInstanceOf(RedirectResponse::class)
+            ->and($response->getTargetUrl())
+            ->toContain($asset->local_path);
     });
 
     it('downloads and stores asset correctly', function () {
@@ -106,7 +102,7 @@ describe('DownloadService on local storage', function () {
         ]);
 
         $job = new DownloadAsset(
-            AssetType::PLUGIN_ZIP,
+            AssetType::PLUGIN,
             'test-plugin',
             'test-plugin.1.0.0.zip',
             'https://downloads.wordpress.org/plugin/test-plugin.1.0.0.zip'
@@ -120,7 +116,7 @@ describe('DownloadService on local storage', function () {
         expect(Asset::count())->toBe(1);
 
         $asset = Asset::first();
-        expect($asset->asset_type->value)->toBe(AssetType::PLUGIN_ZIP->value)
+        expect($asset->asset_type->value)->toBe(AssetType::PLUGIN->value)
             ->and($asset->slug)->toBe('test-plugin')
             ->and($asset->version)->toBe('1.0.0');
     });
@@ -146,7 +142,7 @@ describe('S3 Asset Storage', function () {
 
         // Act
         $job = new DownloadAsset(
-            AssetType::PLUGIN_ZIP,
+            AssetType::PLUGIN,
             'test-plugin',
             'test-plugin.1.0.0.zip',
             'https://downloads.wordpress.org/plugin/test-plugin.1.0.0.zip'
@@ -173,7 +169,7 @@ describe('S3 Asset Storage', function () {
 
         // Act
         $job = new DownloadAsset(
-            AssetType::THEME_ZIP,
+            AssetType::THEME,
             'test-theme',
             'test-theme.1.0.0.zip',
             'https://downloads.wordpress.org/theme/test-theme.1.0.0.zip'
@@ -252,7 +248,7 @@ describe('S3 Asset Storage', function () {
         ]);
 
         $job = new DownloadAsset(
-            AssetType::PLUGIN_ZIP,
+            AssetType::PLUGIN,
             'test-plugin',
             'test-plugin.1.0.0.zip',
             'https://downloads.wordpress.org/plugin/test-plugin.1.0.0.zip'
@@ -269,7 +265,7 @@ describe('S3 Asset Storage', function () {
 
         $asset = Asset::first();
 
-        expect($asset->asset_type->value)->toBe(AssetType::PLUGIN_ZIP->value)
+        expect($asset->asset_type->value)->toBe(AssetType::PLUGIN->value)
             ->and($asset->slug)->toBe('test-plugin')
             ->and($asset->version)->toBe('1.0.0')
             ->and($asset->local_path)->toBe('plugins/test-plugin/test-plugin.1.0.0.zip');
@@ -286,7 +282,7 @@ describe('DownloadAsset Job', function () {
 
         // Test core version extraction
         $coreJob = new DownloadAsset(
-            AssetType::CORE_ZIP,
+            AssetType::CORE,
             'wordpress',
             'wordpress-6.4.2.zip',
             'https://wordpress.org/wordpress-6.4.2.zip'
@@ -295,7 +291,7 @@ describe('DownloadAsset Job', function () {
 
         // Test plugin version extraction
         $pluginJob = new DownloadAsset(
-            AssetType::PLUGIN_ZIP,
+            AssetType::PLUGIN,
             'test-plugin',
             'test-plugin.2.1.0.zip',
             'https://downloads.wordpress.org/plugin/test-plugin.2.1.0.zip'
@@ -303,8 +299,8 @@ describe('DownloadAsset Job', function () {
         $pluginJob->handle();
 
         // Assert
-        $coreAsset   = Asset::where('asset_type', AssetType::CORE_ZIP->value)->first();
-        $pluginAsset = Asset::where('asset_type', AssetType::PLUGIN_ZIP->value)->first();
+        $coreAsset   = Asset::where('asset_type', AssetType::CORE->value)->first();
+        $pluginAsset = Asset::where('asset_type', AssetType::PLUGIN->value)->first();
 
         expect($coreAsset->version)->toBe('6.4.2')
             ->and($pluginAsset->version)->toBe('2.1.0');
@@ -313,39 +309,39 @@ describe('DownloadAsset Job', function () {
 
 describe('Download Routes', function () {
     it('handles WordPress core download requests', function () {
-        $response = $this->get('/wordpress-6.4.2.zip');
+        $response = $this->get('/download/wordpress-6.4.2.zip');
 
-        expect($response->status())->toBe(200);
+        expect($response->status())->toBe(302);
         Queue::assertPushed(DownloadAsset::class, function ($job) {
-            return $job->type === AssetType::CORE_ZIP
+            return $job->type === AssetType::CORE
                    && str_contains($job->file, 'wordpress-6.4.2.zip');
         });
     });
 
     it('handles plugin download requests', function () {
-        $response = $this->get('/plugin/test-plugin.1.0.0.zip');
+        $response = $this->get('/download/plugin/test-plugin.1.0.0.zip');
 
-        expect($response->status())->toBe(200);
+        expect($response->status())->toBe(302);
         Queue::assertPushed(DownloadAsset::class, function ($job) {
-            return $job->type === AssetType::PLUGIN_ZIP
+            return $job->type === AssetType::PLUGIN
                    && $job->slug === 'test-plugin';
         });
     });
 
     it('handles theme download requests', function () {
-        $response = $this->get('/theme/test-theme.1.0.0.zip');
+        $response = $this->get('/download/theme/test-theme.1.0.0.zip');
 
-        expect($response->status())->toBe(200);
+        expect($response->status())->toBe(302);
         Queue::assertPushed(DownloadAsset::class, function ($job) {
-            return $job->type === AssetType::THEME_ZIP
+            return $job->type === AssetType::THEME
                    && $job->slug === 'test-theme';
         });
     });
 
     it('handles asset download requests', function () {
-        $response = $this->get('/test-plugin/assets/screenshot-1.png');
+        $response = $this->get('/download/test-plugin/assets/screenshot-1.png');
 
-        expect($response->status())->toBe(200);
+        expect($response->status())->toBe(302);
         Queue::assertPushed(DownloadAsset::class, function ($job) {
             return $job->type === AssetType::SCREENSHOT
                    && $job->slug === 'test-plugin'
@@ -355,9 +351,9 @@ describe('Download Routes', function () {
 
     it('handles asset download requests with revision', function () {
         // Todo: this is failing check why
-        $response = $this->get('/test-plugin/assets/banner-1544x500.png?rev=3164133');
+        $response = $this->get('/download/test-plugin/assets/banner-1544x500.png?rev=3164133');
 
-        expect($response->status())->toBe(200);
+        expect($response->status())->toBe(302);
         Queue::assertPushed(DownloadAsset::class, function ($job) {
             return $job->type === AssetType::BANNER
                    && $job->slug === 'test-plugin'

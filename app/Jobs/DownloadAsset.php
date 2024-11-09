@@ -8,7 +8,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,7 +16,6 @@ class DownloadAsset implements ShouldQueue
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
-    use SerializesModels;
 
     public function __construct(
         public readonly AssetType $type,
@@ -60,9 +58,9 @@ class DownloadAsset implements ShouldQueue
     public function generateLocalPath(): string
     {
         $basePath = match ($this->type) {
-            AssetType::CORE_ZIP => 'core',
-            AssetType::PLUGIN_ZIP => "plugins/{$this->slug}",
-            AssetType::THEME_ZIP => "themes/{$this->slug}",
+            AssetType::CORE => 'core',
+            AssetType::PLUGIN => "plugins/{$this->slug}",
+            AssetType::THEME => "themes/{$this->slug}",
             AssetType::SCREENSHOT,
             AssetType::BANNER => "assets/{$this->slug}",
         };
@@ -73,9 +71,9 @@ class DownloadAsset implements ShouldQueue
     private function extractVersion(): ?string
     {
         return match ($this->type) {
-            AssetType::CORE_ZIP => $this->extractCoreVersion(),
-            AssetType::PLUGIN_ZIP,
-            AssetType::THEME_ZIP => $this->extractPackageVersion(),
+            AssetType::CORE => $this->extractCoreVersion(),
+            AssetType::PLUGIN,
+            AssetType::THEME => $this->extractPackageVersion(),
             default => null,
         };
     }

@@ -7,9 +7,9 @@ use InvalidArgumentException;
 
 enum AssetType: string
 {
-    case CORE_ZIP = 'core_zip';
-    case PLUGIN_ZIP = 'plugin_zip';
-    case THEME_ZIP = 'theme_zip';
+    case CORE = 'core';
+    case PLUGIN = 'plugin';
+    case THEME = 'theme';
     case SCREENSHOT = 'screenshot';
     case BANNER = 'banner';
 
@@ -17,7 +17,7 @@ enum AssetType: string
     {
         // WordPress core downloads
         if (\Safe\preg_match('/wordpress-[\d.]+\.zip$/', $path)) {
-            return self::CORE_ZIP;
+            return self::CORE;
         }
 
         // Screenshots and Banners)
@@ -33,10 +33,10 @@ enum AssetType: string
         // plugin and theme zips files
         if (Str::endsWith($path, '.zip')) {
             if (Str::contains($path, '/theme/')) {
-                return self::THEME_ZIP;
+                return self::THEME;
             }
             if (Str::contains($path, '/plugin/')) {
-                return self::PLUGIN_ZIP;
+                return self::PLUGIN;
             }
         }
 
@@ -46,9 +46,9 @@ enum AssetType: string
     public function getBasePath(): string
     {
         return match ($this) {
-            self::CORE_ZIP => 'core',
-            self::PLUGIN_ZIP => 'plugins',
-            self::THEME_ZIP => 'themes',
+            self::CORE => 'core',
+            self::PLUGIN => 'plugins',
+            self::THEME => 'themes',
             self::SCREENSHOT,
             self::BANNER => 'assets',
         };
@@ -56,7 +56,7 @@ enum AssetType: string
 
     public function isZip(): bool
     {
-        return in_array($this, [self::CORE_ZIP, self::PLUGIN_ZIP, self::THEME_ZIP]);
+        return in_array($this, [self::CORE, self::PLUGIN, self::THEME]);
     }
 
     public function isAsset(): bool
@@ -67,9 +67,9 @@ enum AssetType: string
     public function getUpstreamBaseUrl(): string
     {
         return match ($this) {
-            self::CORE_ZIP => 'https://wordpress.org/',
-            self::PLUGIN_ZIP => 'https://downloads.wordpress.org/plugin/',
-            self::THEME_ZIP => 'https://downloads.wordpress.org/theme/',
+            self::CORE => 'https://wordpress.org/',
+            self::PLUGIN => 'https://downloads.wordpress.org/plugin/',
+            self::THEME => 'https://downloads.wordpress.org/theme/',
             self::SCREENSHOT,
             self::BANNER => 'https://ps.w.org/%s/assets/',
         };

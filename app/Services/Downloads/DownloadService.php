@@ -5,11 +5,9 @@ namespace App\Services\Downloads;
 use App\Enums\AssetType;
 use App\Jobs\DownloadAsset;
 use App\Models\WpOrg\Asset;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DownloadService
 {
@@ -34,7 +32,7 @@ class DownloadService
 
         // If we have it, and it exists in storage, stream it
         if ($asset && Storage::exists($asset->local_path)) {
-            return $this->streamStoredFile($asset);
+            return $this->downloadStoredFile($asset);
         }
 
         // If we don't have it, proxy from WordPress.org and queue download
@@ -49,62 +47,32 @@ class DownloadService
             $revision
         )->delay(now()->addSeconds(10));
 
-        return $this->proxyUpstreamFile($upstreamUrl, $file);
+        return $this->downloadUpstreamFile($upstreamUrl);
     }
 
     /**
-     * Stream a file from our storage
+     * Download a file from our storage
+     * Keep it simple and redirect using a temporary URL
      */
-    private function streamStoredFile(Asset $asset): StreamedResponse
+    private function downloadStoredFile(Asset $asset): RedirectResponse
     {
-        $filename = basename($asset->local_path);
-        $mimeType = $this->getMimeType($filename);
-        $shouldDisplay = in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif']);
+        $expirationInMinutes = 5;
 
-        $headers = [
-            'Content-Type'        => $mimeType,
-            'Content-Disposition' => $shouldDisplay ? 'inline' : 'attachment; filename="' . $filename . '"',
-        ];
-
-        return Storage::download(
-            $asset->local_path,
-            $filename,
-            $headers
+        return redirect()->away(
+            Storage::temporaryUrl(
+                $asset->local_path,
+                now()->addMinutes($expirationInMinutes)
+            )
         );
     }
 
     /**
      * Proxy a file from WordPress.org
+     * Keep it simple and redirect to the upstream URL
      */
-    private function proxyUpstreamFile(string $upstreamUrl, string $filename): Response
+    private function downloadUpstreamFile(string $upstreamUrl): Response
     {
-        $response = Http::withHeaders([
-            'User-Agent'      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept'          => '*/*',
-            'Accept-Encoding' => 'gzip, deflate, br',
-            'Connection'      => 'keep-alive',
-        ])->get($upstreamUrl);
-
-        if (!$response->successful()) {
-            throw new NotFoundHttpException("File not found at upstream source");
-        }
-
-        $mimeType = $this->getMimeType($filename);
-        $headers  = [
-            'Content-Type'   => $mimeType,
-            'Content-Length' => $response->header('Content-Length'),
-        ];
-
-        // For images (assets), display them instead of downloading
-        if (in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif'])) {
-            return response($response->body(), 200, $headers);
-        }
-
-        // For other files (zip, tar.gz), force download
-        return response($response->body(), 200, [
-            ...$headers,
-            'Content-Disposition' => 'attachment; filename="' . basename($filename) . '"',
-        ]);
+        return redirect()->away($upstreamUrl);
     }
 
     /**
@@ -117,9 +85,9 @@ class DownloadService
         ?string $revision,
     ): string {
         $baseUrl = match ($type) {
-            AssetType::CORE_ZIP => 'https://wordpress.org/',
-            AssetType::PLUGIN_ZIP => 'https://downloads.wordpress.org/plugin/',
-            AssetType::THEME_ZIP => 'https://downloads.wordpress.org/theme/',
+            AssetType::CORE => 'https://wordpress.org/',
+            AssetType::PLUGIN => 'https://downloads.wordpress.org/plugin/',
+            AssetType::THEME => 'https://downloads.wordpress.org/theme/',
             AssetType::SCREENSHOT,
             AssetType::BANNER => sprintf('https://ps.w.org/%s/assets/', $slug),
         };
@@ -131,19 +99,5 @@ class DownloadService
         }
 
         return $url;
-    }
-
-    /**
-     * Get the MIME type for a file
-     */
-    private function getMimeType(string $filename): string
-    {
-        return match (strtolower(pathinfo($filename, PATHINFO_EXTENSION))) {
-            'zip' => 'application/zip',
-            'gif' => 'image/gif',
-            'jpg', 'jpeg' => 'image/jpeg',
-            'png' => 'image/png',
-            default => 'application/octet-stream',
-        };
     }
 }

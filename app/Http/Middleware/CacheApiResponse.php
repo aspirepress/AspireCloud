@@ -16,15 +16,7 @@ class CacheApiResponse
      */
     protected array $excludedRoutes = [
         'secret-key/*',
-        // Core WordPress downloads
-        'wordpress-*.zip',
-        'wordpress-*.tar.gz',
-        // Plugin downloads
-        'plugin/*.zip',
-        // Theme downloads
-        'theme/*.zip',
-        // Asset downloads
-        '*/assets/*',
+        'download/*',
     ];
 
     /**

@@ -30,21 +30,13 @@ $routeDefinition
     ->middleware($middlewares)
     ->group(function (Router $router) {
         // Download routes
-        // Core WordPress: wordpress.org/wordpress-6.6.2.zip
-        $router->get('/wordpress-{version}.{extension}', DownloadCoreController::class)->where([
+        $router->get('/download/wordpress-{version}.{extension}', DownloadCoreController::class)->where([
             'version' => '[\d.]+',
             'extension' => 'zip|tar\.gz',
         ]);
-
-        // Plugins: downloads.wordpress.org/plugin/elementor.3.25.4.zip
-        $router->get('/plugin/{file}', DownloadPluginController::class)->where('file', '.+\.zip');
-
-        // Themes: downloads.wordpress.org/theme/linnet.1.0.15.zip
-        $router->get('/theme/{file}', DownloadThemeController::class)->where('file', '.+\.zip');
-
-        // Assets: ps.w.org/elementor/assets/screenshot-1.gif?rev=3005087
-        // Assets: ps.w.org/elementor/assets/banner-1544x500.png?rev=3164133
-        $router->get('{slug}/assets/{file}', DownloadAssetController::class)
+        $router->get('/download/plugin/{file}', DownloadPluginController::class)->where('file', '.+\.zip');
+        $router->get('/download/theme/{file}', DownloadThemeController::class)->where('file', '.+\.zip');
+        $router->get('/download/{slug}/assets/{file}', DownloadAssetController::class)
             ->where([
                 'slug' => '[a-zA-Z0-9-]+',
                 'file' => '.+',

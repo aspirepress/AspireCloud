@@ -3,12 +3,12 @@
 namespace App\Models\WpOrg;
 
 use App\Enums\AssetType;
-use App\Models\BaseModel;
 use Database\Factories\WpOrg\AssetFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Asset extends BaseModel
+class Asset extends Model
 {
     use HasUuids;
 
@@ -22,9 +22,12 @@ class Asset extends BaseModel
         'revision',
         'upstream_path',
         'local_path',
+        'repository',
     ];
 
     protected $casts = [
         'asset_type' => AssetType::class,
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 }
