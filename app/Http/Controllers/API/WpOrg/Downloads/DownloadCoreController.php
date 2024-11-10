@@ -21,10 +21,6 @@ class DownloadCoreController extends Controller
 
         $file = "wordpress-{$version}.{$extension}";
 
-        return $this->downloadService->download(
-            AssetType::CORE,
-            'wordpress',
-            $file
-        );
+        return $this->downloadService->download(type: AssetType::CORE, slug: 'wordpress', file: $file);
     }
 }

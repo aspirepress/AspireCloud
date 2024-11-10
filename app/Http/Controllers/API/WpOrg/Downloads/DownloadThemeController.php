@@ -21,10 +21,6 @@ class DownloadThemeController extends Controller
 
         $slug = $matches[1];
 
-        return $this->downloadService->download(
-            AssetType::THEME,
-            $slug,
-            $file
-        );
+        return $this->downloadService->download(type: AssetType::THEME, slug: $slug, file: $file);
     }
 }

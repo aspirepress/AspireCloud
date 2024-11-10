@@ -21,10 +21,6 @@ class DownloadPluginController extends Controller
 
         $slug = $matches[1];
 
-        return $this->downloadService->download(
-            AssetType::PLUGIN,
-            $slug,
-            $file
-        );
+        return $this->downloadService->download(type: AssetType::PLUGIN, slug: $slug, file: $file);
     }
 }
