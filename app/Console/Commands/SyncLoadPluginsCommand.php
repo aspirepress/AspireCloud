@@ -68,7 +68,10 @@ class SyncLoadPluginsCommand extends Command
         $this->info("Imported $imported items.");
     }
 
-    /** @return array{message: string, sync: SyncPlugin|null, plugin: Plugin|null} */
+    /**
+     * @param array<string, mixed> $metadata
+     * @return array{message: string, sync: SyncPlugin|null, plugin: Plugin|null}
+     */
     private function loadMetadata(array $metadata): array
     {
         $newOnly = $this->option('new-only');

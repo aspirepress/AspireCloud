@@ -70,7 +70,10 @@ class SyncLoadThemesCommand extends Command
         $this->info("Imported $imported items.");
     }
 
-    /** @return array{message: string, sync: SyncTheme|null, theme: Theme|null} */
+    /**
+     * @param array<string, mixed> $metadata
+     * @return array{message: string, sync: SyncTheme|null, theme: Theme|null}
+     */
     private function loadMetadata(array $metadata): array
     {
         $newOnly = $this->option('new-only');
