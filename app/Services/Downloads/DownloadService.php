@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DownloadService
 {
+    public const int TEMPORARY_URL_EXPIRE_MINS = 5;
+
     /**
      * Get the file download response. If the asset exists locally,
      * streams it from storage. Otherwise, proxies the WordPress.org file
@@ -50,19 +52,11 @@ class DownloadService
         return $this->downloadUpstreamFile($upstreamUrl);
     }
 
-    /**
-     * Download a file from our storage
-     * Keep it simple and redirect using a temporary URL
-     */
+    /** Download a file from our storage */
     private function downloadStoredFile(Asset $asset): RedirectResponse
     {
-        $expirationInMinutes = 5;
-
         return redirect()->away(
-            Storage::temporaryUrl(
-                $asset->local_path,
-                now()->addMinutes($expirationInMinutes)
-            )
+            Storage::temporaryUrl($asset->local_path, now()->addMinutes(self::TEMPORARY_URL_EXPIRE_MINS))
         );
     }
 
