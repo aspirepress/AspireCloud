@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
-class DownloadAsset implements ShouldQueue
+class DownloadAssetJob implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;

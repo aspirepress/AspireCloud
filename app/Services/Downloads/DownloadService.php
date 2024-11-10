@@ -3,7 +3,7 @@
 namespace App\Services\Downloads;
 
 use App\Enums\AssetType;
-use App\Jobs\DownloadAsset;
+use App\Jobs\DownloadAssetJob;
 use App\Models\WpOrg\Asset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -41,7 +41,7 @@ class DownloadService
         $upstreamUrl = $this->buildUpstreamUrl($type, $slug, $file, $revision);
 
         // Queue the download job and delay it by 10 seconds
-        DownloadAsset::dispatch(
+        DownloadAssetJob::dispatch(
             $type,
             $slug,
             $file,
