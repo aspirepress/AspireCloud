@@ -4,7 +4,8 @@ namespace App\Utils;
 
 class Regex
 {
-    public static function match($pattern, $subject): array
+    /** @return string[] */
+    public static function match(string $pattern, string $subject): array
     {
         $matches = [];
         \Safe\preg_match($pattern, $subject, $matches);

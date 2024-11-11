@@ -16,6 +16,7 @@ class Asset extends Model
     /** @use HasFactory<AssetFactory> */
     use HasFactory;
 
+    /** @var array<string, class-string> */
     protected $dispatchesEvents = [
         'created' => AssetCreated::class,
     ];
