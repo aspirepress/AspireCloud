@@ -16,11 +16,11 @@ class DownloadThemeController extends Controller
 
     public function __invoke(string $file): Response
     {
-        [,$slug] = Regex::match('/^([a-zA-Z0-9-]+)\.(.+)\.zip$/', $file);
-        if (!$slug) {
+        $matches = Regex::match('/^([a-zA-Z0-9-]+)\.(.+)\.zip$/', $file);
+        if (!$matches) {
             return response()->json(['error' => "Invalid filename", 'filename' => $file], 400);
         }
 
-        return $this->downloadService->download(type: AssetType::THEME, slug: $slug, file: $file);
+        return $this->downloadService->download(type: AssetType::THEME, slug: $matches[1], file: $file);
     }
 }
