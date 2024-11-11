@@ -41,6 +41,19 @@ services:
                 aliases:
                     - 'db.aspiredev.org'
 
+    queue-worker:
+        build:
+            context: .
+            dockerfile: docker/laravel-worker/Dockerfile
+            target: dev
+        entrypoint: [ 'bin/queue-worker' ]
+        restart: unless-stopped
+        volumes:
+            - .:/var/www/html
+        networks:
+            - app-net
+            - aspire-net
+
     cli:
         build:
             context: .
