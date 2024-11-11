@@ -18,14 +18,8 @@ class DownloadAssetController
             ? AssetType::SCREENSHOT
             : AssetType::BANNER;
 
-        // get the revision from the query string if it exists
         $rev = request()->query('rev') ?: null;
 
-        return $this->downloadService->download(
-            $assetType,
-            $slug,
-            $file,
-            $rev
-        );
+        return $this->downloadService->download(type: $assetType, slug: $slug, file: $file, revision: $rev);
     }
 }

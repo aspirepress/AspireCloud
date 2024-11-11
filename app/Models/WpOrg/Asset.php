@@ -3,6 +3,7 @@
 namespace App\Models\WpOrg;
 
 use App\Enums\AssetType;
+use App\Events\AssetCreated;
 use Database\Factories\WpOrg\AssetFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,11 @@ class Asset extends Model
 
     /** @use HasFactory<AssetFactory> */
     use HasFactory;
+
+    /** @var array<string, class-string> */
+    protected $dispatchesEvents = [
+        'created' => AssetCreated::class,
+    ];
 
     protected $fillable = [
         'asset_type',

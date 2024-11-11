@@ -1,7 +1,7 @@
 <?php
 
 use App\Enums\AssetType;
-use App\Jobs\DownloadAsset;
+use App\Jobs\DownloadAssetJob;
 use App\Models\WpOrg\Asset;
 use App\Services\Downloads\DownloadService;
 use Illuminate\Http\RedirectResponse;
@@ -53,7 +53,7 @@ describe('DownloadService on local storage', function () {
         );
 
         // Assert
-        Queue::assertPushed(DownloadAsset::class, function ($job) {
+        Queue::assertPushed(DownloadAssetJob::class, function ($job) {
             $expectedUrl = 'https://downloads.wordpress.org/plugin/test-plugin.1.0.0.zip';
 
             return $job->type === AssetType::PLUGIN
@@ -101,7 +101,7 @@ describe('DownloadService on local storage', function () {
             '*' => Http::response('file content'),
         ]);
 
-        $job = new DownloadAsset(
+        $job = new DownloadAssetJob(
             AssetType::PLUGIN,
             'test-plugin',
             'test-plugin.1.0.0.zip',
@@ -141,7 +141,7 @@ describe('S3 Asset Storage', function () {
         ]);
 
         // Act
-        $job = new DownloadAsset(
+        $job = new DownloadAssetJob(
             AssetType::PLUGIN,
             'test-plugin',
             'test-plugin.1.0.0.zip',
@@ -168,7 +168,7 @@ describe('S3 Asset Storage', function () {
         ]);
 
         // Act
-        $job = new DownloadAsset(
+        $job = new DownloadAssetJob(
             AssetType::THEME,
             'test-theme',
             'test-theme.1.0.0.zip',
@@ -195,7 +195,7 @@ describe('S3 Asset Storage', function () {
         ]);
 
         // Act
-        $job = new DownloadAsset(
+        $job = new DownloadAssetJob(
             AssetType::SCREENSHOT,
             'test-plugin',
             'screenshot-1.png',
@@ -219,7 +219,7 @@ describe('S3 Asset Storage', function () {
         ]);
 
         // Act
-        $job = new DownloadAsset(
+        $job = new DownloadAssetJob(
             AssetType::BANNER,
             'test-plugin',
             'banner-772x250.jpg',
@@ -247,7 +247,7 @@ describe('S3 Asset Storage', function () {
             ]),
         ]);
 
-        $job = new DownloadAsset(
+        $job = new DownloadAssetJob(
             AssetType::PLUGIN,
             'test-plugin',
             'test-plugin.1.0.0.zip',
@@ -272,7 +272,7 @@ describe('S3 Asset Storage', function () {
     });
 })->skip(fn() => config('filesystems.default') !== 's3');
 
-describe('DownloadAsset Job', function () {
+describe('DownloadAssetJob Job', function () {
     it('extracts version correctly from different file patterns', function () {
         // Arrange
         Storage::fake('local');
@@ -281,7 +281,7 @@ describe('DownloadAsset Job', function () {
         ]);
 
         // Test core version extraction
-        $coreJob = new DownloadAsset(
+        $coreJob = new DownloadAssetJob(
             AssetType::CORE,
             'wordpress',
             'wordpress-6.4.2.zip',
@@ -290,7 +290,7 @@ describe('DownloadAsset Job', function () {
         $coreJob->handle();
 
         // Test plugin version extraction
-        $pluginJob = new DownloadAsset(
+        $pluginJob = new DownloadAssetJob(
             AssetType::PLUGIN,
             'test-plugin',
             'test-plugin.2.1.0.zip',
@@ -312,7 +312,7 @@ describe('Download Routes', function () {
         $response = $this->get('/download/wordpress-6.4.2.zip');
 
         expect($response->status())->toBe(302);
-        Queue::assertPushed(DownloadAsset::class, function ($job) {
+        Queue::assertPushed(DownloadAssetJob::class, function ($job) {
             return $job->type === AssetType::CORE
                    && str_contains($job->file, 'wordpress-6.4.2.zip');
         });
@@ -322,7 +322,7 @@ describe('Download Routes', function () {
         $response = $this->get('/download/plugin/test-plugin.1.0.0.zip');
 
         expect($response->status())->toBe(302);
-        Queue::assertPushed(DownloadAsset::class, function ($job) {
+        Queue::assertPushed(DownloadAssetJob::class, function ($job) {
             return $job->type === AssetType::PLUGIN
                    && $job->slug === 'test-plugin';
         });
@@ -332,7 +332,7 @@ describe('Download Routes', function () {
         $response = $this->get('/download/theme/test-theme.1.0.0.zip');
 
         expect($response->status())->toBe(302);
-        Queue::assertPushed(DownloadAsset::class, function ($job) {
+        Queue::assertPushed(DownloadAssetJob::class, function ($job) {
             return $job->type === AssetType::THEME
                    && $job->slug === 'test-theme';
         });
@@ -342,7 +342,7 @@ describe('Download Routes', function () {
         $response = $this->get('/download/test-plugin/assets/screenshot-1.png');
 
         expect($response->status())->toBe(302);
-        Queue::assertPushed(DownloadAsset::class, function ($job) {
+        Queue::assertPushed(DownloadAssetJob::class, function ($job) {
             return $job->type === AssetType::SCREENSHOT
                    && $job->slug === 'test-plugin'
                    && $job->file === 'screenshot-1.png';
@@ -354,7 +354,7 @@ describe('Download Routes', function () {
         $response = $this->get('/download/test-plugin/assets/banner-1544x500.png?rev=3164133');
 
         expect($response->status())->toBe(302);
-        Queue::assertPushed(DownloadAsset::class, function ($job) {
+        Queue::assertPushed(DownloadAssetJob::class, function ($job) {
             return $job->type === AssetType::BANNER
                    && $job->slug === 'test-plugin'
                    && $job->revision === '3164133';
