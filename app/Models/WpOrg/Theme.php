@@ -120,7 +120,7 @@ final class Theme extends BaseModel
             'sync_id' => $syncTheme->id,
             'author_id' => $author->id,
             'slug' => $syncTheme->slug,
-            'name' => $trunc($syncTheme->name),
+            'name' => $trunc($syncTheme->name ?? ''),
             'version' => $syncTheme->current_version,
             'download_link' => $trunc($data['download_link']),
             'last_updated' => Carbon::parse($data['last_updated']),
