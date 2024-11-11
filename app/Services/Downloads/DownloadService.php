@@ -38,6 +38,7 @@ class DownloadService
         if ($asset && Storage::exists($asset->local_path)) {
             // TODO: handle case where asset exists but local path does not (DownloadAssetJob always creates a new Asset)
             event(new AssetCacheHit($asset));
+            Log::debug("Serving existing asset", ["asset" => $asset]);
             return redirect()->away(
                 Storage::temporaryUrl($asset->local_path, now()->addMinutes(self::TEMPORARY_URL_EXPIRE_MINS)),
             );
