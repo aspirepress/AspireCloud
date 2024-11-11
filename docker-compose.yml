@@ -1,73 +1,86 @@
 services:
-  webapp:
-    build:
-      context: .
-      dockerfile: docker/webapp/Dockerfile
-      target: dev
-    ports:
-      - ${LOCAL_HTTP_PORT:-8099}:80
-    volumes:
-      - .:/var/www/html
-    networks:
-      traefik: ~
-      app-net: ~
-      aspire-net:
-        aliases:
-          - 'api.aspiredev.org'
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.ap-api.rule=Host(`api.aspiredev.org`)"
-      - "traefik.http.routers.ap-api-https.rule=Host(`api.aspiredev.org`)"
-      - "traefik.http.routers.ap-api-https.tls=true"
+    webapp:
+        build:
+            context: .
+            dockerfile: docker/webapp/Dockerfile
+            target: dev
+        ports:
+            - ${LOCAL_HTTP_PORT:-8099}:80
+        volumes:
+            - .:/var/www/html
+        networks:
+            traefik: ~
+            app-net: ~
+            aspire-net:
+                aliases:
+                    - 'api.aspiredev.org'
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.ap-api.rule=Host(`api.aspiredev.org`)"
+            - "traefik.http.routers.ap-api-https.rule=Host(`api.aspiredev.org`)"
+            - "traefik.http.routers.ap-api-https.tls=true"
 
-  redis:
-    image: redis:latest
-    networks:
-      - app-net
+    redis:
+        image: redis:latest
+        networks:
+            - app-net
 
-  postgres:
-    image: postgres:latest
-    environment:
-      - POSTGRES_PASSWORD=password
-      - PGDATA=/opt/pgdata
-      - POSTGRES_DB=aspirecloud
-    ports:
-      - "${LOCAL_POSTGRES_PORT:-5432}:5432"
-    volumes:
-      - postgresdata:/opt/pgdata
-    networks:
-      app-net: ~
-      aspire-net:
-        aliases:
-          - 'db.aspiredev.org'
+    postgres:
+        image: postgres:latest
+        environment:
+            - POSTGRES_PASSWORD=password
+            - PGDATA=/opt/pgdata
+            - POSTGRES_DB=aspirecloud
+        ports:
+            - "${LOCAL_POSTGRES_PORT:-5432}:5432"
+        volumes:
+            - postgresdata:/opt/pgdata
+        networks:
+            app-net: ~
+            aspire-net:
+                aliases:
+                    - 'db.aspiredev.org'
 
-  cli:
-    build:
-      context: .
-      dockerfile: docker/cli/Dockerfile
-      target: dev
-    volumes:
-      - .:/var/www/html
-    networks:
-      - app-net
-      - aspire-net
+    queue-worker:
+        build:
+            context: .
+            dockerfile: docker/laravel-worker/Dockerfile
+            target: dev
+        entrypoint: [ 'bin/queue-worker' ]
+        restart: unless-stopped
+        volumes:
+            - .:/var/www/html
+        networks:
+            - app-net
+            - aspire-net
 
-  mailhog:
-    restart: on-failure
-    image: mailhog/mailhog
-    entrypoint: [ "/bin/sh", "-c", "MailHog >/dev/null 2>&1" ] # mailhog's logging is spammy and useless
-    ports:
-      - "${LOCAL_MAILHOG_UI_PORT:-8525}:8025"
-    networks:
-      - app-net
-      - aspire-net
+    cli:
+        build:
+            context: .
+            dockerfile: docker/cli/Dockerfile
+            target: dev
+        volumes:
+            - .:/var/www/html
+        networks:
+            - app-net
+            - aspire-net
+
+    mailhog:
+        restart: on-failure
+        image: mailhog/mailhog
+        entrypoint: [ "/bin/sh", "-c", "MailHog >/dev/null 2>&1" ] # mailhog's logging is spammy and useless
+        ports:
+            - "${LOCAL_MAILHOG_UI_PORT:-8525}:8025"
+        networks:
+            - app-net
+            - aspire-net
 
 networks:
-  app-net: ~
-  aspire-net:
-    external: true
-  traefik:
-    external: true
+    app-net: ~
+    aspire-net:
+        external: true
+    traefik:
+        external: true
 
 volumes:
-  postgresdata: ~
+    postgresdata: ~

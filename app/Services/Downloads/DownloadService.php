@@ -3,14 +3,17 @@
 namespace App\Services\Downloads;
 
 use App\Enums\AssetType;
-use App\Jobs\DownloadAsset;
+use App\Events\AssetCacheHit;
+use App\Events\AssetCacheMissed;
 use App\Models\WpOrg\Asset;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
 class DownloadService
 {
+    public const int TEMPORARY_URL_EXPIRE_MINS = 5;
+
     /**
      * Get the file download response. If the asset exists locally,
      * streams it from storage. Otherwise, proxies the WordPress.org file
@@ -22,6 +25,7 @@ class DownloadService
         string $file,
         ?string $revision = null,
     ): Response {
+        Log::debug("DOWNLOAD", compact("type", "slug", "file", "revision"));
         // Check if we have it locally
         $asset = Asset::query()
             ->where('asset_type', $type->value)
@@ -32,53 +36,23 @@ class DownloadService
 
         // If we have it, and it exists in storage, stream it
         if ($asset && Storage::exists($asset->local_path)) {
-            return $this->downloadStoredFile($asset);
+            // TODO: handle case where asset exists but local path does not (DownloadAssetJob always creates a new Asset)
+            event(new AssetCacheHit($asset));
+            Log::debug("Serving existing asset", ["asset" => $asset]);
+            return redirect()->away(
+                Storage::temporaryUrl($asset->local_path, now()->addMinutes(self::TEMPORARY_URL_EXPIRE_MINS)),
+            );
         }
 
         // If we don't have it, proxy from WordPress.org and queue download
-        $upstreamUrl = $this->buildUpstreamUrl($type, $slug, $file, $revision);
+        $upstreamUrl = self::buildUpstreamUrl($type, $slug, $file, $revision);
 
-        // Queue the download job and delay it by 10 seconds
-        DownloadAsset::dispatch(
-            $type,
-            $slug,
-            $file,
-            $upstreamUrl,
-            $revision
-        )->delay(now()->addSeconds(10));
-
-        return $this->downloadUpstreamFile($upstreamUrl);
-    }
-
-    /**
-     * Download a file from our storage
-     * Keep it simple and redirect using a temporary URL
-     */
-    private function downloadStoredFile(Asset $asset): RedirectResponse
-    {
-        $expirationInMinutes = 5;
-
-        return redirect()->away(
-            Storage::temporaryUrl(
-                $asset->local_path,
-                now()->addMinutes($expirationInMinutes)
-            )
-        );
-    }
-
-    /**
-     * Proxy a file from WordPress.org
-     * Keep it simple and redirect to the upstream URL
-     */
-    private function downloadUpstreamFile(string $upstreamUrl): Response
-    {
+        event(new AssetCacheMissed(type: $type, slug: $slug, file: $file, upstreamUrl: $upstreamUrl, revision: $revision));
         return redirect()->away($upstreamUrl);
     }
 
-    /**
-     * Build the WordPress.org upstream URL based on an asset type
-     */
-    private function buildUpstreamUrl(
+    /** Build the WordPress.org upstream URL based on asset type and revision */
+    private static function buildUpstreamUrl(
         AssetType $type,
         string $slug,
         string $file,

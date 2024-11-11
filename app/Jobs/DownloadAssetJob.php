@@ -9,9 +9,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class DownloadAsset implements ShouldQueue
+class DownloadAssetJob implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -27,6 +28,9 @@ class DownloadAsset implements ShouldQueue
 
     public function handle(): void
     {
+        $revstr = $this->revision ? " rev=$this->revision" : '';
+        Log::info("Downloading asset for {$this->slug}$revstr from $this->upstreamUrl");
+
         $response = Http::withHeaders([
             'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept' => '*/*',
@@ -35,17 +39,17 @@ class DownloadAsset implements ShouldQueue
         ])->get($this->upstreamUrl);
 
         if (!$response->successful()) {
+            $status = $response->getStatusCode();
+            $message = $response->getReasonPhrase();
+            $url = $this->upstreamUrl;
+            Log::error("Failed to download asset for {$this->slug}$revstr: $message", compact('status', 'message', 'url'));
             return;
         }
 
-        // Generate a storage path
         $localPath = $this->generateLocalPath();
-
-        // Store the file
         Storage::put($localPath, $response->body());
 
-        // Create or update record
-        Asset::create([
+        $asset = Asset::create([
             'asset_type' => $this->type->value,
             'slug' => $this->slug,
             'version' => $this->extractVersion(),
@@ -53,6 +57,11 @@ class DownloadAsset implements ShouldQueue
             'upstream_path' => $this->upstreamUrl,
             'local_path' => $localPath,
         ]);
+
+        Log::info(
+            "Created new Asset for {$this->slug}$revstr",
+            ['asset_id' => $asset->id, 'local_path' => $localPath, 'slug' => $this->slug, 'revision' => $this->revision]
+        );
     }
 
     public function generateLocalPath(): string
