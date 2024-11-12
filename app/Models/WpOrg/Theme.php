@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 /**
@@ -113,13 +114,15 @@ final class Theme extends BaseModel
         $authorData = $data['author'] ?? throw new InvalidArgumentException("SyncTheme metadata has no author");
         $author = Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
 
+        $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
+
         $instance = self::create([
             'sync_id' => $syncTheme->id,
             'author_id' => $author->id,
             'slug' => $syncTheme->slug,
-            'name' => $syncTheme->name,
+            'name' => $trunc($syncTheme->name ?? ''),
             'version' => $syncTheme->current_version,
-            'download_link' => $data['download_link'],
+            'download_link' => $trunc($data['download_link']),
             'last_updated' => Carbon::parse($data['last_updated']),
             'creation_time' => Carbon::parse($data['creation_time']),
         ]);
@@ -146,18 +149,20 @@ final class Theme extends BaseModel
         $authorData = $data['author'] ?? throw new InvalidArgumentException("SyncTheme metadata has no author");
         $author ??= Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
 
+        $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
+
         if (isset($data['tags']) && is_array($data['tags'])) {
             $themeTags = [];
             $this->tags()->detach();
             foreach ($data['tags'] as $tagSlug => $name) {
-                $themeTags[] = ThemeTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
+                $themeTags[] = ThemeTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $trunc($name)]);
             }
             $this->tags()->saveMany($themeTags);
         }
 
         return $this->fill([
             'author_id' => $author->id,
-            'name' => $data['name'],
+            'name' => $trunc($data['name']),
             'description' => $data['sections']['description'] ?? null,
             'version' => $data['version'],
             'download_link' => $data['download_link'],
@@ -165,23 +170,23 @@ final class Theme extends BaseModel
             'last_updated' => Carbon::parse($data['last_updated_time']),
             'creation_time' => Carbon::parse($data['creation_time']),
             // All fields below are optional
-            'preview_url' => $data['preview_url'] ?? null,
-            'screenshot_url' => $data['screenshot_url'] ?? null,
+            'preview_url' => $trunc($data['preview_url'] ?? null),
+            'screenshot_url' => $trunc($data['screenshot_url'] ?? null),
             'ratings' => $data['ratings'] ?? null,
             'rating' => $data['rating'] ?? 0,
             'num_ratings' => $data['num_ratings'] ?? 0,
-            'reviews_url' => $data['reviews_url'] ?? null,
+            'reviews_url' => $trunc($data['reviews_url'] ?? null),
             'downloaded' => $data['downloaded'] ?? 0,
             'active_installs' => $data['active_installs'] ?? 0,
-            'homepage' => $data['homepage'] ?? null,
+            'homepage' => $trunc($data['homepage'] ?? null),
             'sections' => $data['sections'] ?? null,
             'tags' => $data['tags'] ?? null,
             'versions' => $data['versions'] ?? null,
             'requires' => $data['requires'] ?? null,
             'is_commercial' => $data['is_commercial'] ?? false,
-            'external_support_url' => $data['external_support_url'] ?? null,
+            'external_support_url' => $trunc($data['external_support_url'] ?? null),
             'is_community' => $data['is_community'] ?? false,
-            'external_repository_url' => $data['external_repository_url'] ?? null,
+            'external_repository_url' => $trunc($data['external_repository_url'] ?? null),
         ]);
     }
 
