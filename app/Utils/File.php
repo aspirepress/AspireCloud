@@ -12,7 +12,10 @@ final class File
         $file = new SplFileObject($filename);
         while (!$file->eof()) {
             $line = $file->fgets();
-            yield substr($line, 0, -1);
+            if (str_ends_with($line, "\n")) {
+                $line = substr($line, 0, -1);
+            }
+            yield $line;
         }
     }
 
