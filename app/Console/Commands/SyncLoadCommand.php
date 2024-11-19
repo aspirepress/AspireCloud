@@ -14,6 +14,10 @@ use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
+use function Safe\ini_set;
+use function Safe\json_decode;
+use function Safe\preg_replace;
+
 class SyncLoadCommand extends Command
 {
     protected $signature = 'sync:load {file} {--validate-only} {--new-only} {--stop-on-first-error}';
@@ -75,6 +79,7 @@ class SyncLoadCommand extends Command
         $next($metadata);
     }
 
+    /** @param array<string, mixed> $metadata */
     private function decorateWithClass(array $metadata, Closure $next): void
     {
         $sync_meta = $metadata['aspiresync_meta'];
@@ -97,6 +102,7 @@ class SyncLoadCommand extends Command
         $next(['class' => $class, 'metadata' => $metadata]);
     }
 
+    /** @param array{class: class-string, metadata: array<string, mixed>} $decorated */
     private function loadOne(array $decorated, Closure $next): void
     {
         $class = $decorated['class'];
@@ -113,7 +119,7 @@ class SyncLoadCommand extends Command
         $resource?->delete();
 
         $this->info("LOAD: $slug [$base]");
-        $resource = $class::fromSyncMetadata($metadata);
+        $resource = $class::fromSyncMetadata($metadata); // @phpstan-ignore-line
         $this->loaded++;
         $next($resource);
     }

@@ -45,6 +45,7 @@ class ClosedPlugin extends BaseModel
         ];
     }
 
+    /** @param array<string, mixed> $metadata */
     public static function fromSyncMetadata(array $metadata): self
     {
         $syncmeta = $metadata['aspiresync_meta'];

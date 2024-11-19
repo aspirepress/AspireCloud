@@ -3,7 +3,6 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
-use App\Models\Sync\SyncTheme;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -90,12 +89,6 @@ final class Theme extends BaseModel
         return $this->belongsToMany(ThemeTag::class, 'theme_theme_tags', 'theme_id', 'theme_tag_id', 'id', 'id');
     }
 
-    /** @return BelongsTo<SyncTheme, covariant self> */
-    public function syncTheme(): BelongsTo
-    {
-        return $this->belongsTo(SyncTheme::class, 'sync_id', 'id');
-    }
-
     //endregion
 
     //region Constructors
@@ -111,7 +104,7 @@ final class Theme extends BaseModel
         $syncmeta['status'] === 'open' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
 
         $authorData = $metadata['author'];
-        $author ??= Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
+        $author = Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
 
         $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
 
@@ -152,13 +145,8 @@ final class Theme extends BaseModel
             }
             $instance->tags()->saveMany($themeTags);
         }
-        return $instance;
+        return $instance;   // @phpstan-ignore-line
     }
 
-    /** @return $this */
-    public function updateFromSyncTheme(): self
-    {
-        return $this->fillFromMetadata($this->syncTheme->metadata);
-    }
     //endregion
 }
