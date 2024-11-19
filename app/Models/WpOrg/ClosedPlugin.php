@@ -61,6 +61,7 @@ class ClosedPlugin extends BaseModel
             'closed_date' => CarbonImmutable::parse($metadata['closed_date']),
             'reason' => $metadata['reason'],
             'metadata' => $metadata,
+            'ac_origin' => $syncmeta['origin'],
             'ac_created' => now(),
         ]);
     }

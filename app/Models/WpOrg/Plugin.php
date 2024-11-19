@@ -169,6 +169,7 @@ final class Plugin extends BaseModel
             'sections' => $metadata['sections'] ?? null,
             'versions' => $metadata['versions'] ?? null,
             'upgrade_notice' => $metadata['upgrade_notice'] ?? null,
+            'ac_origin' => $syncmeta['origin'],
         ]);
 
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {

@@ -136,6 +136,7 @@ final class Theme extends BaseModel
             'external_support_url' => $trunc($metadata['external_support_url'] ?? null),
             'is_community' => $metadata['is_community'] ?? false,
             'external_repository_url' => $trunc($metadata['external_repository_url'] ?? null),
+            'ac_origin' => $syncmeta['origin'],
         ]);
 
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {
