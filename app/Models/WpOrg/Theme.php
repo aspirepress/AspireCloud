@@ -9,7 +9,6 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
@@ -101,93 +100,59 @@ final class Theme extends BaseModel
 
     //region Constructors
 
-    public static function getOrCreateFromSyncTheme(SyncTheme $syncTheme): self
-    {
-        return self::where('sync_id', $syncTheme->id)->first() ?? self::createFromSyncTheme($syncTheme);
-    }
-
-    public static function createFromSyncTheme(SyncTheme $syncTheme): self
-    {
-        $data = $syncTheme->metadata or throw new InvalidArgumentException("SyncTheme instance has no metadata");
-
-        DB::beginTransaction();
-        $authorData = $data['author'] ?? throw new InvalidArgumentException("SyncTheme metadata has no author");
-        $author = Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
-
-        $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
-
-        $instance = self::create([
-            'sync_id' => $syncTheme->id,
-            'author_id' => $author->id,
-            'slug' => $syncTheme->slug,
-            'name' => $trunc($syncTheme->name ?? ''),
-            'version' => $syncTheme->current_version,
-            'download_link' => $trunc($data['download_link']),
-            'last_updated' => Carbon::parse($data['last_updated']),
-            'creation_time' => Carbon::parse($data['creation_time']),
-        ]);
-        $instance->fillFromMetadata($data, $author);
-        $instance->save();
-        DB::commit();
-        return $instance;
-    }
-
-    //endregion
-
-    //region Utilities
-
     /**
-     * @param array<string,mixed> $data
+     * @param array<string,mixed> $metadata
      * @return $this
      */
-    public function fillFromMetadata(array $data, ?Author $author = null): self
+    public static function fromSyncMetadata(array $metadata): self
     {
-        if ($data['slug'] !== $this->slug) {
-            throw new InvalidArgumentException("Metatada slug does not match [{$data['slug']} !== $this->slug]");
-        }
+        $syncmeta = $metadata['aspiresync_meta'];
+        $syncmeta['type'] === 'theme' or throw new InvalidArgumentException("invalid type '{$syncmeta['type']}'");
+        $syncmeta['status'] === 'open' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
 
-        $authorData = $data['author'] ?? throw new InvalidArgumentException("SyncTheme metadata has no author");
+        $authorData = $metadata['author'];
         $author ??= Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
 
         $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
 
-        if (isset($data['tags']) && is_array($data['tags'])) {
+        $instance = self::create([
+            'author_id' => $author->id,
+            'slug' => $trunc($metadata['slug']),
+            'name' => $trunc($metadata['name']),
+            'description' => $metadata['sections']['description'] ?? null,
+            'version' => $metadata['version'],
+            'download_link' => $metadata['download_link'],
+            'requires_php' => $metadata['requires_php'] ?? null,
+            'last_updated' => Carbon::parse($metadata['last_updated_time']),
+            'creation_time' => Carbon::parse($metadata['creation_time']),
+            // All fields below are optional
+            'preview_url' => $trunc($metadata['preview_url'] ?? null),
+            'screenshot_url' => $trunc($metadata['screenshot_url'] ?? null),
+            'ratings' => $metadata['ratings'] ?? null,
+            'rating' => $metadata['rating'] ?? 0,
+            'num_ratings' => $metadata['num_ratings'] ?? 0,
+            'reviews_url' => $trunc($metadata['reviews_url'] ?? null),
+            'downloaded' => $metadata['downloaded'] ?? 0,
+            'active_installs' => $metadata['active_installs'] ?? 0,
+            'homepage' => $trunc($metadata['homepage'] ?? null),
+            'sections' => $metadata['sections'] ?? null,
+            'tags' => $metadata['tags'] ?? null,
+            'versions' => $metadata['versions'] ?? null,
+            'requires' => $metadata['requires'] ?? null,
+            'is_commercial' => $metadata['is_commercial'] ?? false,
+            'external_support_url' => $trunc($metadata['external_support_url'] ?? null),
+            'is_community' => $metadata['is_community'] ?? false,
+            'external_repository_url' => $trunc($metadata['external_repository_url'] ?? null),
+        ]);
+
+        if (isset($metadata['tags']) && is_array($metadata['tags'])) {
             $themeTags = [];
-            $this->tags()->detach();
-            foreach ($data['tags'] as $tagSlug => $name) {
+            foreach ($metadata['tags'] as $tagSlug => $name) {
                 $themeTags[] = ThemeTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $trunc($name)]);
             }
-            $this->tags()->saveMany($themeTags);
+            $instance->tags()->saveMany($themeTags);
         }
-
-        return $this->fill([
-            'author_id' => $author->id,
-            'name' => $trunc($data['name']),
-            'description' => $data['sections']['description'] ?? null,
-            'version' => $data['version'],
-            'download_link' => $data['download_link'],
-            'requires_php' => $data['requires_php'] ?? null,
-            'last_updated' => Carbon::parse($data['last_updated_time']),
-            'creation_time' => Carbon::parse($data['creation_time']),
-            // All fields below are optional
-            'preview_url' => $trunc($data['preview_url'] ?? null),
-            'screenshot_url' => $trunc($data['screenshot_url'] ?? null),
-            'ratings' => $data['ratings'] ?? null,
-            'rating' => $data['rating'] ?? 0,
-            'num_ratings' => $data['num_ratings'] ?? 0,
-            'reviews_url' => $trunc($data['reviews_url'] ?? null),
-            'downloaded' => $data['downloaded'] ?? 0,
-            'active_installs' => $data['active_installs'] ?? 0,
-            'homepage' => $trunc($data['homepage'] ?? null),
-            'sections' => $data['sections'] ?? null,
-            'tags' => $data['tags'] ?? null,
-            'versions' => $data['versions'] ?? null,
-            'requires' => $data['requires'] ?? null,
-            'is_commercial' => $data['is_commercial'] ?? false,
-            'external_support_url' => $trunc($data['external_support_url'] ?? null),
-            'is_community' => $data['is_community'] ?? false,
-            'external_repository_url' => $trunc($data['external_repository_url'] ?? null),
-        ]);
+        return $instance;
     }
 
     /** @return $this */

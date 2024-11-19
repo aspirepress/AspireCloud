@@ -3,15 +3,12 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
-use App\Models\Sync\SyncPlugin;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\PluginFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
@@ -121,126 +118,73 @@ final class Plugin extends BaseModel
         return $this->belongsToMany(PluginTag::class, 'plugin_plugin_tags', 'plugin_id', 'plugin_tag_id', 'id', 'id');
     }
 
-    /** @return BelongsTo<SyncPlugin, covariant static> */
-    public function syncPlugin(): BelongsTo
-    {
-        return $this->belongsTo(SyncPlugin::class, 'sync_id', 'id');
-    }
-
     //endregion
 
     //region Constructors
 
-    public static function getOrCreateFromSyncPlugin(SyncPlugin $syncPlugin): self
+    /** @param array<string,mixed> $metadata */
+    public static function fromSyncMetadata(array $metadata): self
     {
-        return self::query()->firstWhere('sync_id', $syncPlugin->id) ?? self::createFromSyncPlugin($syncPlugin);
-    }
-
-    public static function createFromSyncPlugin(SyncPlugin $syncPlugin): self
-    {
-        $data = $syncPlugin->metadata or throw new InvalidArgumentException("SyncPlugin instance has no metadata");
-
-        DB::beginTransaction();
+        $syncmeta = $metadata['aspiresync_meta'];
+        $syncmeta['type'] === 'plugin' or throw new InvalidArgumentException("invalid type '{$syncmeta['type']}'");
+        $syncmeta['status'] === 'open' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
 
         $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
 
         $instance = self::create([
-            'sync_id' => $syncPlugin->id,
-            'slug' => $trunc($syncPlugin->slug),
-            'name' => $trunc($syncPlugin->name),
-            'short_description' => $trunc($data['short_description'] ?? '', 150),
-            'description' => $data['description'] ?? '',
-            'version' => $syncPlugin->current_version,
-            'author' => $trunc($data['author'] ?? ''),
-            'requires' => $data['requires'] ?? '',
-            'tested' => $data['tested'] ?? '',
-            'download_link' => $trunc($data['download_link'] ?? '', 1024),
-            'added' => Carbon::parse($data['added']),
+            'slug' => $syncmeta['slug'],
+            'name' => $trunc($metadata['name'] ?? ''),
+            'short_description' => $trunc($metadata['short_description'] ?? '', 150),
+            'description' => $metadata['description'] ?? '',
+            'version' => $metadata['version'],
+            'author' => $trunc($metadata['author'] ?? ''),
+            'requires' => $metadata['requires'],
+            'requires_php' => $metadata['requires_php'] ?? null,
+            'tested' => $metadata['tested'] ?? '',
+            'download_link' => $trunc($metadata['download_link'] ?? '', 1024),
+            'added' => Carbon::parse($metadata['added']),
+            'last_updated' => ($metadata['last_updated'] ?? null) ? Carbon::parse($metadata['last_updated']) : null,
+            'author_profile' => $metadata['author_profile'] ?? null,
+            'rating' => $metadata['rating'] ?? '',
+            'ratings' => $metadata['ratings'] ?? null,
+            'num_ratings' => $metadata['num_ratings'] ?? 0,
+            'support_threads' => $metadata['support_threads'] ?? 0,
+            'support_threads_resolved' => $metadata['support_threads_resolved'] ?? 0,
+            'active_installs' => $metadata['active_installs'] ?? 0,
+            'downloaded' => $metadata['downloaded'] ?? '',
+            'homepage' => $metadata['homepage'] ?? null,
+            'banners' => $metadata['banners'] ?? null,
+            'donate_link' => $trunc($metadata['donate_link'] ?? null, 1024),
+            'contributors' => $metadata['contributors'] ?? null,
+            'icons' => $metadata['icons'] ?? null,
+            'source' => $metadata['source'] ?? null,
+            'business_model' => $metadata['business_model'] ?? null,
+            'commercial_support_url' => $trunc($metadata['commercial_support_url'] ?? null, 1024),
+            'support_url' => $trunc($metadata['support_url'] ?? null, 1024),
+            'preview_link' => $trunc($metadata['preview_link'] ?? null, 1024),
+            'repository_url' => $trunc($metadata['repository_url'] ?? null, 1024),
+            'requires_plugins' => $metadata['requires_plugins'] ?? null,
+            'compatibility' => $metadata['compatibility'] ?? null,
+            'screenshots' => $metadata['screenshots'] ?? null,
+            'sections' => $metadata['sections'] ?? null,
+            'versions' => $metadata['versions'] ?? null,
+            'upgrade_notice' => $metadata['upgrade_notice'] ?? null,
         ]);
-        $instance->fillFromMetadata($data);
-        $instance->save();
 
-        DB::commit();
+        if (isset($metadata['tags']) && is_array($metadata['tags'])) {
+            $pluginTags = [];
+            foreach ($metadata['tags'] as $tagSlug => $name) {
+                $pluginTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
+            }
+            $instance->tags()->saveMany($pluginTags);
+        }
+
         return $instance;
     }
 
     //endregion
 
-    //region Utilities
-
-    /**
-     * @param array<string,mixed> $data
-     * @return $this
-     */
-    public function fillFromMetadata(array $data): self
-    {
-        if ($data['slug'] !== $this->slug) {
-            throw new InvalidArgumentException("Metatada slug does not match [{$data['slug']} !== $this->slug]");
-        }
-
-        if (isset($data['tags']) && is_array($data['tags'])) {
-            $pluginTags = [];
-            $this->tags()->detach();
-            foreach ($data['tags'] as $tagSlug => $name) {
-                $pluginTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
-            }
-            $this->tags()->saveMany($pluginTags);
-        }
-
-        $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
-
-        return $this->fill([
-            'name' => $trunc($data['name'] ?? ''),
-            'short_description' => $trunc($data['short_description'] ?? '', 150),
-            'description' => $data['description'] ?? '',
-            'version' => $data['version'],
-            'author' => $trunc($data['author'] ?? ''),
-            'requires' => $data['requires'],
-            'requires_php' => $data['requires_php'] ?? null,
-            'tested' => $data['tested'] ?? '',
-            'download_link' => $trunc($data['download_link'] ?? '', 1024),
-            'added' => Carbon::parse($data['added']),
-            'last_updated' => ($data['last_updated'] ?? null) ? Carbon::parse($data['last_updated']) : null,
-            'author_profile' => $data['author_profile'] ?? null,
-            'rating' => $data['rating'] ?? '',
-            'ratings' => $data['ratings'] ?? null,
-            'num_ratings' => $data['num_ratings'] ?? 0,
-            'support_threads' => $data['support_threads'] ?? 0,
-            'support_threads_resolved' => $data['support_threads_resolved'] ?? 0,
-            'active_installs' => $data['active_installs'] ?? 0,
-            'downloaded' => $data['downloaded'] ?? '',
-            'homepage' => $data['homepage'] ?? null,
-            'banners' => $data['banners'] ?? null,
-            'donate_link' => $trunc($data['donate_link'] ?? null, 1024),
-            'contributors' => $data['contributors'] ?? null,
-            'icons' => $data['icons'] ?? null,
-            'source' => $data['source'] ?? null,
-            'business_model' => $data['business_model'] ?? null,
-            'commercial_support_url' => $trunc($data['commercial_support_url'] ?? null, 1024),
-            'support_url' => $trunc($data['support_url'] ?? null, 1024),
-            'preview_link' => $trunc($data['preview_link'] ?? null, 1024),
-            'repository_url' => $trunc($data['repository_url'] ?? null, 1024),
-            'requires_plugins' => $data['requires_plugins'] ?? null,
-            'compatibility' => $data['compatibility'] ?? null,
-            'screenshots' => $data['screenshots'] ?? null,
-            'sections' => $data['sections'] ?? null,
-            'versions' => $data['versions'] ?? null,
-            'upgrade_notice' => $data['upgrade_notice'] ?? null,
-        ]);
-    }
-
-    /** @return $this */
-    public function updateFromSyncPlugin(): self
-    {
-        return $this->fillFromMetadata($this->syncPlugin->metadata);
-    }
-    //endregion
-
-    /**
-     * Get the tags attribute.
-     *
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     public function getTagsAttribute(): array
     {
         return $this->tags()
