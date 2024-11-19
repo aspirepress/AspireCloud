@@ -19,8 +19,8 @@ Note: you'll have to add `api.aspiredev.org` to your `/etc/hosts` file to point 
 * Check out and build [AspireSync](https://github.com/aspirepress/AspireSync).  
 
 * **In AspireSync:** 
-  * `aspiresync plugins:meta:dump > /path/to/plugins.jsonl`
-  * `aspiresync themes:meta:dump > /path/to/themes.jsonl`
+  * `aspiresync meta:dump:plugins > /path/to/plugins.jsonl`
+  * `aspiresync meta:dump:themes > /path/to/themes.jsonl`
 
 * **In AspireCloud** 
   * `php artisan sync:load /path/to/plugins.jsonl`
