@@ -23,8 +23,8 @@ Note: you'll have to add `api.aspiredev.org` to your `/etc/hosts` file to point 
   * `aspiresync themes:meta:dump > /path/to/themes.jsonl`
 
 * **In AspireCloud** 
-  * `php artisan sync:plugins:load /path/to/plugins.jsonl`
-  * `php artisan sync:themes:load /path/to/themes.jsonl`
+  * `php artisan sync:load /path/to/plugins.jsonl`
+  * `php artisan sync:load /path/to/themes.jsonl`
 
 
 ## XDebug Instructions for PHPStorm
