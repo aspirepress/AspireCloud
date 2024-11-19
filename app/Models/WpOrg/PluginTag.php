@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property-read string $id
- * @property string $slug
- * @property string $name
- * @property Collection<Plugin> $plugins
+ * @property-read string $slug
+ * @property-read string $name
+ * @property-read Collection<Plugin> $plugins
  */
 final class PluginTag extends BaseModel
 {

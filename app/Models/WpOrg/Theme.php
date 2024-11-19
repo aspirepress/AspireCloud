@@ -12,31 +12,31 @@ use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 /**
- * @property string $id
- * @property string $slug
- * @property string $name
- * @property string $version
- * @property string $download_link
- * @property string $requires_php
- * @property CarbonImmutable $last_updated
- * @property CarbonImmutable $creation_time
- * @property string $preview_url
- * @property string $screenshot_url
- * @property array $ratings
- * @property int $rating
- * @property int $num_ratings
- * @property string $reviews_url
- * @property int $downloaded
- * @property int $active_installs
- * @property string $homepage
- * @property array $sections
- * @property array $tags
- * @property array $versions
- * @property array $requires
- * @property bool $is_commercial
- * @property string $external_support_url
- * @property bool $is_community
- * @property string $external_repository_url
+ * @property-read string $id
+ * @property-read string $slug
+ * @property-read string $name
+ * @property-read string $version
+ * @property-read string $download_link
+ * @property-read string $requires_php
+ * @property-read CarbonImmutable $last_updated
+ * @property-read CarbonImmutable $creation_time
+ * @property-read string $preview_url
+ * @property-read string $screenshot_url
+ * @property-read array $ratings
+ * @property-read int $rating
+ * @property-read int $num_ratings
+ * @property-read string $reviews_url
+ * @property-read int $downloaded
+ * @property-read int $active_installs
+ * @property-read string $homepage
+ * @property-read array $sections
+ * @property-read array $tags
+ * @property-read array $versions
+ * @property-read array $requires
+ * @property-read bool $is_commercial
+ * @property-read string $external_support_url
+ * @property-read bool $is_community
+ * @property-read string $external_repository_url
  */
 final class Theme extends BaseModel
 {
@@ -96,10 +96,7 @@ final class Theme extends BaseModel
 
     //region Constructors
 
-    /**
-     * @param array<string,mixed> $metadata
-     * @return $this
-     */
+    /** @param array<string,mixed> $metadata */
     public static function fromSyncMetadata(array $metadata): self
     {
         $syncmeta = $metadata['aspiresync_meta'];
@@ -150,7 +147,7 @@ final class Theme extends BaseModel
             }
             $instance->tags()->saveMany($themeTags);
         }
-        return $instance;   // @phpstan-ignore-line
+        return $instance;
     }
 
     //endregion

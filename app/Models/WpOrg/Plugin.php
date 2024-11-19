@@ -14,44 +14,44 @@ use InvalidArgumentException;
 
 /**
  * @property-read string $id
- * @property string $slug
- * @property string $name
- * @property string $short_description
- * @property string $description
- * @property string $version
- * @property string $author
- * @property string $requires
- * @property string|null $requires_php
- * @property string $tested
- * @property string $download_link
- * @property CarbonImmutable $added
- * @property CarbonImmutable|null $last_updated
- * @property string|null $author_profile
- * @property int $rating
- * @property array|null $ratings
- * @property int $num_ratings
- * @property int $support_threads
- * @property int $support_threads_resolved
- * @property int $active_installs
- * @property int $downloaded
- * @property string|null $homepage
- * @property array|null $banners
- * @property string|null $donate_link
- * @property array|null $contributors
- * @property array|null $icons
- * @property array|null $source
- * @property string|null $business_model
- * @property string|null $commercial_support_url
- * @property string|null $support_url
- * @property string|null $preview_link
- * @property string|null $repository_url
- * @property array|null $requires_plugins
- * @property array|null $compatibility
- * @property array|null $screenshots
- * @property array|null $sections
- * @property array|null $versions
- * @property array|null $upgrade_notice
- * @property array<string, string> $tags
+ * @property-read string $slug
+ * @property-read string $name
+ * @property-read string $short_description
+ * @property-read string $description
+ * @property-read string $version
+ * @property-read string $author
+ * @property-read string $requires
+ * @property-read string|null $requires_php
+ * @property-read string $tested
+ * @property-read string $download_link
+ * @property-read CarbonImmutable $added
+ * @property-read CarbonImmutable|null $last_updated
+ * @property-read string|null $author_profile
+ * @property-read int $rating
+ * @property-read array|null $ratings
+ * @property-read int $num_ratings
+ * @property-read int $support_threads
+ * @property-read int $support_threads_resolved
+ * @property-read int $active_installs
+ * @property-read int $downloaded
+ * @property-read string|null $homepage
+ * @property-read array|null $banners
+ * @property-read string|null $donate_link
+ * @property-read array|null $contributors
+ * @property-read array|null $icons
+ * @property-read array|null $source
+ * @property-read string|null $business_model
+ * @property-read string|null $commercial_support_url
+ * @property-read string|null $support_url
+ * @property-read string|null $preview_link
+ * @property-read string|null $repository_url
+ * @property-read array|null $requires_plugins
+ * @property-read array|null $compatibility
+ * @property-read array|null $screenshots
+ * @property-read array|null $sections
+ * @property-read array|null $versions
+ * @property-read array|null $upgrade_notice
+ * @property-read array<string, string> $tags
  */
 final class Plugin extends BaseModel
 {
