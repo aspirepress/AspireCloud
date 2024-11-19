@@ -74,6 +74,9 @@ final class Theme extends BaseModel
             'external_support_url' => 'string',
             'is_community' => 'boolean',
             'external_repository_url' => 'string',
+            'ac_origin' => 'string',
+            'ac_created' => 'datetime_immutable',
+            'ac_raw_metadata' => 'array',
         ];
     }
 
@@ -137,6 +140,7 @@ final class Theme extends BaseModel
             'is_community' => $metadata['is_community'] ?? false,
             'external_repository_url' => $trunc($metadata['external_repository_url'] ?? null),
             'ac_origin' => $syncmeta['origin'],
+            'ac_raw_metadata' => $metadata,
         ]);
 
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {

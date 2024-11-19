@@ -39,9 +39,10 @@ class ClosedPlugin extends BaseModel
             'description' => 'string',
             'closed_date' => 'immutable_datetime',
             'reason' => 'string',
-            'metadata' => 'array',
+            'ac_origin' => 'string',
             'ac_created' => 'immutable_datetime',
             'ac_shadow_id' => 'string',
+            'ac_raw_metadata' => 'array',
         ];
     }
 
@@ -60,7 +61,7 @@ class ClosedPlugin extends BaseModel
             'description' => $metadata['description'],
             'closed_date' => CarbonImmutable::parse($metadata['closed_date']),
             'reason' => $metadata['reason'],
-            'metadata' => $metadata,
+            'ac_raw_metadata' => $metadata,
             'ac_origin' => $syncmeta['origin'],
             'ac_created' => now(),
         ]);

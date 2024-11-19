@@ -109,6 +109,9 @@ final class Plugin extends BaseModel
             'sections' => 'array',
             'versions' => 'array',
             'upgrade_notice' => 'array',
+            'ac_origin' => 'string',
+            'ac_created' => 'datetime_immutable',
+            'ac_raw_metadata' => 'array',
         ];
     }
 
@@ -170,6 +173,7 @@ final class Plugin extends BaseModel
             'versions' => $metadata['versions'] ?? null,
             'upgrade_notice' => $metadata['upgrade_notice'] ?? null,
             'ac_origin' => $syncmeta['origin'],
+            'ac_raw_metadata' => $metadata,
         ]);
 
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {
