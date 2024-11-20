@@ -3,9 +3,7 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
-use Database\Factories\WpOrg\PluginFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property-read string $id
@@ -19,9 +17,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Author extends BaseModel
 {
     use HasUuids;
-
-    /** @use HasFactory<PluginFactory> */
-    use HasFactory;
 
     protected $table = 'authors';
 
