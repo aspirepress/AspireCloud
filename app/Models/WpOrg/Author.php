@@ -3,25 +3,20 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
-use Database\Factories\WpOrg\PluginFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property-read string $id
- * @property string $user_nicename
- * @property string|null $profile
- * @property string|null $avatar
- * @property string|null $display_name
- * @property string|null $author
- * @property string|null $author_url
+ * @property-read string $user_nicename
+ * @property-read string|null $profile
+ * @property-read string|null $avatar
+ * @property-read string|null $display_name
+ * @property-read string|null $author
+ * @property-read string|null $author_url
  */
 class Author extends BaseModel
 {
     use HasUuids;
-
-    /** @use HasFactory<PluginFactory> */
-    use HasFactory;
 
     protected $table = 'authors';
 

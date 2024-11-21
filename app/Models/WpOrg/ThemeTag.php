@@ -3,13 +3,15 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * @property string $id
- * @property string $theme_id
- * @property string $slug
+ * @property-read string $id
+ * @property-read string $theme_id
+ * @property-read string $slug
+ * @property-read Collection<Theme> $themes
  */
 final class ThemeTag extends BaseModel
 {
@@ -32,11 +34,7 @@ final class ThemeTag extends BaseModel
 
     //region Relationships
 
-    /**
-     * Define the relationship to themes.
-     *
-     * @return BelongsToMany<Theme, covariant self>
-     */
+    /** @return BelongsToMany<Theme, covariant self> */
     public function themes(): BelongsToMany
     {
         return $this->belongsToMany(Theme::class, 'theme_theme_tags', 'theme_tag_id', 'theme_id');
