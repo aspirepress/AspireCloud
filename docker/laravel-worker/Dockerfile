@@ -9,7 +9,7 @@ RUN install-php-extensions pdo pdo_pgsql zip intl redis
 
 COPY ./docker/cli/php.ini /usr/local/etc/php/php.ini
 
-WORKDIR /var/www/html
+WORKDIR /app
 
 ################
 FROM base AS dev
@@ -22,7 +22,7 @@ RUN sed -i 's/^/#/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 FROM base AS prod
 
 # TODO: use an external volume
-COPY . /var/www/html
+COPY . /app
 
-RUN composer install --no-dev --no-interaction --no-progress --working-dir=/var/www/html
+RUN composer install --no-dev --no-interaction --no-progress --working-dir=/app
 

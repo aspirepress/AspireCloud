@@ -10,7 +10,7 @@ RUN install-php-extensions pdo pdo_pgsql zip intl redis
 COPY ./docker/webapp/Caddyfile /etc/caddy/Caddyfile
 COPY ./docker/webapp/php.ini /usr/local/etc/php/php.ini
 
-WORKDIR /var/www/html
+WORKDIR /app
 
 ################
 FROM base AS dev
@@ -22,7 +22,7 @@ RUN install-php-extensions xdebug
 ################
 FROM base AS prod
 
-COPY . /var/www/html
+COPY . /app
 
 RUN composer install -n -q
 

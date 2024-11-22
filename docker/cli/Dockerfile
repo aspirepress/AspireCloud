@@ -9,7 +9,7 @@ RUN install-php-extensions pdo pdo_pgsql zip intl redis
 
 COPY ./docker/cli/php.ini /usr/local/etc/php/php.ini
 
-WORKDIR /var/www/html
+WORKDIR /app
 
 ################
 FROM base AS dev
