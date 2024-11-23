@@ -24,5 +24,5 @@ FROM base AS prod
 # TODO: use an external volume
 COPY . /app
 
-RUN composer install --no-dev --no-interaction --no-progress --working-dir=/app
+RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --working-dir=/app
 

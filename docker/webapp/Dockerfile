@@ -24,5 +24,5 @@ FROM base AS prod
 
 COPY . /app
 
-RUN composer install -n -q
+RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --working-dir=/app
 
