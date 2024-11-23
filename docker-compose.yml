@@ -65,15 +65,20 @@ services:
             - app-net
             - aspire-net
 
-    mailhog:
-        restart: on-failure
-        image: mailhog/mailhog
-        entrypoint: [ "/bin/sh", "-c", "MailHog >/dev/null 2>&1" ] # mailhog's logging is spammy and useless
+    mailpit:
+        image: axllent/mailpit:v1.21.4
+        restart: unless-stopped
         ports:
-            - "${LOCAL_MAILHOG_UI_PORT:-8525}:8025"
+            - "${LOCAL_MAILPIT_PORT:-8025}:8025"
         networks:
-            - app-net
-            - aspire-net
+            app-net: ~
+            aspire-net:
+                aliases:
+                    - 'mail.aspiredev.org'
+        environment:
+            MP_MAX_MESSAGES: 500
+            MP_SMTP_AUTH_ACCEPT_ANY: 1
+            MP_SMTP_AUTH_ALLOW_INSECURE: 1
 
 networks:
     app-net: ~
