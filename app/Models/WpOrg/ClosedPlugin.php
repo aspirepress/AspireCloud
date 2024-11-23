@@ -20,6 +20,7 @@ use InvalidArgumentException;
  * @property-read array|null $metadata
  * @property-read CarbonImmutable $ac_created
  * @property-read string $ac_shadow_id          if previously open plugin exists, this is its id.  usually null.
+ * @property-read string $ac_origin
  */
 class ClosedPlugin extends BaseModel
 {

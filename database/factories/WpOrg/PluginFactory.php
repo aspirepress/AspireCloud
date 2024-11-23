@@ -2,7 +2,6 @@
 
 namespace Database\Factories\WpOrg;
 
-use App\Models\Sync\SyncPlugin;
 use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\PluginTag;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -19,7 +18,6 @@ class PluginFactory extends Factory
 
         return [
             'id' => $this->faker->uuid(),
-            'sync_id' => SyncPlugin::factory(),
             'slug' => $slug,
             'name' => $name,
             'short_description' => $this->faker->sentence(10),

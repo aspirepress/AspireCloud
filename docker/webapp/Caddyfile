@@ -3,6 +3,6 @@
 }
 
 http:// {
-  root * /var/www/html/public
+  root * /app/public
   php_server
 }
