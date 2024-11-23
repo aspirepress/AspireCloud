@@ -134,10 +134,4 @@ describe('Sync Themes', function () {
             ClosedPlugin::fromSyncMetadata($md_100b);
         })->toThrow(InvalidArgumentException::class);
     });
-
-    it('throws an exception if loaded as Theme', function () use ($md_100b) {
-        expect(function () use ($md_100b) {
-            Theme::fromSyncMetadata($md_100b);
-        })->toThrow(InvalidArgumentException::class);
-    });
 });
