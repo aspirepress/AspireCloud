@@ -56,7 +56,7 @@ class ClosedPlugin extends BaseModel
             'merged-into-core' => 'Merged into Core',   // lowercase 'i' is in upstream response
             'security-issue' => 'Security Issue',
             'unused' => 'Unused',  // here for completeness with upstream code, but it actually _is_ unused
-            'default' => 'Other/Unknown Reason', // AspireCloud addition
+            default => 'Other/Unknown Reason', // AspireCloud addition
         };
     }
 
