@@ -5,8 +5,10 @@ namespace App\Http\Controllers\API\WpOrg\Plugins;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Plugins\PluginInformationRequest;
 use App\Http\Requests\Plugins\QueryPluginsRequest;
+use App\Http\Resources\Plugins\ClosedPluginResource;
 use App\Http\Resources\Plugins\PluginCollection;
 use App\Http\Resources\Plugins\PluginResource;
+use App\Models\WpOrg\ClosedPlugin;
 use App\Services\Plugins\PluginHotTagsService;
 use App\Services\Plugins\PluginInformationService;
 use App\Services\Plugins\QueryPluginsService;
@@ -44,7 +46,14 @@ class PluginInformation_1_2_Controller extends Controller
             return response()->json(['error' => 'Plugin not found'], 404);
         }
 
-        return response()->json(new PluginResource($plugin));
+        if ($plugin instanceof ClosedPlugin) {
+            $resource = new ClosedPluginResource($plugin);
+            $status = 404;
+        } else {
+            $resource = new PluginResource($plugin);
+            $status = 200;
+        }
+        return response()->json($resource, $status);
     }
 
     private function queryPlugins(QueryPluginsRequest $request): JsonResponse

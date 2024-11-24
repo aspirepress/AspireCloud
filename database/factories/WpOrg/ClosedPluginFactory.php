@@ -31,7 +31,7 @@ class ClosedPluginFactory extends Factory
             'description' => $faker->sentence(),
             'closed_date' => $faker->dateTimeBetween('-2 years'),
             'reason' => $faker->randomElement($reasons),
-            'metadata' => null, // TODO
+            'ac_raw_metadata' => null, // TODO
             'ac_created' => $faker->dateTimeBetween('-1 month'),
             'ac_shadow_id' => null,
         ];

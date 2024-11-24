@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\WpOrg\ClosedPlugin;
 use App\Models\WpOrg\Plugin;
+use Carbon\Carbon;
 
 it('returns 400 when slug is missing', function () {
     Plugin::factory(10)->create();
@@ -37,6 +39,32 @@ it('returns plugin information in wp.org format', function () {
         ]);
 
     assertWpPluginAPIStructure($response);
+});
+
+it('returns closed plugin information in wp.org format', function () {
+    $date = Carbon::parse('2021-02-03');
+    ClosedPlugin::factory()->create([
+        'name' => "Display Name If No Gravatar",
+        'slug' => '0gravatar',
+        'closed_date' => $date,
+        'description' => 'test closed plugin',
+        'reason' => 'author-request',
+    ]);
+
+    $response = makeApiRequest('GET', '/plugins/info/1.2?action=plugin_information&request[slug]=0gravatar');
+
+    $response
+        ->assertStatus(404)
+        ->assertJson([
+            'error' => 'closed',
+            'name' => 'Display Name If No Gravatar',
+            'slug' => '0gravatar',
+            'description' => 'test closed plugin',
+            'closed' => true,
+            'closed_date' => $date->format('Y-m-d'),
+            'reason' => 'author-request',
+            'reason_text' => 'Author Request',
+        ]);
 });
 
 it('returns search results by tag in wp.org format', function () {
