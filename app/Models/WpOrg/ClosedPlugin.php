@@ -47,6 +47,19 @@ class ClosedPlugin extends BaseModel
         ];
     }
 
+    public function getReasonText(): string
+    {
+        return match ($this->reason) {
+            'author-request' => 'Author Request',
+            'guideline-violation' => 'Guideline Violation',
+            'licensing-trademark-violation' => 'Licensing/Trademark Violation',
+            'merged-into-core' => 'Merged into Core',   // lowercase 'i' is in upstream response
+            'security-issue' => 'Security Issue',
+            'unused' => 'Unused',  // here for completeness with upstream code, but it actually _is_ unused
+            default => 'Other/Unknown Reason', // AspireCloud addition
+        };
+    }
+
     /** @param array<string, mixed> $metadata */
     public static function fromSyncMetadata(array $metadata): self
     {
