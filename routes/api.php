@@ -19,7 +19,10 @@ use Illuminate\Support\Facades\Route;
 
 // https://codex.wordpress.org/WordPress.org_API
 
-$middlewares = [NormalizeWpOrgRequest::class];
+$middlewares = [
+    NormalizeWpOrgRequest::class,
+    'cache.headers:public;max_age=300,etag', // for the CDN's benefit: the WP user agent does not cache at all.
+];
 $routeDefinition = Route::prefix('/');
 
 if (config('app.aspire_press.api_authentication_enable')) {
