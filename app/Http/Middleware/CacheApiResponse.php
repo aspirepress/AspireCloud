@@ -1,5 +1,7 @@
 <?php
 
+// Note: not currently used.  Update endpoints cannot have long cache periods, and the WordPres UA doesn't cache anyway.
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -32,12 +34,13 @@ class CacheApiResponse
             'stale-while-revalidate' => 86400,  // 24 hours
             'public' => true,
         ],
-        'POST' => [
-            'max-age' => 300,                   // 5 minutes
-            's-maxage' => 3600,                 // 1 hour for CDN
-            'stale-while-revalidate' => 7200,   // 2 hours
-            'public' => true,
-        ],
+        // POST responses must _never_ be cached
+        // 'POST' => [
+        //     'max-age' => 300,                   // 5 minutes
+        //     's-maxage' => 3600,                 // 1 hour for CDN
+        //     'stale-while-revalidate' => 7200,   // 2 hours
+        //     'public' => true,
+        // ],
     ];
 
     public function handle(Request $request, Closure $next): Response

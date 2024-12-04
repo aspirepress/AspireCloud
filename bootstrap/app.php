@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Middleware\CacheApiResponse;
 use App\Http\Middleware\TrustProxies;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -49,7 +48,7 @@ return Application::configure(basePath: dirname(__DIR__))
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             // 'throttle:api',
             SubstituteBindings::class,
-            CacheApiResponse::class
+            // CacheApiResponse::class // replaced with laravels cache.headers in api.php
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) use ($apiPaths) {
