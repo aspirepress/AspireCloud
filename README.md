@@ -1,6 +1,6 @@
 # AspireCloud
 
-This project is designed to function as a CDN/API endpoint system for distributing WordPress assets (themes, plugins, core) to users of the [AspirePress Updater](https://github.com/aspirepress/updater-plugin). It is free software, with the condition that it must not be used for commercial gain when distributing freely available products.
+This project is designed to function as a CDN/API endpoint system for distributing WordPress assets (themes, plugins, core) to users of the [AspirePress Updater](https://github.com/aspirepress/updater-plugin).
 
 ## Setup
 
