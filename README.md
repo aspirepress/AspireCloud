@@ -1,6 +1,6 @@
 # AspireCloud
 
-This project is designed to function as a CDN/API endpoint system for distributing WordPress assets (themes, plugins, core) to users of the [AspirePress Updater](https://github.com/aspirepress/updater-plugin). It is free software, with the condition that it must not be used for commercial gain when distributing freely available products.
+This project is designed to function as a CDN/API endpoint system for distributing WordPress assets (themes, plugins, core) to users of the [AspirePress Updater](https://github.com/aspirepress/updater-plugin).
 
 ## Setup
 
@@ -19,8 +19,8 @@ Note: you'll have to add `api.aspiredev.org` to your `/etc/hosts` file to point 
 * Check out and build [AspireSync](https://github.com/aspirepress/AspireSync).  
 
 * **In AspireSync:** 
-  * `aspiresync meta:dump:plugins > /path/to/plugins.jsonl`
-  * `aspiresync meta:dump:themes > /path/to/themes.jsonl`
+  * `bin/console sync:meta:dump:plugins > /path/to/plugins.jsonl`
+  * `bin/console sync:meta:dump:themes > /path/to/themes.jsonl`
 
 * **In AspireCloud** 
   * `php artisan sync:load /path/to/plugins.jsonl`
