@@ -49,6 +49,7 @@ jobs:
         with:
           context: .
           target: prod
+          platforms: 'linux/arm64'
           file: ${{ matrix.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
