@@ -43,22 +43,36 @@ jobs:
         with:
           images: ${{ matrix.image }}
 
-      - name: Build and push Docker image
-        id: push
-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
-        with:
-          context: .
-          target: prod
-          platforms: 'linux/arm64'
-          file: ${{ matrix.dockerfile }}
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+# The official action is not capable of building for a different arch 🙄
+#      - name: Build and push Docker image
+#        id: push
+#        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+#        with:
+#          context: .
+#          target: prod
+#          platforms: 'linux/arm64'
+#          file: ${{ matrix.dockerfile }}
+#          push: true
+#          tags: ${{ steps.meta.outputs.tags }}
+#          labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
-        with:
-          subject-name: ${{ matrix.image }}
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build the Docker image
+        run: |
+          docker buildx create --use
+          docker buildx build --platform linux/arm64 \
+            -f ${{ matrix.dockerfile }} \
+            $(for tag in $(echo "$DOCKER_METADATA_OUTPUT_TAGS" | xargs); do echo " -t $tag"; done) \
+            --push \
+            .
+
+# Attestation action doesn't work with our manual buildx step
+#      - name: Generate artifact attestation
+#        uses: actions/attest-build-provenance@v2
+#        with:
+#          subject-name: ${{ matrix.image }}
+#          subject-digest: ${{ steps.push.outputs.digest }}
+#          push-to-registry: true
 
