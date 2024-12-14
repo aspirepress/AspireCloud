@@ -64,7 +64,7 @@ jobs:
           docker buildx create --use
           docker buildx build --platform linux/arm64 \
             -f ${{ matrix.dockerfile }} \
-            $(for tag in ${{ steps.meta.outputs.tags }}; do echo " -t $(basename $tag)"; done) \
+            $(for tag in "${{ steps.meta.outputs.tags }}"; do echo " -t $tag"; done) \
             --push \
             .
 
