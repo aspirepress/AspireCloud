@@ -64,9 +64,9 @@ jobs:
           docker buildx create --use
           docker buildx build --platform linux/arm64 \
             -f ${{ matrix.dockerfile }} \
-            $(for tag in ${{ steps.meta.outputs.tags }}; do echo " -t $tag"; done)
-          --push \
-          .
+            $(for tag in ${{ steps.meta.outputs.tags }}; do echo " -t $tag"; done) \
+            --push \
+            .
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
