@@ -3,7 +3,7 @@ name: Build container images
 
 on:
   push:
-    #branches: ['main']
+    branches: ['main']
     tags: ['*']
 #  release:
 #    types: ['published']
@@ -68,10 +68,11 @@ jobs:
             --push \
             .
 
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
-        with:
-          subject-name: ${{ matrix.image }}
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+# Attestation action doesn't work with our manual buildx step
+#      - name: Generate artifact attestation
+#        uses: actions/attest-build-provenance@v2
+#        with:
+#          subject-name: ${{ matrix.image }}
+#          subject-digest: ${{ steps.push.outputs.digest }}
+#          push-to-registry: true
 
