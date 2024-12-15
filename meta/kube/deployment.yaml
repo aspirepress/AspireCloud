@@ -22,17 +22,8 @@ spec:
         envFrom:
           - configMapRef:
               name: ac-configmap
-        env:
-          - name: DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: 'ac-secrets'
-                key: 'db-password'
-          - name: REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: 'ac-secrets'
-                key: 'redis-password'
+          - secretRef:
+              name: ac-secrets
         ports:
         - containerPort: 80
           protocol: TCP
@@ -64,17 +55,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: ac-configmap
-          env:
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: 'ac-secrets'
-                  key: 'db-password'
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: 'ac-secrets'
-                  key: 'redis-password'
+            - secretRef:
+                name: ac-secrets
 ---
 apiVersion: v1
 kind: Service
@@ -152,8 +134,6 @@ data:
 #  MAIL_FROM_NAME: "AspireCloud"
 
   # used for s3 (and only s3)
-  AWS_ACCESS_KEY_ID: ""
-  AWS_SECRET_ACCESS_KEY: ""
   AWS_DEFAULT_REGION: "us-west-1"
   AWS_BUCKET: "aspiresync-dev"
   AWS_ENDPOINT: "https://s3.us-west-1.wasabisys.com/"
