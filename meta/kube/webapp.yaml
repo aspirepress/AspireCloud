@@ -15,8 +15,9 @@ spec:
       labels:
         app: ac-webapp
     spec:
+      restartPolicy: Always
       containers:
-      - image: ghcr.io/aspirepress/aspirecloud:latest
+      - image: 'ghcr.io/aspirepress/aspirecloud:latest'
         name: ac-webapp
         envFrom:
           - configMapRef:
@@ -35,7 +36,45 @@ spec:
         ports:
         - containerPort: 80
           protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ac-queue-worker
+  namespace: aspirepress
+  labels:
+    app: ac-queue-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ac-queue-worker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ac-queue-worker
+    spec:
       restartPolicy: Always
+      containers:
+        - name: queue-worker
+          command: ['bin/queue-worker']
+          image: 'ghcr.io/aspirepress/aspirecloud-worker:latest'
+          envFrom:
+            - configMapRef:
+                name: ac-configmap
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: 'ac-secrets'
+                  key: 'db-password'
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: 'ac-secrets'
+                  key: 'redis-password'
 ---
 apiVersion: v1
 kind: Service
@@ -85,8 +124,6 @@ data:
   DB_PORT: "5432"
   DB_DATABASE: "aspirecloud"
   DB_USERNAME: "postgres"
-# export POSTGRES_PASSWORD=$(kubectl get secret --namespace aspirepress postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
-#  DB_PASSWORD: "password"
 
   SESSION_DRIVER: "redis"
   SESSION_LIFETIME: "120"
@@ -104,8 +141,6 @@ data:
   REDIS_CLIENT: "phpredis"
   REDIS_HOST: "redis-master.aspirepress.svc.cluster.local"
   REDIS_PORT: "6379"
-# export REDIS_PASSWORD=$(kubectl get secret --namespace aspirepress redis -o jsonpath="{.data.redis-password}" | base64 -d)
-#  REDIS_PASSWORD: ""
 
 #  MAIL_MAILER: "smtp"
 #  MAIL_HOST: "mail.aspiredev.org"
