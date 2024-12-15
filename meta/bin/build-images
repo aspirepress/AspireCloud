@@ -14,7 +14,7 @@ buildx() {
     local file=$1
     local name=$2
     local tag=$3
-    docker buildx build --platform $PLATFORM -f $file --target prod -t ghcr.io/$name:$tag -t ghcr.io/$name:latest $push_arg .
+    docker buildx build --platform $platform -f $file --target prod -t ghcr.io/$name:$tag -t ghcr.io/$name:latest $push_arg .
 }
 
 buildx docker/webapp/Dockerfile aspirepress/aspirecloud $tag
