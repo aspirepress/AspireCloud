@@ -1,10 +1,15 @@
 # https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-docker-images
 name: Build container images
 
+# Due to the need to cross-build the image for arm64 and the cache not working, this action is SLOW (15m+)
+# Because of this, we're using a local build/push process, and leaving this action only manually triggered.
+
 on:
-  push:
+  workflow_dispatch: ~
+
+#  push:
 #    branches: ['main']
-    tags: ['*']
+#    tags: ['*']
 #  release:
 #    types: ['published']
 
