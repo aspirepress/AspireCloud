@@ -18,6 +18,20 @@ spec:
       containers:
       - image: ghcr.io/aspirepress/aspirecloud:latest
         name: ac-webapp
+        envFrom:
+          - configMapRef:
+              name: ac-configmap
+        env:
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: 'ac-secrets'
+                key: 'db-password'
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: 'ac-secrets'
+                key: 'redis-password'
         ports:
         - containerPort: 80
           protocol: TCP
@@ -48,3 +62,64 @@ spec:
     services:
     - name: ac-webapp
       port: 80
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ac-configmap
+data:
+  # AspirePress Related Configuration
+  API_AUTHENTICATION_ENABLED: "true"
+
+  APP_NAME: "aspirecloud"
+  APP_URL: "api.aspirecloud.chaz.works"
+  APP_ENV: "production"
+  APP_KEY: "base64:3B+wIIOAiiQ61++I6lqwPcjYZ3PZmqskdHJUpYFbfjU="
+  LOG_CHANNEL: "stack"
+  LOG_STACK: "single"
+  LOG_DEPRECATIONS_CHANNEL: "null"
+  LOG_LEVEL: "debug"
+
+  DB_CONNECTION: "pgsql"
+  DB_HOST: "postgresql.aspirepress.svc.cluster.local"
+  DB_PORT: "5432"
+  DB_DATABASE: "aspirecloud"
+  DB_USERNAME: "postgres"
+# export POSTGRES_PASSWORD=$(kubectl get secret --namespace aspirepress postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
+#  DB_PASSWORD: "password"
+
+  SESSION_DRIVER: "redis"
+  SESSION_LIFETIME: "120"
+  SESSION_ENCRYPT: "false"
+  SESSION_PATH: "/"
+  SESSION_DOMAIN: "null"
+
+  BROADCAST_CONNECTION: "log"
+  FILESYSTEM_DISK: "s3"
+  QUEUE_CONNECTION: "redis"
+
+  CACHE_STORE: "redis"
+  CACHE_PREFIX: ""
+
+  REDIS_CLIENT: "phpredis"
+  REDIS_HOST: "redis-master.aspirepress.svc.cluster.local"
+  REDIS_PORT: "6379"
+# export REDIS_PASSWORD=$(kubectl get secret --namespace aspirepress redis -o jsonpath="{.data.redis-password}" | base64 -d)
+#  REDIS_PASSWORD: ""
+
+#  MAIL_MAILER: "smtp"
+#  MAIL_HOST: "mail.aspiredev.org"
+#  MAIL_PORT: "1025"
+#  MAIL_USERNAME: ""
+#  MAIL_PASSWORD: ""
+#  MAIL_ENCRYPTION: ""
+#  MAIL_FROM_ADDRESS: "do-not-reply@aspirepress.org"
+#  MAIL_FROM_NAME: "AspireCloud"
+
+  # used for s3 (and only s3)
+  AWS_ACCESS_KEY_ID: ""
+  AWS_SECRET_ACCESS_KEY: ""
+  AWS_DEFAULT_REGION: "us-west-1"
+  AWS_BUCKET: "aspiresync-dev"
+  AWS_ENDPOINT: "https://s3.us-west-1.wasabisys.com/"
+  AWS_USE_PATH_STYLE_ENDPOINT: "false"
