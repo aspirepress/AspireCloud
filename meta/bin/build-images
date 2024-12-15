@@ -1,0 +1,21 @@
+#!/bin/bash
+
+. $(dirname $0)/prelude.bash
+
+tag=${TAG:-$(git describe --tags --abbrev=0)}
+platform=${PLATFORM:-linux/arm64} # prod is always arm64
+
+if [[ -n $GHCR_TOKEN ]]; then
+    echo $GHCR_TOKEN | docker login ghcr.io -u userame-is-ignored --password-stdin
+    push_arg='--push'
+fi
+
+buildx() {
+    local file=$1
+    local name=$2
+    local tag=$3
+    docker buildx build --platform $platform -f $file --target prod -t ghcr.io/$name:$tag -t ghcr.io/$name:latest $push_arg .
+}
+
+buildx docker/webapp/Dockerfile aspirepress/aspirecloud $tag
+buildx docker/laravel-worker/Dockerfile aspirepress/aspirecloud-worker $tag

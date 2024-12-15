@@ -1,10 +1,15 @@
 # https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-docker-images
 name: Build container images
 
+# Due to the need to cross-build the image for arm64 and the cache not working, this action is SLOW (15m+)
+# Because of this, we're using a local build/push process, and leaving this action only manually triggered.
+
 on:
-  push:
-    branches: ['main']
-    tags: ['*']
+  workflow_dispatch: ~
+
+#  push:
+#    branches: ['main']
+#    tags: ['*']
 #  release:
 #    types: ['published']
 
@@ -29,6 +34,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Expose GitHub Runtime
+        uses: crazy-max/ghaction-github-runtime@v3
 
       - name: Log in to the GitHub Container Registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
@@ -62,10 +70,13 @@ jobs:
       - name: Build the Docker image
         run: |
           docker buildx create --use
-          docker buildx build --platform linux/arm64 \
+          docker buildx build \
+            --platform linux/arm64 \
             -f ${{ matrix.dockerfile }} \
             $(for tag in $(echo "$DOCKER_METADATA_OUTPUT_TAGS" | xargs); do echo " -t $tag"; done) \
             --push \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
             .
 
 # Attestation action doesn't work with our manual buildx step
