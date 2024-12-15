@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ac-webapp
+  namespace: aspirepress
+  labels:
+    app: ac-webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ac-webapp
+  template:
+    metadata:
+      labels:
+        app: ac-webapp
+    spec:
+      containers:
+      - image: ghcr.io/aspirepress/aspirecloud:latest
+        name: ac-webapp
+        ports:
+        - containerPort: 80
+          protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ac-webapp
+  namespace: aspirepress
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: ac-webapp
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ac-webapp
+  namespace: aspirepress
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - kind: Rule
+    match: Host(`api.aspirecloud.chaz.works`)
+    services:
+    - name: ac-webapp
+      port: 80
