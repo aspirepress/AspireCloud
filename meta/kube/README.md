@@ -13,5 +13,5 @@ kubectl create secret -n aspirepress generic ac-secrets --from-literal="redis-pa
 
 To install AspireCloud to the cluster:
 ```
-kubectl apply -n aspirepress -f webapp.yaml
+kubectl apply -n aspirepress -f deployment.yaml
 ```
