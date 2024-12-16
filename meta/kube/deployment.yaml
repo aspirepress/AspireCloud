@@ -105,7 +105,7 @@ data:
   DB_HOST: "postgresql.aspirepress.svc.cluster.local"
   DB_PORT: "5432"
   DB_DATABASE: "aspirecloud"
-  DB_USERNAME: "postgres"
+  DB_USERNAME: "aspirecloud"
 
   SESSION_DRIVER: "redis"
   SESSION_LIFETIME: "120"
