@@ -16,6 +16,7 @@
         "league/flysystem-aws-s3-v3": "^3.29",
         "predis/predis": "^2.3.0",
         "spatie/laravel-data": "^4.11.1",
+        "spatie/laravel-permission": "^6.10",
         "thecodingmachine/safe": "^2.5",
         "tightenco/ziggy": "^2.4.1"
     },
