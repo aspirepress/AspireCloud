@@ -122,12 +122,6 @@ migration-rollback: ## Rollback database migrations
 seed: ## Run database seeds
 	bin/dcrun php artisan db:seed
 
-migrate-testing: ## Run database migrations
-	bin/dcrun php artisan migrate --database=test --force --no-interaction
-
-seed-testing: ## Run database seeds
-	bin/dcrun php artisan db:seed --database=test
-
 generate-key: ## Generate APP_KEY environment var
 	bin/dcrun php artisan key:generate
 
@@ -139,13 +133,8 @@ create-database:
 
 reset-database: drop-database create-database migrate seed ## run migrations and seeds
 
-reset-testing-database: drop-testing-database create-testing-database migrate-testing seed-testing
-
-drop-testing-database:
-	bin/dcrun sh -c "export PGPASSWORD=${DB_ROOT_PASSWORD} && psql -U ${DB_ROOT_USERNAME} -h ${DB_HOST} -c 'drop database if exists aspirecloud_testing'"
-
-create-testing-database:
-	bin/dcrun sh -c "export PGPASSWORD=${DB_ROOT_PASSWORD} && psql -U ${DB_ROOT_USERNAME} -h ${DB_HOST} -c 'create database aspirecloud_testing owner ${DB_USERNAME}'"
+reset-testing-database:
+	bin/dcrun meta/bin/reset-testing-database
 
 run-psql: ## Runs Postgres on the command line using the .env file variables
 	bin/dcrun sh -c "PGPASSWORD=${DB_PASSWORD} psql -U ${DB_USERNAME} -h ${DB_HOST} -p ${DB_PORT} -d ${DB_USERNAME}"
