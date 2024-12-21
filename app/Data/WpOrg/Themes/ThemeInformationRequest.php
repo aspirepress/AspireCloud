@@ -12,7 +12,6 @@ class ThemeInformationRequest extends Data
     public const ACTION = 'theme_information';
 
     /**
-     * @param string $slug
      * @param ?array<string,bool> $fields
      */
     public function __construct(
