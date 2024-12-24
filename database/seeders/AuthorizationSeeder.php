@@ -39,9 +39,9 @@ class AuthorizationSeeder extends Seeder
             Permission::SearchAllResources,
             Permission::ReadAnyResource,
             Permission::SearchPlugins,
-            Permission::ReadPlugin,
+            Permission::ReadAnyPlugin,
             Permission::SearchThemes,
-            Permission::ReadTheme,
+            Permission::ReadAnyTheme,
         ];
 
         RoleModel::findByName(Role::User->value)->givePermissionTo(...$user_perms);
