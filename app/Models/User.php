@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Auth\Role;
 use Carbon\Carbon;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,6 +39,13 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+
+    protected static function booted(): void
+    {
+        static::created(function (User $user) {
+            $user->assignRole(Role::User);
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
