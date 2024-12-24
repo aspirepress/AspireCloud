@@ -85,7 +85,7 @@ return [
     |
     */
 
-    'prefix' => '',
+    'prefix' => 'fortify',
 
     'domain' => null,
 
