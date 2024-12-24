@@ -32,11 +32,11 @@ class AuthorizationSeeder extends Seeder
             PermissionModel::findOrCreate($permission->value);
         }
 
-        $user_perms = [Permission::SearchAllResources, Permission::ReadAnyResource];
+        $user_perms = [Permission::SearchResources, Permission::ReadResource];
         RoleModel::findByName(Role::User->value)->givePermissionTo(...$user_perms);
         RoleModel::findByName(Role::Guest->value)->givePermissionTo(...$user_perms);
 
-        $repo_admin_perms = [Permission::CreateAnyResource, Permission::DeleteAnyResource, ...$user_perms];
+        $repo_admin_perms = [Permission::CreateResource, Permission::DeleteResource, ...$user_perms];
         RoleModel::findByName(Role::RepoAdmin->value)->givePermissionTo(...$repo_admin_perms);
 
         // SuperAdmins typically bypass permission checks, but it's still useful to grant all perms explicitly

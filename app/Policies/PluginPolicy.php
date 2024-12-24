@@ -20,12 +20,12 @@ class PluginPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo(Permission::CreateAnyResource);
+        return $user->hasPermissionTo(Permission::CreateResource);
     }
 
     public function delete(User $user, Plugin $plugin): bool
     {
-        return $user->hasPermissionTo(Permission::DeleteAnyResource);
+        return $user->hasPermissionTo(Permission::DeleteResource);
     }
 
     // no update method -- resources are immutable

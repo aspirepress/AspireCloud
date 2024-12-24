@@ -6,9 +6,9 @@ namespace App\Auth;
 
 enum Permission: string
 {
-    case SearchAllResources = "any.search";
-    case CreateAnyResource = "any.create";
-    case ReadAnyResource = "any.read";
-    // case UpdateAnyResource = "any.update";  // resources are immutable
-    case DeleteAnyResource = "any.delete";
+    case SearchResources = "resource.search";
+    case CreateResource = "resource.create";
+    case ReadResource = "resource.read";
+    // case UpdateResource = "resource.update";  // resources are immutable
+    case DeleteResource = "resource.delete";
 }
