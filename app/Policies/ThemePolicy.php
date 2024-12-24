@@ -20,16 +20,13 @@ class ThemePolicy
 
     public function create(User $user): bool
     {
-        return $user->hasAnyPermission(Permission::CreateAnyResource, Permission::CreateTheme);
-    }
-
-    public function update(User $user, Theme $theme): bool
-    {
-        return $user->hasAnyPermission(Permission::UpdateAnyResource, Permission::UpdateAnyTheme);
+        return $user->hasPermissionTo(Permission::CreateAnyResource);
     }
 
     public function delete(User $user, Theme $theme): bool
     {
-        return $user->hasAnyPermission(Permission::DeleteAnyResource, Permission::DeleteAnyTheme);
+        return $user->hasPermissionTo(Permission::DeleteAnyResource);
     }
+
+    // no update method -- resources are immutable
 }

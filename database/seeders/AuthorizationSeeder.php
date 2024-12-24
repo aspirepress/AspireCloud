@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission as PermissionModel;
 use Spatie\Permission\Models\Role as RoleModel;
 
-// depends on: UserSeeder
+// depends on: UserSeeder creating admin@aspirecloud.io
 class AuthorizationSeeder extends Seeder
 {
     public function run(): void
@@ -32,20 +32,15 @@ class AuthorizationSeeder extends Seeder
             PermissionModel::findOrCreate($permission->value);
         }
 
-        RoleModel::findByName(Role::SuperAdmin->value)
-            ->givePermissionTo(...Permission::cases());
-
-        $user_perms = [
-            Permission::SearchAllResources,
-            Permission::ReadAnyResource,
-            Permission::SearchPlugins,
-            Permission::ReadAnyPlugin,
-            Permission::SearchThemes,
-            Permission::ReadAnyTheme,
-        ];
-
+        $user_perms = [Permission::SearchAllResources, Permission::ReadAnyResource];
         RoleModel::findByName(Role::User->value)->givePermissionTo(...$user_perms);
         RoleModel::findByName(Role::Guest->value)->givePermissionTo(...$user_perms);
+
+        $repo_admin_perms = [Permission::CreateAnyResource, Permission::DeleteAnyResource, ...$user_perms];
+        RoleModel::findByName(Role::RepoAdmin->value)->givePermissionTo(...$repo_admin_perms);
+
+        // SuperAdmins typically bypass permission checks, but it's still useful to grant all perms explicitly
+        RoleModel::findByName(Role::SuperAdmin->value)->givePermissionTo(...Permission::cases());
     }
 
     private function assignRoles(): void

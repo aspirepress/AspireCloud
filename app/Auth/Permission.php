@@ -9,18 +9,6 @@ enum Permission: string
     case SearchAllResources = "any.search";
     case CreateAnyResource = "any.create";
     case ReadAnyResource = "any.read";
-    case UpdateAnyResource = "any.update";
+    // case UpdateAnyResource = "any.update";  // resources are immutable
     case DeleteAnyResource = "any.delete";
-
-    case SearchPlugins = "plugin.search";
-    case CreatePlugin = "plugin.create";
-    case ReadAnyPlugin = "plugin.read";
-    case UpdateAnyPlugin = "plugin.update";
-    case DeleteAnyPlugin = "plugin.delete";
-
-    case SearchThemes = "theme.search";
-    case CreateTheme = "theme.create";
-    case ReadAnyTheme = "theme.read";
-    case UpdateAnyTheme = "theme.update";
-    case DeleteAnyTheme = "theme.delete";
 }
