@@ -27,7 +27,7 @@ return [
 
     //// AspirePress Configuration
 
-    'aspire_press' => [
+    'aspirecloud' => [
         'api_authentication_enable' => env('API_AUTHENTICATION_ENABLED', false),
     ],
 ];
