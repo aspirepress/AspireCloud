@@ -14,9 +14,15 @@ class AuthorizationSeeder extends Seeder
 {
     public function run(): void
     {
-        // role creation was moved into UserSeeder, since user creation assigns the User role
+        $this->createRoles();
         $this->createPermissions();
-        $this->assignRoles();
+    }
+
+    private function createRoles(): void
+    {
+        foreach (Role::cases() as $role) {
+            RoleModel::findOrCreate($role->value);
+        }
     }
 
     private function createPermissions(): void
@@ -34,10 +40,5 @@ class AuthorizationSeeder extends Seeder
 
         // SuperAdmins typically bypass permission checks, but it's still useful to grant all perms explicitly
         RoleModel::findByName(Role::SuperAdmin->value)->givePermissionTo(...Permission::cases());
-    }
-
-    private function assignRoles(): void
-    {
-        $admin = User::where('email', 'admin@aspirecloud.io')->firstOrFail();
     }
 }
