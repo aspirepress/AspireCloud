@@ -44,12 +44,21 @@ return Application::configure(basePath: dirname(__DIR__))
             SubstituteBindings::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
         ]);
+
         $middleware->group('api', [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             // 'throttle:api',
             SubstituteBindings::class,
             // CacheApiResponse::class // replaced with laravels cache.headers in api.php
         ]);
+
+        // https://spatie.be/docs/laravel-permission/v6/basic-usage/middleware
+        $middleware->alias([
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+        ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions) use ($apiPaths) {
         /**

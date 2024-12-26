@@ -82,3 +82,5 @@ $routeDefinition
     });
 
 // Route::any('{path}', CatchAllController::class)->where('path', '.*');
+
+require __DIR__ . '/inc/admin-api.php';

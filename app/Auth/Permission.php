@@ -6,9 +6,5 @@ namespace App\Auth;
 
 enum Permission: string
 {
-    case SearchResources = "resource.search";
-    case CreateResource = "resource.create";
-    case ReadResource = "resource.read";
-    // case UpdateResource = "resource.update";  // resources are immutable
-    case DeleteResource = "resource.delete";
+    case UseAdminSite = "admin.use"; // only controls access to routes -- actions will do their own auth checks
 }
