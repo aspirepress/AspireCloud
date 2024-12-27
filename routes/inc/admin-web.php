@@ -14,5 +14,5 @@ Route::prefix('admin')
         'permission:' . Permission::UseAdminSite->value,
     ])
     ->group(function (Router $router) {
-        $router->get('/phpinfo', phpinfo(...));
+        // ...
     });
