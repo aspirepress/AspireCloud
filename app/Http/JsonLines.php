@@ -22,7 +22,7 @@ trait JsonLines
                 yield JSON::toAssoc($line);
             }
         } finally {
-            fclose($handle);
+            \Safe\fclose($handle);
         }
     }
 }

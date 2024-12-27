@@ -74,6 +74,6 @@ class BulkImport
         assert(is_a($class, Model::class, true));
 
         $class::query()->where('slug', $slug)->delete();
-        return $class::fromSyncMetadata($metadata); // @phpstan-ignore-line
+        return $class::fromSyncMetadata($metadata);
     }
 }

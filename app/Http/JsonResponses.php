@@ -12,7 +12,6 @@ trait JsonResponses
     /**
      * @param array<string, mixed> $data
      * @param array<string, string> $headers
-     * @param mixed $status
      */
     public function jsonResponse(array $data, int $status = 200, array $headers = []): JsonResponse
     {
