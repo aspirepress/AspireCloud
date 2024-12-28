@@ -1,0 +1,15 @@
+#!/bin/bash
+
+. $(dirname $0)/prelude.bash
+
+. .env
+[[ -r .env.testing ]] && . .env.testing
+
+export APP_ENV=testing
+export DB_CONNECTION=test
+
+export PGPASSWORD=$DB_ROOT_PASSWORD
+psql -U $DB_ROOT_USERNAME -h $DB_HOST -c 'drop database if exists aspirecloud_testing'
+psql -U $DB_ROOT_USERNAME -h $DB_HOST -c "create database aspirecloud_testing owner $DB_USERNAME"
+php artisan migrate --database=test --force --no-interaction
+php artisan db:seed --database=test

@@ -23,3 +23,5 @@ Route::middleware([
         return redirect()->route('profile.show');
     })->name('dashboard');
 });
+
+require __DIR__ . '/inc/admin-web.php';

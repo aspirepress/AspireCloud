@@ -25,7 +25,7 @@ $middlewares = [
 ];
 $routeDefinition = Route::prefix('/');
 
-if (config('app.aspire_press.api_authentication_enable')) {
+if (config('app.aspirecloud.api_authentication_enable')) {
     $middlewares[] = 'auth:sanctum';
 }
 
@@ -82,3 +82,5 @@ $routeDefinition
     });
 
 // Route::any('{path}', CatchAllController::class)->where('path', '.*');
+
+require __DIR__ . '/inc/admin-api.php';

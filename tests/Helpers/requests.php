@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
  */
 function makeApiRequest($method, $uri, $data = [], $headers = [])
 {
-    $isAuthEnabled = config('app.aspire_press.api_authentication_enable');
+    $isAuthEnabled = config('app.aspirecloud.api_authentication_enable');
     $testCase      = test();
 
     if ($isAuthEnabled) {

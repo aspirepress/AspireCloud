@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Auth\Role;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,5 +27,8 @@ class AppServiceProvider extends ServiceProvider
 
         Model::preventLazyLoading($isDev);
         Model::preventSilentlyDiscardingAttributes($isDev);
+
+        // SuperAdmins bypass all auth checks
+        Gate::before(fn(User $user) => $user->hasRole(Role::SuperAdmin) ?: null);
     }
 }
