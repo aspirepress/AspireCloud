@@ -53,7 +53,7 @@ class BulkImport
 
         Log::info("Bulk import complete", [...$request_info, 'imported' => $imported, 'errors' => $errors]);
 
-        return $errors ? $this->error(compact('errors')) : $this->success(['imported' => $imported]);
+        return $errors ? $this->error(compact('errors', 'imported')) : $this->success(['imported' => $imported]);
     }
 
     /** @param array<string, mixed> $metadata */
