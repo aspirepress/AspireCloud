@@ -23,16 +23,16 @@ Note: you'll have to add `api.aspiredev.org` to your `/etc/hosts` file to point 
 * Set
   `ASPIRECLOUD_ADMIN_API_URL` and
   `ASPIRECLOUD_ADMIN_API_KEY` in your local environment
-  _(
-  note:
-  putting
-  them
-  only
-  in
-  `.env.local`
-  will
-  not
-  work!)_
+    *
+    _note:
+    putting
+    them
+    only
+    in
+    `.env.local`
+    will
+    not
+    work!_
 * Run the following:
 
 ```
