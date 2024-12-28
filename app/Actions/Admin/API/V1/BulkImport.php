@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Admin\API\V1;
 
+
 use App\Http\JsonLines;
 use App\Http\JsonResponses;
 use App\Models\WpOrg\ClosedPlugin;
@@ -15,6 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 use function Safe\ini_set;
 
@@ -31,10 +33,19 @@ class BulkImport
         $imported = 0;
         $errors = [];
 
+        $request_info = ['userid' => auth()->user()->id, 'ip' => $request->ip()];
+
+        Log::info("Beginning bulk import", $request_info);
+
         foreach ($this->lazyJsonLines($request) as $metadata) {
             $currentLine++;
             try {
-                DB::transaction(fn() => $this->loadOne($metadata));
+                $model = DB::transaction(fn() => $this->loadOne($metadata));
+                assert($model instanceof Model); // strip 'mixed' type from DB::transaction
+                Log::debug(
+                    "Imported {$model->slug}",
+                    ['slug' => $model->slug, 'version' => $model->version, 'type' => $model->getMorphClass()],
+                );
                 $imported++;
             } catch (Exception $e) {
                 $errors[$currentLine] = $e->getMessage();
@@ -45,6 +56,7 @@ class BulkImport
             return $this->error(compact('errors'));
         }
 
+        Log::info("Bulk import complete", [...$request_info, 'imported' => $imported, 'errors' => $errors]);
         return $this->success(['imported' => $imported]);
     }
 
