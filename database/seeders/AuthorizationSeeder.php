@@ -15,6 +15,7 @@ class AuthorizationSeeder extends Seeder
     {
         $this->createRoles();
         $this->createPermissions();
+        $this->assignPermissions();
     }
 
     private function createRoles(): void
@@ -29,8 +30,15 @@ class AuthorizationSeeder extends Seeder
         foreach (Permission::cases() as $permission) {
             PermissionModel::findOrCreate($permission->value);
         }
+    }
 
+    private function assignPermissions(): void
+    {
         // SuperAdmins typically bypass permission checks, but it's still useful to grant all perms explicitly
         RoleModel::findByName(Role::SuperAdmin->value)->givePermissionTo(...Permission::cases());
+
+        RoleModel::findByName(Role::RepoAdmin->value)
+            ->givePermissionTo(Permission::UseAdminSite)
+            ->givePermissionTo(Permission::BulkImport);
     }
 }
