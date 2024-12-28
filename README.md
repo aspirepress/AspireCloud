@@ -1,3 +1,4 @@
+[//]: # (@formatter:off)
 # AspireCloud
 
 This project is designed to function as a CDN/API endpoint system for distributing WordPress assets (themes, plugins, core) to users of the [AspirePress Updater](https://github.com/aspirepress/updater-plugin).
@@ -16,24 +17,12 @@ Note: you'll have to add `api.aspiredev.org` to your `/etc/hosts` file to point 
 
 ### Importing Plugins and Themes from AspireSync
 
-* Create a user with the RepoAdmin role (or use the built-in
-  `admin@aspirecloud.io` admin user)
+* Create a user with the RepoAdmin role (or use the built-in `admin@aspirecloud.io` admin user)
 * Create an API key for that user through the Jetstream UI.
 * Check out and build [AspireSync](https://github.com/aspirepress/AspireSync)
-* Set
-  `ASPIRECLOUD_ADMIN_API_URL` and
-  `ASPIRECLOUD_ADMIN_API_KEY` in your local environment
-    *
-    _note:
-    putting
-    them
-    only
-    in
-    `.env.local`
-    will
-    not
-    work!_
-* Run the following:
+* Set `ASPIRECLOUD_ADMIN_API_URL` and `ASPIRECLOUD_ADMIN_API_KEY` in your local environment
+  * _note: putting them only in `.env.local` will not work!_ 
+*  Run the following:
 
 ```
 bin/console sync:meta:fetch:plugins -vvv
