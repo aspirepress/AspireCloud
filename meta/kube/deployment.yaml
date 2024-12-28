@@ -17,8 +17,9 @@ spec:
     spec:
       restartPolicy: Always
       containers:
-        - image: 'ghcr.io/aspirepress/aspirecloud:0.7'
-          name: ac-webapp
+        # when updating the image tag, make sure to update ac-queue-worker too!
+        - name: ac-webapp
+          image: 'ghcr.io/aspirepress/aspirecloud:0.7'
           envFrom:
             - configMapRef:
                 name: ac-configmap
@@ -49,9 +50,10 @@ spec:
     spec:
       restartPolicy: Always
       containers:
+        # when updating the image tag, make sure to update ac-webapp too!
         - name: queue-worker
+          image: 'ghcr.io/aspirepress/aspirecloud-worker:0.7'
           command: [ 'bin/queue-worker' ]
-          image: 'ghcr.io/aspirepress/aspirecloud-worker:latest'
           envFrom:
             - configMapRef:
                 name: ac-configmap
