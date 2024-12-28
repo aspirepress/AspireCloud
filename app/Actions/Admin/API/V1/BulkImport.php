@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Actions\Admin\API\V1;
 
-
 use App\Http\JsonLines;
 use App\Http\JsonResponses;
 use App\Models\WpOrg\ClosedPlugin;
