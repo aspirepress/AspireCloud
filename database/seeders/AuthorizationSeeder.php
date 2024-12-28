@@ -8,7 +8,6 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission as PermissionModel;
 use Spatie\Permission\Models\Role as RoleModel;
 
-// depends on: UserSeeder creating admin@aspirecloud.io
 class AuthorizationSeeder extends Seeder
 {
     public function run(): void
