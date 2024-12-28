@@ -93,7 +93,7 @@ data:
   API_AUTHENTICATION_ENABLED: "true"
 
   APP_NAME: "aspirecloud"
-  APP_URL: "api.aspirecloud.io"
+  APP_URL: "https://api.aspirecloud.io"
   APP_ENV: "production"
   APP_KEY: "base64:3B+wIIOAiiQ61++I6lqwPcjYZ3PZmqskdHJUpYFbfjU="
   LOG_CHANNEL: "stack"
@@ -120,7 +120,7 @@ data:
   CACHE_STORE: "redis"
   CACHE_PREFIX: ""
 
-  REDIS_CLIENT: "phpredis"
+  REDIS_CLIENT: "predis"
   REDIS_HOST: "redis-master.aspirepress.svc.cluster.local"
   REDIS_PORT: "6379"
 
