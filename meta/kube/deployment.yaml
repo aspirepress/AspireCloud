@@ -17,7 +17,7 @@ spec:
     spec:
       restartPolicy: Always
       containers:
-      - image: 'ghcr.io/aspirepress/aspirecloud:latest'
+        - image: 'ghcr.io/aspirepress/aspirecloud:0.7'
         name: ac-webapp
         envFrom:
           - configMapRef:
