@@ -17,16 +17,17 @@ spec:
     spec:
       restartPolicy: Always
       containers:
-      - image: 'ghcr.io/aspirepress/aspirecloud:latest'
-        name: ac-webapp
-        envFrom:
-          - configMapRef:
-              name: ac-configmap
-          - secretRef:
-              name: ac-secrets
-        ports:
-        - containerPort: 80
-          protocol: TCP
+        # when updating the image tag, make sure to update ac-queue-worker too!
+        - name: ac-webapp
+          image: 'ghcr.io/aspirepress/aspirecloud:0.7'
+          envFrom:
+            - configMapRef:
+                name: ac-configmap
+            - secretRef:
+                name: ac-secrets
+          ports:
+            - containerPort: 80
+              protocol: TCP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -49,9 +50,10 @@ spec:
     spec:
       restartPolicy: Always
       containers:
+        # when updating the image tag, make sure to update ac-webapp too!
         - name: queue-worker
-          command: ['bin/queue-worker']
-          image: 'ghcr.io/aspirepress/aspirecloud-worker:latest'
+          image: 'ghcr.io/aspirepress/aspirecloud-worker:0.7'
+          command: [ 'bin/queue-worker' ]
           envFrom:
             - configMapRef:
                 name: ac-configmap
@@ -78,11 +80,11 @@ spec:
   entryPoints:
     - websecure
   routes:
-  - kind: Rule
-    match: Host(`api.aspirecloud.io`)
-    services:
-    - name: ac-webapp
-      port: 80
+    - kind: Rule
+      match: Host(`api.aspirecloud.io`)
+      services:
+        - name: ac-webapp
+          port: 80
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -93,7 +95,7 @@ data:
   API_AUTHENTICATION_ENABLED: "true"
 
   APP_NAME: "aspirecloud"
-  APP_URL: "api.aspirecloud.io"
+  APP_URL: "https://api.aspirecloud.io"
   APP_ENV: "production"
   APP_KEY: "base64:3B+wIIOAiiQ61++I6lqwPcjYZ3PZmqskdHJUpYFbfjU="
   LOG_CHANNEL: "stack"
@@ -120,18 +122,18 @@ data:
   CACHE_STORE: "redis"
   CACHE_PREFIX: ""
 
-  REDIS_CLIENT: "phpredis"
+  REDIS_CLIENT: "predis"
   REDIS_HOST: "redis-master.aspirepress.svc.cluster.local"
   REDIS_PORT: "6379"
 
-#  MAIL_MAILER: "smtp"
-#  MAIL_HOST: "mail.aspiredev.org"
-#  MAIL_PORT: "1025"
-#  MAIL_USERNAME: ""
-#  MAIL_PASSWORD: ""
-#  MAIL_ENCRYPTION: ""
-#  MAIL_FROM_ADDRESS: "do-not-reply@aspirepress.org"
-#  MAIL_FROM_NAME: "AspireCloud"
+  #  MAIL_MAILER: "smtp"
+  #  MAIL_HOST: "mail.aspiredev.org"
+  #  MAIL_PORT: "1025"
+  #  MAIL_USERNAME: ""
+  #  MAIL_PASSWORD: ""
+  #  MAIL_ENCRYPTION: ""
+  #  MAIL_FROM_ADDRESS: "do-not-reply@aspirepress.org"
+  #  MAIL_FROM_NAME: "AspireCloud"
 
   # used for s3 (and only s3)
   AWS_DEFAULT_REGION: "us-west-1"
