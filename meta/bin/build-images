@@ -3,7 +3,7 @@
 . $(dirname $0)/prelude.bash
 
 tag=${TAG:-$(git describe --tags --abbrev=0)}
-platform=${PLATFORM:-linux/arm64} # prod is always arm64
+platform=${PLATFORM:-linux/amd64,linux/arm64}
 
 if [[ -n $GHCR_TOKEN ]]; then
     echo $GHCR_TOKEN | docker login ghcr.io -u userame-is-ignored --password-stdin
