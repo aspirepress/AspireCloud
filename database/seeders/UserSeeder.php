@@ -17,11 +17,12 @@ class UserSeeder extends Seeder
     private function createAdminUser(): void
     {
         if (!User::where('email', 'admin@aspirecloud.io')->exists()) {
-            /** @noinspection LaravelFunctionsInspection (env is fine in a seeder) */
+            $password = getenv('ADMIN_PASSWORD') ?: uniqid('', true);
+
             $admin = User::create([
                 'name' => 'Admin User',
                 'email' => 'admin@aspirecloud.io',
-                'password' => Hash::make(env('ADMIN_PASSWORD', uniqid('', true))),
+                'password' => Hash::make($password),
             ]);
             $admin->syncRoles(Role::SuperAdmin);
         }
