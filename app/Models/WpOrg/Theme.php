@@ -103,6 +103,8 @@ final class Theme extends BaseModel
         $syncmeta['type'] === 'theme' or throw new InvalidArgumentException("invalid type '{$syncmeta['type']}'");
         $syncmeta['status'] === 'open' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
 
+        $metadata = self::rewriteMetadata($metadata);
+
         $authorData = $metadata['author'];
         $author = Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
 
@@ -149,6 +151,28 @@ final class Theme extends BaseModel
         }
         return $instance;
     }
+
+    /**
+     * @param array<string, mixed> $metadata
+     * @return array<string, mixed>
+     */
+    public static function rewriteMetadata(array $metadata): array
+    {
+        if (($metadata['aspiresync_meta']['origin'] ?? '') !== 'wp_org') {
+            return $metadata;
+        }
+
+        $base = config('app.url') . '/download/';
+        $rewrite = fn(string $url) => \Safe\preg_replace('#https?://.*?/#i', $base, $url);
+
+        $download_link = $rewrite($metadata['download_link'] ?? '');
+
+        // TODO: rewrite screenshot_url (may need a new asset type first)
+        // "screenshot_url": "//ts.w.org/wp-content/themes/abhokta/screenshot.png?ver=1.0.0",
+
+        return [...$metadata, ...compact('download_link')];
+    }
+
 
     //endregion
 }

@@ -132,6 +132,8 @@ final class Plugin extends BaseModel
         $syncmeta['type'] === 'plugin' or throw new InvalidArgumentException("invalid type '{$syncmeta['type']}'");
         $syncmeta['status'] === 'open' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
 
+        $metadata = self::rewriteMetadata($metadata);
+
         $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
 
         $instance = self::create([
@@ -185,6 +187,30 @@ final class Plugin extends BaseModel
         }
 
         return $instance;
+    }
+
+    /**
+     * @param array<string, mixed> $metadata
+     * @return array<string, mixed>
+     */
+    public static function rewriteMetadata(array $metadata): array
+    {
+        if (($metadata['aspiresync_meta']['origin'] ?? '') !== 'wp_org') {
+            return $metadata;
+        }
+
+        $base = config('app.url') . '/download/';
+        $rewrite = fn(string $url) => \Safe\preg_replace('#https?://.*?/#i', $base, $url);
+
+        $download_link = $rewrite($metadata['download_link'] ?? '');
+        $versions = array_map($rewrite, $metadata['versions'] ?? []);
+        $banners = array_map($rewrite, $metadata['banners'] ?? []);
+
+        $screenshots = collect($metadata['screenshots'] ?? [])
+            ->map(fn(array $screenshot) => [...$screenshot, 'src' => $rewrite($screenshot['src'] ?? '')])
+            ->toArray();
+
+        return [...$metadata, ...compact('download_link', 'versions', 'banners', 'screenshots')];
     }
 
     //endregion
