@@ -10,8 +10,9 @@ enum AssetType: string
     case CORE = 'core';
     case PLUGIN = 'plugin';
     case THEME = 'theme';
-    case SCREENSHOT = 'screenshot';
-    case BANNER = 'banner';
+    case PLUGIN_SCREENSHOT = 'plugin-screenshot';
+    case PLUGIN_BANNER = 'plugin-banner';
+    case THEME_SCREENSHOT = 'theme-screenshot';
 
     public static function fromPath(string $path): self
     {
@@ -23,10 +24,10 @@ enum AssetType: string
         // Screenshots and Banners)
         if (Str::contains($path, '/assets/')) {
             if (Str::contains($path, 'screenshot-')) {
-                return self::SCREENSHOT;
+                return self::PLUGIN_SCREENSHOT;
             }
             if (Str::contains($path, 'banner-')) {
-                return self::BANNER;
+                return self::PLUGIN_BANNER;
             }
         }
 
@@ -49,8 +50,8 @@ enum AssetType: string
             self::CORE => 'core',
             self::PLUGIN => 'plugins',
             self::THEME => 'themes',
-            self::SCREENSHOT,
-            self::BANNER => 'assets',
+            self::PLUGIN_SCREENSHOT,
+            self::PLUGIN_BANNER => 'assets',
         };
     }
 
@@ -61,7 +62,7 @@ enum AssetType: string
 
     public function isAsset(): bool
     {
-        return in_array($this, [self::SCREENSHOT, self::BANNER]);
+        return in_array($this, [self::PLUGIN_SCREENSHOT, self::PLUGIN_BANNER]);
     }
 
     public function getUpstreamBaseUrl(): string
@@ -70,8 +71,8 @@ enum AssetType: string
             self::CORE => 'https://wordpress.org/',
             self::PLUGIN => 'https://downloads.wordpress.org/plugin/',
             self::THEME => 'https://downloads.wordpress.org/theme/',
-            self::SCREENSHOT,
-            self::BANNER => 'https://ps.w.org/%s/assets/',
+            self::PLUGIN_SCREENSHOT,
+            self::PLUGIN_BANNER => 'https://ps.w.org/%s/assets/',
         };
     }
 }

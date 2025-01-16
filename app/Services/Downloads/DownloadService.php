@@ -62,9 +62,11 @@ class DownloadService
             AssetType::CORE => 'https://wordpress.org/',
             AssetType::PLUGIN => 'https://downloads.wordpress.org/plugin/',
             AssetType::THEME => 'https://downloads.wordpress.org/theme/',
-            AssetType::SCREENSHOT,
-            AssetType::BANNER => sprintf('https://ps.w.org/%s/assets/', $slug),
+            AssetType::PLUGIN_SCREENSHOT,
+            AssetType::PLUGIN_BANNER => sprintf('https://ps.w.org/%s/assets/', $slug),
         };
+
+        //   "screenshot_url": "//ts.w.org/wp-content/themes/abhokta/screenshot.png?ver=1.0.0",
 
         $url = $baseUrl . $file;
 

@@ -15,8 +15,8 @@ class DownloadAssetController
     public function __invoke(string $slug, string $file): Response
     {
         $assetType = str_contains($file, 'screenshot-')
-            ? AssetType::SCREENSHOT
-            : AssetType::BANNER;
+            ? AssetType::PLUGIN_SCREENSHOT
+            : AssetType::PLUGIN_BANNER;
 
         $rev = request()->query('rev') ?: null;
 

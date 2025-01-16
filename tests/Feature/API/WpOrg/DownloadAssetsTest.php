@@ -196,7 +196,7 @@ describe('S3 Asset Storage', function () {
 
         // Act
         $job = new DownloadAssetJob(
-            AssetType::SCREENSHOT,
+            AssetType::PLUGIN_SCREENSHOT,
             'test-plugin',
             'screenshot-1.png',
             'https://ps.w.org/test-plugin/assets/screenshot-1.png'
@@ -220,7 +220,7 @@ describe('S3 Asset Storage', function () {
 
         // Act
         $job = new DownloadAssetJob(
-            AssetType::BANNER,
+            AssetType::PLUGIN_BANNER,
             'test-plugin',
             'banner-772x250.jpg',
             'https://ps.w.org/test-plugin/assets/banner-772x250.jpg'
@@ -343,7 +343,7 @@ describe('Download Routes', function () {
 
         expect($response->status())->toBe(302);
         Queue::assertPushed(DownloadAssetJob::class, function ($job) {
-            return $job->type === AssetType::SCREENSHOT
+            return $job->type === AssetType::PLUGIN_SCREENSHOT
                    && $job->slug === 'test-plugin'
                    && $job->file === 'screenshot-1.png';
         });
@@ -355,7 +355,7 @@ describe('Download Routes', function () {
 
         expect($response->status())->toBe(302);
         Queue::assertPushed(DownloadAssetJob::class, function ($job) {
-            return $job->type === AssetType::BANNER
+            return $job->type === AssetType::PLUGIN_BANNER
                    && $job->slug === 'test-plugin'
                    && $job->revision === '3164133';
         });

@@ -70,8 +70,8 @@ class DownloadAssetJob implements ShouldQueue
             AssetType::CORE => 'core',
             AssetType::PLUGIN => "plugins/{$this->slug}",
             AssetType::THEME => "themes/{$this->slug}",
-            AssetType::SCREENSHOT,
-            AssetType::BANNER => "assets/{$this->slug}",
+            AssetType::PLUGIN_SCREENSHOT,
+            AssetType::PLUGIN_BANNER => "assets/{$this->slug}",
         };
 
         return "{$basePath}/{$this->file}";
