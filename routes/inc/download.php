@@ -3,8 +3,8 @@
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadCoreController;
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginAssetController;
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginController;
-use App\Http\Controllers\API\WpOrg\Downloads\DownloadThemeScreenshotController;
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadThemeController;
+use App\Http\Controllers\API\WpOrg\Downloads\DownloadThemeScreenshotController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 

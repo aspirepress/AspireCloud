@@ -132,7 +132,6 @@ describe('Sync Themes', function () {
             ->and($theme->screenshot_url)->toBe(
                 'https://api.aspiredev.org/download/assets/theme/100-bytes/1.1.3/screenshot.png',
             );
-
     });
 
     it('throws an exception if loaded as ClosedPlugin', function () use ($md_100b) {

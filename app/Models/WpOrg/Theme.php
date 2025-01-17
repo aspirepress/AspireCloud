@@ -183,6 +183,5 @@ final class Theme extends BaseModel
         return [...$metadata, ...compact('download_link', 'versions', 'screenshot_url')];
     }
 
-
     //endregion
 }
