@@ -26,15 +26,20 @@ class DownloadService
         ?string $revision = null,
     ): Response {
         Log::debug("DOWNLOAD", compact("type", "slug", "file", "revision"));
+
+        if ($revision === 'head') {
+            $revision = null;
+        }
         // Check if we have it locally
         $asset = Asset::query()
             ->where('asset_type', $type->value)
             ->where('slug', $slug)
             ->where('local_path', 'LIKE', "%{$file}")
             ->when($revision, fn($q) => $q->where('revision', $revision))
+            ->orderBy('revision', 'desc')
+            ->limit(1)
             ->first();
 
-        // If we have it, and it exists in storage, stream it
         if ($asset && Storage::exists($asset->local_path)) {
             // TODO: handle case where asset exists but local path does not (DownloadAssetJob always creates a new Asset)
             event(new AssetCacheHit($asset));
@@ -63,10 +68,9 @@ class DownloadService
             AssetType::PLUGIN => 'https://downloads.wordpress.org/plugin/',
             AssetType::THEME => 'https://downloads.wordpress.org/theme/',
             AssetType::PLUGIN_SCREENSHOT,
-            AssetType::PLUGIN_BANNER => sprintf('https://ps.w.org/%s/assets/', $slug),
+            AssetType::PLUGIN_BANNER => "https://ps.w.org/$slug/assets/",
+            AssetType::THEME_SCREENSHOT => "https://ts.w.org/wp-content/themes/$slug/",
         };
-
-        //   "screenshot_url": "//ts.w.org/wp-content/themes/abhokta/screenshot.png?ver=1.0.0",
 
         $url = $baseUrl . $file;
 

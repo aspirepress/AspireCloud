@@ -6,7 +6,7 @@ use App\Enums\AssetType;
 use App\Services\Downloads\DownloadService;
 use Symfony\Component\HttpFoundation\Response;
 
-class DownloadAssetController
+class DownloadPluginAssetController
 {
     public function __construct(
         private readonly DownloadService $downloadService,
