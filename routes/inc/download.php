@@ -33,19 +33,10 @@ Route::prefix('/')
             ->name('download.theme');
 
         $router
-            ->get('/download/{slug}/assets/{file}', DownloadPluginAssetController::class)
+            ->get('/download/assets/plugin/{slug}/{revision}/{file}', DownloadPluginAssetController::class)
             ->where(['slug' => '[a-zA-Z0-9-]+', 'file' => '.+'])
             ->name('download.plugin.asset');
 
-        // $router->get('/download/theme/{slug}/screenshots/{file}', DownloadThemeScreenshotController::class)
-        //     ->where(['slug' => '[a-zA-Z0-9-]+', 'file' => '.+'])
-        //     ->name('download.theme.screenshot');
-
-        // alternative asset url syntax, will replace the above two.  use 'head' for the empty revision
-        // $router->get('/download/assets/plugin/{slug}/{revision}/{file}', DownloadPluginAssetController::class)
-        //     ->where(['slug' => '[a-zA-Z0-9-]+', 'file' => '.+'])
-        //     ->name('download.plugin.asset');
-        //
         $router
             ->get('/download/assets/theme/{slug}/{revision}/{file}', DownloadThemeScreenshotController::class)
             ->where(['slug' => '[a-zA-Z0-9-]+', 'file' => '.+'])

@@ -8,18 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DownloadPluginAssetController
 {
-    public function __construct(
-        private readonly DownloadService $downloadService,
-    ) {}
+    public function __construct(private readonly DownloadService $downloadService) {}
 
-    public function __invoke(string $slug, string $file): Response
+    public function __invoke(string $slug, string $revision, string $file): Response
     {
-        $assetType = str_contains($file, 'screenshot-')
-            ? AssetType::PLUGIN_SCREENSHOT
-            : AssetType::PLUGIN_BANNER;
-
-        $rev = request()->query('rev') ?: null;
-
-        return $this->downloadService->download(type: $assetType, slug: $slug, file: $file, revision: $rev);
+        $type = str_contains($file, 'screenshot-') ? AssetType::PLUGIN_SCREENSHOT : AssetType::PLUGIN_BANNER;
+        return $this->downloadService->download(type: $type, slug: $slug, file: $file, revision: $revision);
     }
 }

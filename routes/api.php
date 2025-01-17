@@ -33,21 +33,6 @@ if (config('app.aspirecloud.api_authentication_enable')) {
 $routeDefinition
     ->middleware($middlewares)
     ->group(function (Router $router) {
-        // Download routes
-        $router->get('/download/wordpress-{version}.{extension}', DownloadCoreController::class)->where([
-            'version' => '[\d.]+',
-            'extension' => 'zip|tar\.gz',
-        ]);
-        $router->get('/download/plugin/{file}', DownloadPluginController::class)->where('file', '.+\.zip');
-        $router
-            ->get('/download/{slug}/assets/{file}', DownloadPluginAssetController::class)
-            ->where(['slug' => '[a-zA-Z0-9-]+', 'file' => '.+']);
-
-        $router->get('/download/theme/{file}', DownloadThemeController::class)->where('file', '.+\.zip');
-        $router
-            ->get('/download/theme/{slug}/screenshots/{file}', DownloadThemeScreenshotController::class)
-            ->where(['slug' => '[a-zA-Z0-9-]+', 'file' => '.+']);
-
         $router->get('/secret-key/{version}', [SecretKeyController::class, 'index'])->where(['version' => '1.[01]']);
         $router->get('/secret-key/{version}/salt', [SecretKeyController::class, 'salt'])->where(['version' => '1.1']);
 

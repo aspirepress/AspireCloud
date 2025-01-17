@@ -3,6 +3,7 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
+use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\PluginFactory;
@@ -199,20 +200,38 @@ final class Plugin extends BaseModel
             return $metadata;
         }
 
-        $base = config('app.url') . '/download/';
-        $rewrite = fn(string $url) => \Safe\preg_replace('#https?://.*?/#i', $base, $url);
+        $download_link = self::rewriteDotOrgUrl($metadata['download_link'] ?? '');
+        $versions = array_map(self::rewriteDotOrgUrl(...), $metadata['versions'] ?? []);
+        $banners = array_map(self::rewriteDotOrgUrl(...), $metadata['banners'] ?? []);
 
-        $download_link = $rewrite($metadata['download_link'] ?? '');
-        $versions = array_map($rewrite, $metadata['versions'] ?? []);
-        $banners = array_map($rewrite, $metadata['banners'] ?? []);
-
-        /** @var array{src:string|null}[] $md_screenshots */
-        $md_screenshots = $metadata['screenshots'] ?? [];
-        $screenshots = collect($md_screenshots)
-            ->map(fn(array $screenshot) => [...$screenshot, 'src' => $rewrite($screenshot['src'] ?? '')])
-            ->toArray();
+        $screenshots = array_map(
+            fn(array $screenshot) => [...$screenshot, 'src' => self::rewriteDotOrgUrl($screenshot['src'] ?? '')],
+            $metadata['screenshots'] ?? [],
+        );
 
         return [...$metadata, ...compact('download_link', 'versions', 'banners', 'screenshots')];
+    }
+
+    private static function rewriteDotOrgUrl(string $url): string
+    {
+        $base = config('app.url') . '/download/';
+
+        // https://downloads.wordpress.org/plugin/elementor.3.26.5.zip
+        if (str_contains($url, '//downloads.')) {
+            return \Safe\preg_replace('#https?://.*?/#i', $base, $url);
+        }
+
+        // https://ps.w.org/elementor/assets/screenshot-1.gif?rev=3005087
+        if ($matches = Regex::match('#//ps\.w\.org/(.*?)/assets/(.*?)(?:\?rev=(.*))?$#i', $url)) {
+            $slug = $matches[1];
+            $file = $matches[2];
+            $revision = $matches[3] ?? 'head';
+            return $base . "assets/plugin/$slug/$revision/$file";
+        }
+
+        // TODO: icons: {"default": "https://s.w.org/plugins/geopattern-icon/addi-simple-slider_c8bcb2.svg"}
+
+        return $url;
     }
 
     //endregion

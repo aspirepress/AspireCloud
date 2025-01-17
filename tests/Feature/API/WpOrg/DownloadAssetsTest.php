@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\AssetType;
+use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginAssetController;
 use App\Jobs\DownloadAssetJob;
 use App\Models\WpOrg\Asset;
 use App\Services\Downloads\DownloadService;
@@ -339,19 +340,19 @@ describe('Download Routes', function () {
     });
 
     it('handles asset download requests', function () {
-        $response = $this->get('/download/test-plugin/assets/screenshot-1.png');
+        $response = $this->get('/download/assets/plugin/test-plugin/head/screenshot-1.png');
 
         expect($response->status())->toBe(302);
         Queue::assertPushed(DownloadAssetJob::class, function ($job) {
             return $job->type === AssetType::PLUGIN_SCREENSHOT
                    && $job->slug === 'test-plugin'
-                   && $job->file === 'screenshot-1.png';
+                && $job->file === 'screenshot-1.png'
+                && $job->revision === null;
         });
     });
 
     it('handles asset download requests with revision', function () {
-        // Todo: this is failing check why
-        $response = $this->get('/download/test-plugin/assets/banner-1544x500.png?rev=3164133');
+        $response = $this->get('/download/assets/plugin/test-plugin/3164133/banner-1544x500.png');
 
         expect($response->status())->toBe(302);
         Queue::assertPushed(DownloadAssetJob::class, function ($job) {
