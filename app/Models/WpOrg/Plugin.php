@@ -206,7 +206,9 @@ final class Plugin extends BaseModel
         $versions = array_map($rewrite, $metadata['versions'] ?? []);
         $banners = array_map($rewrite, $metadata['banners'] ?? []);
 
-        $screenshots = collect($metadata['screenshots'] ?? [])
+        /** @var array{src:string|null}[] $md_screenshots */
+        $md_screenshots = $metadata['screenshots'] ?? [];
+        $screenshots = collect($md_screenshots)
             ->map(fn(array $screenshot) => [...$screenshot, 'src' => $rewrite($screenshot['src'] ?? '')])
             ->toArray();
 
