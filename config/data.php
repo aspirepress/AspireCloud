@@ -1,5 +1,6 @@
 <?php
 
+use App\Data\Casts\CarbonImmutableCast;
 use Illuminate\Contracts\Support\Arrayable;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Casts\EnumCast;
@@ -20,7 +21,7 @@ use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 use Spatie\LaravelData\Transformers\EnumTransformer;
 
 return [
-    'date_format' => DATE_ATOM,
+    'date_format' => DATE_ATOM, // not used, we use the much more flexible CarbonImmutableCast
     'date_timezone' => null,
 
     'features' => [
@@ -35,7 +36,8 @@ return [
     ],
 
     'casts' => [
-        DateTimeInterface::class => DateTimeInterfaceCast::class,
+        // DateTimeInterface::class => DateTimeInterfaceCast::class, // only uses date_format, which is too strict to be useful
+        DateTimeInterface::class => CarbonImmutableCast::class,
         BackedEnum::class => EnumCast::class,
     ],
 

@@ -42,7 +42,7 @@ beforeEach(function () {
         'external_support_url' => null,
         'is_community' => true,
         'external_repository_url' => 'https://test.com',
-        'author_id' => $authorId,
+        'author_id' => $authorId->toString(),
     ]);
     Theme::create([
         'slug' => 'my-theme2',
@@ -69,7 +69,7 @@ beforeEach(function () {
         'external_support_url' => null,
         'is_community' => true,
         'external_repository_url' => 'https://test.com',
-        'author_id' => $authorId,
+        'author_id' => $authorId->toString(),
     ]);
 
     // Theme::factory()->count(8)->create();

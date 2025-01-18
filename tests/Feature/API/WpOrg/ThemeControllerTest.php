@@ -2,6 +2,7 @@
 
 use App\Models\WpOrg\Author;
 use App\Models\WpOrg\Theme;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -22,8 +23,9 @@ beforeEach(function () {
         'version' => '1.2.1',
         'download_link' => 'https://downloads.wp/my-theme',
         'requires_php' => '5.6',
-        'last_updated' => '2021-01-11 12:00:00',
-        'creation_time' => '2021-01-01 12:00:00',
+        // 'last_updated' => CarbonImmutable::parse('2022-02-22 22:22:22'),
+        'last_updated' => '2025-01-18T20:50:36+00:00',
+        'creation_time' => CarbonImmutable::parse('2011-11-11 11:11:11'),
         'preview_url' => 'https://wp-themes.com/my-theme',
         'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
         'ratings' => [5, 4, 3, 2, 1, 2],

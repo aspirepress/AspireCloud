@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Data\Props;
 
 use Carbon\CarbonImmutable;
+use Ramsey\Uuid\UuidInterface;
 use Spatie\LaravelData\Optional;
 
 class PluginProps extends ModelProps
@@ -22,7 +23,7 @@ class PluginProps extends ModelProps
         public readonly string $tested,
         public readonly string $download_link,
         public readonly CarbonImmutable $added,
-        public readonly ?CarbonImmutable $last_updated,
+        public readonly CarbonImmutable|null $last_updated,
         public readonly Optional|string|null $author_profile,
         public readonly Optional|int $rating,
         public readonly Optional|array|null $ratings,
@@ -48,6 +49,13 @@ class PluginProps extends ModelProps
         public readonly Optional|array|null $sections,
         public readonly Optional|array|null $versions,
         public readonly Optional|array|null $upgrade_notice,
+
+        // associations
+        public readonly Optional|array $tags, // TODO
+
+        // AC-specific
+        public readonly Optional|CarbonImmutable|null $ac_created,
+        public readonly Optional|array|null $ac_raw_metadata,
     ) {}
 
 
