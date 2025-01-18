@@ -111,7 +111,7 @@ final class Plugin extends BaseModel
             'versions' => 'array',
             'upgrade_notice' => 'array',
             'ac_origin' => 'string',
-            'ac_created' => 'datetime_immutable',
+            'ac_created' => 'immutable_datetime',
             'ac_raw_metadata' => 'array',
         ];
     }

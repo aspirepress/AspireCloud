@@ -76,7 +76,7 @@ final class Theme extends BaseModel
             'is_community' => 'boolean',
             'external_repository_url' => 'string',
             'ac_origin' => 'string',
-            'ac_created' => 'datetime_immutable',
+            'ac_created' => 'immutable_datetime',
             'ac_raw_metadata' => 'array',
         ];
     }
