@@ -133,6 +133,7 @@ final class Plugin extends BaseModel
         $syncmeta['type'] === 'plugin' or throw new InvalidArgumentException("invalid type '{$syncmeta['type']}'");
         $syncmeta['status'] === 'open' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
 
+        $ac_raw_metadata = $metadata;
         $metadata = self::rewriteMetadata($metadata);
 
         $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
@@ -176,7 +177,7 @@ final class Plugin extends BaseModel
             'versions' => $metadata['versions'] ?? null,
             'upgrade_notice' => $metadata['upgrade_notice'] ?? null,
             'ac_origin' => $syncmeta['origin'],
-            'ac_raw_metadata' => $metadata,
+            'ac_raw_metadata' => $ac_raw_metadata,
         ]);
 
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {
