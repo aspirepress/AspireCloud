@@ -3,11 +3,6 @@
 // Note: api routes are not prefixed, i.e. all routes in here are from the root like web routes
 
 use App\Http\Controllers\API\WpOrg\Core\ImportersController;
-use App\Http\Controllers\API\WpOrg\Downloads\DownloadCoreController;
-use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginAssetController;
-use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginController;
-use App\Http\Controllers\API\WpOrg\Downloads\DownloadThemeController;
-use App\Http\Controllers\API\WpOrg\Downloads\DownloadThemeScreenshotController;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
 use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;

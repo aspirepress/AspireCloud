@@ -1,7 +1,6 @@
 <?php
 
 use App\Enums\AssetType;
-use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginAssetController;
 use App\Jobs\DownloadAssetJob;
 use App\Models\WpOrg\Asset;
 use App\Services\Downloads\DownloadService;
