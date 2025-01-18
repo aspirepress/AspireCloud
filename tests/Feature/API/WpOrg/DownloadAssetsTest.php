@@ -203,11 +203,14 @@ describe('S3 Asset Storage', function () {
             'https://ps.w.org/test-plugin/assets/screenshot-1.png'
         );
 
+        $path = 'assets/plugin/test-plugin/screenshot-1.png';
+        expect($job->generateLocalPath())->toBe($path);
+
         $job->handle();
 
         // Assert
-        Storage::disk('s3')->assertExists('assets/test-plugin/screenshot-1.png');
-        expect(Storage::disk('s3')->get('assets/test-plugin/screenshot-1.png'))
+        Storage::disk('s3')->assertExists($path);
+        expect(Storage::disk('s3')->get($path))
             ->toBe($imageContent);
     });
 
