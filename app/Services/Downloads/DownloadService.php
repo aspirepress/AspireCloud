@@ -58,6 +58,7 @@ class DownloadService
             AssetType::THEME => 'https://downloads.wordpress.org/theme/',
             AssetType::PLUGIN_SCREENSHOT,
             AssetType::PLUGIN_BANNER => "https://ps.w.org/$slug/assets/",
+            AssetType::PLUGIN_GP_ICON => "https://s.w.org/plugins/geopattern-icon/",
             AssetType::THEME_SCREENSHOT => "https://ts.w.org/wp-content/themes/$slug/",
         };
 

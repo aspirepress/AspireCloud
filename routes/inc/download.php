@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadCoreController;
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginAssetController;
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginController;
+use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginIconController;
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadThemeController;
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadThemeScreenshotController;
 use Illuminate\Routing\Router;
@@ -36,6 +37,11 @@ Route::prefix('/')
             ->get('/download/assets/plugin/{slug}/{revision}/{file}', DownloadPluginAssetController::class)
             ->where(['slug' => '[a-zA-Z0-9-]+', 'file' => '.+'])
             ->name('download.plugin.asset');
+
+        $router
+            ->get('/download/gp-icon/plugin/{slug}/{revision}/{file}', DownloadPluginIconController::class)
+            ->where(['slug' => '[a-zA-Z0-9-]+', 'file' => '.+'])
+            ->name('download.plugin.gp-icon');
 
         $router
             ->get('/download/assets/theme/{slug}/{revision}/{file}', DownloadThemeScreenshotController::class)
