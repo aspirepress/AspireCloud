@@ -70,6 +70,8 @@ class PluginFactory extends Factory
             'sections' => $this->generateSections(),
             'versions' => $this->generateVersions(),
             'upgrade_notice' => $this->generateUpgradeNotices(),
+            'ac_origin' => $this->faker->randomElement(['wp_org', 'packagist', 'git', 'github']),
+            'ac_created' => $this->faker->dateTimeBetween('-1 month'),
         ];
     }
 
