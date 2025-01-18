@@ -45,14 +45,12 @@ describe('DownloadService on local storage', function () {
         // Arrange
         $service = new DownloadService();
 
-        // Act
         $response = $service->download(
             AssetType::PLUGIN,
             'test-plugin',
             'test-plugin.1.0.0.zip'
         );
 
-        // Assert
         Queue::assertPushed(DownloadAssetJob::class, function ($job) {
             $expectedUrl = 'https://downloads.wordpress.org/plugin/test-plugin.1.0.0.zip';
 
