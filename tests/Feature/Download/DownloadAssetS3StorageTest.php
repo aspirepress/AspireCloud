@@ -3,8 +3,6 @@
 use App\Enums\AssetType;
 use App\Jobs\DownloadAssetJob;
 use App\Models\WpOrg\Asset;
-use App\Services\Downloads\DownloadService;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;

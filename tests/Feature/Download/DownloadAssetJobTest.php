@@ -3,8 +3,6 @@
 use App\Enums\AssetType;
 use App\Jobs\DownloadAssetJob;
 use App\Models\WpOrg\Asset;
-use App\Services\Downloads\DownloadService;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +12,6 @@ beforeEach(function () {
     Queue::fake();
     Http::fake();
 });
-
 
 describe('DownloadAssetJob Job', function () {
     it('extracts version correctly from different file patterns', function () {
