@@ -12,7 +12,11 @@ class DownloadPluginIconController
 
     public function __invoke(string $slug, string $revision, string $file): Response
     {
-        $type = AssetType::PLUGIN_GP_ICON;
-        return $this->downloadService->download(type: $type, slug: $slug, file: $file, revision: $revision);
+        return $this->downloadService->download(
+            type: AssetType::PLUGIN_GP_ICON,
+            slug: $slug,
+            file: $file,
+            revision: $revision,
+        );
     }
 }
