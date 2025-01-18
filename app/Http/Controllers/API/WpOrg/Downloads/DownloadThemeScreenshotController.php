@@ -16,7 +16,7 @@ class DownloadThemeScreenshotController
             type: AssetType::THEME_SCREENSHOT,
             slug: $slug,
             file: $file,
-            revision: $revision ?: null,
+            revision: $revision,
         );
     }
 }
