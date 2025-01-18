@@ -78,7 +78,7 @@ class AssetFactory extends Factory
     public function screenshot(): static
     {
         return $this->state(fn(array $attributes) => [
-            'asset_type' => AssetType::SCREENSHOT->value,
+            'asset_type' => AssetType::PLUGIN_SCREENSHOT->value,
             'version' => null,
         ]);
     }
@@ -89,7 +89,7 @@ class AssetFactory extends Factory
     public function banner(): static
     {
         return $this->state(fn(array $attributes) => [
-            'asset_type' => AssetType::BANNER->value,
+            'asset_type' => AssetType::PLUGIN_BANNER->value,
             'version' => null,
         ]);
     }
@@ -103,8 +103,8 @@ class AssetFactory extends Factory
             AssetType::CORE => "https://wordpress.org/wordpress-{$version}.zip",
             AssetType::PLUGIN => "https://downloads.wordpress.org/plugin/{$slug}.{$version}.zip",
             AssetType::THEME => "https://downloads.wordpress.org/theme/{$slug}.{$version}.zip",
-            AssetType::SCREENSHOT => "https://ps.w.org/{$slug}/assets/screenshot-1.png",
-            AssetType::BANNER => "https://ps.w.org/{$slug}/assets/banner-772x250.jpg",
+            AssetType::PLUGIN_SCREENSHOT => "https://ps.w.org/{$slug}/assets/screenshot-1.png",
+            AssetType::PLUGIN_BANNER => "https://ps.w.org/{$slug}/assets/banner-772x250.jpg",
         };
     }
 
@@ -117,8 +117,8 @@ class AssetFactory extends Factory
             AssetType::CORE => "core/wordpress-{$version}.zip",
             AssetType::PLUGIN => "plugins/{$slug}/{$slug}.{$version}.zip",
             AssetType::THEME => "themes/{$slug}/{$slug}.{$version}.zip",
-            AssetType::SCREENSHOT => "assets/{$slug}/screenshot-1.png",
-            AssetType::BANNER => "assets/{$slug}/banner-772x250.jpg",
+            AssetType::PLUGIN_SCREENSHOT => "assets/{$slug}/screenshot-1.png",
+            AssetType::PLUGIN_BANNER => "assets/{$slug}/banner-772x250.jpg",
         };
     }
 }

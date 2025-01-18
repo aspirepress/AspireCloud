@@ -2,57 +2,15 @@
 
 namespace App\Enums;
 
-use Illuminate\Support\Str;
-use InvalidArgumentException;
-
 enum AssetType: string
 {
     case CORE = 'core';
     case PLUGIN = 'plugin';
     case THEME = 'theme';
-    case SCREENSHOT = 'screenshot';
-    case BANNER = 'banner';
-
-    public static function fromPath(string $path): self
-    {
-        // WordPress core downloads
-        if (\Safe\preg_match('/wordpress-[\d.]+\.zip$/', $path)) {
-            return self::CORE;
-        }
-
-        // Screenshots and Banners)
-        if (Str::contains($path, '/assets/')) {
-            if (Str::contains($path, 'screenshot-')) {
-                return self::SCREENSHOT;
-            }
-            if (Str::contains($path, 'banner-')) {
-                return self::BANNER;
-            }
-        }
-
-        // plugin and theme zips files
-        if (Str::endsWith($path, '.zip')) {
-            if (Str::contains($path, '/theme/')) {
-                return self::THEME;
-            }
-            if (Str::contains($path, '/plugin/')) {
-                return self::PLUGIN;
-            }
-        }
-
-        throw new InvalidArgumentException("Unknown asset type for path: {$path}");
-    }
-
-    public function getBasePath(): string
-    {
-        return match ($this) {
-            self::CORE => 'core',
-            self::PLUGIN => 'plugins',
-            self::THEME => 'themes',
-            self::SCREENSHOT,
-            self::BANNER => 'assets',
-        };
-    }
+    case PLUGIN_SCREENSHOT = 'plugin-screenshot';
+    case PLUGIN_BANNER = 'plugin-banner';
+    case PLUGIN_GP_ICON = 'plugin-gp-icon'; // geopattern-icon only -- other icons are treated as screenshots
+    case THEME_SCREENSHOT = 'theme-screenshot';
 
     public function isZip(): bool
     {
@@ -61,17 +19,9 @@ enum AssetType: string
 
     public function isAsset(): bool
     {
-        return in_array($this, [self::SCREENSHOT, self::BANNER]);
-    }
-
-    public function getUpstreamBaseUrl(): string
-    {
-        return match ($this) {
-            self::CORE => 'https://wordpress.org/',
-            self::PLUGIN => 'https://downloads.wordpress.org/plugin/',
-            self::THEME => 'https://downloads.wordpress.org/theme/',
-            self::SCREENSHOT,
-            self::BANNER => 'https://ps.w.org/%s/assets/',
-        };
+        return in_array(
+            $this,
+            [self::PLUGIN_SCREENSHOT, self::PLUGIN_BANNER, self::PLUGIN_GP_ICON, self::THEME_SCREENSHOT],
+        );
     }
 }

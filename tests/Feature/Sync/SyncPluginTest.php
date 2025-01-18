@@ -90,7 +90,7 @@ describe('Sync Plugins', function () {
         ],
     ];
 
-    it('can be loaded as ClosedPlugin class', function () use ($md_0errors) {
+    it('loads metadata', function () use ($md_0errors) {
         $plugin = Plugin::fromSyncMetadata($md_0errors);
         expect($plugin)
             ->toBeInstanceOf(Plugin::class)
@@ -129,7 +129,6 @@ describe('Sync Plugins', function () {
             ->and($plugin->sections['faq'])->toStartWith("<h4>Is it compatible with latest WordPress?</h4>")
             ->and($plugin->sections['changelog'])->toStartWith("<h4>0.2</h4>")
             ->and($plugin->sections['reviews'])->toBeEmpty()
-            ->and($plugin->download_link)->toBe('https://downloads.wordpress.org/plugin/0-errors.0.2.zip')
             ->and($plugin->upgrade_notice)->toBeEmpty()
             ->and($plugin->screenshots)->toBeEmpty()
             ->and($plugin->tags)->toBe([
@@ -138,18 +137,24 @@ describe('Sync Plugins', function () {
                 'errors' => 'errors',
                 'error_reporting' => 'error_reporting',
             ])
-            ->and($plugin->versions)->toBe([
-                '0.1' => 'https://downloads.wordpress.org/plugin/0-errors.0.1.zip',
-                '0.2' => 'https://downloads.wordpress.org/plugin/0-errors.0.2.zip',
-                'trunk' => 'https://downloads.wordpress.org/plugin/0-errors.zip',
-            ])
             ->and($plugin->business_model)->toBe('')
             ->and($plugin->repository_url)->toBeEmpty()
             ->and($plugin->commercial_support_url)->toBeEmpty()
             ->and($plugin->donate_link)->toBeEmpty()
             ->and($plugin->banners)->toBeEmpty()
-            ->and($plugin->icons)->toBe(['default' => 'https://s.w.org/plugins/geopattern-icon/0-errors.svg'])
             ->and($plugin->preview_link)->toBeEmpty();
+
+        // test URL rewrites
+        expect($plugin->download_link)
+            ->toBe('https://api.aspiredev.org/download/plugin/0-errors.0.2.zip')
+            ->and($plugin->icons)->toBe(
+                ['default' => 'https://api.aspiredev.org/download/gp-icon/plugin/0-errors/head/0-errors.svg'],
+            )
+            ->and($plugin->versions)->toBe([
+                '0.1' => 'https://api.aspiredev.org/download/plugin/0-errors.0.1.zip',
+                '0.2' => 'https://api.aspiredev.org/download/plugin/0-errors.0.2.zip',
+                'trunk' => 'https://api.aspiredev.org/download/plugin/0-errors.zip',
+            ]);
     });
 
     it('throws an exception if loaded as ClosedPlugin', function () use ($md_0errors) {

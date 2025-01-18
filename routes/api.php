@@ -3,10 +3,6 @@
 // Note: api routes are not prefixed, i.e. all routes in here are from the root like web routes
 
 use App\Http\Controllers\API\WpOrg\Core\ImportersController;
-use App\Http\Controllers\API\WpOrg\Downloads\DownloadAssetController;
-use App\Http\Controllers\API\WpOrg\Downloads\DownloadCoreController;
-use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginController;
-use App\Http\Controllers\API\WpOrg\Downloads\DownloadThemeController;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
 use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
@@ -32,19 +28,6 @@ if (config('app.aspirecloud.api_authentication_enable')) {
 $routeDefinition
     ->middleware($middlewares)
     ->group(function (Router $router) {
-        // Download routes
-        $router->get('/download/wordpress-{version}.{extension}', DownloadCoreController::class)->where([
-            'version' => '[\d.]+',
-            'extension' => 'zip|tar\.gz',
-        ]);
-        $router->get('/download/plugin/{file}', DownloadPluginController::class)->where('file', '.+\.zip');
-        $router->get('/download/theme/{file}', DownloadThemeController::class)->where('file', '.+\.zip');
-        $router->get('/download/{slug}/assets/{file}', DownloadAssetController::class)
-            ->where([
-                'slug' => '[a-zA-Z0-9-]+',
-                'file' => '.+',
-            ]);
-
         $router->get('/secret-key/{version}', [SecretKeyController::class, 'index'])->where(['version' => '1.[01]']);
         $router->get('/secret-key/{version}/salt', [SecretKeyController::class, 'salt'])->where(['version' => '1.1']);
 

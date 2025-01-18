@@ -3,6 +3,7 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
+use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\PluginFactory;
@@ -132,6 +133,9 @@ final class Plugin extends BaseModel
         $syncmeta['type'] === 'plugin' or throw new InvalidArgumentException("invalid type '{$syncmeta['type']}'");
         $syncmeta['status'] === 'open' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
 
+        $ac_raw_metadata = $metadata;
+        $metadata = self::rewriteMetadata($metadata);
+
         $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
 
         $instance = self::create([
@@ -173,7 +177,7 @@ final class Plugin extends BaseModel
             'versions' => $metadata['versions'] ?? null,
             'upgrade_notice' => $metadata['upgrade_notice'] ?? null,
             'ac_origin' => $syncmeta['origin'],
-            'ac_raw_metadata' => $metadata,
+            'ac_raw_metadata' => $ac_raw_metadata,
         ]);
 
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {
@@ -185,6 +189,63 @@ final class Plugin extends BaseModel
         }
 
         return $instance;
+    }
+
+    /**
+     * @param array<string, mixed> $metadata
+     * @return array<string, mixed>
+     */
+    public static function rewriteMetadata(array $metadata): array
+    {
+        if (($metadata['aspiresync_meta']['origin'] ?? '') !== 'wp_org') {
+            return $metadata;
+        }
+
+        $download_link = self::rewriteDotOrgUrl($metadata['download_link'] ?? '');
+        $versions = array_map(self::rewriteDotOrgUrl(...), $metadata['versions'] ?? []);
+        $banners = array_map(self::rewriteDotOrgUrl(...), $metadata['banners'] ?? []);
+        $icons = array_map(self::rewriteDotOrgUrl(...), $metadata['icons'] ?? []);
+
+        $screenshots = array_map(
+            fn(array $screenshot) => [...$screenshot, 'src' => self::rewriteDotOrgUrl($screenshot['src'] ?? '')],
+            $metadata['screenshots'] ?? [],
+        );
+
+        return [...$metadata, ...compact('download_link', 'versions', 'banners', 'icons', 'screenshots')];
+    }
+
+    private static function rewriteDotOrgUrl(string $url): string
+    {
+        $base = config('app.url') . '/download/';
+
+        // https://downloads.wordpress.org/plugin/elementor.3.26.5.zip
+        // => /download/plugin/elementor.3.26.5.zip
+        if (str_contains($url, '//downloads.')) {
+            return \Safe\preg_replace('#https?://.*?/#i', $base, $url);
+        }
+
+        // https://ps.w.org/elementor/assets/screenshot-1.gif?rev=3005087
+        // => /download/assets/plugin/elementor/3005087/screenshot-1.gif
+        if ($matches = Regex::match('#//ps\.w\.org/(.*?)/assets/(.*?)(?:\?rev=(.*))?$#i', $url)) {
+            $slug = $matches[1];
+            $file = $matches[2];
+            $revision = $matches[3] ?? 'head';
+            return $base . "assets/plugin/$slug/$revision/$file";
+        }
+
+        // https://s.w.org/plugins/geopattern-icon/addi-simple-slider_c8bcb2.svg
+        // => /download/gp-icon/plugin/addi-simple-slider/head/addi-simple-slider_c8bcb2.svg
+        if ($matches = Regex::match(
+            '#//s\.w\.org/plugins/geopattern-icon/((.*?)(?:_[^.]+)?\.svg)(?:\?rev=(.*))?$#i',
+            $url,
+        )) {
+            $file = $matches[1];
+            $slug = $matches[2];
+            $revision = $matches[3] ?? 'head';
+            return $base . "gp-icon/plugin/$slug/$revision/$file";
+        }
+
+        return $url;
     }
 
     //endregion

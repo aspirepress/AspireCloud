@@ -3,6 +3,7 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
+use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -103,6 +104,9 @@ final class Theme extends BaseModel
         $syncmeta['type'] === 'theme' or throw new InvalidArgumentException("invalid type '{$syncmeta['type']}'");
         $syncmeta['status'] === 'open' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
 
+        $ac_raw_metadata = $metadata;
+        $metadata = self::rewriteMetadata($metadata);
+
         $authorData = $metadata['author'];
         $author = Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
 
@@ -137,7 +141,7 @@ final class Theme extends BaseModel
             'is_community' => $metadata['is_community'] ?? false,
             'external_repository_url' => $trunc($metadata['external_repository_url'] ?? null),
             'ac_origin' => $syncmeta['origin'],
-            'ac_raw_metadata' => $metadata,
+            'ac_raw_metadata' => $ac_raw_metadata,
         ]);
 
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {
@@ -148,6 +152,35 @@ final class Theme extends BaseModel
             $instance->tags()->saveMany($themeTags);
         }
         return $instance;
+    }
+
+    /**
+     * @param array<string, mixed> $metadata
+     * @return array<string, mixed>
+     */
+    public static function rewriteMetadata(array $metadata): array
+    {
+        if (($metadata['aspiresync_meta']['origin'] ?? '') !== 'wp_org') {
+            return $metadata;
+        }
+
+        $base = config('app.url') . '/download/';
+        $rewrite = fn(string $url) => \Safe\preg_replace('#https?://.*?/#i', $base, $url);
+
+        $download_link = $rewrite($metadata['download_link'] ?? '');
+        $versions = array_map($rewrite, $metadata['versions'] ?? []);
+
+        // //ts.w.org/wp-content/themes/abhokta/screenshot.png?ver=1.0.0
+        // /download/assets/theme/abhokta/1.0.0/screenshot.png
+        $screenshot_url = $metadata['screenshot_url'] ?? '';
+        if ($matches = Regex::match('#^.*?/themes/(.*?)/(.*?)(?:\?ver=(.*))?$#i', $screenshot_url)) {
+            $slug = $matches[1];
+            $file = $matches[2];
+            $revision = $matches[3] ?? 'head';
+            $screenshot_url = $base . "assets/theme/$slug/$revision/$file";
+        }
+
+        return [...$metadata, ...compact('download_link', 'versions', 'screenshot_url')];
     }
 
     //endregion
