@@ -10,13 +10,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class RouteTestCommand extends Command
 {
     protected $signature = 'route:test {uri}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
+    protected $description = 'Match path against routes';
 
     public function handle(): int
     {
