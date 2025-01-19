@@ -102,10 +102,10 @@ check: lint test ## Run lint and unit tests
 fix: fix-style ## Run automated code fixes
 
 style: ## Run code style checks
-	bin/dcrun vendor/bin/php-cs-fixer check
+	bin/dcrun vendor/bin/pint --test
 
 fix-style: ## Run code style fixes
-	bin/dcrun vendor/bin/php-cs-fixer fix
+	bin/dcrun vendor/bin/pint
 
 create-migration: ## Create a new database migration
 	bin/dcrun php artisan make:migration
