@@ -105,7 +105,7 @@ describe('Sync Themes', function () {
             ->and($theme->tags['blog'])->toBe('Blog')
             ->and($theme->tags['full-width-template'])->toBe('Full width template')
             ->and($theme->tags['one-column'])->toBe('One column')
-            ->and($theme->requires)->toBeFalse()
+            ->and($theme->requires)->toBeNull()
             ->and($theme->requires_php)->toBe('5.6')
             ->and($theme->is_commercial)->toBeFalse()
             ->and($theme->external_support_url)->toBe('')

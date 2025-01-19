@@ -2,6 +2,7 @@
 
 namespace App\Models\WpOrg;
 
+use App\Data\Props\ThemeProps;
 use App\Models\BaseModel;
 use App\Utils\Regex;
 use Carbon\Carbon;
@@ -76,7 +77,7 @@ final class Theme extends BaseModel
             'is_community' => 'boolean',
             'external_repository_url' => 'string',
             'ac_origin' => 'string',
-            'ac_created' => 'datetime_immutable',
+            'ac_created' => 'immutable_datetime',
             'ac_raw_metadata' => 'array',
         ];
     }
@@ -97,7 +98,23 @@ final class Theme extends BaseModel
 
     //region Constructors
 
-    /** @param array<string,mixed> $metadata */
+    /**
+     * @param ThemeProps|array<string, mixed> $props
+     */
+    public static function create(array|ThemeProps $props): self
+    {
+        if (is_array($props)) {
+            /** @noinspection CallableParameterUseCaseInTypeContextInspection (Data::from is highly magical) */
+            $props = ThemeProps::from($props);
+        }
+        assert($props instanceof ThemeProps);
+        return self::_create($props->toArray());
+    }
+
+    /**
+     * TODO: move to WpOrgThemeRepo
+     * @param array<string,mixed> $metadata
+     */
     public static function fromSyncMetadata(array $metadata): self
     {
         $syncmeta = $metadata['aspiresync_meta'];
@@ -112,7 +129,8 @@ final class Theme extends BaseModel
 
         $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
 
-        $instance = self::create([
+        // TODO: use self::create for validation
+        $instance = self::_create([
             'author_id' => $author->id,
             'slug' => $trunc($metadata['slug']),
             'name' => $trunc($metadata['name']),
@@ -135,7 +153,7 @@ final class Theme extends BaseModel
             'sections' => $metadata['sections'] ?? null,
             'tags' => $metadata['tags'] ?? null,
             'versions' => $metadata['versions'] ?? null,
-            'requires' => $metadata['requires'] ?? null,
+            'requires' => $metadata['requires'] ?: null,
             'is_commercial' => $metadata['is_commercial'] ?? false,
             'external_support_url' => $trunc($metadata['external_support_url'] ?? null),
             'is_community' => $metadata['is_community'] ?? false,

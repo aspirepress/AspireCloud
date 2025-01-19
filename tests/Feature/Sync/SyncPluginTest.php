@@ -96,8 +96,12 @@ describe('Sync Plugins', function () {
             ->toBeInstanceOf(Plugin::class)
             ->and($plugin->slug)->toBe('0-errors')
             ->and($plugin->name)->toBe('0-Errors')
-            ->and($plugin->description)->toStartWith("<p>This plugin makes it easy to work with WordPress with-ought the errors messing up the layout")
-            ->and($plugin->short_description)->toBe('Shows generated php site errors only to the admin via a drop down panel and hides them from the public. Email Alerts the admin of errors.')
+            ->and($plugin->description)->toStartWith(
+                "<p>This plugin makes it easy to work with WordPress with-ought the errors messing up the layout",
+            )
+            ->and($plugin->short_description)->toBe(
+                'Shows generated php site errors only to the admin via a drop down panel and hides them from the public. Email Alerts the admin of errors.',
+            )
             ->and($plugin->author)->toBe('<a href="http://zanto.org/">Ayebare Mucunguzi</a>')
             ->and($plugin->author_profile)->toBe('https://profiles.wordpress.org/brooksx/')
             ->and($plugin->contributors)->toBe([
@@ -109,7 +113,7 @@ describe('Sync Plugins', function () {
             ])
             ->and($plugin->requires)->toBe('3.1')
             ->and($plugin->tested)->toBe('4.1.41')
-            ->and($plugin->requires_php)->toBe('')
+            ->and($plugin->requires_php)->toBeNull()
             ->and($plugin->requires_plugins)->toBeEmpty()
             ->and($plugin->compatibility)->toBeEmpty()
             ->and($plugin->rating)->toBe(100)
@@ -137,7 +141,7 @@ describe('Sync Plugins', function () {
                 'errors' => 'errors',
                 'error_reporting' => 'error_reporting',
             ])
-            ->and($plugin->business_model)->toBe('')
+            ->and($plugin->business_model)->toBeNull()
             ->and($plugin->repository_url)->toBeEmpty()
             ->and($plugin->commercial_support_url)->toBeEmpty()
             ->and($plugin->donate_link)->toBeEmpty()

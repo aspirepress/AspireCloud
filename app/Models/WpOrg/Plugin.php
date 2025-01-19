@@ -2,6 +2,7 @@
 
 namespace App\Models\WpOrg;
 
+use App\Data\Props\PluginProps;
 use App\Models\BaseModel;
 use App\Utils\Regex;
 use Carbon\Carbon;
@@ -111,7 +112,7 @@ final class Plugin extends BaseModel
             'versions' => 'array',
             'upgrade_notice' => 'array',
             'ac_origin' => 'string',
-            'ac_created' => 'datetime_immutable',
+            'ac_created' => 'immutable_datetime',
             'ac_raw_metadata' => 'array',
         ];
     }
@@ -126,7 +127,23 @@ final class Plugin extends BaseModel
 
     //region Constructors
 
-    /** @param array<string,mixed> $metadata */
+    /**
+     * @param PluginProps|array<string, mixed> $props
+     */
+    public static function create(array|PluginProps $props): self
+    {
+        if (is_array($props)) {
+            /** @noinspection CallableParameterUseCaseInTypeContextInspection (Data::from is highly magical) */
+            $props = PluginProps::from($props);
+        }
+        assert($props instanceof PluginProps);
+        return self::_create($props->toArray());
+    }
+
+    /**
+     * TODO: move to WpOrgPluginRepo
+     * @param array<string,mixed> $metadata
+     */
     public static function fromSyncMetadata(array $metadata): self
     {
         $syncmeta = $metadata['aspiresync_meta'];
@@ -138,7 +155,8 @@ final class Plugin extends BaseModel
 
         $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
 
-        $instance = self::create([
+        // TODO: use self::create for validation
+        $instance = self::_create([
             'slug' => $syncmeta['slug'],
             'name' => $trunc($metadata['name'] ?? ''),
             'short_description' => $trunc($metadata['short_description'] ?? '', 150),
@@ -146,30 +164,30 @@ final class Plugin extends BaseModel
             'version' => $metadata['version'],
             'author' => $trunc($metadata['author'] ?? ''),
             'requires' => $metadata['requires'],
-            'requires_php' => $metadata['requires_php'] ?? null,
+            'requires_php' => $metadata['requires_php'] ?: null, // use ?: to convert blank and false to null
             'tested' => $metadata['tested'] ?? '',
             'download_link' => $trunc($metadata['download_link'] ?? '', 1024),
             'added' => Carbon::parse($metadata['added']),
             'last_updated' => ($metadata['last_updated'] ?? null) ? Carbon::parse($metadata['last_updated']) : null,
             'author_profile' => $metadata['author_profile'] ?? null,
-            'rating' => $metadata['rating'] ?? '',
+            'rating' => $metadata['rating'] ?? 0,
             'ratings' => $metadata['ratings'] ?? null,
             'num_ratings' => $metadata['num_ratings'] ?? 0,
             'support_threads' => $metadata['support_threads'] ?? 0,
             'support_threads_resolved' => $metadata['support_threads_resolved'] ?? 0,
             'active_installs' => $metadata['active_installs'] ?? 0,
             'downloaded' => $metadata['downloaded'] ?? '',
-            'homepage' => $metadata['homepage'] ?? null,
+            'homepage' => $metadata['homepage'] ?: null,
             'banners' => $metadata['banners'] ?? null,
-            'donate_link' => $trunc($metadata['donate_link'] ?? null, 1024),
+            'donate_link' => $trunc($metadata['donate_link'] ?: null, 1024),
             'contributors' => $metadata['contributors'] ?? null,
             'icons' => $metadata['icons'] ?? null,
             'source' => $metadata['source'] ?? null,
-            'business_model' => $metadata['business_model'] ?? null,
-            'commercial_support_url' => $trunc($metadata['commercial_support_url'] ?? null, 1024),
-            'support_url' => $trunc($metadata['support_url'] ?? null, 1024),
-            'preview_link' => $trunc($metadata['preview_link'] ?? null, 1024),
-            'repository_url' => $trunc($metadata['repository_url'] ?? null, 1024),
+            'business_model' => $metadata['business_model'] ?: null,
+            'commercial_support_url' => $trunc($metadata['commercial_support_url'] ?: null, 1024),
+            'support_url' => $trunc($metadata['support_url'] ?: null, 1024),
+            'preview_link' => $trunc($metadata['preview_link'] ?: null, 1024),
+            'repository_url' => $trunc($metadata['repository_url'] ?: null, 1024),
             'requires_plugins' => $metadata['requires_plugins'] ?? null,
             'compatibility' => $metadata['compatibility'] ?? null,
             'screenshots' => $metadata['screenshots'] ?? null,

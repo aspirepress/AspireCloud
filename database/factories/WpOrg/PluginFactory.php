@@ -24,8 +24,8 @@ class PluginFactory extends Factory
             'description' => $this->faker->paragraphs(3, true),
             'version' => $this->faker->semver(),
             'author' => $this->faker->name(),
-            'requires' => 'WordPress ' . $this->faker->semver(),
-            'requires_php' => '>=' . $this->faker->numberBetween(7, 8) . '.0',
+            'requires' => $this->faker->semver(),
+            'requires_php' => $this->faker->randomElement(['7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3']),
             'tested' => 'WordPress ' . $this->faker->semver(),
             'download_link' => $this->faker->url(),
             'added' => $this->faker->dateTimeBetween('-2 years'),
@@ -70,6 +70,8 @@ class PluginFactory extends Factory
             'sections' => $this->generateSections(),
             'versions' => $this->generateVersions(),
             'upgrade_notice' => $this->generateUpgradeNotices(),
+            'ac_origin' => $this->faker->randomElement(['wp_org', 'packagist', 'git', 'github']),
+            'ac_created' => $this->faker->dateTimeBetween('-1 month'),
         ];
     }
 
@@ -189,8 +191,8 @@ class PluginFactory extends Factory
             $versions[$version] = [
                 'url' => $this->faker->url(),
                 'package' => $this->faker->url(),
-                'requires' => 'WordPress ' . $this->faker->semver(),
-                'requires_php' => '>=' . $this->faker->numberBetween(7, 8) . '.0',
+                'requires' => $this->faker->semver(),
+                'requires_php' => $this->faker->randomElement(['7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3']),
                 'released' => $this->faker->dateTime()->format('Y-m-d'),
             ];
         }

@@ -11,4 +11,12 @@ abstract class BaseModel extends Model
     public $timestamps = false;
 
     protected $guarded = [];    // everything is fillable by default
+
+    /**
+     * @param array<string, mixed> $attributes
+     */
+    protected static function _create(array $attributes = []): static
+    {
+        return static::query()->create($attributes);
+    }
 }

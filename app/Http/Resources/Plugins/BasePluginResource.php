@@ -30,12 +30,12 @@ abstract class BasePluginResource extends JsonResource
     }
 
     /**
-     * @param array<int> $ratings
+     * @param int[]|null $ratings
      * @return Collection<string, int>
      */
-    protected function mapRatings(array $ratings): Collection
+    protected function mapRatings(?array $ratings): Collection
     {
-        return collect($ratings)
+        return collect($ratings ?? [])
             ->mapWithKeys(fn($value, $key) => [(string) $key => $value]);
     }
 }
