@@ -28,7 +28,6 @@ class BarePluginRepo implements PluginRepo
         string $requires,
         string $tested,
         string $download_link,
-        string $repository_url,
         array $extra = [],
     ): Plugin {
         $now = now();
@@ -49,7 +48,6 @@ class BarePluginRepo implements PluginRepo
                 extra: [
                     'ac_created' => $now,
                     'ac_origin' => $this->origin(),
-                    'repository_url' => $repository_url,
                     ...$extra,
                 ],
             ),

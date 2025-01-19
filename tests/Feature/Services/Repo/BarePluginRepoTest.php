@@ -16,7 +16,9 @@ test('Bare Plugin Repo', function () {
         requires: 'test',
         tested: 'test',
         download_link: 'gopher://test',
-        repository_url: 'wais://test',
+        extra: [
+            'repository_url' => 'wais://test',
+        ],
     );
     $then = now()->subSeconds(10);
     $now = now();

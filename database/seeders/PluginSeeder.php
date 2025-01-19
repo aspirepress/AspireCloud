@@ -32,8 +32,8 @@ class PluginSeeder extends Seeder
             requires: '5.3',
             tested: '6.7',
             download_link: "https://github.com/aspirepress/aspireupdate/archive/refs/tags/$au_version.zip",
-            repository_url: 'https://github.com/aspirepress/aspireupdate',
             extra: [
+                'repository_url' => 'https://github.com/aspirepress/aspireupdate',
                 'homepage' => 'https://aspirepress.org/',
                 'requires_php' => '7.4',
             ],
