@@ -15,6 +15,21 @@ use Spatie\LaravelData\Optional;
 
 final class PluginProps extends ModelProps
 {
+    /**
+     * @param Optional|array<string, mixed>|null $ratings
+     * @param Optional|array<string, mixed>|null $banners
+     * @param Optional|array<string, mixed>|null $contributors
+     * @param Optional|array<string, mixed>|null $icons
+     * @param Optional|array<string, mixed>|null $source
+     * @param Optional|array<string, mixed>|null $requires_plugins
+     * @param Optional|array<string, mixed>|null $compatibility
+     * @param Optional|array<string, mixed>|null $screenshots
+     * @param Optional|array<string, mixed>|null $sections
+     * @param Optional|array<string, mixed>|null $versions
+     * @param Optional|array<string, mixed>|null $upgrade_notice
+     * @param Optional|array<string, mixed> $tags
+     * @param Optional|array<string, mixed>|null $ac_raw_metadata
+     */
     public function __construct(
         #[Uuid]
         public readonly Optional|string $id,
@@ -130,6 +145,9 @@ final class PluginProps extends ModelProps
         public readonly Optional|array|null $ac_raw_metadata,
     ) {}
 
+    /**
+     * @param array<string, mixed> $extra
+     */
     public static function make(
         string $slug,
         string $name,

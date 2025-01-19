@@ -127,6 +127,9 @@ final class Plugin extends BaseModel
 
     //region Constructors
 
+    /**
+     * @param PluginProps|array<string, mixed> $props
+     */
     public static function create(array|PluginProps $props): self
     {
         if (is_array($props)) {

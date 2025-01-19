@@ -97,6 +97,10 @@ final class Theme extends BaseModel
     //endregion
 
     //region Constructors
+
+    /**
+     * @param ThemeProps|array<string, mixed> $props
+     */
     public static function create(array|ThemeProps $props): self
     {
         if (is_array($props)) {

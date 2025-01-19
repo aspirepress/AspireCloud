@@ -6,7 +6,5 @@ namespace App\Contracts\Repo;
 
 use App\Models\WpOrg\Theme;
 
-/**
- * @template-implements Repo<Theme>
- */
+/** @extends Repo<Theme> */
 interface ThemeRepo extends Repo {}

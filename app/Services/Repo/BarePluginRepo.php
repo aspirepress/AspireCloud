@@ -16,6 +16,9 @@ class BarePluginRepo implements PluginRepo
         return 'bare';
     }
 
+    /**
+     * @param array<string, mixed> $extra
+     */
     public function createPlugin(
         string $slug,
         string $name,

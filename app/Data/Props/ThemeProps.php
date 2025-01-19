@@ -15,6 +15,14 @@ use Spatie\LaravelData\Optional;
 
 final class ThemeProps extends ModelProps
 {
+    /**
+     * @param Optional|array<string, mixed>|null $ratings
+     * @param Optional|array<string, mixed>|null $sections
+     * @param Optional|array<string, mixed>|null $versions
+     * @param Optional|array<string, mixed>|null $requires
+     * @param Optional|array<string, mixed> $tags
+     * @param Optional|array<string, mixed>|null $ac_raw_metadata
+     */
     public function __construct(
         #[Uuid]
         public readonly Optional|string $id,
@@ -102,6 +110,9 @@ final class ThemeProps extends ModelProps
         public readonly Optional|array|null $ac_raw_metadata,
     ) {}
 
+    /**
+     * @param array<string, mixed> $extra
+     */
     public static function make(
         string $slug,
         string $name,

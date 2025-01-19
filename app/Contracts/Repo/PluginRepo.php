@@ -6,7 +6,5 @@ namespace App\Contracts\Repo;
 
 use App\Models\WpOrg\Plugin;
 
-/**
- * @template-implements Repo<Plugin>
- */
+/** @extends Repo<Plugin> */
 interface PluginRepo extends Repo {}
