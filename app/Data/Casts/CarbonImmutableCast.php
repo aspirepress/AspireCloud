@@ -7,7 +7,6 @@ use DateTimeZone;
 use Override;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Casts\Uncastable;
-use Spatie\LaravelData\Exceptions\CannotCastDate;
 
 class CarbonImmutableCast extends DateTimeInterfaceCast
 {
