@@ -72,7 +72,7 @@ class SecretKeyController extends Controller
     {
         return implode(array_map(
             static fn() => self::VALID_KEY_CHARACTERS[random_int(0, $length)],
-            array_fill(0, $length, null)
+            array_fill(0, $length, null),
         ));
     }
 }

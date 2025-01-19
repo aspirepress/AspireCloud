@@ -64,14 +64,14 @@ class PluginInformation_1_2_Controller extends Controller
             search: $request->query('search'),
             tag: $request->query('tag'),
             author: $request->query('author'),
-            browse: $request->getBrowse()
+            browse: $request->getBrowse(),
         );
 
         return response()->json(new PluginCollection(
             PluginResource::collection($result['plugins']),
             $result['page'],
             $result['totalPages'],
-            $result['total']
+            $result['total'],
         ));
     }
 

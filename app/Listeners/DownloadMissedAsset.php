@@ -17,7 +17,7 @@ class DownloadMissedAsset
             slug: $event->slug,
             file: $event->file,
             upstreamUrl: $event->upstreamUrl,
-            revision: $event->revision
+            revision: $event->revision,
         ));
     }
 }

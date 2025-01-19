@@ -275,7 +275,7 @@ class PluginFactory extends Factory
                     [
                         'id' => $this->faker->uuid(),
                         'name' => $tagName,
-                    ]
+                    ],
                 );
             });
 

@@ -22,7 +22,7 @@ class PluginUpdateCheck_1_1_Controller extends Controller
 
         $result = $this->pluginService->processPlugins(
             plugins: $pluginsData['plugins'],
-            includeAll: $request->boolean('all')
+            includeAll: $request->boolean('all'),
         );
 
         $response = [

@@ -46,9 +46,9 @@ function assertWpThemeAPIStructure1_1_query_themes($response)
             'themes',
             fn($json) => $json->each(
                 fn($theme) => assertWpThemeBaseStructure($theme)
-                    ->whereType('author', 'string')
-            )
-        )
+                    ->whereType('author', 'string'),
+            ),
+        ),
     );
 }
 
@@ -65,9 +65,9 @@ function assertWpThemeAPIStructure1_2_query_themes($response)
                     ->has('external_support_url')
                     ->has('is_community')
                     ->has('external_repository_url')
-                    ->whereType('author', 'array')
-            )
-        )
+                    ->whereType('author', 'array'),
+            ),
+        ),
     );
 }
 
@@ -75,7 +75,7 @@ function assertWpThemeAPIStructure1_1_theme_information($response)
 {
     return $response->assertJson(
         fn(AssertableJson $json) => assertWpThemeInfoBaseStructure($json)
-            ->whereType('author', 'string')
+            ->whereType('author', 'string'),
     );
 }
 
@@ -91,7 +91,7 @@ function assertWpThemeAPIStructure1_2_theme_information($response)
             ->has('external_repository_url')
             ->has('reviews_url')
             ->has('creation_time')
-            ->whereType('author', 'array')
+            ->whereType('author', 'array'),
     );
 }
 

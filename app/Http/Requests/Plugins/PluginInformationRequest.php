@@ -41,7 +41,7 @@ class PluginInformationRequest extends FormRequest
         throw new HttpResponseException(
             response()->json([
                 'error' => 'Slug is required',
-            ], 400)
+            ], 400),
         );
     }
 }
