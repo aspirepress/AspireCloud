@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 use App\Services\Repo\BarePluginRepo;
 
 test('Git Plugin Repo', function () {

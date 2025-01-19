@@ -2,7 +2,6 @@
 
 namespace App\Models\WpOrg;
 
-use App\Data\Props\PluginProps;
 use App\Data\Props\ThemeProps;
 use App\Models\BaseModel;
 use App\Utils\Regex;
@@ -107,7 +106,6 @@ final class Theme extends BaseModel
         assert($props instanceof ThemeProps);
         return self::_create($props->toArray());
     }
-
 
     /**
      * TODO: move to WpOrgThemeRepo

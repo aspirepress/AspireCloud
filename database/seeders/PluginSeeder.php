@@ -2,12 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Auth\Role;
-use App\Models\User;
 use App\Models\WpOrg\Plugin;
 use App\Services\Repo\BarePluginRepo;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class PluginSeeder extends Seeder
 {
