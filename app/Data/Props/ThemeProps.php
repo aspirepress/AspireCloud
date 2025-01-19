@@ -101,4 +101,25 @@ final class ThemeProps extends ModelProps
 
         public readonly Optional|array|null $ac_raw_metadata,
     ) {}
+
+    public static function make(
+        string $slug,
+        string $name,
+        string $version,
+        string $description,
+        string $download_link,
+        array $extra = [],
+    ): self {
+        $args = [
+            ...$extra,
+            ...compact(
+                'slug',
+                'name',
+                'version',
+                'description',
+                'download_link',
+            ),
+        ];
+        return self::from($args);
+    }
 }

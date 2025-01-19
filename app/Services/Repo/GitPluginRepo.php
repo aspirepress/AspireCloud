@@ -27,13 +27,14 @@ class GitPluginRepo implements PluginRepo
         string $tested,
         string $download_link,
         string $repository_url,
+        array $extra = [],
     ): Plugin {
         $now = now();
 
         $trunc = fn(string $str, int $len = 150) => Str::substr($str, 0, 255);
 
         return Plugin::create(
-            PluginProps::minimal(
+            PluginProps::make(
                 slug: $trunc($slug),
                 name: $trunc($name),
                 short_description: $trunc($short_description, 150),
@@ -49,6 +50,7 @@ class GitPluginRepo implements PluginRepo
                     'ac_created' => $now,
                     'ac_origin' => $this->origin(),
                     'repository_url' => $repository_url,
+                    ...$extra,
                 ],
             ),
         );

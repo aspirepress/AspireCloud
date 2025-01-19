@@ -130,7 +130,7 @@ final class PluginProps extends ModelProps
         public readonly Optional|array|null $ac_raw_metadata,
     ) {}
 
-    public static function minimal(
+    public static function make(
         string $slug,
         string $name,
         string $short_description,
@@ -145,6 +145,7 @@ final class PluginProps extends ModelProps
         array $extra = [],
     ): self {
         $args = [
+            ...$extra,
             ...compact(
                 'slug',
                 'name',
@@ -158,7 +159,6 @@ final class PluginProps extends ModelProps
                 'added',
                 'last_updated',
             ),
-            ...$extra,
         ];
         return self::from($args);
     }
