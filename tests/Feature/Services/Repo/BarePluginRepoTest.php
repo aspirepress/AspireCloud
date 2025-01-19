@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 
-use App\Services\Repo\GitPluginRepo;
+use App\Services\Repo\BarePluginRepo;
 
 test('Git Plugin Repo', function () {
-    $repo = new GitPluginRepo();
+    $repo = new BarePluginRepo();
     $plugin = $repo->createPlugin(
         slug: 'test',
         name: 'test',
@@ -21,7 +21,7 @@ test('Git Plugin Repo', function () {
     );
     $then = now()->subSeconds(10);
     $now = now();
-    expect($plugin->ac_origin)->toBe('git');
+    expect($plugin->ac_origin)->toBe('bare');
     expect($plugin->added)->toBeBetween($then, $now);
     expect($plugin->last_updated)->toBeBetween($then, $now);
     expect($plugin->ac_created)->toBeBetween($then, $now);

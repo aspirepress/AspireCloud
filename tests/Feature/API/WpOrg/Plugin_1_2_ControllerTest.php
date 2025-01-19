@@ -4,6 +4,10 @@ use App\Models\WpOrg\ClosedPlugin;
 use App\Models\WpOrg\Plugin;
 use Carbon\Carbon;
 
+beforeEach(function () {
+    Plugin::truncate();
+});
+
 it('returns 400 when slug is missing', function () {
     Plugin::factory(10)->create();
     $response = makeApiRequest('GET', '/plugins/info/1.2?action=plugin_information');

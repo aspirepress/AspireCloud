@@ -9,11 +9,11 @@ use App\Data\Props\PluginProps;
 use App\Models\WpOrg\Plugin;
 use Illuminate\Support\Str;
 
-class GitPluginRepo implements PluginRepo
+class BarePluginRepo implements PluginRepo
 {
     public function origin(): string
     {
-        return 'git';
+        return 'bare';
     }
 
     public function createPlugin(
