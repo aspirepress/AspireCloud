@@ -62,7 +62,7 @@ final class PluginProps extends ModelProps
         public readonly string $tested,
 
         #[Url]
-        #[Max(2048)]
+        #[Max(1024)]
         public readonly string $download_link,
 
         public readonly DateTimeInterface $added,
@@ -70,6 +70,7 @@ final class PluginProps extends ModelProps
         public readonly ?DateTimeInterface $last_updated,
 
         #[Url]
+        #[Max(1024)]
         public readonly Optional|string|null $author_profile,
 
         #[Between(0, 100)]
@@ -93,11 +94,13 @@ final class PluginProps extends ModelProps
         public readonly Optional|int $downloaded,
 
         #[Url]
+        #[Max(1024)]
         public readonly Optional|string|null $homepage,
 
         public readonly Optional|array|null $banners,
 
         #[Url]
+        #[Max(1024)]
         public readonly Optional|string|null $donate_link,
 
         public readonly Optional|array|null $contributors,
@@ -110,15 +113,19 @@ final class PluginProps extends ModelProps
         public readonly Optional|string|null $business_model,
 
         #[Url]
+        #[Max(1024)]
         public readonly Optional|string|null $commercial_support_url,
 
         #[Url]
+        #[Max(1024)]
         public readonly Optional|string|null $support_url,
 
         #[Url]
+        #[Max(1024)]
         public readonly Optional|string|null $preview_link,
 
         #[Url]
+        #[Max(1024)]
         public readonly Optional|string|null $repository_url,
 
         public readonly Optional|array|null $requires_plugins,

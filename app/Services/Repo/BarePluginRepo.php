@@ -7,7 +7,6 @@ namespace App\Services\Repo;
 use App\Contracts\Repo\PluginRepo;
 use App\Data\Props\PluginProps;
 use App\Models\WpOrg\Plugin;
-use Illuminate\Support\Str;
 
 class BarePluginRepo implements PluginRepo
 {
@@ -34,16 +33,14 @@ class BarePluginRepo implements PluginRepo
     ): Plugin {
         $now = now();
 
-        $trunc = fn(string $str, int $len = 150) => Str::substr($str, 0, 255);
-
         return Plugin::create(
             PluginProps::make(
-                slug: $trunc($slug),
-                name: $trunc($name),
-                short_description: $trunc($short_description, 150),
-                description: $trunc($description, 1024 * 16),
-                version: Str::substr($version, 0, 255),
-                author: Str::substr($author, 0, 255),
+                slug: $slug,
+                name: $name,
+                short_description: $short_description,
+                description: $description,
+                version: $version,
+                author: $author,
                 requires: $requires,
                 tested: $tested,
                 download_link: $download_link,

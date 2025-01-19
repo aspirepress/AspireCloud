@@ -7,6 +7,7 @@ namespace App\Data\Props;
 use App\Data\WpOrg\Author;
 use Carbon\CarbonImmutable;
 use Spatie\LaravelData\Attributes\Validation\Between;
+use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
 use Spatie\LaravelData\Attributes\Validation\RequiredWithout;
 use Spatie\LaravelData\Attributes\Validation\Url;
@@ -40,6 +41,7 @@ final class ThemeProps extends ModelProps
         public readonly string $version,
 
         #[Url]
+        #[Max(1024)]
         public readonly string $download_link,
 
         #[Between(1, 32)]
@@ -50,9 +52,11 @@ final class ThemeProps extends ModelProps
         public readonly Optional|CarbonImmutable $creation_time,
 
         #[Url]
+        #[Max(1024)]
         public readonly Optional|string|null $preview_url,
 
         #[Url]
+        #[Max(1024)]
         public readonly Optional|string|null $screenshot_url,
 
         public readonly Optional|array|null $ratings,
@@ -64,6 +68,7 @@ final class ThemeProps extends ModelProps
         public readonly Optional|int $num_ratings,
 
         #[Url]
+        #[Max(1024)]
         public readonly Optional|string|null $reviews_url,
 
         #[Min(0)]
@@ -73,6 +78,7 @@ final class ThemeProps extends ModelProps
         public readonly Optional|int $active_installs,
 
         #[Url]
+        #[Max(1024)]
         public readonly Optional|string|null $homepage,
 
         public readonly Optional|array|null $sections,
@@ -84,11 +90,13 @@ final class ThemeProps extends ModelProps
         public readonly Optional|bool $is_commercial,
 
         #[Url]
+        #[Max(1024)]
         public readonly Optional|string|null $external_support_url,
 
         public readonly Optional|bool $is_community,
 
         #[Url]
+        #[Max(1024)]
         public readonly Optional|string|null $external_repository_url,
 
         // associations
