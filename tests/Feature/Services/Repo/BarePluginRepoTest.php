@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Services\Repo\BarePluginRepo;
 
-test('Git Plugin Repo', function () {
+test('Bare Plugin Repo', function () {
     $repo = new BarePluginRepo();
     $plugin = $repo->createPlugin(
         slug: 'test',
