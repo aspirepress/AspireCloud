@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Services\Repo;
 
 use App\Contracts\Repo\PluginRepo;
+use App\Data\Props\PluginProps;
 use App\Models\WpOrg\Plugin;
+use Illuminate\Support\Str;
 
 class GitPluginRepo implements PluginRepo
 {
@@ -14,48 +16,41 @@ class GitPluginRepo implements PluginRepo
         return 'git';
     }
 
-    /**
-     * @param array<string, mixed> $attributes
-     */
-    public function createPlugin(array $attributes): Plugin
-    {
-        $slug = $attributes['slug'];
-        $name = $attributes['name'];
-        $short_description = $attributes['short_description'];
-        $description = $attributes['description'];
-        $version = $attributes['version'];
-        $author = $attributes['author'];
-        $requires = $attributes['requires'];
-        $tested = $attributes['tested'];
-        $download_link = $attributes['download_link'];
-        $added = $attributes['added'];
-        $ac_origin = $this->origin();
+    public function createPlugin(
+        string $slug,
+        string $name,
+        string $short_description,
+        string $description,
+        string $version,
+        string $author,
+        string $requires,
+        string $tested,
+        string $download_link,
+        string $repository_url,
+    ): Plugin {
+        $now = now();
+
+        $trunc = fn(string $str, int $len = 150) => Str::substr($str, 0, 255);
 
         return Plugin::create(
-            compact(
-                'slug',
-                'name',
-                'short_description',
-                'description',
-                'version',
-                'author',
-                'requires',
-                'tested',
-                'download_link',
-                'added',
-                'ac_origin',
+            PluginProps::minimal(
+                slug: $trunc($slug),
+                name: $trunc($name),
+                short_description: $trunc($short_description, 150),
+                description: $trunc($description, 1024 * 16),
+                version: Str::substr($version, 0, 255),
+                author: Str::substr($author, 0, 255),
+                requires: $requires,
+                tested: $tested,
+                download_link: $download_link,
+                added: $now,
+                last_updated: $now,
+                extra: [
+                    'ac_created' => $now,
+                    'ac_origin' => $this->origin(),
+                    'repository_url' => $repository_url,
+                ],
             ),
         );
     }
 }
-
-//     slug
-//     name
-//     short_description
-//     description
-//     version
-//     author
-//     requires
-//     tested
-//     download_link
-//     added

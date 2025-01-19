@@ -137,7 +137,10 @@ final class Plugin extends BaseModel
         return self::_create($props->toArray());
     }
 
-    /** @param array<string,mixed> $metadata */
+    /**
+     * TODO: move to WpOrgPluginRepo
+     * @param array<string,mixed> $metadata
+     */
     public static function fromSyncMetadata(array $metadata): self
     {
         $syncmeta = $metadata['aspiresync_meta'];
@@ -149,7 +152,8 @@ final class Plugin extends BaseModel
 
         $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
 
-        $instance = self::create([
+        // TODO: use self::create for validation
+        $instance = self::_create([
             'slug' => $syncmeta['slug'],
             'name' => $trunc($metadata['name'] ?? ''),
             'short_description' => $trunc($metadata['short_description'] ?? '', 150),

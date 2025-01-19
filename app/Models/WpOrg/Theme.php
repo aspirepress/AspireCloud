@@ -109,7 +109,10 @@ final class Theme extends BaseModel
     }
 
 
-    /** @param array<string,mixed> $metadata */
+    /**
+     * TODO: move to WpOrgThemeRepo
+     * @param array<string,mixed> $metadata
+     */
     public static function fromSyncMetadata(array $metadata): self
     {
         $syncmeta = $metadata['aspiresync_meta'];
@@ -124,7 +127,8 @@ final class Theme extends BaseModel
 
         $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
 
-        $instance = self::create([
+        // TODO: use self::create for validation
+        $instance = self::_create([
             'author_id' => $author->id,
             'slug' => $trunc($metadata['slug']),
             'name' => $trunc($metadata['name']),
