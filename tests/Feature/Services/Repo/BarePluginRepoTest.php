@@ -25,6 +25,6 @@ test('Git Plugin Repo', function () {
     expect($plugin->last_updated)->toBeBetween($then, $now);
     expect($plugin->ac_created)->toBeBetween($then, $now);
     expect($plugin->ac_raw_metadata)->toBeNull();
-    expect($plugin->download_link)->toBe('gopher://test'); // invalid url becomes null
-    expect($plugin->repository_url)->toBe('wais://test'); // invalid url becomes null
+    expect($plugin->download_link)->toBe('gopher://test');
+    expect($plugin->repository_url)->toBe('wais://test');
 });
