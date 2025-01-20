@@ -29,6 +29,6 @@ jobs:
 
       - name: Run tests
         run: |
-          vendor/bin/php-cs-fixer check
+          vendor/bin/pint --test
           vendor/bin/phpstan --memory-limit=1G analyse
           php artisan test tests/Unit
