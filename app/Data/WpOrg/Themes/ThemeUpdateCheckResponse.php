@@ -27,7 +27,7 @@ class ThemeUpdateCheckResponse extends Data
         return new self(
             themes: ThemeUpdateData::fromModelCollection($themes),
             no_update: ThemeUpdateData::fromModelCollection($noUpdate),
-            translations: []
+            translations: [],
         );
     }
 }

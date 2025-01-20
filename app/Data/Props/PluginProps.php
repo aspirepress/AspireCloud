@@ -33,111 +33,74 @@ final class PluginProps extends ModelProps
     public function __construct(
         #[Uuid]
         public readonly Optional|string $id,
-
         #[Between(1, 255)]
         public readonly string $slug,
-
         #[Between(1, 255)]
         public readonly string $name,
-
         #[Between(0, 150)]
         public readonly string $short_description,
-
         #[Between(1, 1024 * 128)]
         public readonly string $description,
-
         #[Between(1, 32)]
         public readonly string $version,
-
         #[Between(1, 255)]
         public readonly string $author,
-
         #[Between(1, 32)]
         public readonly string $requires,
-
         #[Between(1, 32)]
         public readonly Optional|string|null $requires_php,
-
         #[Between(1, 32)]
         public readonly string $tested,
-
         #[Url]
         #[Max(1024)]
         public readonly string $download_link,
-
         public readonly DateTimeInterface $added,
-
         public readonly ?DateTimeInterface $last_updated,
-
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $author_profile,
-
         #[Between(0, 100)]
         public readonly Optional|int $rating,
-
         public readonly Optional|array|null $ratings,
-
         #[Min(0)]
         public readonly Optional|int $num_ratings,
-
         #[Min(0)]
         public readonly Optional|int $support_threads,
-
         #[Min(0)]
         public readonly Optional|int $support_threads_resolved,
-
         #[Min(0)]
         public readonly Optional|int $active_installs,
-
         #[Min(0)]
         public readonly Optional|int $downloaded,
-
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $homepage,
-
         public readonly Optional|array|null $banners,
-
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $donate_link,
-
         public readonly Optional|array|null $contributors,
-
         public readonly Optional|array|null $icons,
-
         public readonly Optional|array|null $source,
-
         #[Max(255)]
         public readonly Optional|string|null $business_model,
-
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $commercial_support_url,
-
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $support_url,
-
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $preview_link,
-
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $repository_url,
-
         public readonly Optional|array|null $requires_plugins,
-
         public readonly Optional|array|null $compatibility,
-
         public readonly Optional|array|null $screenshots,
-
         public readonly Optional|array|null $sections,
-
         public readonly Optional|array|null $versions,
-
         public readonly Optional|array|null $upgrade_notice,
 
         // associations
@@ -146,9 +109,7 @@ final class PluginProps extends ModelProps
         // AC-specific
         #[Between(1, 32)]
         public readonly Optional|string $ac_origin,
-
         public readonly Optional|CarbonImmutable|null $ac_created,
-
         public readonly Optional|array|null $ac_raw_metadata,
     ) {}
 

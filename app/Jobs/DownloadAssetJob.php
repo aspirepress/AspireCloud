@@ -60,7 +60,12 @@ class DownloadAssetJob implements ShouldQueue
 
         Log::info(
             "Created new Asset for {$this->slug}$revstr",
-            ['asset_id' => $asset->id, 'local_path' => $localPath, 'slug' => $this->slug, 'revision' => $this->revision]
+            [
+                'asset_id' => $asset->id,
+                'local_path' => $localPath,
+                'slug' => $this->slug,
+                'revision' => $this->revision,
+            ],
         );
     }
 

@@ -46,7 +46,7 @@ class PluginUpdateRequest extends FormRequest
             if (!isset($plugins['plugins']) || !is_array($plugins['plugins'])) {
                 $validator->errors()->add(
                     'plugins',
-                    'The plugins JSON must contain a "plugins" array.'
+                    'The plugins JSON must contain a "plugins" array.',
                 );
             }
         });

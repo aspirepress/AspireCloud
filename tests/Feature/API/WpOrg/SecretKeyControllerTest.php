@@ -24,9 +24,9 @@ function validateKeys(string $content, array $expectedKeyNames, string $validKey
             ->and(preg_match(
                 '/^define\(\'' . preg_quote(
                     $keyName,
-                    '/'
+                    '/',
                 ) . '\',\s+\'[^\']+\'\);$/',
-                $matches[0]
+                $matches[0],
             ))->toBe(1);
     }
 }
@@ -51,7 +51,7 @@ it(
         expect(explode("\n", $content))->toHaveCount($expectedKeys + 1);
 
         validateKeys($content, $expectedKeyNames, $validKeys);
-    }
+    },
 )->with([
     '1.0 version' => ['1.0', 1],
     '1.1 version' => ['1.1', 4],
