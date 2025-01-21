@@ -62,7 +62,7 @@ $user ??= auth()->user();
     <main class="homepage">
         <div class="message">
             <p>
-                Welcome to the AspireCloud API, a service of <a href="https://www.aspirepress.com">AspirePress</a>.
+                Welcome to the AspireCloud API, a service of <a href="https://www.aspirepress.org">AspirePress</a>.
             </p>
             <p>
                 Right now, we're currently in beta testing, but anyone can join.
