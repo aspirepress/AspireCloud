@@ -1,0 +1,17 @@
+.cache/
+.github/
+.idea/
+bruno/
+meta/
+node_modules/
+tests/
+tmp/
+vendor/
+
+storage/
+!storage/logs/.gitignore
+
+*.bak
+*.log
+*.swp
+*.tmp

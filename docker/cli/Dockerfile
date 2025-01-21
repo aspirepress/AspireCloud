@@ -9,6 +9,8 @@ RUN install-php-extensions pdo pdo_pgsql zip intl redis
 
 COPY ./docker/cli/php.ini /usr/local/etc/php/php.ini
 
+RUN useradd --create-home --shell /bin/bash app
+
 WORKDIR /app
 
 ################
@@ -19,6 +21,8 @@ RUN apt update && apt install -y nodejs npm
 # Xdebug exists, but is explicitly disabled for cli.  Use docker-compose.override.yml to enable.
 RUN install-php-extensions xdebug
 RUN sed -i 's/^/#/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+USER app
 
 ################
 # FROM base AS prod

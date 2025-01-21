@@ -9,6 +9,8 @@ RUN install-php-extensions pdo pdo_pgsql zip intl redis
 
 COPY ./docker/cli/php.ini /usr/local/etc/php/php.ini
 
+RUN useradd --create-home --shell /bin/bash app
+
 WORKDIR /app
 
 ################
@@ -18,11 +20,17 @@ FROM base AS dev
 RUN install-php-extensions xdebug
 RUN sed -i 's/^/#/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
+USER app
+
 ################
 FROM base AS prod
 
-# TODO: use an external volume
+# no workie, composer can't create /app/vendor ¯\_(ツ)_/¯
+# COPY --chown=app:app . /app
+
 COPY . /app
+RUN chown -R app:app /app
+
+USER app
 
 RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --working-dir=/app
-
