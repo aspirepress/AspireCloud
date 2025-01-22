@@ -36,4 +36,4 @@ USER app
 RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --working-dir=/app
 
 RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --working-dir=/app \
-    && mkdir -p storage/logs storage/app/{public,private} storage/framework/{sessions,views} storage/framework/cache/data
+    && mkdir -p storage/logs storage/app/public storage/app/private storage/framework/sessions storage/framework/views storage/framework/cache/data
