@@ -35,4 +35,5 @@ RUN chown -R app:app /app
 
 USER app
 
-RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --working-dir=/app
+RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --working-dir=/app \
+    && mkdir -p storage/logs storage/app/{public,private} storage/framework/{sessions,views} storage/framework/cache/data

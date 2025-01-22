@@ -4,12 +4,10 @@
 bruno/
 meta/
 node_modules/
+storage/
 tests/
 tmp/
 vendor/
-
-storage/
-!storage/logs/.gitignore
 
 *.bak
 *.log
