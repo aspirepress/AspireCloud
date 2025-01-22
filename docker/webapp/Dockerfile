@@ -10,19 +10,21 @@ RUN install-php-extensions pdo pdo_pgsql zip intl redis
 COPY ./docker/webapp/Caddyfile /etc/caddy/Caddyfile
 COPY ./docker/webapp/php.ini /usr/local/etc/php/php.ini
 
-RUN useradd --create-home --shell /bin/bash app
+# frankenphp sets XDG_CONFIG_HOME=/config and XDG_DATA_HOME=/data, and I won't change these in case they're hardwired
+RUN useradd --create-home --shell /bin/bash app \
+    && chown -R app:app /config /data
 
 WORKDIR /app
 
 ################
 FROM base AS dev
 
-RUN echo test
 RUN apt update && apt install -y git nodejs npm postgresql-client
 
 RUN install-php-extensions xdebug
 
 USER app
+WORKDIR /app
 
 ################
 FROM base AS prod
@@ -34,5 +36,7 @@ COPY . /app
 RUN chown -R app:app /app
 
 USER app
+WORKDIR /app
 
-RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --working-dir=/app
+RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --working-dir=/app \
+    && mkdir -p storage/logs storage/app/public storage/app/private storage/framework/sessions storage/framework/views storage/framework/cache/data
