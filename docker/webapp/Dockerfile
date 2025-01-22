@@ -24,7 +24,6 @@ RUN apt update && apt install -y git nodejs npm postgresql-client
 RUN install-php-extensions xdebug
 
 USER app
-WORKDIR /app
 
 ################
 FROM base AS prod
@@ -35,8 +34,17 @@ FROM base AS prod
 COPY . /app
 RUN chown -R app:app /app
 
+RUN apt update && apt install -y nodejs npm
+
 USER app
-WORKDIR /app
 
 RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --working-dir=/app \
     && mkdir -p storage/logs storage/app/public storage/app/private storage/framework/sessions storage/framework/views storage/framework/cache/data
+
+RUN npm ci && rm -rf public/build && npm run build
+
+USER root
+
+RUN apt purge -y nodejs npm
+
+USER app
