@@ -17,6 +17,8 @@
         "predis/predis": "^2.3.0",
         "spatie/laravel-data": "^4.11.1",
         "spatie/laravel-permission": "^6.10.1",
+        "symfony/http-client": "^7.2",
+        "symfony/mailgun-mailer": "^7.2",
         "thecodingmachine/safe": "^2.5",
         "tightenco/ziggy": "^2.4.1"
     },
