@@ -47,6 +47,20 @@ $user ??= auth()->user();
                 @endif
             </ul>
         </nav>
+
+        @if (!app()->isProduction())
+            <div class="warning message">
+                <p>
+                    <strong>Warning:</strong>
+                    This is a development server, and the stability of the platform is not guaranteed. It may be reset
+                    from time to time without warning, requiring you to re-register and generate new API keys.
+                </p>
+                <p>
+                    Email <em>cannot</em> be sent by this server, and thus password resets can only be performed by a site administrator.
+                    Warnings about verifying your account email can be ignored for the time being.
+                </p>
+            </div>
+        @endif
     </main>
 @endsection
 
@@ -86,10 +100,6 @@ $user ??= auth()->user();
             justify-content: space-evenly;
         }
 
-        main.homepage nav li {
-            margin-top: 1em;
-        }
-
         main.homepage a {
             text-decoration: none;
             color: darkcyan;
@@ -97,6 +107,10 @@ $user ??= auth()->user();
 
         main.homepage a:hover {
             color: deepskyblue;
+        }
+
+        main.homepage .warning {
+            background-color: lightyellow;
         }
     </style>
 @endsection
