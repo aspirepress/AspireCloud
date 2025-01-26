@@ -182,7 +182,7 @@ final class Theme extends BaseModel
             return $metadata;
         }
 
-        $base = config('app.url') . '/download/';
+        $base = config('app.aspirecloud.download.base');
         $rewrite = fn(string $url) => \Safe\preg_replace('#https?://.*?/#i', $base, $url);
 
         $download_link = $rewrite($metadata['download_link'] ?? '');
