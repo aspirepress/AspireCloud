@@ -7,10 +7,10 @@ use App\Enums\AssetType;
 use App\Events\AssetCacheHit;
 use App\Events\AssetCacheMissed;
 use App\Models\WpOrg\Asset;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 class DownloadService implements Downloader
 {
@@ -50,5 +50,4 @@ class DownloadService implements Downloader
         $response = Http::withHeaders(['User-Agent' => 'AspireCloud'])->get($upstreamUrl);
         return new Response($response->body(), $response->status(), $response->headers());
     }
-
 }

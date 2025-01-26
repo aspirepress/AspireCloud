@@ -7,7 +7,7 @@ use App\Enums\AssetType;
 use App\Events\AssetCacheHit;
 use App\Events\AssetCacheMissed;
 use App\Models\WpOrg\Asset;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,7 +19,7 @@ class RedirectingDownloadService implements Downloader
      * Get the file download response. If the asset exists locally, return a redirect url to it.
      * Otherwise, redirect to WordPress.org and queue a job to download it for future requests.
      */
-    public function download(AssetType $type, string $slug, string $file, ?string $revision = null): Response
+    public function download(AssetType $type, string $slug, string $file, ?string $revision = null): RedirectResponse
     {
         Log::debug("DOWNLOAD", compact("type", "slug", "file", "revision"));
 
@@ -53,7 +53,7 @@ class RedirectingDownloadService implements Downloader
         return $this->response($upstreamUrl);
     }
 
-    private function response(string $url): Response
+    private function response(string $url): RedirectResponse
     {
         return redirect()->away($url);
     }

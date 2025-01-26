@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Contracts\Downloads;
 
 use App\Enums\AssetType;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 interface Downloader
 {

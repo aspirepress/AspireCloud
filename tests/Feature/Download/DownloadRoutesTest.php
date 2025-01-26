@@ -22,7 +22,7 @@ describe('Download Routes', function () {
     it('handles WordPress core download requests', function () use ($getJob) {
         $response = $this->get('/download/wordpress-6.4.2.zip');
 
-        expect($response->status())->toBe(200); // TODO: write more assertions
+        expect($response->getStatusCode())->toBe(200); // TODO: write more assertions
 
         $job = $getJob();
         expect($job->type)
@@ -36,7 +36,7 @@ describe('Download Routes', function () {
     it('handles plugin download requests', function () use ($getJob) {
         $response = $this->get('/download/plugin/test-plugin.1.0.0.zip');
 
-        expect($response->status())->toBe(200); // TODO: write more assertions
+        expect($response->getStatusCode())->toBe(200); // TODO: write more assertions
 
         $job = $getJob();
         expect($job->type)
@@ -50,7 +50,7 @@ describe('Download Routes', function () {
     it('handles theme download requests', function () use ($getJob) {
         $response = $this->get('/download/theme/test-theme.1.0.0.zip');
 
-        expect($response->status())->toBe(200); // TODO: write more assertions
+        expect($response->getStatusCode())->toBe(200); // TODO: write more assertions
 
         $job = $getJob();
         expect($job->type)
@@ -63,7 +63,7 @@ describe('Download Routes', function () {
 
     it('handles plugin asset download requests', function () use ($getJob) {
         $response = $this->get('/download/assets/plugin/test-plugin/head/screenshot-1.png');
-        expect($response->status())->toBe(200); // TODO: write more assertions
+        expect($response->getStatusCode())->toBe(200); // TODO: write more assertions
 
         $job = $getJob();
         expect($job->type)
@@ -77,7 +77,7 @@ describe('Download Routes', function () {
     it('handles asset download requests with revision', function () use ($getJob) {
         $response = $this->get('/download/assets/plugin/test-plugin/3164133/banner-1544x500.png');
 
-        expect($response->status())->toBe(200); // TODO: write more assertions
+        expect($response->getStatusCode())->toBe(200); // TODO: write more assertions
 
         $job = $getJob();
         expect($job->type)
