@@ -6,13 +6,18 @@ use App\Enums\AssetType;
 use App\Events\AssetCacheHit;
 use App\Events\AssetCacheMissed;
 use App\Models\WpOrg\Asset;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
-class DownloadService
+class RedirectingDownloadService
 {
+    public const int TEMPORARY_URL_EXPIRE_MINS = 5;
+
+    /**
+     * Get the file download response. If the asset exists locally, return a redirect url to it.
+     * Otherwise, redirect to WordPress.org and queue a job to download it for future requests.
+     */
     public function download(AssetType $type, string $slug, string $file, ?string $revision = null): Response
     {
         Log::debug("DOWNLOAD", compact("type", "slug", "file", "revision"));
@@ -34,18 +39,17 @@ class DownloadService
             // TODO: handle case where asset exists but local path does not (DownloadAssetJob always creates a new Asset)
             event(new AssetCacheHit($asset));
             Log::debug("Serving existing asset", ["asset" => $asset]);
-            $stream = Storage::disk('s3')->getDriver()->readStream($asset->local_path);
-            return response()->stream(fn() => fpassthru($stream),
-                headers: ['Content-Type' => 'application/octet-stream']);
+            return $this->response(
+                Storage::temporaryUrl($asset->local_path, now()->addMinutes(self::TEMPORARY_URL_EXPIRE_MINS)),
+            );
         }
 
         $upstreamUrl = self::buildUpstreamUrl($type, $slug, $file, $revision);
 
-        event(new AssetCacheMissed(type: $type, slug: $slug, file: $file, upstreamUrl: $upstreamUrl, revision: $revision));
-
-        // TODO: use a real client.  Plugins are small enough we can get away with this for now.
-        $response = Http::withHeaders(['User-Agent' => 'AspireCloud'])->get($upstreamUrl);
-        return new Response($response->body(), $response->status(), $response->headers());
+        event(
+            new AssetCacheMissed(type: $type, slug: $slug, file: $file, upstreamUrl: $upstreamUrl, revision: $revision),
+        );
+        return $this->response($upstreamUrl);
     }
 
     public static function buildUpstreamUrl(AssetType $type, string $slug, string $file, ?string $revision): string
@@ -67,5 +71,10 @@ class DownloadService
         }
 
         return $url;
+    }
+
+    private function response(string $url): Response
+    {
+        return redirect()->away($url);
     }
 }
