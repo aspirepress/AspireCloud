@@ -29,5 +29,7 @@ return [
 
     'aspirecloud' => [
         'api_authentication_enable' => env('API_AUTHENTICATION_ENABLED', false),
+        'download_base' => env('DOWNLOAD_BASE', env('APP_URL') . '/download'),
     ],
+
 ];

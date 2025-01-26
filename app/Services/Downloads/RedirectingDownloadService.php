@@ -2,6 +2,7 @@
 
 namespace App\Services\Downloads;
 
+use App\Contracts\Downloads\Downloader;
 use App\Enums\AssetType;
 use App\Events\AssetCacheHit;
 use App\Events\AssetCacheMissed;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
-class RedirectingDownloadService
+class RedirectingDownloadService implements Downloader
 {
     public const int TEMPORARY_URL_EXPIRE_MINS = 5;
 
@@ -44,33 +45,12 @@ class RedirectingDownloadService
             );
         }
 
-        $upstreamUrl = self::buildUpstreamUrl($type, $slug, $file, $revision);
+        $upstreamUrl = $type->buildUpstreamUrl($slug, $file, $revision);
 
         event(
             new AssetCacheMissed(type: $type, slug: $slug, file: $file, upstreamUrl: $upstreamUrl, revision: $revision),
         );
         return $this->response($upstreamUrl);
-    }
-
-    public static function buildUpstreamUrl(AssetType $type, string $slug, string $file, ?string $revision): string
-    {
-        $baseUrl = match ($type) {
-            AssetType::CORE => 'https://wordpress.org/',
-            AssetType::PLUGIN => 'https://downloads.wordpress.org/plugin/',
-            AssetType::THEME => 'https://downloads.wordpress.org/theme/',
-            AssetType::PLUGIN_SCREENSHOT,
-            AssetType::PLUGIN_BANNER => "https://ps.w.org/$slug/assets/",
-            AssetType::PLUGIN_GP_ICON => "https://s.w.org/plugins/geopattern-icon/",
-            AssetType::THEME_SCREENSHOT => "https://ts.w.org/wp-content/themes/$slug/",
-        };
-
-        $url = $baseUrl . $file;
-
-        if ($revision && $type->isAsset()) {
-            $url .= "?rev={$revision}";
-        }
-
-        return $url;
     }
 
     private function response(string $url): Response
