@@ -10,7 +10,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
 $auth_middleware = config('app.aspirecloud.api_authentication_enable') ? ['auth:sanctum'] : [];
-$cache_seconds = config('app.aspirecloud.cache_seconds');
+$cache_seconds = config('app.aspirecloud.download.cache_seconds');
 $middleware = [
     "cache.headers:public;max_age=$cache_seconds", // we're streaming responses, so no etags
     ...$auth_middleware,
