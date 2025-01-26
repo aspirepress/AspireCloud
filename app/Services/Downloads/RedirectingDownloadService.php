@@ -7,9 +7,9 @@ use App\Enums\AssetType;
 use App\Events\AssetCacheHit;
 use App\Events\AssetCacheMissed;
 use App\Models\WpOrg\Asset;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\Response;
 
 class RedirectingDownloadService implements Downloader
 {
