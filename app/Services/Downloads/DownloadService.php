@@ -36,8 +36,10 @@ class DownloadService implements Downloader
             event(new AssetCacheHit($asset));
             Log::debug("Serving existing asset", ["asset" => $asset]);
             $stream = Storage::disk('s3')->getDriver()->readStream($asset->local_path);
-            return response()->stream(fn() => fpassthru($stream),
-                headers: ['Content-Type' => 'application/octet-stream']);
+            return response()->stream(
+                fn() => fpassthru($stream),
+                headers: ['Content-Type' => 'application/octet-stream'],
+            );
         }
 
         $upstreamUrl = $type->buildUpstreamUrl($slug, $file, $revision);
