@@ -12,6 +12,8 @@ beforeEach(function () {
     Http::fake();
 });
 
+
+
 describe('Download Routes', function () {
     $getJob = function (): DownloadAssetJob {
         $jobs = Queue::pushed(DownloadAssetJob::class);
@@ -22,7 +24,9 @@ describe('Download Routes', function () {
     it('handles WordPress core download requests', function () use ($getJob) {
         $response = $this->get('/download/wordpress-6.4.2.zip');
 
-        expect($response->getStatusCode())->toBe(200); // TODO: write more assertions
+        expect($response->status())->toBe(302);
+        /** @noinspection PhpUndefinedMethodInspection */
+        expect($response->getTargetUrl())->toBe('https://wordpress.org/wordpress-6.4.2.zip');
 
         $job = $getJob();
         expect($job->type)
@@ -36,7 +40,9 @@ describe('Download Routes', function () {
     it('handles plugin download requests', function () use ($getJob) {
         $response = $this->get('/download/plugin/test-plugin.1.0.0.zip');
 
-        expect($response->getStatusCode())->toBe(200); // TODO: write more assertions
+        expect($response->status())->toBe(302);
+        /** @noinspection PhpUndefinedMethodInspection */
+        expect($response->getTargetUrl())->toBe('https://downloads.wordpress.org/plugin/test-plugin.1.0.0.zip');
 
         $job = $getJob();
         expect($job->type)
@@ -50,7 +56,9 @@ describe('Download Routes', function () {
     it('handles theme download requests', function () use ($getJob) {
         $response = $this->get('/download/theme/test-theme.1.0.0.zip');
 
-        expect($response->getStatusCode())->toBe(200); // TODO: write more assertions
+        expect($response->status())->toBe(302);
+        /** @noinspection PhpUndefinedMethodInspection */
+        expect($response->getTargetUrl())->toBe('https://downloads.wordpress.org/theme/test-theme.1.0.0.zip');
 
         $job = $getJob();
         expect($job->type)
@@ -63,7 +71,9 @@ describe('Download Routes', function () {
 
     it('handles plugin asset download requests', function () use ($getJob) {
         $response = $this->get('/download/assets/plugin/test-plugin/head/screenshot-1.png');
-        expect($response->getStatusCode())->toBe(200); // TODO: write more assertions
+        expect($response->status())->toBe(302);
+        /** @noinspection PhpUndefinedMethodInspection */
+        expect($response->getTargetUrl())->toBe('https://ps.w.org/test-plugin/assets/screenshot-1.png');
 
         $job = $getJob();
         expect($job->type)
@@ -77,7 +87,9 @@ describe('Download Routes', function () {
     it('handles asset download requests with revision', function () use ($getJob) {
         $response = $this->get('/download/assets/plugin/test-plugin/3164133/banner-1544x500.png');
 
-        expect($response->getStatusCode())->toBe(200); // TODO: write more assertions
+        expect($response->status())->toBe(302);
+        /** @noinspection PhpUndefinedMethodInspection */
+        expect($response->getTargetUrl())->toBe('https://ps.w.org/test-plugin/assets/banner-1544x500.png?rev=3164133');
 
         $job = $getJob();
         expect($job->type)
@@ -87,4 +99,4 @@ describe('Download Routes', function () {
             ->and($job->upstreamUrl)->toBe('https://ps.w.org/test-plugin/assets/banner-1544x500.png?rev=3164133')
             ->and($job->revision)->toBe('3164133');
     });
-});
+})->todo("turn these into tests of AssetType::buildUpstreamUrl");

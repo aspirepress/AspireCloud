@@ -67,3 +67,4 @@ $routeDefinition
 // Route::any('{path}', CatchAllController::class)->where('path', '.*');
 
 require __DIR__ . '/inc/admin-api.php';
+require __DIR__ . '/inc/download.php';

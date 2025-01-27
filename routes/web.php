@@ -27,4 +27,3 @@ Route::middleware([
 });
 
 require __DIR__ . '/inc/admin-web.php';
-require __DIR__ . '/inc/download.php';
