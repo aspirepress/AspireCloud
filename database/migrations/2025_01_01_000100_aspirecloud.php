@@ -35,8 +35,7 @@ return new class extends Migration {
             $table->jsonb('contributors')->nullable();
             $table->jsonb('icons')->nullable();
             $table->jsonb('source')->nullable();
-            $table->string('business_model')->nullable(
-            ); // 'commercial'|'community'|false (we'll store false as a string)
+            $table->string('business_model')->nullable();
             $table->string('commercial_support_url', 1024)->nullable();
             $table->string('support_url', 1024)->nullable();
             $table->string('preview_link', 1024)->nullable();
@@ -50,9 +49,6 @@ return new class extends Migration {
             $table->string('ac_origin')->nullable()->index();
             $table->dateTime('ac_created')->useCurrent()->index();
             $table->jsonb('ac_raw_metadata')->nullable();
-
-            // denormalized stuff that should go away
-            $table->jsonb('tags')->nullable();
 
             // additional indexes
             $table->string('slug')->fulltext()->change();

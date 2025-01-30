@@ -66,9 +66,6 @@ final class Plugin extends BaseModel
 
     protected $table = 'plugins';
 
-    /** @phpstan-ignore-next-line */
-    protected $appends = ['tags'];
-
     protected function casts(): array
     {
         return [
@@ -113,13 +110,9 @@ final class Plugin extends BaseModel
             'ac_origin' => 'string',
             'ac_created' => 'immutable_datetime',
             'ac_raw_metadata' => 'array',
-
-            // 'tags' => 'array', // synthetic attribute
         ];
     }
 
-
-    // XXX I don't like that ->tags() and ->tags have different types, but it's worked out fine so far.
     /** @return BelongsToMany<PluginTag, covariant self> */
     public function tags(): BelongsToMany
     {
@@ -268,12 +261,12 @@ final class Plugin extends BaseModel
 
     //endregion
 
-    /** @return array<string, string> */
-    public function getTagsAttribute(): array
+    /**
+     * @return array<string, string>
+     * @noinspection UnknownColumnInspection (doesn't like 'slug' 🤷)
+     */
+    public function tagsArray(): array
     {
-        return $this->tags()
-            ->get()
-            ->pluck('name', 'slug')
-            ->toArray();
+        return $this->tags()->select('name', 'slug')->pluck('name', 'slug')->toArray();
     }
 }

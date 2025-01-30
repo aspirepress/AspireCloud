@@ -135,7 +135,7 @@ describe('Sync Plugins', function () {
             ->and($plugin->sections['reviews'])->toBeEmpty()
             ->and($plugin->upgrade_notice)->toBeEmpty()
             ->and($plugin->screenshots)->toBeEmpty()
-            ->and($plugin->tags)->toBe([
+            ->and($plugin->tagsArray())->toBe([
                 'debug' => 'debug',
                 'email-errors' => 'email errors',
                 'errors' => 'errors',
