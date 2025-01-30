@@ -37,7 +37,18 @@ return [
     ],
 
     'ignore_commands' => [
-        //
+        'migrate',
+        'migrate:rollback',
+        'migrate:fresh',
+        'migrate:reset',
+        'migrate:install',
+        'db:seed',
+        'package:discover',
+        'queue:listen',
+        'queue:work',
+        'horizon',
+        'horizon:work',
+        'horizon:supervisor',
     ],
 
     'watchers' => [
