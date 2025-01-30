@@ -65,6 +65,18 @@ return new class extends Migration {
             $table->string('author')->index()->change();
         });
 
+        Schema::table('closed_plugins', function (Blueprint $table) {
+            $table->string('slug')->index()->change();
+            $table->string('slug')->fulltext()->change();
+            $table->string('name')->index()->change();
+            $table->string('name')->fulltext()->change();
+            $table->string('description')->fulltext()->change();
+            $table->dateTime('closed_date')->index()->change();
+            $table->string('reason')->index()->change();
+            $table->string('ac_origin')->index()->change();
+            $table->dateTime('ac_created')->index()->change();
+        });
+
     }
 
     public function down(): void
@@ -113,6 +125,18 @@ return new class extends Migration {
             $table->dropIndex('authors_user_nicename_index');
             $table->dropIndex('authors_display_name_index');
             $table->dropIndex('authors_author_index');
+        });
+
+        Schema::table('closed_plugins', function (Blueprint $table) {
+            $table->dropIndex('closed_plugins_slug_index');
+            $table->dropIndex('closed_plugins_name_index');
+            $table->dropFullText('closed_plugins_description_fulltext');
+            $table->dropFullText('closed_plugins_slug_fulltext');
+            $table->dropFullText('closed_plugins_name_fulltext');
+            $table->dropIndex('closed_plugins_closed_date_index');
+            $table->dropIndex('closed_plugins_reason_index');
+            $table->dropIndex('closed_plugins_ac_origin_index');
+            $table->dropIndex('closed_plugins_ac_created_index');
         });
     }
 
