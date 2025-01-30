@@ -55,15 +55,12 @@ return new class extends Migration {
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         $schema = Schema::connection($this->getConnection());
+        $schema->dropIfExists('telescope_monitoring');
 
         $schema->dropIfExists('telescope_entries_tags');
         $schema->dropIfExists('telescope_entries');
-        $schema->dropIfExists('telescope_monitoring');
     }
 };
