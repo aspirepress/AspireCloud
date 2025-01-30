@@ -95,7 +95,6 @@ final class Plugin extends BaseModel
             'downloaded' => 'integer',
             'homepage' => 'string',
             'banners' => 'array',
-            'tags' => 'array',
             'donate_link' => 'string',
             'contributors' => 'array',
             'icons' => 'array',
@@ -114,9 +113,13 @@ final class Plugin extends BaseModel
             'ac_origin' => 'string',
             'ac_created' => 'immutable_datetime',
             'ac_raw_metadata' => 'array',
+
+            // 'tags' => 'array', // synthetic attribute
         ];
     }
 
+
+    // XXX I don't like that ->tags() and ->tags have different types, but it's worked out fine so far.
     /** @return BelongsToMany<PluginTag, covariant self> */
     public function tags(): BelongsToMany
     {
@@ -127,13 +130,10 @@ final class Plugin extends BaseModel
 
     //region Constructors
 
-    /**
-     * @param PluginProps|array<string, mixed> $props
-     */
-    public static function create(array|PluginProps $props): self
+    /** @param PluginProps|array<string, mixed> $props */
+    public static function create(PluginProps|array $props): self
     {
         if (is_array($props)) {
-            /** @noinspection CallableParameterUseCaseInTypeContextInspection (Data::from is highly magical) */
             $props = PluginProps::from($props);
         }
         assert($props instanceof PluginProps);

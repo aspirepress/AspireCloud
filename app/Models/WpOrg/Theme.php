@@ -69,7 +69,6 @@ final class Theme extends BaseModel
             'active_installs' => 'integer',
             'homepage' => 'string',
             'sections' => 'array',
-            'tags' => 'array',
             'versions' => 'array',
             'requires' => 'array',
             'is_commercial' => 'boolean',
@@ -79,7 +78,15 @@ final class Theme extends BaseModel
             'ac_origin' => 'string',
             'ac_created' => 'immutable_datetime',
             'ac_raw_metadata' => 'array',
+
+            'tags' => 'array', // XXX we need this for the column in the table ...
         ];
+    }
+    // XXX ... but we also call this in other places.  fun!
+    /** @return BelongsToMany<ThemeTag, covariant self> */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(ThemeTag::class, 'theme_theme_tags', 'theme_id', 'theme_tag_id', 'id', 'id');
     }
 
     /** @return BelongsTo<Author, covariant self> */
@@ -88,23 +95,14 @@ final class Theme extends BaseModel
         return $this->belongsTo(Author::class);
     }
 
-    /** @return BelongsToMany<ThemeTag, covariant self> */
-    public function tags(): BelongsToMany
-    {
-        return $this->belongsToMany(ThemeTag::class, 'theme_theme_tags', 'theme_id', 'theme_tag_id', 'id', 'id');
-    }
-
     //endregion
 
     //region Constructors
 
-    /**
-     * @param ThemeProps|array<string, mixed> $props
-     */
+    /** @param ThemeProps|array<string, mixed> $props */
     public static function create(array|ThemeProps $props): self
     {
         if (is_array($props)) {
-            /** @noinspection CallableParameterUseCaseInTypeContextInspection (Data::from is highly magical) */
             $props = ThemeProps::from($props);
         }
         assert($props instanceof ThemeProps);

@@ -6,6 +6,7 @@ namespace App\Data\Props;
 
 use Carbon\CarbonImmutable;
 use DateTimeInterface;
+use Override;
 use Spatie\LaravelData\Attributes\Validation\Between;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
@@ -147,5 +148,12 @@ final class PluginProps extends ModelProps
             ),
         ];
         return self::from($args);
+    }
+
+    #[Override] // empty override to narrow the return type (BaseData::from is not generic)
+    public static function from(
+        mixed ...$args
+    ): static {
+        return parent::from(...$args);
     }
 }
