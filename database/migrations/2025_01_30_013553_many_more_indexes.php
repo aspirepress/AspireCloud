@@ -77,6 +77,11 @@ return new class extends Migration {
             $table->dateTime('ac_created')->index()->change();
         });
 
+        Schema::table('users', function (Blueprint $table) {
+            $table->dateTime('created_at')->index()->change();
+            $table->dateTime('updated_at')->index()->change();
+        });
+
     }
 
     public function down(): void
@@ -138,7 +143,10 @@ return new class extends Migration {
             $table->dropIndex('closed_plugins_ac_origin_index');
             $table->dropIndex('closed_plugins_ac_created_index');
         });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropIndex('users_created_at_index');
+            $table->dropIndex('users_updated_at_index');
+        });
     }
-
-
 };
