@@ -48,6 +48,23 @@ return new class extends Migration {
             $table->string('ac_origin')->index()->change();
             $table->dateTime('ac_created')->index()->change();
         });
+
+        Schema::table('assets', function (Blueprint $table) {
+            $table->string('repository')->index()->change();
+            $table->dateTime('created_at')->index()->change();
+            $table->dateTime('updated_at')->index()->change();
+        });
+
+        Schema::table('authors', function (Blueprint $table) {
+            $table->string('user_nicename')->index()->change();
+            $table->string('user_nicename')->fulltext()->change();
+
+            $table->string('display_name')->index()->change();
+            $table->string('display_name')->fulltext()->change();
+
+            $table->string('author')->index()->change();
+        });
+
     }
 
     public function down(): void
@@ -66,6 +83,7 @@ return new class extends Migration {
             $table->dropIndex('plugins_support_threads_resolved_index');
             $table->dropIndex('plugins_version_index');
         });
+
         Schema::table('themes', function (Blueprint $table) {
             $table->dropFullText('themes_slug_fulltext');
             $table->dropFullText('themes_name_fulltext');
@@ -82,5 +100,21 @@ return new class extends Migration {
             $table->dropIndex('themes_last_updated_index');
             $table->dropIndex('themes_creation_time_index');
         });
+
+        Schema::table('assets', function (Blueprint $table) {
+            $table->dropIndex('assets_repository_index');
+            $table->dropIndex('assets_created_at_index');
+            $table->dropIndex('assets_updated_at_index');
+        });
+
+        Schema::table('authors', function (Blueprint $table) {
+            $table->dropFullText('authors_user_nicename_fulltext');
+            $table->dropFullText('authors_display_name_fulltext');
+            $table->dropIndex('authors_user_nicename_index');
+            $table->dropIndex('authors_display_name_index');
+            $table->dropIndex('authors_author_index');
+        });
     }
+
+
 };
