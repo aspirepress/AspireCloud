@@ -31,7 +31,6 @@ return new class extends Migration {
             $table->unsignedInteger('downloaded')->default(0)->index();
             $table->string('homepage', 1024)->nullable();
             $table->jsonb('banners')->nullable();
-            $table->jsonb('tags')->nullable();   // denormalized, will be in a join table too
             $table->string('donate_link', 1024)->nullable();
             $table->jsonb('contributors')->nullable();
             $table->jsonb('icons')->nullable();
@@ -51,6 +50,9 @@ return new class extends Migration {
             $table->string('ac_origin')->nullable()->index();
             $table->dateTime('ac_created')->useCurrent()->index();
             $table->jsonb('ac_raw_metadata')->nullable();
+
+            // denormalized stuff that should go away
+            $table->jsonb('tags')->nullable();
 
             // additional indexes
             $table->string('slug')->fulltext()->change();
@@ -121,6 +123,9 @@ return new class extends Migration {
             $table->string('ac_origin')->nullable()->index();
             $table->datetime('ac_created')->nullable()->index();
             $table->jsonb('ac_raw_metadata')->nullable();
+
+            // denormalized stuff that should go away
+            $table->jsonb('tags')->nullable();
 
             // additional indexes
             $table->string('slug')->fulltext()->change();
