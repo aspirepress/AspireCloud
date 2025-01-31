@@ -27,7 +27,6 @@ beforeEach(function () {
         'creation_time' => '2021-01-01 12:00:00',
         'preview_url' => 'https://wp-themes.com/my-theme',
         'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
-        'ratings' => [5, 4, 3, 2, 1, 2],
         'rating' => 5,
         'num_ratings' => 6,
         'reviews_url' => 'https://wp-themes.com/my-theme/reviews',
@@ -43,6 +42,7 @@ beforeEach(function () {
         'external_repository_url' => 'https://test.com',
         'author_id' => $authorId->toString(),
     ])->addTagsBySlugs(['black', 'white', 'red', 'blue']);
+    // 'ratings' => [5, 4, 3, 2, 1, 2],
 
     Theme::create([
         'slug' => 'my-theme2',
@@ -54,7 +54,6 @@ beforeEach(function () {
         'creation_time' => '2021-01-01 12:00:00',
         'preview_url' => 'https://wp-themes.com/my-theme2',
         'screenshot_url' => 'https://wp-themes.com/my-theme2/screenshot.png',
-        'ratings' => [5, 4, 3, 2, 1, 2],
         'rating' => 5,
         'num_ratings' => 6,
         'reviews_url' => 'https://wp-themes.com/my-theme2/reviews',
@@ -70,6 +69,7 @@ beforeEach(function () {
         'external_repository_url' => 'https://test.com',
         'author_id' => $authorId->toString(),
     ])->addTagsBySlugs(['black', 'white', 'red', 'blue']);
+    // 'ratings' => [5, 4, 3, 2, 1, 2],
 });
 
 it('returns theme updates', function () {

@@ -96,7 +96,6 @@ return new class extends Migration {
             $table->datetime('creation_time')->index();
             $table->string('preview_url')->nullable();
             $table->string('screenshot_url')->nullable();
-            $table->jsonb('ratings')->nullable();
             $table->unsignedSmallInteger('rating')->default(0)->index();
             $table->unsignedInteger('num_ratings')->default(0)->index();
             $table->string('reviews_url')->nullable();

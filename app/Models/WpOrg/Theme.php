@@ -24,7 +24,6 @@ use InvalidArgumentException;
  * @property-read CarbonImmutable $creation_time
  * @property-read string $preview_url
  * @property-read string $screenshot_url
- * @property-read array $ratings
  * @property-read int $rating
  * @property-read int $num_ratings
  * @property-read string $reviews_url
@@ -60,7 +59,6 @@ final class Theme extends BaseModel
             'creation_time' => 'datetime',
             'preview_url' => 'string',
             'screenshot_url' => 'string',
-            'ratings' => 'array',
             'rating' => 'integer',
             'num_ratings' => 'integer',
             'reviews_url' => 'string',
@@ -138,7 +136,6 @@ final class Theme extends BaseModel
             // All fields below are optional
             'preview_url' => $trunc($metadata['preview_url'] ?? null),
             'screenshot_url' => $trunc($metadata['screenshot_url'] ?? null),
-            'ratings' => $metadata['ratings'] ?? null,
             'rating' => $metadata['rating'] ?? 0,
             'num_ratings' => $metadata['num_ratings'] ?? 0,
             'reviews_url' => $trunc($metadata['reviews_url'] ?? null),
@@ -192,6 +189,11 @@ final class Theme extends BaseModel
     }
 
     //endregion
+
+    public function ratings(): array
+    {
+        return $this->ac_raw_metadata['ratings'] ?? [];
+    }
 
     public function addTags(array $tags): self
     {

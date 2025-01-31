@@ -28,7 +28,6 @@ beforeEach(function () {
         'creation_time' => CarbonImmutable::parse('2011-11-11 11:11:11'),
         'preview_url' => 'https://wp-themes.com/my-theme',
         'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
-        'ratings' => [5, 4, 3, 2, 1, 2],
         'rating' => 5,
         'num_ratings' => 6,
         'reviews_url' => 'https://wp-themes.com/my-theme/reviews',
@@ -44,6 +43,7 @@ beforeEach(function () {
         'external_repository_url' => 'https://test.com',
         'author_id' => $author->id,
     ])->addTagsBySlugs(['black', 'white', 'red', 'blue']);
+    // 'ratings' => [5, 4, 3, 2, 1, 2],
 });
 
 it('returns 400 when slug is missing', function () {

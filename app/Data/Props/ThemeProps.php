@@ -18,7 +18,6 @@ use Spatie\LaravelData\Optional;
 final class ThemeProps extends ModelProps
 {
     /**
-     * @param Optional|array<string, mixed>|null $ratings
      * @param Optional|array<string, mixed>|null $sections
      * @param Optional|array<string, mixed>|null $versions
      * @param Optional|array<string, mixed>|null $requires
@@ -50,7 +49,6 @@ final class ThemeProps extends ModelProps
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $screenshot_url,
-        public readonly Optional|array|null $ratings,
         #[Between(0, 100)]
         public readonly Optional|int $rating,
         #[Min(0)]
