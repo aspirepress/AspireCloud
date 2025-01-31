@@ -115,7 +115,6 @@ final class Theme extends BaseModel
         $syncmeta['status'] === 'open' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
 
         $ac_raw_metadata = $metadata;
-        $metadata = self::rewriteMetadata($metadata);
 
         $authorData = $metadata['author'];
         $author = Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
@@ -153,37 +152,36 @@ final class Theme extends BaseModel
         return $instance;
     }
 
-    /**
-     * @param array<string, mixed> $metadata
-     * @return array<string, mixed>
-     */
-    public static function rewriteMetadata(array $metadata): array
-    {
-        if (($metadata['aspiresync_meta']['origin'] ?? '') !== 'wp_org') {
-            return $metadata;
-        }
-
-        $base = config('app.aspirecloud.download.base');
-        $rewrite = fn(string $url) => \Safe\preg_replace('#https?://.*?/#i', $base, $url);
-
-        $download_link = $rewrite($metadata['download_link'] ?? '');
-
-        // //ts.w.org/wp-content/themes/abhokta/screenshot.png?ver=1.0.0
-        // /download/assets/theme/abhokta/1.0.0/screenshot.png
-        $screenshot_url = $metadata['screenshot_url'] ?? '';
-        if ($matches = Regex::match('#^.*?/themes/(.*?)/(.*?)(?:\?ver=(.*))?$#i', $screenshot_url)) {
-            $slug = $matches[1];
-            $file = $matches[2];
-            $revision = $matches[3] ?? 'head';
-            $screenshot_url = $base . "assets/theme/$slug/$revision/$file";
-        }
-
-        return [...$metadata, ...compact('download_link', 'screenshot_url')];
-    }
-
     //endregion
 
     //region Getters
+
+    public function getDownloadLink(): string
+    {
+        $link = $this->attributes['download_link'] ?? '';
+        return $this->shouldRewriteMetadata() ? self::rewriteDotOrgUrl($link) : $link;
+    }
+
+    public function getScreenshotUrl(): string
+    {
+        $url = $this->attributes['screenshot_url'] ?? '';
+        if (!$this->shouldRewriteMetadata()) {
+            return $url;
+        }
+
+        // //ts.w.org/wp-content/themes/abhokta/screenshot.png?ver=1.0.0
+        // /download/assets/theme/abhokta/1.0.0/screenshot.png
+
+        $base = config('app.aspirecloud.download.base');
+        $matches = Regex::match('#^.*?/themes/(.*?)/(.*?)(?:\?ver=(.*))?$#i', $url);
+        if (!$matches) {
+            return $url;
+        }
+        $slug = $matches[1];
+        $file = $matches[2];
+        $revision = $matches[3] ?? 'head';
+        return $base . "assets/theme/$slug/$revision/$file";
+    }
 
     public function getRatings(): array
     {
@@ -218,15 +216,21 @@ final class Theme extends BaseModel
         return $this->ac_origin === 'wp_org';
     }
 
-    private function rewriteDotOrgUrl(string $url): string
+    private static function rewriteDotOrgUrl(string $url): string
     {
         $base = config('app.aspirecloud.download.base');
-        return \Safe\preg_replace('#https?://.*?/#i', $base, $url);
+        return \Safe\preg_replace('#https?://.*?/#i', $base, $url); // TODO make this check for a .org url
     }
 
     //endregion
 
     //region Attributes
+
+    public function downloadLink(): Attribute
+    {
+        // note: must be writable, since download_link appears in create()
+        return Attribute::make(get: $this->getDownloadLink(...));
+    }
 
     public function ratings(): Attribute
     {
@@ -236,6 +240,11 @@ final class Theme extends BaseModel
     public function requires(): Attribute
     {
         return Attribute::make(get: $this->getRequires(...), set: self::_readonly(...));
+    }
+
+    public function screenshotUrl(): Attribute
+    {
+        return Attribute::make(get: $this->getScreenshotUrl(...));
     }
 
     public function sections(): Attribute

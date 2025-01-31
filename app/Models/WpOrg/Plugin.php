@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 /**
@@ -132,9 +131,6 @@ final class Plugin extends BaseModel
         $syncmeta['type'] === 'plugin' or throw new InvalidArgumentException("invalid type '{$syncmeta['type']}'");
         $syncmeta['status'] === 'open' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
 
-        $ac_raw_metadata = $metadata;
-        $metadata = self::rewriteMetadata($metadata);
-
         // TODO: use self::create for validation
         $instance = self::_create([
             'slug' => $syncmeta['slug'],
@@ -164,7 +160,7 @@ final class Plugin extends BaseModel
             'preview_link' => $metadata['preview_link'] ?: null,
             'repository_url' => $metadata['repository_url'] ?: null,
             'ac_origin' => $syncmeta['origin'],
-            'ac_raw_metadata' => $ac_raw_metadata,
+            'ac_raw_metadata' => $metadata,
         ]);
 
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {
@@ -172,21 +168,6 @@ final class Plugin extends BaseModel
         }
 
         return $instance;
-    }
-
-    /**
-     * @param array<string, mixed> $metadata
-     * @return array<string, mixed>
-     */
-    public static function rewriteMetadata(array $metadata): array
-    {
-        if (($metadata['aspiresync_meta']['origin'] ?? '') !== 'wp_org') {
-            return $metadata;
-        }
-
-        $download_link = self::rewriteDotOrgUrl($metadata['download_link'] ?? '');
-
-        return [...$metadata, ...compact('download_link')];
     }
 
     private static function rewriteDotOrgUrl(string $url): string
@@ -241,6 +222,12 @@ final class Plugin extends BaseModel
     public function getContributors(): array
     {
         return $this->getMetadataArray('contributors');
+    }
+
+    public function getDownloadLink(): string
+    {
+        $link = $this->attributes['download_link'] ?? '';
+        return $this->shouldRewriteMetadata() ? self::rewriteDotOrgUrl($link) : $link;
     }
 
     public function getIcons(): array
@@ -303,8 +290,8 @@ final class Plugin extends BaseModel
 
     //region Attributes
 
-    // Note that Attributes are deeply magical in Laravel, and will not tolerate being subclassed
-    // or even having their construction delegated to a trait.
+    // Note that Attributes are deeply magical in Laravel, and will not tolerate being subclassed or even having their
+    // construction delegated to a trait.  This is about as refactored as they are going to get.
 
     public function banners(): Attribute
     {
@@ -319,6 +306,12 @@ final class Plugin extends BaseModel
     public function contributors(): Attribute
     {
         return Attribute::make(get: $this->getContributors(...), set: self::_readonly(...));
+    }
+
+    public function downloadLink(): Attribute
+    {
+        // note: must be writable, since download_link appears in create()
+        return Attribute::make(get: $this->getDownloadLink(...));
     }
 
     public function icons(): Attribute
