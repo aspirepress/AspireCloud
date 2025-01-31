@@ -85,7 +85,7 @@ class PluginUpdateService
             'new_version' => $plugin->version,
             'url' => "https://wordpress.org/plugins/{$plugin->slug}/",
             'package' => $plugin->download_link,
-            'icons' => $plugin->icons ?? [],
+            'icons' => $plugin->icons(),
             'banners' => $plugin->banners(),
             'banners_rtl' => [],
             'requires' => $plugin->requires,

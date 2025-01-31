@@ -39,10 +39,6 @@ class PluginFactory extends Factory
             'downloaded' => $this->faker->numberBetween(0, 2000000),
             'homepage' => $this->faker->url(),
             'donate_link' => $this->faker->optional()->url(),
-            'icons' => [
-                '1x' => $this->faker->imageUrl(128, 128),
-                '2x' => $this->faker->imageUrl(256, 256),
-            ],
             'source' => [
                 'type' => $this->faker->randomElement(['wordpress.org', 'github', 'bitbucket']),
                 'url' => $this->faker->url(),
@@ -72,6 +68,10 @@ class PluginFactory extends Factory
                 'banners' => [
                     'low' => $this->faker->imageUrl(772, 250),
                     'high' => $this->faker->imageUrl(1544, 500),
+                ],
+                'icons' => [
+                    '1x' => $this->faker->imageUrl(128, 128),
+                    '2x' => $this->faker->imageUrl(256, 256),
                 ],
             ],
         ];

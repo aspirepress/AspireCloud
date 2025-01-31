@@ -37,7 +37,6 @@ use InvalidArgumentException;
  * @property-read int $downloaded
  * @property-read string|null $homepage
  * @property-read string|null $donate_link
- * @property-read array|null $icons
  * @property-read array|null $source
  * @property-read string|null $business_model
  * @property-read string|null $commercial_support_url
@@ -85,7 +84,6 @@ final class Plugin extends BaseModel
             'downloaded' => 'integer',
             'homepage' => 'string',
             'donate_link' => 'string',
-            'icons' => 'array',
             'source' => 'array',
             'business_model' => 'string',
             'commercial_support_url' => 'string',
@@ -158,7 +156,6 @@ final class Plugin extends BaseModel
             'downloaded' => $metadata['downloaded'] ?? '',
             'homepage' => $metadata['homepage'] ?: null,
             'donate_link' => $trunc($metadata['donate_link'] ?: null, 1024),
-            'icons' => $metadata['icons'] ?? null,
             'source' => $metadata['source'] ?? null,
             'business_model' => $metadata['business_model'] ?: null,
             'commercial_support_url' => $trunc($metadata['commercial_support_url'] ?: null, 1024),
@@ -190,14 +187,13 @@ final class Plugin extends BaseModel
 
         $download_link = self::rewriteDotOrgUrl($metadata['download_link'] ?? '');
         $versions = array_map(self::rewriteDotOrgUrl(...), $metadata['versions'] ?? []);
-        $icons = array_map(self::rewriteDotOrgUrl(...), $metadata['icons'] ?? []);
 
         $screenshots = array_map(
             fn(array $screenshot) => [...$screenshot, 'src' => self::rewriteDotOrgUrl($screenshot['src'] ?? '')],
             $metadata['screenshots'] ?? [],
         );
 
-        return [...$metadata, ...compact('download_link', 'versions', 'icons', 'screenshots')];
+        return [...$metadata, ...compact('download_link', 'versions', 'screenshots')];
     }
 
     private static function rewriteDotOrgUrl(string $url): string
@@ -266,10 +262,19 @@ final class Plugin extends BaseModel
         return $this->getMetadataObject('upgrade_notice');
     }
 
+
+    // rewritten fields
+
     public function banners(): array
     {
         $banners = $this->getMetadataObject('banners');
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $banners) : $banners;
+    }
+
+    public function icons(): array
+    {
+        $icons = $this->getMetadataObject('icons');
+        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $icons) : $icons;
     }
 
     private function getMetadataObject(string $field): array

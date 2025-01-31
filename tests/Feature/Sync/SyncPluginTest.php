@@ -155,7 +155,7 @@ describe('Sync Plugins', function () {
         // test URL rewrites
         expect($plugin->download_link)
             ->toBe('https://api.aspiredev.org/download/plugin/0-errors.0.2.zip')
-            ->and($plugin->icons)->toBe(
+            ->and($plugin->icons())->toBe(
                 ['default' => 'https://api.aspiredev.org/download/gp-icon/plugin/0-errors/head/0-errors.svg'],
             )
             ->and($plugin->versions)->toBe([
