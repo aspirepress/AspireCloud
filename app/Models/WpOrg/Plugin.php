@@ -240,32 +240,37 @@ final class Plugin extends BaseModel
 
     public function ratings(): array
     {
-        return $this->ac_raw_metadata['ratings'] ?? [];
+        return $this->getMetadataObject('ratings');
     }
 
     public function contributors(): array
     {
-        return $this->ac_raw_metadata['contributors'] ?? [];
+        return $this->getMetadataObject('contributors');
     }
 
     public function requires_plugins(): array
     {
-        return $this->ac_raw_metadata['requires_plugins'] ?? [];
+        return $this->getMetadataObject('requires_plugins');
     }
 
     public function compatibility(): array
     {
-        return $this->ac_raw_metadata['compatibility'] ?? [];
+        return $this->getMetadataObject('compatibility');
     }
 
     public function sections(): array
     {
-        return $this->ac_raw_metadata['sections'] ?? [];
+        return $this->getMetadataObject('sections');
     }
 
     public function upgrade_notice(): array
     {
-        return $this->ac_raw_metadata['upgrade_notice'] ?? [];
+        return $this->getMetadataObject('upgrade_notice');
+    }
+
+    private function getMetadataObject(string $field): array
+    {
+        return ($this->ac_raw_metadata[$field] ?? []) ?: [];    // coerce false into an array
     }
 
     public function addTags(array $tags): self

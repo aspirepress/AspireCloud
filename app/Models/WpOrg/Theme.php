@@ -189,12 +189,17 @@ final class Theme extends BaseModel
 
     public function ratings(): array
     {
-        return $this->ac_raw_metadata['ratings'] ?? [];
+        return $this->getMetadataObject('ratings');
     }
 
     public function sections(): array
     {
-        return $this->ac_raw_metadata['sections'] ?? [];
+        return $this->getMetadataObject('sections');
+    }
+
+    private function getMetadataObject(string $field): array
+    {
+        return ($this->ac_raw_metadata[$field] ?? []) ?: [];    // coerce false into an array
     }
 
     public function addTags(array $tags): self
