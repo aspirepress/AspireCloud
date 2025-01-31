@@ -8,6 +8,7 @@ use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\PluginFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -219,19 +220,10 @@ final class Plugin extends BaseModel
 
     //region Getters
 
-    public function getRatings(): array
+    public function getBanners(): array
     {
-        return $this->getMetadataArray('ratings');
-    }
-
-    public function getContributors(): array
-    {
-        return $this->getMetadataArray('contributors');
-    }
-
-    public function getRequiresPlugins(): array
-    {
-        return $this->getMetadataArray('requires_plugins');
+        $banners = $this->getMetadataArray('banners');
+        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $banners) : $banners;
     }
 
     public function getCompatibility(): array
@@ -239,25 +231,9 @@ final class Plugin extends BaseModel
         return $this->getMetadataArray('compatibility');
     }
 
-    public function getSections(): array
+    public function getContributors(): array
     {
-        return $this->getMetadataArray('sections');
-    }
-
-    public function getUpgradeNotice(): array
-    {
-        return $this->getMetadataArray('upgrade_notice');
-    }
-
-    public function getSource(): array
-    {
-        return $this->getMetadataArray('source');
-    }
-
-    public function getBanners(): array
-    {
-        $banners = $this->getMetadataArray('banners');
-        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $banners) : $banners;
+        return $this->getMetadataArray('contributors');
     }
 
     public function getIcons(): array
@@ -266,10 +242,14 @@ final class Plugin extends BaseModel
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $icons) : $icons;
     }
 
-    public function getVersions(): array
+    public function getRatings(): array
     {
-        $versions = $this->getMetadataArray('versions');
-        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
+        return $this->getMetadataArray('ratings');
+    }
+
+    public function getRequiresPlugins(): array
+    {
+        return $this->getMetadataArray('requires_plugins');
     }
 
     public function getScreenshots(): array
@@ -279,6 +259,29 @@ final class Plugin extends BaseModel
         return $this->shouldRewriteMetadata() ? array_map($rewrite, $screenshots) : $screenshots;
     }
 
+    public function getSections(): array
+    {
+        return $this->getMetadataArray('sections');
+    }
+
+    public function getSource(): array
+    {
+        return $this->getMetadataArray('source');
+    }
+
+    public function getUpgradeNotice(): array
+    {
+        return $this->getMetadataArray('upgrade_notice');
+    }
+
+    public function getVersions(): array
+    {
+        $versions = $this->getMetadataArray('versions');
+        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
+    }
+
+    /// private api
+
     private function getMetadataArray(string $field): array
     {
         return ($this->ac_raw_metadata[$field] ?? []) ?: []; // coerce false to empty array because lolphp and lolwp
@@ -287,6 +290,75 @@ final class Plugin extends BaseModel
     private function shouldRewriteMetadata(): bool
     {
         return $this->ac_origin === 'wp_org';
+    }
+
+    //endregion
+
+    //region Attributes
+
+    // Note that Attributes are deeply magical in Laravel, and will not tolerate being subclassed
+    // or even having their construction delegated to a trait.
+
+    public function banners(): Attribute
+    {
+        return Attribute::make(get: $this->getBanners(...), set: self::_readonly(...));
+    }
+
+    public function compatibility(): Attribute
+    {
+        return Attribute::make(get: $this->getCompatibility(...), set: self::_readonly(...));
+    }
+
+    public function contributors(): Attribute
+    {
+        return Attribute::make(get: $this->getContributors(...), set: self::_readonly(...));
+    }
+
+    public function icons(): Attribute
+    {
+        return Attribute::make(get: $this->getIcons(...), set: self::_readonly(...));
+    }
+
+    public function ratings(): Attribute
+    {
+        return Attribute::make(get: $this->getRatings(...), set: self::_readonly(...));
+    }
+
+    public function requiresPlugins(): Attribute
+    {
+        return Attribute::make(get: $this->getRequiresPlugins(...), set: self::_readonly(...));
+    }
+
+    public function screenshots(): Attribute
+    {
+        return Attribute::make(get: $this->getScreenshots(...), set: self::_readonly(...));
+    }
+
+    public function sections(): Attribute
+    {
+        return Attribute::make(get: $this->getSections(...), set: self::_readonly(...));
+    }
+
+    public function source(): Attribute
+    {
+        return Attribute::make(get: $this->getSource(...), set: self::_readonly(...));
+    }
+
+    public function upgradeNotice(): Attribute
+    {
+        return Attribute::make(get: $this->getUpgradeNotice(...), set: self::_readonly(...));
+    }
+
+    public function versions(): Attribute
+    {
+        return Attribute::make(get: $this->getVersions(...), set: self::_readonly(...));
+    }
+
+    /// private api
+
+    private static function _readonly(): never
+    {
+        throw new InvalidArgumentException('Cannot modify read-only attribute');
     }
 
     //endregion

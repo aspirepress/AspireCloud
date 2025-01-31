@@ -7,6 +7,8 @@ use App\Models\BaseModel;
 use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
+use Closure;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -187,14 +189,14 @@ final class Theme extends BaseModel
         return $this->getMetadataObject('ratings');
     }
 
-    public function getSections(): array
-    {
-        return $this->getMetadataObject('sections');
-    }
-
     public function getRequires(): array
     {
         return $this->getMetadataObject('requires');
+    }
+
+    public function getSections(): array
+    {
+        return $this->getMetadataObject('sections');
     }
 
     public function getVersions(): array
@@ -202,6 +204,8 @@ final class Theme extends BaseModel
         $versions = $this->getMetadataObject('versions');
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
     }
+
+    /// private api
 
     private function getMetadataObject(string $field): array
     {
@@ -217,6 +221,32 @@ final class Theme extends BaseModel
     {
         $base = config('app.aspirecloud.download.base');
         return \Safe\preg_replace('#https?://.*?/#i', $base, $url);
+    }
+
+    //endregion
+
+    //region Attributes
+
+    public function ratings(): Attribute
+    {
+        return Attribute::make(get: $this->getRatings(...), set: self::_readonly(...));
+    }
+
+    public function requires(): Attribute
+    {
+        return Attribute::make(get: $this->getRequires(...), set: self::_readonly(...));
+    }
+
+    public function sections(): Attribute
+    {
+        return Attribute::make(get: $this->getSections(...), set: self::_readonly(...));
+    }
+
+    /// private api
+
+    private static function _readonly(): never
+    {
+        throw new InvalidArgumentException('Cannot modify read-only attribute');
     }
 
     //endregion
