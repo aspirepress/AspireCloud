@@ -52,14 +52,16 @@ class QueryThemesService
     /** @param Builder<Theme> $query */
     private static function applySearch(Builder $query, string $search): void
     {
-        $query->where('name', 'like', "%$search%")
+        $query
+            ->whereFullText('slug', $search)
+            ->orWhereFullText('name', $search)
             ->orWhereFullText('description', $search);
     }
 
     /** @param Builder<Theme> $query */
     private static function applyTheme(Builder $query, string $theme): void
     {
-        $query->where('slug', 'like', "%$theme%");
+        $query->whereFullText('slug', $theme);
     }
 
     /** @param Builder<Theme> $query */
