@@ -36,7 +36,6 @@ use InvalidArgumentException;
  * @property-read int $active_installs
  * @property-read int $downloaded
  * @property-read string|null $homepage
- * @property-read array|null $banners
  * @property-read string|null $donate_link
  * @property-read array|null $icons
  * @property-read array|null $source
@@ -47,6 +46,8 @@ use InvalidArgumentException;
  * @property-read string|null $repository_url
  * @property-read array|null $screenshots
  * @property-read array|null $versions
+ * @property-read string $ac_origin
+ * @property-read array $ac_metadata
  */
 final class Plugin extends BaseModel
 {
@@ -83,7 +84,6 @@ final class Plugin extends BaseModel
             'active_installs' => 'integer',
             'downloaded' => 'integer',
             'homepage' => 'string',
-            'banners' => 'array',
             'donate_link' => 'string',
             'icons' => 'array',
             'source' => 'array',
@@ -157,7 +157,6 @@ final class Plugin extends BaseModel
             'active_installs' => $metadata['active_installs'] ?? 0,
             'downloaded' => $metadata['downloaded'] ?? '',
             'homepage' => $metadata['homepage'] ?: null,
-            'banners' => $metadata['banners'] ?? null,
             'donate_link' => $trunc($metadata['donate_link'] ?: null, 1024),
             'icons' => $metadata['icons'] ?? null,
             'source' => $metadata['source'] ?? null,
@@ -191,7 +190,6 @@ final class Plugin extends BaseModel
 
         $download_link = self::rewriteDotOrgUrl($metadata['download_link'] ?? '');
         $versions = array_map(self::rewriteDotOrgUrl(...), $metadata['versions'] ?? []);
-        $banners = array_map(self::rewriteDotOrgUrl(...), $metadata['banners'] ?? []);
         $icons = array_map(self::rewriteDotOrgUrl(...), $metadata['icons'] ?? []);
 
         $screenshots = array_map(
@@ -199,7 +197,7 @@ final class Plugin extends BaseModel
             $metadata['screenshots'] ?? [],
         );
 
-        return [...$metadata, ...compact('download_link', 'versions', 'banners', 'icons', 'screenshots')];
+        return [...$metadata, ...compact('download_link', 'versions', 'icons', 'screenshots')];
     }
 
     private static function rewriteDotOrgUrl(string $url): string
@@ -268,9 +266,20 @@ final class Plugin extends BaseModel
         return $this->getMetadataObject('upgrade_notice');
     }
 
+    public function banners(): array
+    {
+        $banners = $this->getMetadataObject('banners');
+        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $banners) : $banners;
+    }
+
     private function getMetadataObject(string $field): array
     {
         return ($this->ac_raw_metadata[$field] ?? []) ?: [];    // coerce false into an array
+    }
+
+    private function shouldRewriteMetadata(): bool
+    {
+        return $this->ac_origin === 'wp_org';
     }
 
     public function addTags(array $tags): self

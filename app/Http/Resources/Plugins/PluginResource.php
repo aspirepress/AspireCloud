@@ -53,7 +53,7 @@ class PluginResource extends BasePluginResource
                 'business_model' => $plugin->business_model,
                 'repository_url' => $plugin->repository_url,
                 'commercial_support_url' => $plugin->commercial_support_url,
-                'banners' => $plugin->banners,
+                'banners' => $plugin->banners(),
                 'preview_link' => $plugin->preview_link,
             ]),
             default => $data,

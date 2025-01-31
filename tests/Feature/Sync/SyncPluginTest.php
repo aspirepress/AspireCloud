@@ -149,7 +149,7 @@ describe('Sync Plugins', function () {
             ->and($plugin->repository_url)->toBeEmpty()
             ->and($plugin->commercial_support_url)->toBeEmpty()
             ->and($plugin->donate_link)->toBeEmpty()
-            ->and($plugin->banners)->toBeEmpty()
+            ->and($plugin->banners())->toBeEmpty()
             ->and($plugin->preview_link)->toBeEmpty();
 
         // test URL rewrites

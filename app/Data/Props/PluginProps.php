@@ -17,7 +17,6 @@ use Spatie\LaravelData\Optional;
 final class PluginProps extends ModelProps
 {
     /**
-     * @param Optional|array<string, mixed>|null $banners
      * @param Optional|array<string, mixed>|null $icons
      * @param Optional|array<string, mixed>|null $source
      * @param Optional|array<string, mixed>|null $screenshots
@@ -69,7 +68,6 @@ final class PluginProps extends ModelProps
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $homepage,
-        public readonly Optional|array|null $banners,
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $donate_link,

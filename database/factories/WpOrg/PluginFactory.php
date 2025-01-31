@@ -38,10 +38,6 @@ class PluginFactory extends Factory
             'active_installs' => $this->faker->numberBetween(0, 1000000),
             'downloaded' => $this->faker->numberBetween(0, 2000000),
             'homepage' => $this->faker->url(),
-            'banners' => [
-                'low' => $this->faker->imageUrl(772, 250),
-                'high' => $this->faker->imageUrl(1544, 500),
-            ],
             'donate_link' => $this->faker->optional()->url(),
             'icons' => [
                 '1x' => $this->faker->imageUrl(128, 128),
@@ -73,6 +69,10 @@ class PluginFactory extends Factory
                 'compatibility' => $this->generateCompatibility(),
                 'sections' => $this->generateSections(),
                 'upgrade_notice' => $this->generateUpgradeNotices(),
+                'banners' => [
+                    'low' => $this->faker->imageUrl(772, 250),
+                    'high' => $this->faker->imageUrl(1544, 500),
+                ],
             ],
         ];
     }

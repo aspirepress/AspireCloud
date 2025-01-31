@@ -29,7 +29,6 @@ return new class extends Migration {
             $table->unsignedInteger('active_installs')->default(0)->index();
             $table->unsignedInteger('downloaded')->default(0)->index();
             $table->string('homepage', 1024)->nullable();
-            $table->jsonb('banners')->nullable();
             $table->string('donate_link', 1024)->nullable();
             $table->jsonb('icons')->nullable();
             $table->jsonb('source')->nullable();
