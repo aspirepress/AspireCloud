@@ -19,15 +19,15 @@ return new class extends Migration {
             $table->text('requires_php')->nullable();
             $table->text('tested');
             $table->text('download_link');
-            $table->dateTime('added')->index();
-            $table->dateTime('last_updated')->nullable()->index();
+            $table->timestampTz('added')->index();
+            $table->timestampTz('last_updated')->nullable()->index();
             $table->text('author_profile')->nullable();
-            $table->unsignedSmallInteger('rating')->default(0)->index();
-            $table->unsignedInteger('num_ratings')->default(0)->index();
-            $table->unsignedInteger('support_threads')->default(0)->index();
-            $table->unsignedInteger('support_threads_resolved')->default(0)->index();
-            $table->unsignedInteger('active_installs')->default(0)->index();
-            $table->unsignedInteger('downloaded')->default(0)->index();
+            $table->smallInteger('rating')->default(0)->index();
+            $table->integer('num_ratings')->default(0)->index();
+            $table->integer('support_threads')->default(0)->index();
+            $table->integer('support_threads_resolved')->default(0)->index();
+            $table->integer('active_installs')->default(0)->index();
+            $table->integer('downloaded')->default(0)->index();
             $table->text('homepage')->nullable();
             $table->text('donate_link')->nullable();
             $table->text('business_model')->nullable();
@@ -36,7 +36,7 @@ return new class extends Migration {
             $table->text('preview_link')->nullable();
             $table->text('repository_url')->nullable();
             $table->text('ac_origin')->nullable()->index();
-            $table->dateTime('ac_created')->useCurrent()->index();
+            $table->timestampTz('ac_created')->useCurrent()->index();
             $table->jsonb('ac_raw_metadata')->nullable();
 
             // additional indexes
@@ -51,11 +51,11 @@ return new class extends Migration {
             $table->text('slug')->index();
             $table->text('name')->index();
             $table->text('description');
-            $table->dateTime('closed_date')->index();
+            $table->timestampTz('closed_date')->index();
             $table->text('reason')->index();
             $table->foreignUuid('ac_shadow_id')->nullable()->references('id')->on('plugins')->nullOnDelete();
             $table->text('ac_origin')->nullable()->index();
-            $table->dateTime('ac_created')->index();
+            $table->timestampTz('ac_created')->index();
             $table->jsonb('ac_raw_metadata')->nullable();
 
             // additional indexes
@@ -87,22 +87,22 @@ return new class extends Migration {
             $table->foreignUuid('author_id')->references('id')->on('authors');
             $table->text('download_link');
             $table->text('requires_php')->nullable();
-            $table->datetime('last_updated')->index();
-            $table->datetime('creation_time')->index();
+            $table->timestampTz('last_updated')->index();
+            $table->timestampTz('creation_time')->index();
             $table->text('preview_url')->nullable();
             $table->text('screenshot_url')->nullable();
-            $table->unsignedSmallInteger('rating')->default(0)->index();
-            $table->unsignedInteger('num_ratings')->default(0)->index();
+            $table->smallInteger('rating')->default(0)->index();
+            $table->integer('num_ratings')->default(0)->index();
             $table->text('reviews_url')->nullable();
-            $table->unsignedInteger('downloaded')->default(0)->index();
-            $table->unsignedInteger('active_installs')->default(0)->index();
+            $table->integer('downloaded')->default(0)->index();
+            $table->integer('active_installs')->default(0)->index();
             $table->text('homepage')->nullable();
             $table->boolean('is_commercial')->default(false);
             $table->text('external_support_url')->nullable();
             $table->boolean('is_community')->default(false);
             $table->text('external_repository_url')->nullable();
             $table->text('ac_origin')->nullable()->index();
-            $table->datetime('ac_created')->nullable()->index();
+            $table->timestampTz('ac_created')->nullable()->index();
             $table->jsonb('ac_raw_metadata')->nullable();
 
             // additional indexes
@@ -144,7 +144,8 @@ return new class extends Migration {
             $table->text('upstream_path');
             $table->text('local_path');
             $table->text('repository')->default('wp_org')->index();
-            $table->timestamps();
+            $table->timestampTz('created_at')->useCurrent();
+            $table->timestampTz('updated_at')->useCurrent();
 
             $table->index(['asset_type', 'slug']);
         });
@@ -158,7 +159,7 @@ return new class extends Migration {
             $table->integer('response_code');
             $table->text('response_body')->nullable();
             $table->json('response_headers');
-            $table->dateTime('created_at')->useCurrent();
+            $table->timestampTz('created_at')->useCurrent();
         });
     }
 

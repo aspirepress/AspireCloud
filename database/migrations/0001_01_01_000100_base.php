@@ -9,24 +9,24 @@ return new class extends Migration {
     {
         Schema::create('cache', function (Blueprint $table) {
             $table->text('key')->primary();
-            $table->mediumText('value');
-            $table->integer('expiration');
+            $table->text('value');
+            $table->bigInteger('expiration');
         });
 
         Schema::create('cache_locks', function (Blueprint $table) {
             $table->text('key')->primary();
             $table->text('owner');
-            $table->integer('expiration');
+            $table->bigInteger('expiration');
         });
 
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
             $table->text('queue')->index();
-            $table->longText('payload');
-            $table->unsignedTinyInteger('attempts');
-            $table->unsignedInteger('reserved_at')->nullable();
-            $table->unsignedInteger('available_at');
-            $table->unsignedInteger('created_at');
+            $table->text('payload');
+            $table->integer('attempts');
+            $table->bigInteger('reserved_at')->nullable();
+            $table->bigInteger('available_at');
+            $table->bigInteger('created_at');
         });
 
         Schema::create('job_batches', function (Blueprint $table) {
@@ -35,11 +35,11 @@ return new class extends Migration {
             $table->integer('total_jobs');
             $table->integer('pending_jobs');
             $table->integer('failed_jobs');
-            $table->longText('failed_job_ids');
-            $table->mediumText('options')->nullable();
-            $table->integer('cancelled_at')->nullable();
-            $table->integer('created_at');
-            $table->integer('finished_at')->nullable();
+            $table->text('failed_job_ids');
+            $table->text('options')->nullable();
+            $table->bigInteger('cancelled_at')->nullable();
+            $table->bigInteger('created_at');
+            $table->bigInteger('finished_at')->nullable();
         });
 
         Schema::create('failed_jobs', function (Blueprint $table) {
@@ -47,9 +47,9 @@ return new class extends Migration {
             $table->text('uuid')->unique();
             $table->text('connection');
             $table->text('queue');
-            $table->longText('payload');
-            $table->longText('exception');
-            $table->timestamp('failed_at')->useCurrent();
+            $table->text('payload');
+            $table->text('exception');
+            $table->timestampTz('failed_at')->useCurrent();
         });
     }
 
