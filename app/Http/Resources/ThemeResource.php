@@ -81,7 +81,7 @@ class ThemeResource extends JsonResource
             'sections' => $this->whenField('sections', fn() => $resource->sections()),
             'download_link' => $this->whenField('downloadlink', fn() => $resource->download_link ?? ''),
             'tags' => $this->whenField('tags', fn() => $tags),
-            'versions' => $this->whenField('versions', fn() => $resource->versions),
+            'versions' => $this->whenField('versions', fn() => $resource->versions()),
             // TODO: support parent
             // 'parent' => $this->whenField('parent', function () use ($resource) {
             //     $parent = $resource->parent_theme;

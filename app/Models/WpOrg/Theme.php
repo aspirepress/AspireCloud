@@ -30,7 +30,6 @@ use InvalidArgumentException;
  * @property-read int $downloaded
  * @property-read int $active_installs
  * @property-read string $homepage
- * @property-read array $versions
  * @property-read bool $is_commercial
  * @property-read string $external_support_url
  * @property-read bool $is_community
@@ -63,7 +62,6 @@ final class Theme extends BaseModel
             'downloaded' => 'integer',
             'active_installs' => 'integer',
             'homepage' => 'string',
-            'versions' => 'array',
             'is_commercial' => 'boolean',
             'external_support_url' => 'string',
             'is_community' => 'boolean',
@@ -138,7 +136,6 @@ final class Theme extends BaseModel
             'downloaded' => $metadata['downloaded'] ?? 0,
             'active_installs' => $metadata['active_installs'] ?? 0,
             'homepage' => $trunc($metadata['homepage'] ?? null),
-            'versions' => $metadata['versions'] ?? null,
             'is_commercial' => $metadata['is_commercial'] ?? false,
             'external_support_url' => $trunc($metadata['external_support_url'] ?? null),
             'is_community' => $metadata['is_community'] ?? false,
@@ -167,7 +164,6 @@ final class Theme extends BaseModel
         $rewrite = fn(string $url) => \Safe\preg_replace('#https?://.*?/#i', $base, $url);
 
         $download_link = $rewrite($metadata['download_link'] ?? '');
-        $versions = array_map($rewrite, $metadata['versions'] ?? []);
 
         // //ts.w.org/wp-content/themes/abhokta/screenshot.png?ver=1.0.0
         // /download/assets/theme/abhokta/1.0.0/screenshot.png
@@ -179,7 +175,7 @@ final class Theme extends BaseModel
             $screenshot_url = $base . "assets/theme/$slug/$revision/$file";
         }
 
-        return [...$metadata, ...compact('download_link', 'versions', 'screenshot_url')];
+        return [...$metadata, ...compact('download_link', 'screenshot_url')];
     }
 
     //endregion
@@ -202,6 +198,23 @@ final class Theme extends BaseModel
     private function getMetadataObject(string $field): array
     {
         return ($this->ac_raw_metadata[$field] ?? []) ?: [];    // coerce false into an array
+    }
+
+    public function versions(): array
+    {
+        $versions = $this->getMetadataObject('versions');
+        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
+    }
+
+    public function rewriteDotOrgUrl(string $url): string
+    {
+        $base = config('app.aspirecloud.download.base');
+        return \Safe\preg_replace('#https?://.*?/#i', $base, $url);
+    }
+
+    private function shouldRewriteMetadata(): bool
+    {
+        return $this->ac_origin === 'wp_org';
     }
 
     public function addTags(array $tags): self
