@@ -46,7 +46,6 @@ use InvalidArgumentException;
  * @property-read string|null $support_url
  * @property-read string|null $preview_link
  * @property-read string|null $repository_url
- * @property-read array|null $compatibility
  * @property-read array|null $screenshots
  * @property-read array|null $sections
  * @property-read array|null $versions
@@ -96,7 +95,6 @@ final class Plugin extends BaseModel
             'support_url' => 'string',
             'preview_link' => 'string',
             'repository_url' => 'string',
-            'compatibility' => 'array',
             'screenshots' => 'array',
             'sections' => 'array',
             'versions' => 'array',
@@ -173,7 +171,6 @@ final class Plugin extends BaseModel
             'support_url' => $trunc($metadata['support_url'] ?: null, 1024),
             'preview_link' => $trunc($metadata['preview_link'] ?: null, 1024),
             'repository_url' => $trunc($metadata['repository_url'] ?: null, 1024),
-            'compatibility' => $metadata['compatibility'] ?? null,
             'screenshots' => $metadata['screenshots'] ?? null,
             'sections' => $metadata['sections'] ?? null,
             'versions' => $metadata['versions'] ?? null,
@@ -261,6 +258,11 @@ final class Plugin extends BaseModel
     public function requires_plugins(): array
     {
         return $this->ac_raw_metadata['requires_plugins'] ?? [];
+    }
+
+    public function compatibility(): array
+    {
+        return $this->ac_raw_metadata['compatibility'] ?? [];
     }
 
     public function addTags(array $tags): self

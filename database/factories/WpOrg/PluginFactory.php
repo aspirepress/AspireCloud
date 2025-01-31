@@ -56,7 +56,6 @@ class PluginFactory extends Factory
             'support_url' => $this->faker->url(),
             'preview_link' => $this->faker->url(),
             'repository_url' => $this->faker->url(),
-            'compatibility' => $this->generateCompatibility(),
             'screenshots' => $this->generateScreenshots(),
             'sections' => $this->generateSections(),
             'versions' => $this->generateVersions(),
@@ -73,6 +72,7 @@ class PluginFactory extends Factory
                 ],
                 'contributors' => $this->generateContributors(),
                 'requires_plugins' => $this->generateRequiredPlugins(),
+                'compatibility' => $this->generateCompatibility(),
             ],
         ];
     }

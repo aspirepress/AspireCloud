@@ -92,7 +92,7 @@ class PluginUpdateService
             'tested' => $plugin->tested,
             'requires_php' => $plugin->requires_php,
             'requires_plugins' => $plugin->requires_plugins(),
-            'compatibility' => $plugin->compatibility ?? [],
+            'compatibility' => $plugin->compatibility(),
         ];
     }
 }
