@@ -7,7 +7,6 @@ use App\Models\BaseModel;
 use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
-use Closure;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +35,12 @@ use InvalidArgumentException;
  * @property-read string $external_support_url
  * @property-read bool $is_community
  * @property-read string $external_repository_url
+ *
+ * TODO
+ * @property mixed $sections
+ * @property mixed $versions
+ * @property mixed $requires
+ * @property mixed $ratings
  */
 final class Theme extends BaseModel
 {
@@ -240,6 +245,11 @@ final class Theme extends BaseModel
     public function sections(): Attribute
     {
         return Attribute::make(get: $this->getSections(...), set: self::_readonly(...));
+    }
+
+    public function versions(): Attribute
+    {
+        return Attribute::make(get: $this->getVersions(...), set: self::_readonly(...));
     }
 
     /// private api

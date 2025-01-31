@@ -45,6 +45,18 @@ use InvalidArgumentException;
  * @property-read string|null $repository_url
  * @property-read string $ac_origin
  * @property-read array $ac_metadata
+ *
+ * TODO
+ * @property mixed $banners
+ * @property mixed $screenshots
+ * @property mixed $contributors
+ * @property mixed $versions
+ * @property mixed $sections
+ * @property mixed $ratings
+ * @property mixed $requires_plugins
+ * @property mixed $icons
+ * @property mixed $compatibility
+ * @property mixed $upgrade_notice
  */
 final class Plugin extends BaseModel
 {
