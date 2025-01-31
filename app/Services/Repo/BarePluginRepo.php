@@ -48,6 +48,7 @@ class BarePluginRepo implements PluginRepo
                 extra: [
                     'ac_created' => $now,
                     'ac_origin' => $this->origin(),
+                    'ac_raw_metadata' => [],
                     ...$extra,
                 ],
             ),

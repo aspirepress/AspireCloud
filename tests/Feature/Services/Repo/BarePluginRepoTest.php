@@ -27,7 +27,7 @@ test('BarePluginRepo basics', function () {
     expect($plugin->added)->toBeBetween($then, $now);
     expect($plugin->last_updated)->toBeBetween($then, $now);
     expect($plugin->ac_created)->toBeBetween($then, $now);
-    expect($plugin->ac_raw_metadata)->toBeNull();
+    expect($plugin->ac_raw_metadata)->toBeEmpty();
     expect($plugin->download_link)->toBe('gopher://test');
     expect($plugin->repository_url)->toBe('wais://test');
 });

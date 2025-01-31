@@ -14,28 +14,34 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use InvalidArgumentException;
 
 /**
+ * @property-read Author|null $author
+ *
  * @property-read string $id
  * @property-read string $slug
  * @property-read string $name
  * @property-read string $version
+ * @property-read string $description
  * @property-read string $download_link
- * @property-read string $requires_php
- * @property-read CarbonImmutable $last_updated
- * @property-read CarbonImmutable $creation_time
- * @property-read string $preview_url
- * @property-read string $screenshot_url
+ * @property-read string|null $requires
+ * @property-read string|null $requires_php
+ * @property-read CarbonImmutable|null $last_updated
+ * @property-read CarbonImmutable|null $creation_time
+ * @property-read string|null $preview_url
+ * @property-read string|null $screenshot_url
  * @property-read int $rating
  * @property-read int $num_ratings
- * @property-read string $reviews_url
  * @property-read int $downloaded
  * @property-read int $active_installs
- * @property-read string $homepage
  * @property-read bool $is_commercial
- * @property-read string $external_support_url
  * @property-read bool $is_community
- * @property-read string $external_repository_url
+ * @property-read string|null $homepage
+ * @property-read string|null $reviews_url
+ * @property-read string|null $external_support_url
+ * @property-read string|null $external_repository_url
  *
- * @property string|null $requires // TODO put this back as a column
+ * @property-read string $ac_origin
+ * @property-read CarbonImmutable $ac_created
+ * @property-read array<string, mixed> $ac_raw_metadata
  *
  * // synthesized attributes
  * @property array<string, string> $sections

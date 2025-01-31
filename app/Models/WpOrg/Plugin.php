@@ -22,11 +22,11 @@ use InvalidArgumentException;
  * @property-read string $description
  * @property-read string $version
  * @property-read string $author
- * @property-read string $requires
+ * @property-read string|null $requires
  * @property-read string|null $requires_php
- * @property-read string $tested
+ * @property-read string|null $tested
  * @property-read string $download_link
- * @property-read CarbonImmutable $added
+ * @property-read CarbonImmutable|null $added
  * @property-read CarbonImmutable|null $last_updated
  * @property-read string|null $author_profile
  * @property-read int $rating
@@ -42,20 +42,22 @@ use InvalidArgumentException;
  * @property-read string|null $support_url
  * @property-read string|null $preview_link
  * @property-read string|null $repository_url
+ *
  * @property-read string $ac_origin
- * @property-read array $ac_metadata
+ * @property-read CarbonImmutable $ac_created
+ * @property-read array<string, mixed> $ac_raw_metadata
  *
  * // Synthesized attributes
- * @property array<array-key, mixed> $banners // TODO
- * @property array<array-key, array{src: string, caption: string}> $screenshots
- * @property array<string, mixed> $contributors // TODO
- * @property array<string, string> $versions
- * @property array<string, string> $sections
- * @property array{"1":int, "2":int, "3":int, "4":int, "5":int} $ratings
- * @property string[] $requires_plugins
- * @property array<string, string> $icons
- * @property array<array-key, mixed> $compatibility // TODO (it only ever seems to be empty)
- * @property array<string, string> $upgrade_notice
+ * @property-read array<array-key, mixed> $banners // TODO
+ * @property-read array<array-key, array{src: string, caption: string}> $screenshots
+ * @property-read array<string, mixed> $contributors // TODO
+ * @property-read array<string, string> $versions
+ * @property-read array<string, string> $sections
+ * @property-read array{"1":int, "2":int, "3":int, "4":int, "5":int} $ratings
+ * @property-read string[] $requires_plugins
+ * @property-read array<string, string> $icons
+ * @property-read array<array-key, mixed> $compatibility // TODO (it only ever seems to be empty)
+ * @property-read array<string, string> $upgrade_notice
  */
 final class Plugin extends BaseModel
 {
@@ -170,7 +172,7 @@ final class Plugin extends BaseModel
         return $instance;
     }
 
-    private static function rewriteDotOrgUrl(string $url): string
+    private static function rewriteDotOrgUrl(mixed $url): string
     {
         $base = config('app.aspirecloud.download.base');
 

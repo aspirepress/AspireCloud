@@ -39,6 +39,8 @@ beforeEach(function () {
         'is_community' => true,
         'external_repository_url' => 'https://test.com',
         'author_id' => $author->id,
+        'ac_origin' => 'wp_org',
+        'ac_raw_metadata' => [],
     ])->addTagsBySlugs(['black', 'white', 'red', 'blue']);
     // 'ratings' => [5, 4, 3, 2, 1, 2],
     // 'requires' => ['php' => '5.6', 'wp' => '5.0'],

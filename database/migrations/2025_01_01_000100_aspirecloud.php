@@ -15,11 +15,11 @@ return new class extends Migration {
             $table->text('description');
             $table->text('version')->index();
             $table->text('author')->index();
-            $table->text('requires');
+            $table->text('requires')->nullable();
             $table->text('requires_php')->nullable();
-            $table->text('tested');
+            $table->text('tested')->nullable();
             $table->text('download_link');
-            $table->timestampTz('added')->index();
+            $table->timestampTz('added')->nullable()->index();
             $table->timestampTz('last_updated')->nullable()->index();
             $table->text('author_profile')->nullable();
             $table->smallInteger('rating')->default(0)->index();
@@ -35,9 +35,9 @@ return new class extends Migration {
             $table->text('support_url')->nullable();
             $table->text('preview_link')->nullable();
             $table->text('repository_url')->nullable();
-            $table->text('ac_origin')->nullable()->index();
+            $table->text('ac_origin')->index();
             $table->timestampTz('ac_created')->useCurrent()->index();
-            $table->jsonb('ac_raw_metadata')->nullable();
+            $table->jsonb('ac_raw_metadata');
 
             // additional indexes
             $table->text('slug')->fulltext()->change();
@@ -82,14 +82,14 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->text('slug')->index();
             $table->text('name')->index();
-            $table->text('description')->nullable();
             $table->text('version')->index();
+            $table->text('description');
             $table->foreignUuid('author_id')->references('id')->on('authors');
             $table->text('download_link');
             $table->text('requires')->nullable();
             $table->text('requires_php')->nullable();
-            $table->timestampTz('last_updated')->index();
-            $table->timestampTz('creation_time')->index();
+            $table->timestampTz('last_updated')->nullable()->index();
+            $table->timestampTz('creation_time')->nullable()->index();
             $table->text('preview_url')->nullable();
             $table->text('screenshot_url')->nullable();
             $table->smallInteger('rating')->default(0)->index();
@@ -102,9 +102,9 @@ return new class extends Migration {
             $table->text('external_support_url')->nullable();
             $table->boolean('is_community')->default(false);
             $table->text('external_repository_url')->nullable();
-            $table->text('ac_origin')->nullable()->index();
-            $table->timestampTz('ac_created')->nullable()->index();
-            $table->jsonb('ac_raw_metadata')->nullable();
+            $table->text('ac_origin')->index();
+            $table->timestampTz('ac_created')->useCurrent()->index();
+            $table->jsonb('ac_raw_metadata');
 
             // additional indexes
             $table->text('slug')->fulltext()->change();
