@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 /**
@@ -121,32 +120,29 @@ final class Theme extends BaseModel
         $authorData = $metadata['author'];
         $author = Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
 
-        $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
-
         // TODO: use self::create for validation
         $instance = self::_create([
             'author_id' => $author->id,
-            'slug' => $trunc($metadata['slug']),
-            'name' => $trunc($metadata['name']),
+            'slug' => $metadata['slug'],
+            'name' => $metadata['name'],
             'description' => $metadata['sections']['description'] ?? null,
             'version' => $metadata['version'],
             'download_link' => $metadata['download_link'],
             'requires_php' => $metadata['requires_php'] ?? null,
             'last_updated' => Carbon::parse($metadata['last_updated_time']),
             'creation_time' => Carbon::parse($metadata['creation_time']),
-            // All fields below are optional
-            'preview_url' => $trunc($metadata['preview_url'] ?? null),
-            'screenshot_url' => $trunc($metadata['screenshot_url'] ?? null),
+            'preview_url' => $metadata['preview_url'] ?? null,
+            'screenshot_url' => $metadata['screenshot_url'] ?? null,
             'rating' => $metadata['rating'] ?? 0,
             'num_ratings' => $metadata['num_ratings'] ?? 0,
-            'reviews_url' => $trunc($metadata['reviews_url'] ?? null),
+            'reviews_url' => $metadata['reviews_url'] ?? null,
             'downloaded' => $metadata['downloaded'] ?? 0,
             'active_installs' => $metadata['active_installs'] ?? 0,
-            'homepage' => $trunc($metadata['homepage'] ?? null),
+            'homepage' => $metadata['homepage'] ?? null,
             'is_commercial' => $metadata['is_commercial'] ?? false,
-            'external_support_url' => $trunc($metadata['external_support_url'] ?? null),
+            'external_support_url' => $metadata['external_support_url'] ?? null,
             'is_community' => $metadata['is_community'] ?? false,
-            'external_repository_url' => $trunc($metadata['external_repository_url'] ?? null),
+            'external_repository_url' => $metadata['external_repository_url'] ?? null,
             'ac_origin' => $syncmeta['origin'],
             'ac_raw_metadata' => $ac_raw_metadata,
         ]);

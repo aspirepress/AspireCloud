@@ -125,10 +125,7 @@ final class Plugin extends BaseModel
         return self::_create($props->toArray());
     }
 
-    /**
-     * TODO: move to WpOrgPluginRepo
-     * @param array<string,mixed> $metadata
-     */
+    /** @param array<string,mixed> $metadata */
     public static function fromSyncMetadata(array $metadata): self
     {
         $syncmeta = $metadata['aspiresync_meta'];
@@ -138,20 +135,18 @@ final class Plugin extends BaseModel
         $ac_raw_metadata = $metadata;
         $metadata = self::rewriteMetadata($metadata);
 
-        $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
-
         // TODO: use self::create for validation
         $instance = self::_create([
             'slug' => $syncmeta['slug'],
-            'name' => $trunc($metadata['name'] ?? ''),
-            'short_description' => $trunc($metadata['short_description'] ?? '', 150),
+            'name' => $metadata['name'] ?? '',
+            'short_description' => $metadata['short_description'] ?? '',
             'description' => $metadata['description'] ?? '',
             'version' => $metadata['version'],
-            'author' => $trunc($metadata['author'] ?? ''),
+            'author' => $metadata['author'] ?? '',
             'requires' => $metadata['requires'],
-            'requires_php' => $metadata['requires_php'] ?: null, // use ?: to convert blank and false to null
+            'requires_php' => $metadata['requires_php'] ?: null,
             'tested' => $metadata['tested'] ?? '',
-            'download_link' => $trunc($metadata['download_link'] ?? '', 1024),
+            'download_link' => $metadata['download_link'] ?? '',
             'added' => Carbon::parse($metadata['added']),
             'last_updated' => ($metadata['last_updated'] ?? null) ? Carbon::parse($metadata['last_updated']) : null,
             'author_profile' => $metadata['author_profile'] ?? null,
@@ -162,12 +157,12 @@ final class Plugin extends BaseModel
             'active_installs' => $metadata['active_installs'] ?? 0,
             'downloaded' => $metadata['downloaded'] ?? '',
             'homepage' => $metadata['homepage'] ?: null,
-            'donate_link' => $trunc($metadata['donate_link'] ?: null, 1024),
+            'donate_link' => $metadata['donate_link'] ?: null,
             'business_model' => $metadata['business_model'] ?: null,
-            'commercial_support_url' => $trunc($metadata['commercial_support_url'] ?: null, 1024),
-            'support_url' => $trunc($metadata['support_url'] ?: null, 1024),
-            'preview_link' => $trunc($metadata['preview_link'] ?: null, 1024),
-            'repository_url' => $trunc($metadata['repository_url'] ?: null, 1024),
+            'commercial_support_url' => $metadata['commercial_support_url'] ?: null,
+            'support_url' => $metadata['support_url'] ?: null,
+            'preview_link' => $metadata['preview_link'] ?: null,
+            'repository_url' => $metadata['repository_url'] ?: null,
             'ac_origin' => $syncmeta['origin'],
             'ac_raw_metadata' => $ac_raw_metadata,
         ]);
