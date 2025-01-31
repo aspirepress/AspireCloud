@@ -210,17 +210,20 @@ final class Plugin extends BaseModel
 
     //region Getters
 
+    /** @return array<string,mixed> */
     public function getBanners(): array
     {
         $banners = $this->getMetadataArray('banners');
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $banners) : $banners;
     }
 
+    /** @return array<string,mixed> */
     public function getCompatibility(): array
     {
         return $this->getMetadataArray('compatibility');
     }
 
+    /** @return array<string,mixed> */
     public function getContributors(): array
     {
         return $this->getMetadataArray('contributors');
@@ -232,22 +235,26 @@ final class Plugin extends BaseModel
         return $this->shouldRewriteMetadata() ? self::rewriteDotOrgUrl($link) : $link;
     }
 
+    /** @return array<string,mixed> */
     public function getIcons(): array
     {
         $icons = $this->getMetadataArray('icons');
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $icons) : $icons;
     }
 
+    /** @return array<string,mixed> */
     public function getRatings(): array
     {
         return $this->getMetadataArray('ratings');
     }
 
+    /** @return string[] */
     public function getRequiresPlugins(): array
     {
         return $this->getMetadataArray('requires_plugins');
     }
 
+    /** @return array<string,mixed> */
     public function getScreenshots(): array
     {
         $screenshots = $this->getMetadataArray('screenshots');
@@ -255,21 +262,25 @@ final class Plugin extends BaseModel
         return $this->shouldRewriteMetadata() ? array_map($rewrite, $screenshots) : $screenshots;
     }
 
+    /** @return array<string,string> */
     public function getSections(): array
     {
         return $this->getMetadataArray('sections');
     }
 
+    /** @return array<string,mixed> */
     public function getSource(): array
     {
         return $this->getMetadataArray('source');
     }
 
+    /** @return array<string,mixed> */
     public function getUpgradeNotice(): array
     {
         return $this->getMetadataArray('upgrade_notice');
     }
 
+    /** @return array<string,string> */
     public function getVersions(): array
     {
         $versions = $this->getMetadataArray('versions');
@@ -278,6 +289,7 @@ final class Plugin extends BaseModel
 
     /// private api
 
+    /** @return array<array-key,mixed> */
     private function getMetadataArray(string $field): array
     {
         return ($this->ac_raw_metadata[$field] ?? []) ?: []; // coerce false to empty array because lolphp and lolwp
@@ -295,62 +307,76 @@ final class Plugin extends BaseModel
     // Note that Attributes are deeply magical in Laravel, and will not tolerate being subclassed or even having their
     // construction delegated to a trait.  This is about as refactored as they are going to get.
 
+    // TODO: tighten up getter types in generics
+
+    /** @return Attribute<array<array-key, mixed>, never> */
     public function banners(): Attribute
     {
         return Attribute::make(get: $this->getBanners(...), set: self::_readonly(...));
     }
 
+    /** @return Attribute<array<array-key, mixed>, never> */
     public function compatibility(): Attribute
     {
         return Attribute::make(get: $this->getCompatibility(...), set: self::_readonly(...));
     }
 
+    /** @return Attribute<array<array-key, mixed>, never> */
     public function contributors(): Attribute
     {
         return Attribute::make(get: $this->getContributors(...), set: self::_readonly(...));
     }
 
+    /** @return Attribute<string, never> (actually Attribute<string,string> but we want it to _look_ read-only) */
     public function downloadLink(): Attribute
     {
         // note: must be writable, since download_link appears in create()
         return Attribute::make(get: $this->getDownloadLink(...));
     }
 
+    /** @return Attribute<array<array-key, mixed>, never> */
     public function icons(): Attribute
     {
         return Attribute::make(get: $this->getIcons(...), set: self::_readonly(...));
     }
 
+    /** @return Attribute<array{"1": int, "2": int, "3": int, "4": int, "5": int}, never> */
     public function ratings(): Attribute
     {
         return Attribute::make(get: $this->getRatings(...), set: self::_readonly(...));
     }
 
+    /** @return Attribute<string[], never> */
     public function requiresPlugins(): Attribute
     {
         return Attribute::make(get: $this->getRequiresPlugins(...), set: self::_readonly(...));
     }
 
+    /** @return Attribute<array<array-key, mixed>, never> */
     public function screenshots(): Attribute
     {
         return Attribute::make(get: $this->getScreenshots(...), set: self::_readonly(...));
     }
 
+    /** @return Attribute<array<string, string>, never> */
     public function sections(): Attribute
     {
         return Attribute::make(get: $this->getSections(...), set: self::_readonly(...));
     }
 
+    /** @return Attribute<array<array-key, mixed>, never> */
     public function source(): Attribute
     {
         return Attribute::make(get: $this->getSource(...), set: self::_readonly(...));
     }
 
+    /** @return Attribute<array<array-key, mixed>, never> */
     public function upgradeNotice(): Attribute
     {
         return Attribute::make(get: $this->getUpgradeNotice(...), set: self::_readonly(...));
     }
 
+    /** @return Attribute<array<string, string>, never> */
     public function versions(): Attribute
     {
         return Attribute::make(get: $this->getVersions(...), set: self::_readonly(...));
@@ -367,6 +393,7 @@ final class Plugin extends BaseModel
 
     //region Collection Management
 
+    /** @param array<string, string> $tags */
     public function addTags(array $tags): self
     {
         $pluginTags = [];
@@ -377,6 +404,7 @@ final class Plugin extends BaseModel
         return $this;
     }
 
+    /** @param string[] $tagSlugs */
     public function addTagsBySlugs(array $tagSlugs): self
     {
         return $this->addTags(array_combine($tagSlugs, $tagSlugs));

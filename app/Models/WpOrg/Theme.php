@@ -191,16 +191,19 @@ final class Theme extends BaseModel
         return $base . "assets/theme/$slug/$revision/$file";
     }
 
+    /** @return array{"1":int, "2":int, "3":int, "4":int, "5":int} */
     public function getRatings(): array
     {
         return $this->getMetadataObject('ratings');
     }
 
+    /** @return array<string, string> */
     public function getSections(): array
     {
         return $this->getMetadataObject('sections');
     }
 
+    /** @return array<string, string> */
     public function getVersions(): array
     {
         $versions = $this->getMetadataObject('versions');
@@ -209,6 +212,7 @@ final class Theme extends BaseModel
 
     /// private api
 
+    /** @return array<array-key, mixed> */
     private function getMetadataObject(string $field): array
     {
         return ($this->ac_raw_metadata[$field] ?? []) ?: [];    // coerce false into an array
@@ -229,27 +233,34 @@ final class Theme extends BaseModel
 
     //region Attributes
 
+    // TODO: tighten up getter types in generics
+
+    /** @return Attribute<string, never> */
     public function downloadLink(): Attribute
     {
         // note: must be writable, since download_link appears in create()
         return Attribute::make(get: $this->getDownloadLink(...));
     }
 
+    /** @return Attribute<array{"1":int, "2":int, "3":int, "4":int, "5":int}, never> */
     public function ratings(): Attribute
     {
         return Attribute::make(get: $this->getRatings(...), set: self::_readonly(...));
     }
 
+    /** @return Attribute<string, never> */
     public function screenshotUrl(): Attribute
     {
         return Attribute::make(get: $this->getScreenshotUrl(...));
     }
 
+    /** @return Attribute<array<string, string>, never> */
     public function sections(): Attribute
     {
         return Attribute::make(get: $this->getSections(...), set: self::_readonly(...));
     }
 
+    /** @return Attribute<array<string, string>, never> */
     public function versions(): Attribute
     {
         return Attribute::make(get: $this->getVersions(...), set: self::_readonly(...));
@@ -266,6 +277,7 @@ final class Theme extends BaseModel
 
     //region Collection Management
 
+    /** @param array<string, string> $tags */
     public function addTags(array $tags): self
     {
         $themeTags = [];
@@ -276,6 +288,7 @@ final class Theme extends BaseModel
         return $this;
     }
 
+    /** @param string[] $tagSlugs */
     public function addTagsBySlugs(array $tagSlugs): self
     {
         return $this->addTags(array_combine($tagSlugs, $tagSlugs));
