@@ -17,7 +17,6 @@ use Spatie\LaravelData\Optional;
 final class PluginProps extends ModelProps
 {
     /**
-     * @param Optional|array<string, mixed>|null $source
      * @param Optional|array<string, mixed>|null $screenshots
      * @param Optional|array<string, mixed>|null $versions
      * @param Optional|array<string, mixed> $tags
@@ -70,7 +69,6 @@ final class PluginProps extends ModelProps
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $donate_link,
-        public readonly Optional|array|null $source,
         #[Max(255)]
         public readonly Optional|string|null $business_model,
         #[Url]

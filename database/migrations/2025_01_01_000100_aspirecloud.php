@@ -30,7 +30,6 @@ return new class extends Migration {
             $table->unsignedInteger('downloaded')->default(0)->index();
             $table->string('homepage', 1024)->nullable();
             $table->string('donate_link', 1024)->nullable();
-            $table->jsonb('source')->nullable();
             $table->string('business_model')->nullable();
             $table->string('commercial_support_url', 1024)->nullable();
             $table->string('support_url', 1024)->nullable();

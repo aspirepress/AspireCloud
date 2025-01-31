@@ -37,7 +37,6 @@ use InvalidArgumentException;
  * @property-read int $downloaded
  * @property-read string|null $homepage
  * @property-read string|null $donate_link
- * @property-read array|null $source
  * @property-read string|null $business_model
  * @property-read string|null $commercial_support_url
  * @property-read string|null $support_url
@@ -84,7 +83,6 @@ final class Plugin extends BaseModel
             'downloaded' => 'integer',
             'homepage' => 'string',
             'donate_link' => 'string',
-            'source' => 'array',
             'business_model' => 'string',
             'commercial_support_url' => 'string',
             'support_url' => 'string',
@@ -156,7 +154,6 @@ final class Plugin extends BaseModel
             'downloaded' => $metadata['downloaded'] ?? '',
             'homepage' => $metadata['homepage'] ?: null,
             'donate_link' => $trunc($metadata['donate_link'] ?: null, 1024),
-            'source' => $metadata['source'] ?? null,
             'business_model' => $metadata['business_model'] ?: null,
             'commercial_support_url' => $trunc($metadata['commercial_support_url'] ?: null, 1024),
             'support_url' => $trunc($metadata['support_url'] ?: null, 1024),
@@ -262,6 +259,10 @@ final class Plugin extends BaseModel
         return $this->getMetadataObject('upgrade_notice');
     }
 
+    public function source(): array
+    {
+        return $this->getMetadataObject('source');
+    }
 
     // rewritten fields
 
