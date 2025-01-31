@@ -56,7 +56,6 @@ class PluginFactory extends Factory
             'support_url' => $this->faker->url(),
             'preview_link' => $this->faker->url(),
             'repository_url' => $this->faker->url(),
-            'requires_plugins' => $this->generateRequiredPlugins(),
             'compatibility' => $this->generateCompatibility(),
             'screenshots' => $this->generateScreenshots(),
             'sections' => $this->generateSections(),
@@ -73,6 +72,7 @@ class PluginFactory extends Factory
                     '1' => $this->faker->numberBetween(0, 20),
                 ],
                 'contributors' => $this->generateContributors(),
+                'requires_plugins' => $this->generateRequiredPlugins(),
             ],
         ];
     }

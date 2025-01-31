@@ -91,7 +91,7 @@ class PluginUpdateService
             'requires' => $plugin->requires,
             'tested' => $plugin->tested,
             'requires_php' => $plugin->requires_php,
-            'requires_plugins' => $plugin->requires_plugins ?? [],
+            'requires_plugins' => $plugin->requires_plugins(),
             'compatibility' => $plugin->compatibility ?? [],
         ];
     }

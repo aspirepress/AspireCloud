@@ -114,7 +114,7 @@ describe('Sync Plugins', function () {
             ->and($plugin->requires)->toBe('3.1')
             ->and($plugin->tested)->toBe('4.1.41')
             ->and($plugin->requires_php)->toBeNull()
-            ->and($plugin->requires_plugins)->toBeEmpty()
+            ->and($plugin->requires_plugins())->toBeEmpty()
             ->and($plugin->compatibility)->toBeEmpty()
             ->and($plugin->rating)->toBe(100)
             ->and($plugin->ratings())->toBe(['5' => 1, '4' => 0, '3' => 0, '2' => 0, '1' => 0])

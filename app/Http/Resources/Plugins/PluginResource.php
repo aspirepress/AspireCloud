@@ -33,7 +33,7 @@ class PluginResource extends BasePluginResource
             'homepage' => $plugin->homepage,
             'tags' => $plugin->tagsArray(),
             'donate_link' => $plugin->donate_link,
-            'requires_plugins' => $plugin->requires_plugins ?? [],
+            'requires_plugins' => $plugin->requires_plugins(),
         ]);
 
         return match ($request->query('action')) {

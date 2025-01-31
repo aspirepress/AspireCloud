@@ -18,10 +18,8 @@ final class PluginProps extends ModelProps
 {
     /**
      * @param Optional|array<string, mixed>|null $banners
-     * @param Optional|array<string, mixed>|null $contributors
      * @param Optional|array<string, mixed>|null $icons
      * @param Optional|array<string, mixed>|null $source
-     * @param Optional|array<string, mixed>|null $requires_plugins
      * @param Optional|array<string, mixed>|null $compatibility
      * @param Optional|array<string, mixed>|null $screenshots
      * @param Optional|array<string, mixed>|null $sections
@@ -78,7 +76,6 @@ final class PluginProps extends ModelProps
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $donate_link,
-        public readonly Optional|array|null $contributors,
         public readonly Optional|array|null $icons,
         public readonly Optional|array|null $source,
         #[Max(255)]
@@ -95,7 +92,6 @@ final class PluginProps extends ModelProps
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $repository_url,
-        public readonly Optional|array|null $requires_plugins,
         public readonly Optional|array|null $compatibility,
         public readonly Optional|array|null $screenshots,
         public readonly Optional|array|null $sections,

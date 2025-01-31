@@ -38,7 +38,6 @@ return new class extends Migration {
             $table->string('support_url', 1024)->nullable();
             $table->string('preview_link', 1024)->nullable();
             $table->string('repository_url', 1024)->nullable();
-            $table->jsonb('requires_plugins')->nullable();   // string[]
             $table->jsonb('compatibility')->nullable();      // string[]
             $table->jsonb('screenshots')->nullable();
             $table->jsonb('sections')->nullable();
