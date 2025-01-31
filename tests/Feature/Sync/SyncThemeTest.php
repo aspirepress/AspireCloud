@@ -109,7 +109,7 @@ describe('Sync Themes', function () {
                 'full-width-template' => 'Full width template',
                 'one-column' => 'One column',
             ])
-            ->and($theme->requires)->toBeNull()
+            ->and($theme->requires())->toBeEmpty()
             ->and($theme->requires_php)->toBe('5.6')
             ->and($theme->is_commercial)->toBeFalse()
             ->and($theme->external_support_url)->toBe('')

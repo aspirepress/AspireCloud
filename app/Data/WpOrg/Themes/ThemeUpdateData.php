@@ -29,7 +29,7 @@ class ThemeUpdateData extends Data
             new_version: $theme->version,
             url: $theme->download_link,
             package: "downloadurl_placeholder{$theme->version}",
-            requires: $theme->requires['wordpress'] ?? null,
+            requires: $theme->requires()['wordpress'] ?? null,
             requires_php: $theme->requires_php,
         );
     }

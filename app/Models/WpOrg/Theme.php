@@ -31,7 +31,6 @@ use InvalidArgumentException;
  * @property-read int $active_installs
  * @property-read string $homepage
  * @property-read array $versions
- * @property-read array $requires
  * @property-read bool $is_commercial
  * @property-read string $external_support_url
  * @property-read bool $is_community
@@ -65,7 +64,6 @@ final class Theme extends BaseModel
             'active_installs' => 'integer',
             'homepage' => 'string',
             'versions' => 'array',
-            'requires' => 'array',
             'is_commercial' => 'boolean',
             'external_support_url' => 'string',
             'is_community' => 'boolean',
@@ -141,7 +139,6 @@ final class Theme extends BaseModel
             'active_installs' => $metadata['active_installs'] ?? 0,
             'homepage' => $trunc($metadata['homepage'] ?? null),
             'versions' => $metadata['versions'] ?? null,
-            'requires' => $metadata['requires'] ?: null,
             'is_commercial' => $metadata['is_commercial'] ?? false,
             'external_support_url' => $trunc($metadata['external_support_url'] ?? null),
             'is_community' => $metadata['is_community'] ?? false,
@@ -195,6 +192,11 @@ final class Theme extends BaseModel
     public function sections(): array
     {
         return $this->getMetadataObject('sections');
+    }
+
+    public function requires(): array
+    {
+        return $this->getMetadataObject('requires');
     }
 
     private function getMetadataObject(string $field): array

@@ -35,7 +35,7 @@ class ThemeResource extends JsonResource
      *     download_link: string,
      *     tags: array<string, string>,
      *     versions: array<string, string>,
-     *     requires: bool,
+     *     requires: array<string, string>,
      *     requires_php: string,
      *     is_commercial: bool,
      *     external_support_url: string|bool,
@@ -91,7 +91,7 @@ class ThemeResource extends JsonResource
             //         'homepage' => "https://wordpress.org/themes/{$parent->slug}/",
             //     ] : new MissingValue();
             // }),
-            'requires' => $this->whenField('requires', $resource->requires),
+            'requires' => $this->whenField('requires', $resource->requires()),
             'requires_php' => $this->whenField('requires_php', $resource->requires_php),
             'is_commercial' => $this->whenField('is_commercial', fn() => $resource->is_commercial),
             'external_support_url' => $this->whenField('external_support_url', fn() => $resource->is_commercial ? $resource->external_support_url : false),

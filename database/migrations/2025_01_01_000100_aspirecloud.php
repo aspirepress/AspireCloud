@@ -103,7 +103,6 @@ return new class extends Migration {
             $table->unsignedInteger('active_installs')->default(0)->index();
             $table->string('homepage')->nullable();
             $table->jsonb('versions')->nullable();
-            $table->jsonb('requires')->nullable();
             $table->boolean('is_commercial')->default(false);
             $table->string('external_support_url')->nullable();
             $table->boolean('is_community')->default(false);
