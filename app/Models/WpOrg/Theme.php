@@ -194,26 +194,26 @@ final class Theme extends BaseModel
     /** @return array{"1":int, "2":int, "3":int, "4":int, "5":int} */
     public function getRatings(): array
     {
-        return $this->getMetadataObject('ratings');
+        return $this->getMetadataArray('ratings');
     }
 
     /** @return array<string, string> */
     public function getSections(): array
     {
-        return $this->getMetadataObject('sections');
+        return $this->getMetadataArray('sections');
     }
 
     /** @return array<string, string> */
     public function getVersions(): array
     {
-        $versions = $this->getMetadataObject('versions');
+        $versions = $this->getMetadataArray('versions');
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
     }
 
     /// private api
 
     /** @return array<array-key, mixed> */
-    private function getMetadataObject(string $field): array
+    private function getMetadataArray(string $field): array
     {
         return ($this->ac_raw_metadata[$field] ?? []) ?: [];    // coerce false into an array
     }
