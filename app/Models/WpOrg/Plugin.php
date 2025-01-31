@@ -53,7 +53,6 @@ use InvalidArgumentException;
  * @property-read array|null $sections
  * @property-read array|null $versions
  * @property-read array|null $upgrade_notice
- * @property-read array<string, string> $tags
  */
 final class Plugin extends BaseModel
 {
