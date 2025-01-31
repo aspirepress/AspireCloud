@@ -110,7 +110,7 @@ final class ThemeProps extends ModelProps
 
     #[Override] // empty override to narrow the return type (BaseData::from is not generic)
     public static function from(
-        mixed ...$args
+        mixed ...$args,
     ): static {
         return parent::from(...$args);
     }

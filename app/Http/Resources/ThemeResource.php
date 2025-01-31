@@ -78,10 +78,10 @@ class ThemeResource extends JsonResource
             'last_updated_time' => $this->whenField('last_updated', fn() => $resource->last_updated->format('Y-m-d H:i:s')),
             'creation_time' => $this->whenField('creation_time', fn() => $resource->creation_time->format('Y-m-d H:i:s')),
             'homepage' => $this->whenField('homepage', fn() => "https://wordpress.org/themes/{$resource->slug}/"),
-            'sections' => $this->whenField('sections', fn() => $resource->sections()),
+            'sections' => $this->whenField('sections', fn() => $resource->getSections()),
             'download_link' => $this->whenField('downloadlink', fn() => $resource->download_link ?? ''),
             'tags' => $this->whenField('tags', fn() => $tags),
-            'versions' => $this->whenField('versions', fn() => $resource->versions()),
+            'versions' => $this->whenField('versions', fn() => $resource->getVersions()),
             // TODO: support parent
             // 'parent' => $this->whenField('parent', function () use ($resource) {
             //     $parent = $resource->parent_theme;
@@ -91,7 +91,7 @@ class ThemeResource extends JsonResource
             //         'homepage' => "https://wordpress.org/themes/{$parent->slug}/",
             //     ] : new MissingValue();
             // }),
-            'requires' => $this->whenField('requires', $resource->requires()),
+            'requires' => $this->whenField('requires', $resource->getRequires()),
             'requires_php' => $this->whenField('requires_php', $resource->requires_php),
             'is_commercial' => $this->whenField('is_commercial', fn() => $resource->is_commercial),
             'external_support_url' => $this->whenField('external_support_url', fn() => $resource->is_commercial ? $resource->external_support_url : false),

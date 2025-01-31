@@ -104,7 +104,7 @@ describe('Sync Plugins', function () {
             )
             ->and($plugin->author)->toBe('<a href="http://zanto.org/">Ayebare Mucunguzi</a>')
             ->and($plugin->author_profile)->toBe('https://profiles.wordpress.org/brooksx/')
-            ->and($plugin->contributors())->toBe([
+            ->and($plugin->getContributors())->toBe([
                 'brooksx' => [
                     'profile' => 'https://profiles.wordpress.org/brooksx/',
                     'avatar' => 'https://secure.gravatar.com/avatar/4fa021b564189f92bf90322a1215401d?s=96&d=monsterid&r=g',
@@ -114,10 +114,10 @@ describe('Sync Plugins', function () {
             ->and($plugin->requires)->toBe('3.1')
             ->and($plugin->tested)->toBe('4.1.41')
             ->and($plugin->requires_php)->toBeNull()
-            ->and($plugin->requires_plugins())->toBeEmpty()
-            ->and($plugin->compatibility())->toBeEmpty()
+            ->and($plugin->getRequiresPlugins())->toBeEmpty()
+            ->and($plugin->getCompatibility())->toBeEmpty()
             ->and($plugin->rating)->toBe(100)
-            ->and($plugin->ratings())->toBe(['5' => 1, '4' => 0, '3' => 0, '2' => 0, '1' => 0])
+            ->and($plugin->getRatings())->toBe(['5' => 1, '4' => 0, '3' => 0, '2' => 0, '1' => 0])
             ->and($plugin->num_ratings)->toBe(1)
             ->and($plugin->support_url)->toBe('https://wordpress.org/support/plugin/0-errors/')
             ->and($plugin->support_threads)->toBe(0)
@@ -127,18 +127,18 @@ describe('Sync Plugins', function () {
             ->and($plugin->last_updated)->toBeBetween(new DateTime('2015-01-28 9:41pm GMT'), new DateTime('2015-01-28 10:41pm GMT'))
             ->and($plugin->added)->toBeBetween(new DateTime('2015-01-20'), new DateTime('2015-01-21'))
             ->and($plugin->homepage)->toBe('http://example.org/')
-            ->and($plugin->sections())->toHaveKeys(['description', 'installation', 'faq', 'changelog', 'reviews'])
-            ->and($plugin->sections()['description'])->toStartWith(
+            ->and($plugin->getSections())->toHaveKeys(['description', 'installation', 'faq', 'changelog', 'reviews'])
+            ->and($plugin->getSections()['description'])->toStartWith(
                 "<p>This plugin makes it easy to work with WordPress with-ought the errors messing up the layout",
             )
-            ->and($plugin->sections()['installation'])->toBe(
+            ->and($plugin->getSections()['installation'])->toBe(
                 "<p>Upload the 0-Errors Plugin Base plugin to your blog and activate it. It would work as is.</p>",
             )
-            ->and($plugin->sections()['faq'])->toStartWith("<h4>Is it compatible with latest WordPress?</h4>")
-            ->and($plugin->sections()['changelog'])->toStartWith("<h4>0.2</h4>")
-            ->and($plugin->sections()['reviews'])->toBeEmpty()
-            ->and($plugin->upgrade_notice())->toBeEmpty()
-            ->and($plugin->screenshots())->toBeEmpty()
+            ->and($plugin->getSections()['faq'])->toStartWith("<h4>Is it compatible with latest WordPress?</h4>")
+            ->and($plugin->getSections()['changelog'])->toStartWith("<h4>0.2</h4>")
+            ->and($plugin->getSections()['reviews'])->toBeEmpty()
+            ->and($plugin->getUpgradeNotice())->toBeEmpty()
+            ->and($plugin->getScreenshots())->toBeEmpty()
             ->and($plugin->tagsArray())->toBe([
                 'debug' => 'debug',
                 'email-errors' => 'email errors',
@@ -149,16 +149,16 @@ describe('Sync Plugins', function () {
             ->and($plugin->repository_url)->toBeEmpty()
             ->and($plugin->commercial_support_url)->toBeEmpty()
             ->and($plugin->donate_link)->toBeEmpty()
-            ->and($plugin->banners())->toBeEmpty()
+            ->and($plugin->getBanners())->toBeEmpty()
             ->and($plugin->preview_link)->toBeEmpty();
 
         // test URL rewrites
         expect($plugin->download_link)
             ->toBe('https://api.aspiredev.org/download/plugin/0-errors.0.2.zip')
-            ->and($plugin->icons())->toBe(
+            ->and($plugin->getIcons())->toBe(
                 ['default' => 'https://api.aspiredev.org/download/gp-icon/plugin/0-errors/head/0-errors.svg'],
             )
-            ->and($plugin->versions())->toBe([
+            ->and($plugin->getVersions())->toBe([
                 '0.1' => 'https://api.aspiredev.org/download/plugin/0-errors.0.1.zip',
                 '0.2' => 'https://api.aspiredev.org/download/plugin/0-errors.0.2.zip',
                 'trunk' => 'https://api.aspiredev.org/download/plugin/0-errors.zip',

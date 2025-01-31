@@ -37,7 +37,7 @@ use InvalidArgumentException;
  */
 final class Theme extends BaseModel
 {
-    //region Model Definition
+    //region Definition
 
     use HasUuids;
 
@@ -180,19 +180,27 @@ final class Theme extends BaseModel
 
     //endregion
 
-    public function ratings(): array
+    //region Getters
+
+    public function getRatings(): array
     {
         return $this->getMetadataObject('ratings');
     }
 
-    public function sections(): array
+    public function getSections(): array
     {
         return $this->getMetadataObject('sections');
     }
 
-    public function requires(): array
+    public function getRequires(): array
     {
         return $this->getMetadataObject('requires');
+    }
+
+    public function getVersions(): array
+    {
+        $versions = $this->getMetadataObject('versions');
+        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
     }
 
     private function getMetadataObject(string $field): array
@@ -200,22 +208,20 @@ final class Theme extends BaseModel
         return ($this->ac_raw_metadata[$field] ?? []) ?: [];    // coerce false into an array
     }
 
-    public function versions(): array
+    private function shouldRewriteMetadata(): bool
     {
-        $versions = $this->getMetadataObject('versions');
-        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
+        return $this->ac_origin === 'wp_org';
     }
 
-    public function rewriteDotOrgUrl(string $url): string
+    private function rewriteDotOrgUrl(string $url): string
     {
         $base = config('app.aspirecloud.download.base');
         return \Safe\preg_replace('#https?://.*?/#i', $base, $url);
     }
 
-    private function shouldRewriteMetadata(): bool
-    {
-        return $this->ac_origin === 'wp_org';
-    }
+    //endregion
+
+    //region Collection Management
 
     public function addTags(array $tags): self
     {
@@ -237,4 +243,6 @@ final class Theme extends BaseModel
     {
         return $this->tags()->select('name', 'slug')->pluck('name', 'slug')->toArray();
     }
+
+    //endregion
 }

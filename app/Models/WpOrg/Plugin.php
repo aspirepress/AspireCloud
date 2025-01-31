@@ -217,77 +217,81 @@ final class Plugin extends BaseModel
 
     //endregion
 
-    public function ratings(): array
+    //region Getters
+
+    public function getRatings(): array
     {
-        return $this->getMetadataObject('ratings');
+        return $this->getMetadataArray('ratings');
     }
 
-    public function contributors(): array
+    public function getContributors(): array
     {
-        return $this->getMetadataObject('contributors');
+        return $this->getMetadataArray('contributors');
     }
 
-    public function requires_plugins(): array
+    public function getRequiresPlugins(): array
     {
-        return $this->getMetadataObject('requires_plugins');
+        return $this->getMetadataArray('requires_plugins');
     }
 
-    public function compatibility(): array
+    public function getCompatibility(): array
     {
-        return $this->getMetadataObject('compatibility');
+        return $this->getMetadataArray('compatibility');
     }
 
-    public function sections(): array
+    public function getSections(): array
     {
-        return $this->getMetadataObject('sections');
+        return $this->getMetadataArray('sections');
     }
 
-    public function upgrade_notice(): array
+    public function getUpgradeNotice(): array
     {
-        return $this->getMetadataObject('upgrade_notice');
+        return $this->getMetadataArray('upgrade_notice');
     }
 
-    public function source(): array
+    public function getSource(): array
     {
-        return $this->getMetadataObject('source');
+        return $this->getMetadataArray('source');
     }
 
-    // rewritten fields
-
-    public function banners(): array
+    public function getBanners(): array
     {
-        $banners = $this->getMetadataObject('banners');
+        $banners = $this->getMetadataArray('banners');
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $banners) : $banners;
     }
 
-    public function icons(): array
+    public function getIcons(): array
     {
-        $icons = $this->getMetadataObject('icons');
+        $icons = $this->getMetadataArray('icons');
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $icons) : $icons;
     }
 
-    public function versions(): array
+    public function getVersions(): array
     {
-        $versions = $this->getMetadataObject('versions');
+        $versions = $this->getMetadataArray('versions');
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
     }
 
-    public function screenshots(): array
+    public function getScreenshots(): array
     {
-        $screenshots = $this->getMetadataObject('screenshots');
+        $screenshots = $this->getMetadataArray('screenshots');
         $rewrite = fn(array $screenshot) => [...$screenshot, 'src' => self::rewriteDotOrgUrl($screenshot['src'] ?? '')];
         return $this->shouldRewriteMetadata() ? array_map($rewrite, $screenshots) : $screenshots;
     }
 
-    private function getMetadataObject(string $field): array
+    private function getMetadataArray(string $field): array
     {
-        return ($this->ac_raw_metadata[$field] ?? []) ?: [];    // coerce false into an array
+        return ($this->ac_raw_metadata[$field] ?? []) ?: []; // coerce false to empty array because lolphp and lolwp
     }
 
     private function shouldRewriteMetadata(): bool
     {
         return $this->ac_origin === 'wp_org';
     }
+
+    //endregion
+
+    //region Collection Management
 
     public function addTags(array $tags): self
     {
@@ -309,4 +313,6 @@ final class Plugin extends BaseModel
     {
         return $this->tags()->select('name', 'slug')->pluck('name', 'slug')->toArray();
     }
+
+    //endregion
 }
