@@ -86,6 +86,7 @@ return new class extends Migration {
             $table->text('version')->index();
             $table->foreignUuid('author_id')->references('id')->on('authors');
             $table->text('download_link');
+            $table->text('requires')->nullable();
             $table->text('requires_php')->nullable();
             $table->timestampTz('last_updated')->index();
             $table->timestampTz('creation_time')->index();

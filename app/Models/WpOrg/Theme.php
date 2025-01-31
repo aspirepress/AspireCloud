@@ -128,6 +128,7 @@ final class Theme extends BaseModel
             'description' => $metadata['sections']['description'] ?? null,
             'version' => $metadata['version'],
             'download_link' => $metadata['download_link'],
+            'requires' => $metadata['requires'] ?? null,
             'requires_php' => $metadata['requires_php'] ?? null,
             'last_updated' => Carbon::parse($metadata['last_updated_time']),
             'creation_time' => Carbon::parse($metadata['creation_time']),
@@ -189,11 +190,6 @@ final class Theme extends BaseModel
         return $this->getMetadataObject('ratings');
     }
 
-    public function getRequires(): array
-    {
-        return $this->getMetadataObject('requires');
-    }
-
     public function getSections(): array
     {
         return $this->getMetadataObject('sections');
@@ -236,11 +232,6 @@ final class Theme extends BaseModel
     public function ratings(): Attribute
     {
         return Attribute::make(get: $this->getRatings(...), set: self::_readonly(...));
-    }
-
-    public function requires(): Attribute
-    {
-        return Attribute::make(get: $this->getRequires(...), set: self::_readonly(...));
     }
 
     public function screenshotUrl(): Attribute
