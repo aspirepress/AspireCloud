@@ -102,9 +102,11 @@ describe('Sync Themes', function () {
             ->and($theme->creation_time)->toBeBetween(new DateTime('2023-05-31'), new DateTime('2023-06-01'))
             ->and($theme->homepage)->toBe('https://wordpress.org/themes/100-bytes/')
             ->and($theme->sections['description'])->toBe('100 Bytes is a theme that aims to look as optimal as possible to deliver your message to your audience using WordPress as a content manager. The idea is simple, make a theme that looks good everywhere, with as little CSS code as possible. In this case the limit is 100 Bytes of CSS information. Actually the compressed CSS code contains 82 bytes of information, but 100 bytes sounds better.')
-            ->and($theme->tags['blog'])->toBe('Blog')
-            ->and($theme->tags['full-width-template'])->toBe('Full width template')
-            ->and($theme->tags['one-column'])->toBe('One column')
+            ->and($theme->tagsArray())->toBe([
+                'blog' => 'Blog',
+                'full-width-template' => 'Full width template',
+                'one-column' => 'One column',
+            ])
             ->and($theme->requires)->toBeNull()
             ->and($theme->requires_php)->toBe('5.6')
             ->and($theme->is_commercial)->toBeFalse()

@@ -32,7 +32,6 @@ use InvalidArgumentException;
  * @property-read int $active_installs
  * @property-read string $homepage
  * @property-read array $sections
- * @property-read array $tags
  * @property-read array $versions
  * @property-read array $requires
  * @property-read bool $is_commercial
@@ -78,11 +77,9 @@ final class Theme extends BaseModel
             'ac_origin' => 'string',
             'ac_created' => 'immutable_datetime',
             'ac_raw_metadata' => 'array',
-
-            'tags' => 'array', // XXX we need this for the column in the table ...
         ];
     }
-    // XXX ... but we also call this in other places.  fun!
+
     /** @return BelongsToMany<ThemeTag, covariant self> */
     public function tags(): BelongsToMany
     {
@@ -149,7 +146,6 @@ final class Theme extends BaseModel
             'active_installs' => $metadata['active_installs'] ?? 0,
             'homepage' => $trunc($metadata['homepage'] ?? null),
             'sections' => $metadata['sections'] ?? null,
-            'tags' => $metadata['tags'] ?? null,
             'versions' => $metadata['versions'] ?? null,
             'requires' => $metadata['requires'] ?: null,
             'is_commercial' => $metadata['is_commercial'] ?? false,
@@ -161,11 +157,7 @@ final class Theme extends BaseModel
         ]);
 
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {
-            $themeTags = [];
-            foreach ($metadata['tags'] as $tagSlug => $name) {
-                $themeTags[] = ThemeTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $trunc($name)]);
-            }
-            $instance->tags()->saveMany($themeTags);
+            $instance->addTags($metadata['tags']);
         }
         return $instance;
     }
@@ -200,4 +192,25 @@ final class Theme extends BaseModel
     }
 
     //endregion
+
+    public function addTags(array $tags): self
+    {
+        $themeTags = [];
+        foreach ($tags as $tagSlug => $name) {
+            $themeTags[] = ThemeTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
+        }
+        $this->tags()->saveMany($themeTags);
+        return $this;
+    }
+
+    public function addTagsBySlugs(array $tagSlugs): self
+    {
+        return $this->addTags(array_combine($tagSlugs, $tagSlugs));
+    }
+
+    /** @return array<string, string> */
+    public function tagsArray(): array
+    {
+        return $this->tags()->select('name', 'slug')->pluck('name', 'slug')->toArray();
+    }
 }

@@ -192,11 +192,7 @@ final class Plugin extends BaseModel
         ]);
 
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {
-            $pluginTags = [];
-            foreach ($metadata['tags'] as $tagSlug => $name) {
-                $pluginTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
-            }
-            $instance->tags()->saveMany($pluginTags);
+            $instance->addTags($metadata['tags']);
         }
 
         return $instance;
@@ -261,10 +257,22 @@ final class Plugin extends BaseModel
 
     //endregion
 
-    /**
-     * @return array<string, string>
-     * @noinspection UnknownColumnInspection (doesn't like 'slug' 🤷)
-     */
+    public function addTags(array $tags): self
+    {
+        $pluginTags = [];
+        foreach ($tags as $tagSlug => $name) {
+            $pluginTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
+        }
+        $this->tags()->saveMany($pluginTags);
+        return $this;
+    }
+
+    public function addTagsBySlugs(array $tagSlugs): self
+    {
+        return $this->addTags(array_combine($tagSlugs, $tagSlugs));
+    }
+
+    /** @return array<string, string> */
     public function tagsArray(): array
     {
         return $this->tags()->select('name', 'slug')->pluck('name', 'slug')->toArray();

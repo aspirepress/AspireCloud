@@ -120,9 +120,6 @@ return new class extends Migration {
             $table->datetime('ac_created')->nullable()->index();
             $table->jsonb('ac_raw_metadata')->nullable();
 
-            // denormalized stuff that should go away
-            $table->jsonb('tags')->nullable();
-
             // additional indexes
             $table->string('slug')->fulltext()->change();
             $table->string('name')->fulltext()->change();

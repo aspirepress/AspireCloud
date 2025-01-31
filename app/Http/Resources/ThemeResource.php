@@ -50,7 +50,7 @@ class ThemeResource extends JsonResource
         $author = $resource->author->toArray();
         unset($author['id']);
 
-        $tags = $resource->tags;
+        $tags = $resource->tagsArray();
         ksort($tags);
 
         $screenshotBase = "https://wp-themes.com/wp-content/themes/{$resource->slug}/screenshot";

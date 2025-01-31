@@ -35,7 +35,6 @@ beforeEach(function () {
         'active_installs' => 100,
         'homepage' => 'https://wp-themes.com/my-theme',
         'sections' => [],
-        'tags' => ['black', 'white', 'red', 'blue'],
         'versions' => ['1.2.1', '1.2.0', '1.1.0'],
         'requires' => ['php' => '5.6', 'wp' => '5.0'],
         'is_commercial' => false,
@@ -43,7 +42,8 @@ beforeEach(function () {
         'is_community' => true,
         'external_repository_url' => 'https://test.com',
         'author_id' => $authorId->toString(),
-    ]);
+    ])->addTagsBySlugs(['black', 'white', 'red', 'blue']);
+
     Theme::create([
         'slug' => 'my-theme2',
         'name' => 'My Theme2',
@@ -62,7 +62,6 @@ beforeEach(function () {
         'active_installs' => 100,
         'homepage' => 'https://wp-themes.com/my-theme2',
         'sections' => [],
-        'tags' => ['black', 'white', 'red', 'blue'],
         'versions' => ['1.2.1', '1.2.0', '1.1.0'],
         'requires' => ['php' => '5.6', 'wp' => '5.0'],
         'is_commercial' => false,
@@ -70,9 +69,7 @@ beforeEach(function () {
         'is_community' => true,
         'external_repository_url' => 'https://test.com',
         'author_id' => $authorId->toString(),
-    ]);
-
-    // Theme::factory()->count(8)->create();
+    ])->addTagsBySlugs(['black', 'white', 'red', 'blue']);
 });
 
 it('returns theme updates', function () {
