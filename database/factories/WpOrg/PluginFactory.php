@@ -44,7 +44,6 @@ class PluginFactory extends Factory
             'support_url' => $this->faker->url(),
             'preview_link' => $this->faker->url(),
             'repository_url' => $this->faker->url(),
-            'screenshots' => $this->generateScreenshots(),
             'versions' => $this->generateVersions(),
             'ac_origin' => $this->faker->randomElement(['wp_org', 'packagist', 'git', 'github']),
             'ac_created' => $this->faker->dateTimeBetween('-1 month'),
@@ -73,6 +72,7 @@ class PluginFactory extends Factory
                     'type' => $this->faker->randomElement(['wordpress.org', 'github', 'bitbucket']),
                     'url' => $this->faker->url(),
                 ],
+                'screenshots' => $this->generateScreenshots(),
             ],
         ];
     }

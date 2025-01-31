@@ -47,7 +47,7 @@ class PluginResource extends BasePluginResource
                 'sections' => $plugin->sections(),
                 'versions' => $plugin->versions,
                 'contributors' => $plugin->contributors(),
-                'screenshots' => $plugin->screenshots,
+                'screenshots' => $plugin->screenshots(),
                 'support_url' => $plugin->support_url,
                 'upgrade_notice' => $plugin->upgrade_notice(),
                 'business_model' => $plugin->business_model,

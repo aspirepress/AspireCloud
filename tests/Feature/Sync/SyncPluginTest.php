@@ -138,7 +138,7 @@ describe('Sync Plugins', function () {
             ->and($plugin->sections()['changelog'])->toStartWith("<h4>0.2</h4>")
             ->and($plugin->sections()['reviews'])->toBeEmpty()
             ->and($plugin->upgrade_notice())->toBeEmpty()
-            ->and($plugin->screenshots)->toBeEmpty()
+            ->and($plugin->screenshots())->toBeEmpty()
             ->and($plugin->tagsArray())->toBe([
                 'debug' => 'debug',
                 'email-errors' => 'email errors',

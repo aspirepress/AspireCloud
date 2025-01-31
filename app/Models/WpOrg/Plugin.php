@@ -42,7 +42,6 @@ use InvalidArgumentException;
  * @property-read string|null $support_url
  * @property-read string|null $preview_link
  * @property-read string|null $repository_url
- * @property-read array|null $screenshots
  * @property-read array|null $versions
  * @property-read string $ac_origin
  * @property-read array $ac_metadata
@@ -88,7 +87,6 @@ final class Plugin extends BaseModel
             'support_url' => 'string',
             'preview_link' => 'string',
             'repository_url' => 'string',
-            'screenshots' => 'array',
             'versions' => 'array',
             'ac_origin' => 'string',
             'ac_created' => 'immutable_datetime',
@@ -159,7 +157,6 @@ final class Plugin extends BaseModel
             'support_url' => $trunc($metadata['support_url'] ?: null, 1024),
             'preview_link' => $trunc($metadata['preview_link'] ?: null, 1024),
             'repository_url' => $trunc($metadata['repository_url'] ?: null, 1024),
-            'screenshots' => $metadata['screenshots'] ?? null,
             'versions' => $metadata['versions'] ?? null,
             'ac_origin' => $syncmeta['origin'],
             'ac_raw_metadata' => $ac_raw_metadata,
@@ -185,12 +182,7 @@ final class Plugin extends BaseModel
         $download_link = self::rewriteDotOrgUrl($metadata['download_link'] ?? '');
         $versions = array_map(self::rewriteDotOrgUrl(...), $metadata['versions'] ?? []);
 
-        $screenshots = array_map(
-            fn(array $screenshot) => [...$screenshot, 'src' => self::rewriteDotOrgUrl($screenshot['src'] ?? '')],
-            $metadata['screenshots'] ?? [],
-        );
-
-        return [...$metadata, ...compact('download_link', 'versions', 'screenshots')];
+        return [...$metadata, ...compact('download_link', 'versions')];
     }
 
     private static function rewriteDotOrgUrl(string $url): string
@@ -276,6 +268,13 @@ final class Plugin extends BaseModel
     {
         $icons = $this->getMetadataObject('icons');
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $icons) : $icons;
+    }
+
+    public function screenshots(): array
+    {
+        $screenshots = $this->getMetadataObject('screenshots');
+        $rewrite = fn(array $screenshot) => [...$screenshot, 'src' => self::rewriteDotOrgUrl($screenshot['src'] ?? '')];
+        return $this->shouldRewriteMetadata() ? array_map($rewrite, $screenshots) : $screenshots;
     }
 
     private function getMetadataObject(string $field): array
