@@ -23,7 +23,6 @@ return new class extends Migration {
             $table->dateTime('last_updated')->nullable()->index();
             $table->string('author_profile')->nullable();
             $table->unsignedSmallInteger('rating')->default(0)->index();
-            $table->jsonb('ratings')->nullable();
             $table->unsignedInteger('num_ratings')->default(0)->index();
             $table->unsignedInteger('support_threads')->default(0)->index();
             $table->unsignedInteger('support_threads_resolved')->default(0)->index();

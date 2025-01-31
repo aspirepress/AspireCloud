@@ -32,13 +32,6 @@ class PluginFactory extends Factory
             'last_updated' => $this->faker->dateTimeBetween('-6 months'),
             'author_profile' => $this->faker->url(),
             'rating' => $this->faker->numberBetween(0, 5),
-            'ratings' => [
-                '5' => $this->faker->numberBetween(0, 100),
-                '4' => $this->faker->numberBetween(0, 80),
-                '3' => $this->faker->numberBetween(0, 60),
-                '2' => $this->faker->numberBetween(0, 40),
-                '1' => $this->faker->numberBetween(0, 20),
-            ],
             'num_ratings' => $this->faker->numberBetween(0, 1000),
             'support_threads' => $this->faker->numberBetween(0, 100),
             'support_threads_resolved' => $this->faker->numberBetween(0, 50),
@@ -72,6 +65,15 @@ class PluginFactory extends Factory
             'upgrade_notice' => $this->generateUpgradeNotices(),
             'ac_origin' => $this->faker->randomElement(['wp_org', 'packagist', 'git', 'github']),
             'ac_created' => $this->faker->dateTimeBetween('-1 month'),
+            'ac_raw_metadata' => [
+                'ratings' => [
+                    '5' => $this->faker->numberBetween(0, 100),
+                    '4' => $this->faker->numberBetween(0, 80),
+                    '3' => $this->faker->numberBetween(0, 60),
+                    '2' => $this->faker->numberBetween(0, 40),
+                    '1' => $this->faker->numberBetween(0, 20),
+                ],
+            ],
         ];
     }
 

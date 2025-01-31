@@ -24,7 +24,7 @@ class PluginResource extends BasePluginResource
             'author_profile' => $plugin->author_profile,
             'rating' => $plugin->rating,
             'num_ratings' => $plugin->num_ratings,
-            'ratings' => $this->mapRatings($plugin->ratings),
+            'ratings' => $this->mapRatings($plugin->ratings()),
             'support_threads' => $plugin->support_threads,
             'support_threads_resolved' => $plugin->support_threads_resolved,
             'active_installs' => $plugin->active_installs,

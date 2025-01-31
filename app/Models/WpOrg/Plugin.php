@@ -8,6 +8,7 @@ use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\PluginFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -30,7 +31,6 @@ use InvalidArgumentException;
  * @property-read CarbonImmutable|null $last_updated
  * @property-read string|null $author_profile
  * @property-read int $rating
- * @property-read array|null $ratings
  * @property-read int $num_ratings
  * @property-read int $support_threads
  * @property-read int $support_threads_resolved
@@ -83,7 +83,6 @@ final class Plugin extends BaseModel
             'last_updated' => 'immutable_datetime',
             'author_profile' => 'string',
             'rating' => 'integer',
-            'ratings' => 'array',
             'num_ratings' => 'integer',
             'support_threads' => 'integer',
             'support_threads_resolved' => 'integer',
@@ -163,7 +162,6 @@ final class Plugin extends BaseModel
             'last_updated' => ($metadata['last_updated'] ?? null) ? Carbon::parse($metadata['last_updated']) : null,
             'author_profile' => $metadata['author_profile'] ?? null,
             'rating' => $metadata['rating'] ?? 0,
-            'ratings' => $metadata['ratings'] ?? null,
             'num_ratings' => $metadata['num_ratings'] ?? 0,
             'support_threads' => $metadata['support_threads'] ?? 0,
             'support_threads_resolved' => $metadata['support_threads_resolved'] ?? 0,
@@ -255,6 +253,11 @@ final class Plugin extends BaseModel
     }
 
     //endregion
+
+    public function ratings(): array
+    {
+        return $this->ac_raw_metadata['ratings'] ?? [];
+    }
 
     public function addTags(array $tags): self
     {

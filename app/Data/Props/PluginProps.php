@@ -17,7 +17,6 @@ use Spatie\LaravelData\Optional;
 final class PluginProps extends ModelProps
 {
     /**
-     * @param Optional|array<string, mixed>|null $ratings
      * @param Optional|array<string, mixed>|null $banners
      * @param Optional|array<string, mixed>|null $contributors
      * @param Optional|array<string, mixed>|null $icons
@@ -62,7 +61,6 @@ final class PluginProps extends ModelProps
         public readonly Optional|string|null $author_profile,
         #[Between(0, 100)]
         public readonly Optional|int $rating,
-        public readonly Optional|array|null $ratings,
         #[Min(0)]
         public readonly Optional|int $num_ratings,
         #[Min(0)]
