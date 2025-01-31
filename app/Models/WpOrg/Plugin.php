@@ -42,7 +42,6 @@ use InvalidArgumentException;
  * @property-read string|null $support_url
  * @property-read string|null $preview_link
  * @property-read string|null $repository_url
- * @property-read array|null $versions
  * @property-read string $ac_origin
  * @property-read array $ac_metadata
  */
@@ -87,7 +86,6 @@ final class Plugin extends BaseModel
             'support_url' => 'string',
             'preview_link' => 'string',
             'repository_url' => 'string',
-            'versions' => 'array',
             'ac_origin' => 'string',
             'ac_created' => 'immutable_datetime',
             'ac_raw_metadata' => 'array',
@@ -157,7 +155,6 @@ final class Plugin extends BaseModel
             'support_url' => $trunc($metadata['support_url'] ?: null, 1024),
             'preview_link' => $trunc($metadata['preview_link'] ?: null, 1024),
             'repository_url' => $trunc($metadata['repository_url'] ?: null, 1024),
-            'versions' => $metadata['versions'] ?? null,
             'ac_origin' => $syncmeta['origin'],
             'ac_raw_metadata' => $ac_raw_metadata,
         ]);
@@ -180,9 +177,8 @@ final class Plugin extends BaseModel
         }
 
         $download_link = self::rewriteDotOrgUrl($metadata['download_link'] ?? '');
-        $versions = array_map(self::rewriteDotOrgUrl(...), $metadata['versions'] ?? []);
 
-        return [...$metadata, ...compact('download_link', 'versions')];
+        return [...$metadata, ...compact('download_link')];
     }
 
     private static function rewriteDotOrgUrl(string $url): string
@@ -268,6 +264,12 @@ final class Plugin extends BaseModel
     {
         $icons = $this->getMetadataObject('icons');
         return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $icons) : $icons;
+    }
+
+    public function versions(): array
+    {
+        $versions = $this->getMetadataObject('versions');
+        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
     }
 
     public function screenshots(): array

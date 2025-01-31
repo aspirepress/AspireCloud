@@ -17,7 +17,6 @@ use Spatie\LaravelData\Optional;
 final class PluginProps extends ModelProps
 {
     /**
-     * @param Optional|array<string, mixed>|null $versions
      * @param Optional|array<string, mixed> $tags
      * @param Optional|array<string, mixed>|null $ac_raw_metadata
      */
@@ -82,7 +81,6 @@ final class PluginProps extends ModelProps
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $repository_url,
-        public readonly Optional|array|null $versions,
 
         // associations
         public readonly Optional|array $tags, // TODO

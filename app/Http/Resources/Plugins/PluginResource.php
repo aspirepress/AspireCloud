@@ -45,7 +45,7 @@ class PluginResource extends BasePluginResource
             ]),
             'plugin_information' => array_merge($data, [
                 'sections' => $plugin->sections(),
-                'versions' => $plugin->versions,
+                'versions' => $plugin->versions(),
                 'contributors' => $plugin->contributors(),
                 'screenshots' => $plugin->screenshots(),
                 'support_url' => $plugin->support_url,

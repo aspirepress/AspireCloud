@@ -34,7 +34,6 @@ beforeEach(function () {
         'downloaded' => 1000,
         'active_installs' => 100,
         'homepage' => 'https://wp-themes.com/my-theme',
-        'versions' => ['1.2.1', '1.2.0', '1.1.0'],
         'is_commercial' => false,
         'external_support_url' => null,
         'is_community' => true,
@@ -43,6 +42,7 @@ beforeEach(function () {
     ])->addTagsBySlugs(['black', 'white', 'red', 'blue']);
     // 'ratings' => [5, 4, 3, 2, 1, 2],
     // 'requires' => ['php' => '5.6', 'wp' => '5.0'],
+    // 'versions' => ['1.2.1', '1.2.0', '1.1.0'],
 });
 
 it('returns 400 when slug is missing', function () {

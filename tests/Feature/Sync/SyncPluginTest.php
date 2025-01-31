@@ -158,7 +158,7 @@ describe('Sync Plugins', function () {
             ->and($plugin->icons())->toBe(
                 ['default' => 'https://api.aspiredev.org/download/gp-icon/plugin/0-errors/head/0-errors.svg'],
             )
-            ->and($plugin->versions)->toBe([
+            ->and($plugin->versions())->toBe([
                 '0.1' => 'https://api.aspiredev.org/download/plugin/0-errors.0.1.zip',
                 '0.2' => 'https://api.aspiredev.org/download/plugin/0-errors.0.2.zip',
                 'trunk' => 'https://api.aspiredev.org/download/plugin/0-errors.zip',

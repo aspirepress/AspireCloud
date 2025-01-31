@@ -18,7 +18,6 @@ use Spatie\LaravelData\Optional;
 final class ThemeProps extends ModelProps
 {
     /**
-     * @param Optional|array<string, mixed>|null $versions
      * @param Optional|array<string, mixed> $tags
      * @param Optional|array<string, mixed>|null $ac_raw_metadata
      */
@@ -61,7 +60,6 @@ final class ThemeProps extends ModelProps
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $homepage,
-        public readonly Optional|array|null $versions,
         public readonly Optional|bool $is_commercial,
         #[Url]
         #[Max(1024)]
