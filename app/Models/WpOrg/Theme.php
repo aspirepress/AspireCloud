@@ -35,11 +35,12 @@ use InvalidArgumentException;
  * @property-read bool $is_community
  * @property-read string $external_repository_url
  *
- * TODO
- * @property mixed $sections
- * @property mixed $versions
- * @property mixed $requires
- * @property mixed $ratings
+ * @property string|null $requires // TODO put this back as a column
+ *
+ * // synthesized attributes
+ * @property array<string, string> $sections
+ * @property array<string, string> $versions
+ * @property array{"1":int, "2":int, "3":int, "4":int, "5":int} $ratings
  */
 final class Theme extends BaseModel
 {

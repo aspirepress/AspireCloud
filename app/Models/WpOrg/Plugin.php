@@ -45,17 +45,17 @@ use InvalidArgumentException;
  * @property-read string $ac_origin
  * @property-read array $ac_metadata
  *
- * TODO
- * @property mixed $banners
- * @property mixed $screenshots
- * @property mixed $contributors
- * @property mixed $versions
- * @property mixed $sections
- * @property mixed $ratings
- * @property mixed $requires_plugins
- * @property mixed $icons
- * @property mixed $compatibility
- * @property mixed $upgrade_notice
+ * // Synthesized attributes
+ * @property array<array-key, mixed> $banners // TODO
+ * @property array<array-key, array{src: string, caption: string}> $screenshots
+ * @property array<string, mixed> $contributors // TODO
+ * @property array<string, string> $versions
+ * @property array<string, string> $sections
+ * @property array{"1":int, "2":int, "3":int, "4":int, "5":int} $ratings
+ * @property string[] $requires_plugins
+ * @property array<string, string> $icons
+ * @property array<array-key, mixed> $compatibility // TODO (it only ever seems to be empty)
+ * @property array<string, string> $upgrade_notice
  */
 final class Plugin extends BaseModel
 {
