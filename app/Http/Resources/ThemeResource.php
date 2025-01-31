@@ -116,43 +116,4 @@ class ThemeResource extends JsonResource
         }
         return $this->when($include, $value);
     }
-
-    // upstream code below -- we get sections and ratings and such already processed.  Leaving commented for later reference.
-
-    // /** @return array<string, string> */
-    // private function getSections(): array
-    // {
-    //     return $resource->sections ?? [];
-    //     $sections = [];
-    //     if (preg_match_all('|--theme-data-(.+?)-->(.*?)<!|ims', $resource->content ?? "", $matches)) {
-    //         foreach ($matches[1] as $i => $section) {
-    //             $sections[$section] = trim($matches[2][$i]);
-    //         }
-    //     } else {
-    //         $sections['description'] = $this->fixMangledDescription(trim($resource->content ?? ""));
-    //     }
-    //     return $sections;
-    // }
-    //
-    // /**
-    //  * @param array<int>|null $ratings
-    //  * @return Collection<string, int>
-    //  */
-    // private function mapRatings(?array $ratings = []): Collection
-    // {
-    //     return collect($ratings)
-    //         ->mapWithKeys(fn($value, $key) => [(string) $key => $value]);
-    // }
-    //
-    // private function getDescription(): string
-    // {
-    //     return strpos($resource->content ?? "", '<!--') !== false
-    //         ? trim(substr($resource->content, 0, strpos($resource->content, '<!--')))
-    //         : trim($resource->content);
-    // }
-    //
-    // private function fixMangledDescription(string $description): string
-    // {
-    //     return str_replace(['[br]', '[p]'], ["\n", "\n\n"], $description);
-    // }
 }

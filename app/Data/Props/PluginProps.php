@@ -21,7 +21,6 @@ final class PluginProps extends ModelProps
      * @param Optional|array<string, mixed>|null $icons
      * @param Optional|array<string, mixed>|null $source
      * @param Optional|array<string, mixed>|null $screenshots
-     * @param Optional|array<string, mixed>|null $sections
      * @param Optional|array<string, mixed>|null $versions
      * @param Optional|array<string, mixed>|null $upgrade_notice
      * @param Optional|array<string, mixed> $tags
@@ -92,7 +91,6 @@ final class PluginProps extends ModelProps
         #[Max(1024)]
         public readonly Optional|string|null $repository_url,
         public readonly Optional|array|null $screenshots,
-        public readonly Optional|array|null $sections,
         public readonly Optional|array|null $versions,
         public readonly Optional|array|null $upgrade_notice,
 

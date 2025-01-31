@@ -39,7 +39,6 @@ return new class extends Migration {
             $table->string('preview_link', 1024)->nullable();
             $table->string('repository_url', 1024)->nullable();
             $table->jsonb('screenshots')->nullable();
-            $table->jsonb('sections')->nullable();
             $table->jsonb('versions')->nullable();
             $table->jsonb('upgrade_notice')->nullable();
             $table->string('ac_origin')->nullable()->index();

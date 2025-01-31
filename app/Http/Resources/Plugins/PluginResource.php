@@ -44,7 +44,7 @@ class PluginResource extends BasePluginResource
                 'icons' => $plugin->icons,
             ]),
             'plugin_information' => array_merge($data, [
-                'sections' => $plugin->sections,
+                'sections' => $plugin->sections(),
                 'versions' => $plugin->versions,
                 'contributors' => $plugin->contributors(),
                 'screenshots' => $plugin->screenshots,

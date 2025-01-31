@@ -8,7 +8,6 @@ use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\PluginFactory;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -47,7 +46,6 @@ use InvalidArgumentException;
  * @property-read string|null $preview_link
  * @property-read string|null $repository_url
  * @property-read array|null $screenshots
- * @property-read array|null $sections
  * @property-read array|null $versions
  * @property-read array|null $upgrade_notice
  */
@@ -96,7 +94,6 @@ final class Plugin extends BaseModel
             'preview_link' => 'string',
             'repository_url' => 'string',
             'screenshots' => 'array',
-            'sections' => 'array',
             'versions' => 'array',
             'upgrade_notice' => 'array',
             'ac_origin' => 'string',
@@ -172,7 +169,6 @@ final class Plugin extends BaseModel
             'preview_link' => $trunc($metadata['preview_link'] ?: null, 1024),
             'repository_url' => $trunc($metadata['repository_url'] ?: null, 1024),
             'screenshots' => $metadata['screenshots'] ?? null,
-            'sections' => $metadata['sections'] ?? null,
             'versions' => $metadata['versions'] ?? null,
             'upgrade_notice' => $metadata['upgrade_notice'] ?? null,
             'ac_origin' => $syncmeta['origin'],
@@ -263,6 +259,11 @@ final class Plugin extends BaseModel
     public function compatibility(): array
     {
         return $this->ac_raw_metadata['compatibility'] ?? [];
+    }
+
+    public function sections(): array
+    {
+        return $this->ac_raw_metadata['sections'] ?? [];
     }
 
     public function addTags(array $tags): self

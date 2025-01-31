@@ -57,7 +57,6 @@ class PluginFactory extends Factory
             'preview_link' => $this->faker->url(),
             'repository_url' => $this->faker->url(),
             'screenshots' => $this->generateScreenshots(),
-            'sections' => $this->generateSections(),
             'versions' => $this->generateVersions(),
             'upgrade_notice' => $this->generateUpgradeNotices(),
             'ac_origin' => $this->faker->randomElement(['wp_org', 'packagist', 'git', 'github']),
@@ -73,6 +72,7 @@ class PluginFactory extends Factory
                 'contributors' => $this->generateContributors(),
                 'requires_plugins' => $this->generateRequiredPlugins(),
                 'compatibility' => $this->generateCompatibility(),
+                'sections' => $this->generateSections(),
             ],
         ];
     }
