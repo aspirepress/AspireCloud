@@ -58,7 +58,6 @@ class PluginFactory extends Factory
             'repository_url' => $this->faker->url(),
             'screenshots' => $this->generateScreenshots(),
             'versions' => $this->generateVersions(),
-            'upgrade_notice' => $this->generateUpgradeNotices(),
             'ac_origin' => $this->faker->randomElement(['wp_org', 'packagist', 'git', 'github']),
             'ac_created' => $this->faker->dateTimeBetween('-1 month'),
             'ac_raw_metadata' => [
@@ -73,6 +72,7 @@ class PluginFactory extends Factory
                 'requires_plugins' => $this->generateRequiredPlugins(),
                 'compatibility' => $this->generateCompatibility(),
                 'sections' => $this->generateSections(),
+                'upgrade_notice' => $this->generateUpgradeNotices(),
             ],
         ];
     }

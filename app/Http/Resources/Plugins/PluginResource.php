@@ -49,7 +49,7 @@ class PluginResource extends BasePluginResource
                 'contributors' => $plugin->contributors(),
                 'screenshots' => $plugin->screenshots,
                 'support_url' => $plugin->support_url,
-                'upgrade_notice' => $plugin->upgrade_notice,
+                'upgrade_notice' => $plugin->upgrade_notice(),
                 'business_model' => $plugin->business_model,
                 'repository_url' => $plugin->repository_url,
                 'commercial_support_url' => $plugin->commercial_support_url,

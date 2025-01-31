@@ -47,7 +47,6 @@ use InvalidArgumentException;
  * @property-read string|null $repository_url
  * @property-read array|null $screenshots
  * @property-read array|null $versions
- * @property-read array|null $upgrade_notice
  */
 final class Plugin extends BaseModel
 {
@@ -95,7 +94,6 @@ final class Plugin extends BaseModel
             'repository_url' => 'string',
             'screenshots' => 'array',
             'versions' => 'array',
-            'upgrade_notice' => 'array',
             'ac_origin' => 'string',
             'ac_created' => 'immutable_datetime',
             'ac_raw_metadata' => 'array',
@@ -170,7 +168,6 @@ final class Plugin extends BaseModel
             'repository_url' => $trunc($metadata['repository_url'] ?: null, 1024),
             'screenshots' => $metadata['screenshots'] ?? null,
             'versions' => $metadata['versions'] ?? null,
-            'upgrade_notice' => $metadata['upgrade_notice'] ?? null,
             'ac_origin' => $syncmeta['origin'],
             'ac_raw_metadata' => $ac_raw_metadata,
         ]);
@@ -264,6 +261,11 @@ final class Plugin extends BaseModel
     public function sections(): array
     {
         return $this->ac_raw_metadata['sections'] ?? [];
+    }
+
+    public function upgrade_notice(): array
+    {
+        return $this->ac_raw_metadata['upgrade_notice'] ?? [];
     }
 
     public function addTags(array $tags): self

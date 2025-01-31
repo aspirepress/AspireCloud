@@ -40,7 +40,6 @@ return new class extends Migration {
             $table->string('repository_url', 1024)->nullable();
             $table->jsonb('screenshots')->nullable();
             $table->jsonb('versions')->nullable();
-            $table->jsonb('upgrade_notice')->nullable();
             $table->string('ac_origin')->nullable()->index();
             $table->dateTime('ac_created')->useCurrent()->index();
             $table->jsonb('ac_raw_metadata')->nullable();

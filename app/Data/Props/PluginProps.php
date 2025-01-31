@@ -22,7 +22,6 @@ final class PluginProps extends ModelProps
      * @param Optional|array<string, mixed>|null $source
      * @param Optional|array<string, mixed>|null $screenshots
      * @param Optional|array<string, mixed>|null $versions
-     * @param Optional|array<string, mixed>|null $upgrade_notice
      * @param Optional|array<string, mixed> $tags
      * @param Optional|array<string, mixed>|null $ac_raw_metadata
      */
@@ -92,7 +91,6 @@ final class PluginProps extends ModelProps
         public readonly Optional|string|null $repository_url,
         public readonly Optional|array|null $screenshots,
         public readonly Optional|array|null $versions,
-        public readonly Optional|array|null $upgrade_notice,
 
         // associations
         public readonly Optional|array $tags, // TODO
