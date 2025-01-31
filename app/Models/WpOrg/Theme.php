@@ -30,7 +30,6 @@ use InvalidArgumentException;
  * @property-read int $downloaded
  * @property-read int $active_installs
  * @property-read string $homepage
- * @property-read array $sections
  * @property-read array $versions
  * @property-read array $requires
  * @property-read bool $is_commercial
@@ -65,7 +64,6 @@ final class Theme extends BaseModel
             'downloaded' => 'integer',
             'active_installs' => 'integer',
             'homepage' => 'string',
-            'sections' => 'array',
             'versions' => 'array',
             'requires' => 'array',
             'is_commercial' => 'boolean',
@@ -142,7 +140,6 @@ final class Theme extends BaseModel
             'downloaded' => $metadata['downloaded'] ?? 0,
             'active_installs' => $metadata['active_installs'] ?? 0,
             'homepage' => $trunc($metadata['homepage'] ?? null),
-            'sections' => $metadata['sections'] ?? null,
             'versions' => $metadata['versions'] ?? null,
             'requires' => $metadata['requires'] ?: null,
             'is_commercial' => $metadata['is_commercial'] ?? false,
@@ -193,6 +190,11 @@ final class Theme extends BaseModel
     public function ratings(): array
     {
         return $this->ac_raw_metadata['ratings'] ?? [];
+    }
+
+    public function sections(): array
+    {
+        return $this->ac_raw_metadata['sections'] ?? [];
     }
 
     public function addTags(array $tags): self

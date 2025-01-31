@@ -78,7 +78,7 @@ class ThemeResource extends JsonResource
             'last_updated_time' => $this->whenField('last_updated', fn() => $resource->last_updated->format('Y-m-d H:i:s')),
             'creation_time' => $this->whenField('creation_time', fn() => $resource->creation_time->format('Y-m-d H:i:s')),
             'homepage' => $this->whenField('homepage', fn() => "https://wordpress.org/themes/{$resource->slug}/"),
-            'sections' => $this->whenField('sections', fn() => $resource->sections),
+            'sections' => $this->whenField('sections', fn() => $resource->sections()),
             'download_link' => $this->whenField('downloadlink', fn() => $resource->download_link ?? ''),
             'tags' => $this->whenField('tags', fn() => $tags),
             'versions' => $this->whenField('versions', fn() => $resource->versions),

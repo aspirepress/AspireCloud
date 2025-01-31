@@ -101,7 +101,9 @@ describe('Sync Themes', function () {
             ->and($theme->last_updated)->toBeBetween(new DateTime('2024-01-13'), new DateTime('2024-01-14'))
             ->and($theme->creation_time)->toBeBetween(new DateTime('2023-05-31'), new DateTime('2023-06-01'))
             ->and($theme->homepage)->toBe('https://wordpress.org/themes/100-bytes/')
-            ->and($theme->sections['description'])->toBe('100 Bytes is a theme that aims to look as optimal as possible to deliver your message to your audience using WordPress as a content manager. The idea is simple, make a theme that looks good everywhere, with as little CSS code as possible. In this case the limit is 100 Bytes of CSS information. Actually the compressed CSS code contains 82 bytes of information, but 100 bytes sounds better.')
+            ->and($theme->sections()['description'])->toBe(
+                '100 Bytes is a theme that aims to look as optimal as possible to deliver your message to your audience using WordPress as a content manager. The idea is simple, make a theme that looks good everywhere, with as little CSS code as possible. In this case the limit is 100 Bytes of CSS information. Actually the compressed CSS code contains 82 bytes of information, but 100 bytes sounds better.',
+            )
             ->and($theme->tagsArray())->toBe([
                 'blog' => 'Blog',
                 'full-width-template' => 'Full width template',

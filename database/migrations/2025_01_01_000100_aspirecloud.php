@@ -102,7 +102,6 @@ return new class extends Migration {
             $table->unsignedInteger('downloaded')->default(0)->index();
             $table->unsignedInteger('active_installs')->default(0)->index();
             $table->string('homepage')->nullable();
-            $table->jsonb('sections')->nullable();
             $table->jsonb('versions')->nullable();
             $table->jsonb('requires')->nullable();
             $table->boolean('is_commercial')->default(false);

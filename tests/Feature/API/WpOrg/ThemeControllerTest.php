@@ -34,7 +34,6 @@ beforeEach(function () {
         'downloaded' => 1000,
         'active_installs' => 100,
         'homepage' => 'https://wp-themes.com/my-theme',
-        'sections' => [],
         'versions' => ['1.2.1', '1.2.0', '1.1.0'],
         'requires' => ['php' => '5.6', 'wp' => '5.0'],
         'is_commercial' => false,
