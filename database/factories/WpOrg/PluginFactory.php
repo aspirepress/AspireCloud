@@ -43,7 +43,6 @@ class PluginFactory extends Factory
                 'high' => $this->faker->imageUrl(1544, 500),
             ],
             'donate_link' => $this->faker->optional()->url(),
-            'contributors' => $this->generateContributors(),
             'icons' => [
                 '1x' => $this->faker->imageUrl(128, 128),
                 '2x' => $this->faker->imageUrl(256, 256),
@@ -73,6 +72,7 @@ class PluginFactory extends Factory
                     '2' => $this->faker->numberBetween(0, 40),
                     '1' => $this->faker->numberBetween(0, 20),
                 ],
+                'contributors' => $this->generateContributors(),
             ],
         ];
     }

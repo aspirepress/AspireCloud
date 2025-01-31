@@ -39,7 +39,6 @@ use InvalidArgumentException;
  * @property-read string|null $homepage
  * @property-read array|null $banners
  * @property-read string|null $donate_link
- * @property-read array|null $contributors
  * @property-read array|null $icons
  * @property-read array|null $source
  * @property-read string|null $business_model
@@ -91,7 +90,6 @@ final class Plugin extends BaseModel
             'homepage' => 'string',
             'banners' => 'array',
             'donate_link' => 'string',
-            'contributors' => 'array',
             'icons' => 'array',
             'source' => 'array',
             'business_model' => 'string',
@@ -170,7 +168,6 @@ final class Plugin extends BaseModel
             'homepage' => $metadata['homepage'] ?: null,
             'banners' => $metadata['banners'] ?? null,
             'donate_link' => $trunc($metadata['donate_link'] ?: null, 1024),
-            'contributors' => $metadata['contributors'] ?? null,
             'icons' => $metadata['icons'] ?? null,
             'source' => $metadata['source'] ?? null,
             'business_model' => $metadata['business_model'] ?: null,
@@ -257,6 +254,11 @@ final class Plugin extends BaseModel
     public function ratings(): array
     {
         return $this->ac_raw_metadata['ratings'] ?? [];
+    }
+
+    public function contributors(): array
+    {
+        return $this->ac_raw_metadata['contributors'] ?? [];
     }
 
     public function addTags(array $tags): self

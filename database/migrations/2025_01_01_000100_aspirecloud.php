@@ -31,7 +31,6 @@ return new class extends Migration {
             $table->string('homepage', 1024)->nullable();
             $table->jsonb('banners')->nullable();
             $table->string('donate_link', 1024)->nullable();
-            $table->jsonb('contributors')->nullable();
             $table->jsonb('icons')->nullable();
             $table->jsonb('source')->nullable();
             $table->string('business_model')->nullable();
