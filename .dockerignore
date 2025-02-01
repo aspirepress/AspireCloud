@@ -9,6 +9,10 @@ tests/
 tmp/
 vendor/
 
+# prod uses real environment variables only
+.env
+.env.*
+
 *.bak
 *.log
 *.swp

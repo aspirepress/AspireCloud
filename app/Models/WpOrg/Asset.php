@@ -49,4 +49,9 @@ class Asset extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    /** @var array<string, mixed> */
+    protected $attributes = [
+        'repository' => 'wp_org', // this is the db default as well since 0.9.3, but it's handy to have it here too
+    ];
 }

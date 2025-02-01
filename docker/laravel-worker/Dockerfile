@@ -16,9 +16,7 @@ WORKDIR /app
 ################
 FROM base AS dev
 
-# Xdebug exists, but is explicitly disabled on workers.  Use docker-compose.override.yml to enable.
 RUN install-php-extensions xdebug
-RUN sed -i 's/^/#/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 USER app
 
