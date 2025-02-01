@@ -8,10 +8,10 @@ use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\PluginFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 /**
@@ -22,38 +22,42 @@ use InvalidArgumentException;
  * @property-read string $description
  * @property-read string $version
  * @property-read string $author
- * @property-read string $requires
+ * @property-read string|null $requires
  * @property-read string|null $requires_php
- * @property-read string $tested
+ * @property-read string|null $tested
  * @property-read string $download_link
- * @property-read CarbonImmutable $added
+ * @property-read CarbonImmutable|null $added
  * @property-read CarbonImmutable|null $last_updated
  * @property-read string|null $author_profile
  * @property-read int $rating
- * @property-read array|null $ratings
  * @property-read int $num_ratings
  * @property-read int $support_threads
  * @property-read int $support_threads_resolved
  * @property-read int $active_installs
  * @property-read int $downloaded
  * @property-read string|null $homepage
- * @property-read array|null $banners
  * @property-read string|null $donate_link
- * @property-read array|null $contributors
- * @property-read array|null $icons
- * @property-read array|null $source
  * @property-read string|null $business_model
  * @property-read string|null $commercial_support_url
  * @property-read string|null $support_url
  * @property-read string|null $preview_link
  * @property-read string|null $repository_url
- * @property-read array|null $requires_plugins
- * @property-read array|null $compatibility
- * @property-read array|null $screenshots
- * @property-read array|null $sections
- * @property-read array|null $versions
- * @property-read array|null $upgrade_notice
- * @property-read array<string, string> $tags
+ *
+ * @property-read string $ac_origin
+ * @property-read CarbonImmutable $ac_created
+ * @property-read array<string, mixed> $ac_raw_metadata
+ *
+ * // Synthesized attributes
+ * @property-read array<array-key, mixed> $banners // TODO
+ * @property-read array<array-key, array{src: string, caption: string}> $screenshots
+ * @property-read array<string, mixed> $contributors // TODO
+ * @property-read array<string, string> $versions
+ * @property-read array<string, string> $sections
+ * @property-read array{"1":int, "2":int, "3":int, "4":int, "5":int} $ratings
+ * @property-read string[] $requires_plugins
+ * @property-read array<string, string> $icons
+ * @property-read array<array-key, mixed> $compatibility // TODO (it only ever seems to be empty)
+ * @property-read array<string, string> $upgrade_notice
  */
 final class Plugin extends BaseModel
 {
@@ -65,9 +69,6 @@ final class Plugin extends BaseModel
     use HasFactory;
 
     protected $table = 'plugins';
-
-    /** @phpstan-ignore-next-line */
-    protected $appends = ['tags'];
 
     protected function casts(): array
     {
@@ -87,30 +88,18 @@ final class Plugin extends BaseModel
             'last_updated' => 'immutable_datetime',
             'author_profile' => 'string',
             'rating' => 'integer',
-            'ratings' => 'array',
             'num_ratings' => 'integer',
             'support_threads' => 'integer',
             'support_threads_resolved' => 'integer',
             'active_installs' => 'integer',
             'downloaded' => 'integer',
             'homepage' => 'string',
-            'banners' => 'array',
-            'tags' => 'array',
             'donate_link' => 'string',
-            'contributors' => 'array',
-            'icons' => 'array',
-            'source' => 'array',
             'business_model' => 'string',
             'commercial_support_url' => 'string',
             'support_url' => 'string',
             'preview_link' => 'string',
             'repository_url' => 'string',
-            'requires_plugins' => 'array',
-            'compatibility' => 'array',
-            'screenshots' => 'array',
-            'sections' => 'array',
-            'versions' => 'array',
-            'upgrade_notice' => 'array',
             'ac_origin' => 'string',
             'ac_created' => 'immutable_datetime',
             'ac_raw_metadata' => 'array',
@@ -127,112 +116,63 @@ final class Plugin extends BaseModel
 
     //region Constructors
 
-    /**
-     * @param PluginProps|array<string, mixed> $props
-     */
-    public static function create(array|PluginProps $props): self
+    /** @param PluginProps|array<string, mixed> $props */
+    public static function create(PluginProps|array $props): self
     {
         if (is_array($props)) {
-            /** @noinspection CallableParameterUseCaseInTypeContextInspection (Data::from is highly magical) */
             $props = PluginProps::from($props);
         }
         assert($props instanceof PluginProps);
         return self::_create($props->toArray());
     }
 
-    /**
-     * TODO: move to WpOrgPluginRepo
-     * @param array<string,mixed> $metadata
-     */
+    /** @param array<string,mixed> $metadata */
     public static function fromSyncMetadata(array $metadata): self
     {
         $syncmeta = $metadata['aspiresync_meta'];
         $syncmeta['type'] === 'plugin' or throw new InvalidArgumentException("invalid type '{$syncmeta['type']}'");
         $syncmeta['status'] === 'open' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
 
-        $ac_raw_metadata = $metadata;
-        $metadata = self::rewriteMetadata($metadata);
-
-        $trunc = fn(?string $str, int $len = 255) => ($str === null) ? null : Str::substr($str, 0, $len);
-
         // TODO: use self::create for validation
         $instance = self::_create([
             'slug' => $syncmeta['slug'],
-            'name' => $trunc($metadata['name'] ?? ''),
-            'short_description' => $trunc($metadata['short_description'] ?? '', 150),
+            'name' => $metadata['name'] ?? '',
+            'short_description' => $metadata['short_description'] ?? '',
             'description' => $metadata['description'] ?? '',
             'version' => $metadata['version'],
-            'author' => $trunc($metadata['author'] ?? ''),
+            'author' => $metadata['author'] ?? '',
             'requires' => $metadata['requires'],
-            'requires_php' => $metadata['requires_php'] ?: null, // use ?: to convert blank and false to null
+            'requires_php' => $metadata['requires_php'] ?: null,
             'tested' => $metadata['tested'] ?? '',
-            'download_link' => $trunc($metadata['download_link'] ?? '', 1024),
+            'download_link' => $metadata['download_link'] ?? '',
             'added' => Carbon::parse($metadata['added']),
             'last_updated' => ($metadata['last_updated'] ?? null) ? Carbon::parse($metadata['last_updated']) : null,
             'author_profile' => $metadata['author_profile'] ?? null,
             'rating' => $metadata['rating'] ?? 0,
-            'ratings' => $metadata['ratings'] ?? null,
             'num_ratings' => $metadata['num_ratings'] ?? 0,
             'support_threads' => $metadata['support_threads'] ?? 0,
             'support_threads_resolved' => $metadata['support_threads_resolved'] ?? 0,
             'active_installs' => $metadata['active_installs'] ?? 0,
             'downloaded' => $metadata['downloaded'] ?? '',
             'homepage' => $metadata['homepage'] ?: null,
-            'banners' => $metadata['banners'] ?? null,
-            'donate_link' => $trunc($metadata['donate_link'] ?: null, 1024),
-            'contributors' => $metadata['contributors'] ?? null,
-            'icons' => $metadata['icons'] ?? null,
-            'source' => $metadata['source'] ?? null,
+            'donate_link' => $metadata['donate_link'] ?: null,
             'business_model' => $metadata['business_model'] ?: null,
-            'commercial_support_url' => $trunc($metadata['commercial_support_url'] ?: null, 1024),
-            'support_url' => $trunc($metadata['support_url'] ?: null, 1024),
-            'preview_link' => $trunc($metadata['preview_link'] ?: null, 1024),
-            'repository_url' => $trunc($metadata['repository_url'] ?: null, 1024),
-            'requires_plugins' => $metadata['requires_plugins'] ?? null,
-            'compatibility' => $metadata['compatibility'] ?? null,
-            'screenshots' => $metadata['screenshots'] ?? null,
-            'sections' => $metadata['sections'] ?? null,
-            'versions' => $metadata['versions'] ?? null,
-            'upgrade_notice' => $metadata['upgrade_notice'] ?? null,
+            'commercial_support_url' => $metadata['commercial_support_url'] ?: null,
+            'support_url' => $metadata['support_url'] ?: null,
+            'preview_link' => $metadata['preview_link'] ?: null,
+            'repository_url' => $metadata['repository_url'] ?: null,
             'ac_origin' => $syncmeta['origin'],
-            'ac_raw_metadata' => $ac_raw_metadata,
+            'ac_raw_metadata' => $metadata,
         ]);
 
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {
-            $pluginTags = [];
-            foreach ($metadata['tags'] as $tagSlug => $name) {
-                $pluginTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
-            }
-            $instance->tags()->saveMany($pluginTags);
+            $instance->addTags($metadata['tags']);
         }
 
         return $instance;
     }
 
-    /**
-     * @param array<string, mixed> $metadata
-     * @return array<string, mixed>
-     */
-    public static function rewriteMetadata(array $metadata): array
-    {
-        if (($metadata['aspiresync_meta']['origin'] ?? '') !== 'wp_org') {
-            return $metadata;
-        }
-
-        $download_link = self::rewriteDotOrgUrl($metadata['download_link'] ?? '');
-        $versions = array_map(self::rewriteDotOrgUrl(...), $metadata['versions'] ?? []);
-        $banners = array_map(self::rewriteDotOrgUrl(...), $metadata['banners'] ?? []);
-        $icons = array_map(self::rewriteDotOrgUrl(...), $metadata['icons'] ?? []);
-
-        $screenshots = array_map(
-            fn(array $screenshot) => [...$screenshot, 'src' => self::rewriteDotOrgUrl($screenshot['src'] ?? '')],
-            $metadata['screenshots'] ?? [],
-        );
-
-        return [...$metadata, ...compact('download_link', 'versions', 'banners', 'icons', 'screenshots')];
-    }
-
-    private static function rewriteDotOrgUrl(string $url): string
+    private static function rewriteDotOrgUrl(mixed $url): string
     {
         $base = config('app.aspirecloud.download.base');
 
@@ -268,12 +208,213 @@ final class Plugin extends BaseModel
 
     //endregion
 
-    /** @return array<string, string> */
-    public function getTagsAttribute(): array
+    //region Getters
+
+    /** @return array<string,mixed> */
+    public function getBanners(): array
     {
-        return $this->tags()
-            ->get()
-            ->pluck('name', 'slug')
-            ->toArray();
+        $banners = $this->getMetadataArray('banners');
+        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $banners) : $banners;
     }
+
+    /** @return array<string,mixed> */
+    public function getCompatibility(): array
+    {
+        return $this->getMetadataArray('compatibility');
+    }
+
+    /** @return array<string,mixed> */
+    public function getContributors(): array
+    {
+        return $this->getMetadataArray('contributors');
+    }
+
+    public function getDownloadLink(): string
+    {
+        $link = $this->attributes['download_link'] ?? '';
+        return $this->shouldRewriteMetadata() ? self::rewriteDotOrgUrl($link) : $link;
+    }
+
+    /** @return array<string,mixed> */
+    public function getIcons(): array
+    {
+        $icons = $this->getMetadataArray('icons');
+        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $icons) : $icons;
+    }
+
+    /** @return array<string,mixed> */
+    public function getRatings(): array
+    {
+        return $this->getMetadataArray('ratings');
+    }
+
+    /** @return string[] */
+    public function getRequiresPlugins(): array
+    {
+        return $this->getMetadataArray('requires_plugins');
+    }
+
+    /** @return array<string,mixed> */
+    public function getScreenshots(): array
+    {
+        $screenshots = $this->getMetadataArray('screenshots');
+        $rewrite = fn(array $screenshot) => [...$screenshot, 'src' => self::rewriteDotOrgUrl($screenshot['src'] ?? '')];
+        return $this->shouldRewriteMetadata() ? array_map($rewrite, $screenshots) : $screenshots;
+    }
+
+    /** @return array<string,string> */
+    public function getSections(): array
+    {
+        return $this->getMetadataArray('sections');
+    }
+
+    /** @return array<string,mixed> */
+    public function getSource(): array
+    {
+        return $this->getMetadataArray('source');
+    }
+
+    /** @return array<string,mixed> */
+    public function getUpgradeNotice(): array
+    {
+        return $this->getMetadataArray('upgrade_notice');
+    }
+
+    /** @return array<string,string> */
+    public function getVersions(): array
+    {
+        $versions = $this->getMetadataArray('versions');
+        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
+    }
+
+    /// private api
+
+    /** @return array<array-key,mixed> */
+    private function getMetadataArray(string $field): array
+    {
+        return ($this->ac_raw_metadata[$field] ?? []) ?: []; // coerce false to empty array because lolphp and lolwp
+    }
+
+    private function shouldRewriteMetadata(): bool
+    {
+        return $this->ac_origin === 'wp_org';
+    }
+
+    //endregion
+
+    //region Attributes
+
+    // Note that Attributes are deeply magical in Laravel, and will not tolerate being subclassed or even having their
+    // construction delegated to a trait.  This is about as refactored as they are going to get.
+
+    // TODO: tighten up getter types in generics
+
+    /** @return Attribute<array<array-key, mixed>, never> */
+    public function banners(): Attribute
+    {
+        return Attribute::make(get: $this->getBanners(...), set: self::_readonly(...));
+    }
+
+    /** @return Attribute<array<array-key, mixed>, never> */
+    public function compatibility(): Attribute
+    {
+        return Attribute::make(get: $this->getCompatibility(...), set: self::_readonly(...));
+    }
+
+    /** @return Attribute<array<array-key, mixed>, never> */
+    public function contributors(): Attribute
+    {
+        return Attribute::make(get: $this->getContributors(...), set: self::_readonly(...));
+    }
+
+    /** @return Attribute<string, never> (actually Attribute<string,string> but we want it to _look_ read-only) */
+    public function downloadLink(): Attribute
+    {
+        // note: must be writable, since download_link appears in create()
+        return Attribute::make(get: $this->getDownloadLink(...));
+    }
+
+    /** @return Attribute<array<array-key, mixed>, never> */
+    public function icons(): Attribute
+    {
+        return Attribute::make(get: $this->getIcons(...), set: self::_readonly(...));
+    }
+
+    /** @return Attribute<array{"1": int, "2": int, "3": int, "4": int, "5": int}, never> */
+    public function ratings(): Attribute
+    {
+        return Attribute::make(get: $this->getRatings(...), set: self::_readonly(...));
+    }
+
+    /** @return Attribute<string[], never> */
+    public function requiresPlugins(): Attribute
+    {
+        return Attribute::make(get: $this->getRequiresPlugins(...), set: self::_readonly(...));
+    }
+
+    /** @return Attribute<array<array-key, mixed>, never> */
+    public function screenshots(): Attribute
+    {
+        return Attribute::make(get: $this->getScreenshots(...), set: self::_readonly(...));
+    }
+
+    /** @return Attribute<array<string, string>, never> */
+    public function sections(): Attribute
+    {
+        return Attribute::make(get: $this->getSections(...), set: self::_readonly(...));
+    }
+
+    /** @return Attribute<array<array-key, mixed>, never> */
+    public function source(): Attribute
+    {
+        return Attribute::make(get: $this->getSource(...), set: self::_readonly(...));
+    }
+
+    /** @return Attribute<array<array-key, mixed>, never> */
+    public function upgradeNotice(): Attribute
+    {
+        return Attribute::make(get: $this->getUpgradeNotice(...), set: self::_readonly(...));
+    }
+
+    /** @return Attribute<array<string, string>, never> */
+    public function versions(): Attribute
+    {
+        return Attribute::make(get: $this->getVersions(...), set: self::_readonly(...));
+    }
+
+    /// private api
+
+    private static function _readonly(): never
+    {
+        throw new InvalidArgumentException('Cannot modify read-only attribute');
+    }
+
+    //endregion
+
+    //region Collection Management
+
+    /** @param array<string, string> $tags */
+    public function addTags(array $tags): self
+    {
+        $pluginTags = [];
+        foreach ($tags as $tagSlug => $name) {
+            $pluginTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
+        }
+        $this->tags()->saveMany($pluginTags);
+        return $this;
+    }
+
+    /** @param string[] $tagSlugs */
+    public function addTagsBySlugs(array $tagSlugs): self
+    {
+        return $this->addTags(array_combine($tagSlugs, $tagSlugs));
+    }
+
+    /** @return array<string, string> */
+    public function tagsArray(): array
+    {
+        return $this->tags()->select('name', 'slug')->pluck('name', 'slug')->toArray();
+    }
+
+    //endregion
 }

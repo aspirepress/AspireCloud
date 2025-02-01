@@ -15,7 +15,7 @@ class ThemeUpdateData extends Data
         public string $url,
         public string $package,
         public ?string $requires,
-        public string $requires_php,
+        public ?string $requires_php,
     ) {}
 
     /**
@@ -29,7 +29,8 @@ class ThemeUpdateData extends Data
             new_version: $theme->version,
             url: $theme->download_link,
             package: "downloadurl_placeholder{$theme->version}",
-            requires: $theme->requires['wordpress'] ?? null,
+            // requires: $theme->requires['wordpress'] ?? null, // XXX HUH?  requires is always a string...
+            requires: $theme->requires,
             requires_php: $theme->requires_php,
         );
     }

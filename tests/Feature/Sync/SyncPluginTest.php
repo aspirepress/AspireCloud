@@ -128,14 +128,18 @@ describe('Sync Plugins', function () {
             ->and($plugin->added)->toBeBetween(new DateTime('2015-01-20'), new DateTime('2015-01-21'))
             ->and($plugin->homepage)->toBe('http://example.org/')
             ->and($plugin->sections)->toHaveKeys(['description', 'installation', 'faq', 'changelog', 'reviews'])
-            ->and($plugin->sections['description'])->toStartWith("<p>This plugin makes it easy to work with WordPress with-ought the errors messing up the layout")
-            ->and($plugin->sections['installation'])->toBe("<p>Upload the 0-Errors Plugin Base plugin to your blog and activate it. It would work as is.</p>")
+            ->and($plugin->sections['description'])->toStartWith(
+                "<p>This plugin makes it easy to work with WordPress with-ought the errors messing up the layout",
+            )
+            ->and($plugin->sections['installation'])->toBe(
+                "<p>Upload the 0-Errors Plugin Base plugin to your blog and activate it. It would work as is.</p>",
+            )
             ->and($plugin->sections['faq'])->toStartWith("<h4>Is it compatible with latest WordPress?</h4>")
             ->and($plugin->sections['changelog'])->toStartWith("<h4>0.2</h4>")
             ->and($plugin->sections['reviews'])->toBeEmpty()
             ->and($plugin->upgrade_notice)->toBeEmpty()
             ->and($plugin->screenshots)->toBeEmpty()
-            ->and($plugin->tags)->toBe([
+            ->and($plugin->tagsArray())->toBe([
                 'debug' => 'debug',
                 'email-errors' => 'email errors',
                 'errors' => 'errors',

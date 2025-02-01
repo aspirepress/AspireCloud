@@ -6,6 +6,7 @@ namespace App\Data\Props;
 
 use Carbon\CarbonImmutable;
 use DateTimeInterface;
+use Override;
 use Spatie\LaravelData\Attributes\Validation\Between;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
@@ -16,17 +17,6 @@ use Spatie\LaravelData\Optional;
 final class PluginProps extends ModelProps
 {
     /**
-     * @param Optional|array<string, mixed>|null $ratings
-     * @param Optional|array<string, mixed>|null $banners
-     * @param Optional|array<string, mixed>|null $contributors
-     * @param Optional|array<string, mixed>|null $icons
-     * @param Optional|array<string, mixed>|null $source
-     * @param Optional|array<string, mixed>|null $requires_plugins
-     * @param Optional|array<string, mixed>|null $compatibility
-     * @param Optional|array<string, mixed>|null $screenshots
-     * @param Optional|array<string, mixed>|null $sections
-     * @param Optional|array<string, mixed>|null $versions
-     * @param Optional|array<string, mixed>|null $upgrade_notice
      * @param Optional|array<string, mixed> $tags
      * @param Optional|array<string, mixed>|null $ac_raw_metadata
      */
@@ -61,7 +51,6 @@ final class PluginProps extends ModelProps
         public readonly Optional|string|null $author_profile,
         #[Between(0, 100)]
         public readonly Optional|int $rating,
-        public readonly Optional|array|null $ratings,
         #[Min(0)]
         public readonly Optional|int $num_ratings,
         #[Min(0)]
@@ -75,13 +64,9 @@ final class PluginProps extends ModelProps
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $homepage,
-        public readonly Optional|array|null $banners,
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $donate_link,
-        public readonly Optional|array|null $contributors,
-        public readonly Optional|array|null $icons,
-        public readonly Optional|array|null $source,
         #[Max(255)]
         public readonly Optional|string|null $business_model,
         #[Url]
@@ -96,12 +81,6 @@ final class PluginProps extends ModelProps
         #[Url]
         #[Max(1024)]
         public readonly Optional|string|null $repository_url,
-        public readonly Optional|array|null $requires_plugins,
-        public readonly Optional|array|null $compatibility,
-        public readonly Optional|array|null $screenshots,
-        public readonly Optional|array|null $sections,
-        public readonly Optional|array|null $versions,
-        public readonly Optional|array|null $upgrade_notice,
 
         // associations
         public readonly Optional|array $tags, // TODO
@@ -147,5 +126,12 @@ final class PluginProps extends ModelProps
             ),
         ];
         return self::from($args);
+    }
+
+    #[Override] // empty override to narrow the return type (BaseData::from is not generic)
+    public static function from(
+        mixed ...$args,
+    ): static {
+        return parent::from(...$args);
     }
 }

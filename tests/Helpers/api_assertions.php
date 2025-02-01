@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Testing\Fluent\AssertableJson;
+use Illuminate\Testing\TestResponse;
 
 function assertWpThemeBaseStructure($json)
 {
@@ -39,7 +40,7 @@ function assertWpThemeInfoBaseStructure($json)
         ->has('author');
 }
 
-function assertWpThemeAPIStructure1_1_query_themes($response)
+function assertWpThemeAPIStructure1_1_query_themes(TestResponse $response): TestResponse
 {
     return $response->assertJson(
         fn(AssertableJson $json) => $json->has('info')->has(
@@ -52,7 +53,7 @@ function assertWpThemeAPIStructure1_1_query_themes($response)
     );
 }
 
-function assertWpThemeAPIStructure1_2_query_themes($response)
+function assertWpThemeAPIStructure1_2_query_themes(TestResponse $response): TestResponse
 {
     return $response->assertJson(
         fn(AssertableJson $json) => $json->has('info')->has(
@@ -71,7 +72,7 @@ function assertWpThemeAPIStructure1_2_query_themes($response)
     );
 }
 
-function assertWpThemeAPIStructure1_1_theme_information($response)
+function assertWpThemeAPIStructure1_1_theme_information(TestResponse $response): TestResponse
 {
     return $response->assertJson(
         fn(AssertableJson $json) => assertWpThemeInfoBaseStructure($json)
@@ -79,7 +80,7 @@ function assertWpThemeAPIStructure1_1_theme_information($response)
     );
 }
 
-function assertWpThemeAPIStructure1_2_theme_information($response)
+function assertWpThemeAPIStructure1_2_theme_information(TestResponse $response): TestResponse
 {
     return $response->assertJson(
         fn(AssertableJson $json) => assertWpThemeInfoBaseStructure($json)
@@ -95,7 +96,7 @@ function assertWpThemeAPIStructure1_2_theme_information($response)
     );
 }
 
-function assertWpPluginAPIStructure($response)
+function assertWpPluginAPIStructure(TestResponse $response): TestResponse
 {
     return $response->assertJsonStructure([
         'name',
@@ -142,7 +143,7 @@ function assertWpPluginAPIStructure($response)
     ]);
 }
 
-function assertWpPluginAPIStructureForSearch($response)
+function assertWpPluginAPIStructureForSearch(TestResponse $response): TestResponse
 {
     return $response->assertJsonStructure([
         'info'    => [

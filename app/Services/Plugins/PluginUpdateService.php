@@ -85,14 +85,14 @@ class PluginUpdateService
             'new_version' => $plugin->version,
             'url' => "https://wordpress.org/plugins/{$plugin->slug}/",
             'package' => $plugin->download_link,
-            'icons' => $plugin->icons ?? [],
-            'banners' => $plugin->banners ?? [],
+            'icons' => $plugin->icons,
+            'banners' => $plugin->banners,
             'banners_rtl' => [],
             'requires' => $plugin->requires,
             'tested' => $plugin->tested,
             'requires_php' => $plugin->requires_php,
-            'requires_plugins' => $plugin->requires_plugins ?? [],
-            'compatibility' => $plugin->compatibility ?? [],
+            'requires_plugins' => $plugin->requires_plugins,
+            'compatibility' => $plugin->compatibility,
         ];
     }
 }

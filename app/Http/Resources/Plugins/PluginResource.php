@@ -31,9 +31,9 @@ class PluginResource extends BasePluginResource
             'last_updated' => $plugin->last_updated?->format(self::LAST_UPDATED_DATE_FORMAT),
             'added' => $plugin->added->format('Y-m-d'),
             'homepage' => $plugin->homepage,
-            'tags' => $plugin->tags,
+            'tags' => $plugin->tagsArray(),
             'donate_link' => $plugin->donate_link,
-            'requires_plugins' => $plugin->requires_plugins ?? [],
+            'requires_plugins' => $plugin->requires_plugins,
         ]);
 
         return match ($request->query('action')) {

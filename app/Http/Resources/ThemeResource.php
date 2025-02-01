@@ -35,7 +35,7 @@ class ThemeResource extends JsonResource
      *     download_link: string,
      *     tags: array<string, string>,
      *     versions: array<string, string>,
-     *     requires: bool,
+     *     requires: array<string, string>,
      *     requires_php: string,
      *     is_commercial: bool,
      *     external_support_url: string|bool,
@@ -50,7 +50,7 @@ class ThemeResource extends JsonResource
         $author = $resource->author->toArray();
         unset($author['id']);
 
-        $tags = $resource->tags;
+        $tags = $resource->tagsArray();
         ksort($tags);
 
         $screenshotBase = "https://wp-themes.com/wp-content/themes/{$resource->slug}/screenshot";
@@ -116,43 +116,4 @@ class ThemeResource extends JsonResource
         }
         return $this->when($include, $value);
     }
-
-    // upstream code below -- we get sections and ratings and such already processed.  Leaving commented for later reference.
-
-    // /** @return array<string, string> */
-    // private function getSections(): array
-    // {
-    //     return $resource->sections ?? [];
-    //     $sections = [];
-    //     if (preg_match_all('|--theme-data-(.+?)-->(.*?)<!|ims', $resource->content ?? "", $matches)) {
-    //         foreach ($matches[1] as $i => $section) {
-    //             $sections[$section] = trim($matches[2][$i]);
-    //         }
-    //     } else {
-    //         $sections['description'] = $this->fixMangledDescription(trim($resource->content ?? ""));
-    //     }
-    //     return $sections;
-    // }
-    //
-    // /**
-    //  * @param array<int>|null $ratings
-    //  * @return Collection<string, int>
-    //  */
-    // private function mapRatings(?array $ratings = []): Collection
-    // {
-    //     return collect($ratings)
-    //         ->mapWithKeys(fn($value, $key) => [(string) $key => $value]);
-    // }
-    //
-    // private function getDescription(): string
-    // {
-    //     return strpos($resource->content ?? "", '<!--') !== false
-    //         ? trim(substr($resource->content, 0, strpos($resource->content, '<!--')))
-    //         : trim($resource->content);
-    // }
-    //
-    // private function fixMangledDescription(string $description): string
-    // {
-    //     return str_replace(['[br]', '[p]'], ["\n", "\n\n"], $description);
-    // }
 }
