@@ -1,9 +1,9 @@
-FROM php:8.3-cli AS base
+FROM php:8.4-cli AS base
 
-COPY --from=composer:2.8.3 /usr/bin/composer /usr/bin/composer
-ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.5.2/install-php-extensions /usr/local/bin/
+COPY --from=composer:2.8.5 /usr/bin/composer /usr/bin/composer
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.7.14/install-php-extensions /usr/local/bin/
 
-RUN apt update && apt install -y bash git postgresql-client zip
+RUN apt update && apt install -y bash git postgresql-client vim zip
 
 RUN install-php-extensions pdo pdo_pgsql zip intl redis
 
@@ -18,9 +18,7 @@ FROM base AS dev
 
 RUN apt update && apt install -y nodejs npm
 
-# Xdebug exists, but is explicitly disabled for cli.  Use docker-compose.override.yml to enable.
 RUN install-php-extensions xdebug
-RUN sed -i 's/^/#/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 USER app
 

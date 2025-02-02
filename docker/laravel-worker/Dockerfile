@@ -5,7 +5,7 @@ ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/relea
 
 RUN apt update && apt install -y bash git postgresql-client zip
 
-RUN install-php-extensions pdo pdo_pgsql zip intl redis
+RUN install-php-extensions pdo pdo_pgsql zip intl opcache redis
 
 COPY ./docker/cli/php.ini /usr/local/etc/php/php.ini
 

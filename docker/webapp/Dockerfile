@@ -6,7 +6,9 @@ ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/relea
 # yes, vim, even on prod.  sudo is disabled anyway, so it can't do much damage.
 RUN apt update && apt install -y bash vim zip
 
-RUN install-php-extensions pdo pdo_pgsql zip intl redis
+RUN install-php-extensions pdo pdo_pgsql zip intl opcache redis
+
+RUN cp /etc/caddy/Caddyfile /etc/caddy/Caddyfile.bak
 
 COPY ./docker/webapp/Caddyfile /etc/caddy/Caddyfile
 COPY ./docker/webapp/php.ini /usr/local/etc/php/php.ini
