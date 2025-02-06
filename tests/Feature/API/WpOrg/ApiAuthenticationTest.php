@@ -10,4 +10,5 @@ it('should return 401 when an invalid auth token is present', function () {
     $response->assertStatus(401);
 });
 
-// TODO: write tests for real and and bad auth tokens
+// TODO: write test for real auth token
+
