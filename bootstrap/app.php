@@ -52,11 +52,13 @@ return Application::configure(basePath: dirname(__DIR__))
             // CacheApiResponse::class // replaced with laravels cache.headers in api.php
         ]);
 
-        // https://spatie.be/docs/laravel-permission/v6/basic-usage/middleware
         $middleware->alias([
+            // https://spatie.be/docs/laravel-permission/v6/basic-usage/middleware
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+
+            'auth.optional' => App\Http\Middleware\AuthOptional::class,
         ]);
 
     })

@@ -28,7 +28,6 @@ return [
     //// AspirePress Configuration
 
     'aspirecloud' => [
-        'api_authentication_enable' => env('API_AUTHENTICATION_ENABLED', false),
         'download' => [
             'base' => env('DOWNLOAD_BASE', env('APP_URL') . '/download/'), # must have a trailing slash!
             'cache_seconds' => env('DOWNLOAD_CACHE_SECONDS', 60 * 60 * 24 * 10),

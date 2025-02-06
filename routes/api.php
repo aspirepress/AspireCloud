@@ -15,18 +15,12 @@ use Illuminate\Support\Facades\Route;
 
 // https://codex.wordpress.org/WordPress.org_API
 
-$middlewares = [
-    NormalizeWpOrgRequest::class,
-    'cache.headers:public;max_age=300,etag', // for the CDN's benefit: the WP user agent does not cache at all.
-];
-$routeDefinition = Route::prefix('/');
-
-if (config('app.aspirecloud.api_authentication_enable')) {
-    $middlewares[] = 'auth:sanctum';
-}
-
-$routeDefinition
-    ->middleware($middlewares)
+Route::prefix('/')
+    ->middleware([
+        'auth.optional:sanctum',
+        NormalizeWpOrgRequest::class,
+        'cache.headers:public;s_maxage=300,etag', // for the CDN's benefit: the WP user agent does not cache at all.
+    ])
     ->group(function (Router $router) {
         $router->get('/secret-key/{version}', [SecretKeyController::class, 'index'])->where(['version' => '1.[01]']);
         $router->get('/secret-key/{version}/salt', [SecretKeyController::class, 'salt'])->where(['version' => '1.1']);
@@ -52,7 +46,9 @@ $routeDefinition
         $router->get('/translations/themes/{version}', CatchAllController::class)->where(['version' => '1.0']);
 
         $router->get('/themes/info/{version}', [ThemeController::class, 'info'])->where(['version' => '1.[012]']);
-        $router->match(['get', 'post'], '/themes/update-check/{version}', ThemeUpdatesController::class)->where(['version' => '1.[01]']);
+        $router->match(['get', 'post'], '/themes/update-check/{version}', ThemeUpdatesController::class)->where(
+            ['version' => '1.[01]'],
+        );
 
         $router->get('/plugins/info/1.2', PluginInformation_1_2_Controller::class);
         $router->get('/plugins/info/{version}', CatchAllController::class)->where(['version' => '1.[01]']);
