@@ -58,7 +58,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
 
-            'sanctum.optional' => App\Http\Middleware\SanctumOptional::class,
+            'auth.optional' => App\Http\Middleware\AuthOptional::class,
         ]);
 
     })

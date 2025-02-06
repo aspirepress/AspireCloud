@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('/')
     ->middleware([
-        'sanctum.optional',
+        'auth.optional:sanctum',
         NormalizeWpOrgRequest::class,
         'cache.headers:public;s_maxage=300,etag', // for the CDN's benefit: the WP user agent does not cache at all.
     ])
