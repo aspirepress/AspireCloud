@@ -27,6 +27,7 @@ class BulkImport
     public function __invoke(Request $request, Pipeline $pipeline): JsonResponse
     {
         ini_set('memory_limit', '2G');
+        ini_set('max_execution_time', '300');
 
         $currentLine = 0;
         $imported = 0;
