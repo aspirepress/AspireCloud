@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Models\User;
 use Illuminate\Support\Str;
 
-
 function makeApiRequest(string $method, string $uri, array $data = [], array $headers = [])
 {
     $testCase = test();
