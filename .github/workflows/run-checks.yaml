@@ -29,6 +29,14 @@ jobs:
 
       - name: Run tests
         run: |
-          vendor/bin/pint --test
           vendor/bin/phpstan --memory-limit=1G analyse
           php artisan test tests/Unit
+
+      # [chuck 2025-02-06] Removed pint.  Its not only grotesquely slow, it doesn't even fix things in one pass.
+      # If we're going to have style wars, I'd rather it were between humans and not within one insane formatter.
+
+      # - name: Run tests
+      #   run: |
+      #     vendor/bin/pint --test
+      #     vendor/bin/phpstan --memory-limit=1G analyse
+      #     php artisan test tests/Unit
