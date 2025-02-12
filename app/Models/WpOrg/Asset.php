@@ -4,6 +4,7 @@ namespace App\Models\WpOrg;
 
 use App\Enums\AssetType;
 use App\Events\AssetCreated;
+use App\Utils\Regex;
 use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\AssetFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -54,4 +55,21 @@ class Asset extends Model
     protected $attributes = [
         'repository' => 'wp_org', // this is the db default as well since 0.9.3, but it's handy to have it here too
     ];
+
+    public function getContentType(): string
+    {
+        $matches = Regex::match('/^.+\.(\w+)$/', $this->local_path);
+        if (!$matches) {
+            return 'application/octet-stream';
+        }
+        // hardly exhaustive, but enough to cover our assets ;)
+        return match ($matches[1]) {
+            'zip' => 'application/zip',
+            'png' => 'image/png',
+            'jpg', 'jpeg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'svg' => 'image/svg+xml',
+            default => 'application/octet-stream',
+        };
+    }
 }
