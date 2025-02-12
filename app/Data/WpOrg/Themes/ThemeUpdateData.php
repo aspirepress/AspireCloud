@@ -18,9 +18,6 @@ class ThemeUpdateData extends Data
         public ?string $requires_php,
     ) {}
 
-    /**
-     * Static method to create an instance from a Theme model.
-     */
     public static function fromModel(Theme $theme): self
     {
         return new self(
@@ -28,22 +25,18 @@ class ThemeUpdateData extends Data
             theme: $theme->slug,
             new_version: $theme->version,
             url: $theme->download_link,
-            package: "downloadurl_placeholder{$theme->version}",
-            // requires: $theme->requires['wordpress'] ?? null, // XXX HUH?  requires is always a string...
+            package: $theme->download_link,
             requires: $theme->requires,
             requires_php: $theme->requires_php,
         );
     }
 
     /**
-     * Static method to create an instance from a Theme model.
      * @param Collection<int,Theme> $themes
      * @return Collection<string,ThemeUpdateData>
      */
     public static function fromModelCollection(Collection $themes): Collection
     {
-        return $themes->mapWithKeys(fn($theme) => [
-            $theme->slug => self::fromModel($theme),
-        ]);
+        return $themes->mapWithKeys(fn($theme) => [$theme->slug => self::fromModel($theme)]);
     }
 }
