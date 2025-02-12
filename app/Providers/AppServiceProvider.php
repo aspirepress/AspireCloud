@@ -18,6 +18,11 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if (!config('app.report_deprecations')) {
+            // Both Laravel and Symfony try to force error_reporting(-1) with no way out, and it's super annoying.
+            error_reporting(E_ALL & ~E_DEPRECATED);
+        }
+
         $isDev = !$this->app->isProduction();
 
         // SSL termination means $request->getScheme() is always 'http', so prevent mixed content problems here.
