@@ -38,7 +38,7 @@ class DownloadService implements Downloader
             $stream = Storage::disk('s3')->getDriver()->readStream($asset->local_path);
             return response()->stream(
                 fn() => fpassthru($stream),
-                headers: ['Content-Type' => 'application/octet-stream'],
+                headers: ['Content-Type' => $asset->getContentType()],
             );
         }
 

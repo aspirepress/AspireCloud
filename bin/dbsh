@@ -1,0 +1,21 @@
+#!/bin/bash
+
+cd $(dirname $0)/..
+
+# allow real environment variables to override .env
+orig_pgdatabase=${PGDATABASE:-$DB_DATABASE}
+orig_pghost=${PGHOST:-$DB_HOST}
+orig_pgpassword=${PGPASSWORD:-$DB_PASSWORD}
+orig_pgport=${PGPORT:-$DB_PORT}
+orig_pguser=${PGUSER:-$DB_USERNAME}
+
+[[ -f .env ]] && source .env
+
+# note we don't respect PG* variables set in .env, since it should only have variables used by Laravel
+export PGDATABASE=${orig_pgdatabase:-$DB_DATABASE}
+export PGHOST=${orig_pghost:-$DB_HOST}
+export PGPASSWORD=${orig_pgpassword:-$DB_PASSWORD}
+export PGPORT=${orig_pgport:-$DB_PORT}
+export PGUSER=${orig_pguser:-$DB_USERNAME}
+
+exec psql "$@"

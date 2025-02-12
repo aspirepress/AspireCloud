@@ -24,26 +24,26 @@ Route::prefix('/')
 
         $router
             ->get('/download/plugin/{file}', DownloadPluginController::class)
-            ->where('file', '.+\.zip')
+            ->where(['file' => '.+\.zip'])
             ->name('download.plugin');
 
         $router
             ->get('/download/theme/{file}', DownloadThemeController::class)
-            ->where('file', '.+\.zip')
+            ->where(['file' => '.+\.zip'])
             ->name('download.theme');
 
         $router
             ->get('/download/assets/plugin/{slug}/{revision}/{file}', DownloadPluginAssetController::class)
-            ->where(['slug' => '[a-zA-Z0-9-]+', 'file' => '.+'])
+            ->where(['file' => '.+'])
             ->name('download.plugin.asset');
 
         $router
             ->get('/download/gp-icon/plugin/{slug}/{revision}/{file}', DownloadPluginIconController::class)
-            ->where(['slug' => '[a-zA-Z0-9-]+', 'file' => '.+'])
+            ->where(['file' => '.+'])
             ->name('download.plugin.gp-icon');
 
         $router
             ->get('/download/assets/theme/{slug}/{revision}/{file}', DownloadThemeScreenshotController::class)
-            ->where(['slug' => '[a-zA-Z0-9-]+', 'file' => '.+'])
+            ->where(['file' => '.+'])
             ->name('download.theme.asset');
     });
