@@ -102,46 +102,42 @@ it('returns theme updates', function () {
                     "Stylesheet" => "my-theme",
                 ],
             ],
-        ]), 'translations' => "[]",
+        ]),
+        'translations' => "[]",
         'locale' => "[\"en_US\"]",
     ], [
         'Accept' => 'application/json',
     ]);
 
     $response->assertStatus(200);
-    $response->assertJsonCount(1, 'themes')
+    $response
+        ->assertJsonCount(1, 'themes')
         ->assertJsonCount(1, 'no_update')
-        ->assertJsonStructure([
+        ->assertJson([
             'themes' => [
                 'my-theme' => [
-                    'name',
-                    'new_version',
-                    'package',
-                    'requires',
-                    'requires_php',
-                    'theme',
-                    'url',
+                    'name' => 'My Theme',
+                    'theme' => 'my-theme',
+                    'new_version' => '1.2.1',
+                    'url' => 'https://api.aspiredev.org/download/my-theme',
+                    'package' => 'https://api.aspiredev.org/download/my-theme',
+                    'requires' => null,
+                    'requires_php' => '5.6',
                 ],
             ],
             'no_update' => [
                 'my-theme2' => [
-                    'name',
-                    'new_version',
-                    'package',
-                    'requires',
-                    'requires_php',
-                    'theme',
-                    'url',
+                    'name' => 'My Theme2',
+                    'theme' => 'my-theme2',
+                    'new_version' => '2.9',
+                    'url' => 'https://api.aspiredev.org/download/my-theme2',
+                    'package' => 'https://api.aspiredev.org/download/my-theme2',
+                    'requires' => null,
+                    'requires_php' => '5.6',
                 ],
             ],
-            'translations',
-        ])
-        ->assertJsonPath('themes.my-theme.name', 'My Theme')
-        ->assertJsonPath('themes.my-theme.new_version', '1.2.1')
-        ->assertJsonPath('themes.my-theme.theme', 'my-theme')
-        ->assertJsonPath('no_update.my-theme2.name', 'My Theme2')
-        ->assertJsonPath('no_update.my-theme2.new_version', '2.9')
-        ->assertJsonPath('no_update.my-theme2.theme', 'my-theme2');
+            'translations' => [],
+        ]);
 });
 
 it('returns theme updates - no_updates', function () {
@@ -170,43 +166,39 @@ it('returns theme updates - no_updates', function () {
                     "Stylesheet" => "my-theme",
                 ],
             ],
-        ]), 'translations' => "[]",
+        ]),
+        'translations' => "[]",
         'locale' => "[\"en_US\"]",
     ], [
         'Accept' => 'application/json',
     ]);
 
     $response->assertStatus(200);
-    $response->assertJsonCount(0, 'themes')
+    $response
+        ->assertJsonCount(0, 'themes')
         ->assertJsonCount(2, 'no_update')
-        ->assertJsonStructure([
-            'themes',
+        ->assertJson([
+            'themes' => [],
             'no_update' => [
                 'my-theme' => [
-                    'name',
-                    'new_version',
-                    'package',
-                    'requires',
-                    'requires_php',
-                    'theme',
-                    'url',
+                    'name' => 'My Theme',
+                    'theme' => 'my-theme',
+                    'new_version' => '1.2.1',
+                    'url' => 'https://api.aspiredev.org/download/my-theme',
+                    'package' => 'https://api.aspiredev.org/download/my-theme',
+                    'requires' => null,
+                    'requires_php' => '5.6',
                 ],
                 'my-theme2' => [
-                    'name',
-                    'new_version',
-                    'package',
-                    'requires',
-                    'requires_php',
-                    'theme',
-                    'url',
+                    'name' => 'My Theme2',
+                    'theme' => 'my-theme2',
+                    'new_version' => '2.9',
+                    'url' => 'https://api.aspiredev.org/download/my-theme2',
+                    'package' => 'https://api.aspiredev.org/download/my-theme2',
+                    'requires' => null,
+                    'requires_php' => '5.6',
                 ],
             ],
-            'translations',
-        ])
-        ->assertJsonPath('no_update.my-theme.name', 'My Theme')
-        ->assertJsonPath('no_update.my-theme.new_version', '1.2.1')
-        ->assertJsonPath('no_update.my-theme.theme', 'my-theme')
-        ->assertJsonPath('no_update.my-theme2.name', 'My Theme2')
-        ->assertJsonPath('no_update.my-theme2.new_version', '2.9')
-        ->assertJsonPath('no_update.my-theme2.theme', 'my-theme2');
+            'translations' => [],
+        ]);
 });
