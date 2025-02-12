@@ -11,4 +11,3 @@ it('should return 401 when an invalid auth token is present', function () {
 });
 
 // TODO: write test for real auth token
-
