@@ -3,11 +3,12 @@
 namespace App\Http\Resources\Plugins;
 
 use App\Models\WpOrg\Plugin;
+use DateTimeInterface;
 use Illuminate\Http\Request;
 
 class PluginResource extends BasePluginResource
 {
-    public const LAST_UPDATED_DATE_FORMAT = 'Y-m-d H:ia T'; // .org's goofy format: "2024-09-27 9:53pm GMT"
+    public const LAST_UPDATED_DATE_FORMAT = 'Y-m-d h:ia T'; // .org's goofy format: "2024-09-27 9:53pm GMT"
 
     /**
      * Transform the resource into an array.
@@ -28,7 +29,7 @@ class PluginResource extends BasePluginResource
             'support_threads' => $plugin->support_threads,
             'support_threads_resolved' => $plugin->support_threads_resolved,
             'active_installs' => $plugin->active_installs,
-            'last_updated' => $plugin->last_updated?->format(self::LAST_UPDATED_DATE_FORMAT),
+            'last_updated' => self::formatLastUpdated($plugin->last_updated),
             'added' => $plugin->added->format('Y-m-d'),
             'homepage' => $plugin->homepage,
             'tags' => $plugin->tagsArray(),
@@ -58,5 +59,15 @@ class PluginResource extends BasePluginResource
             ]),
             default => $data,
         };
+    }
+
+    private static function formatLastUpdated(?DateTimeInterface $lastUpdated): ?string
+    {
+        if ($lastUpdated === null) {
+            return null;
+        }
+        $out = $lastUpdated->format(self::LAST_UPDATED_DATE_FORMAT);
+        // Unfortunately this seems to render GMT as "GMT+0000" for some reason, so strip that out
+        return \Safe\preg_replace('/\+\d+$/', '', $out);
     }
 }
