@@ -3,6 +3,7 @@
 namespace App\Services\Plugins;
 
 use App\Models\WpOrg\Plugin;
+use App\Utils\Regex;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -26,6 +27,10 @@ class QueryPluginsService
         ?string $author = null,
         string $browse = 'popular',
     ): array {
+        $search = self::normalizeSearchString($search);
+        $tag = self::normalizeSearchString($tag);
+        $author = self::normalizeSearchString($author);
+
         $query = Plugin::query()
             ->when($browse, self::applyBrowse(...))
             ->when($search, self::applySearch(...))
@@ -38,7 +43,8 @@ class QueryPluginsService
         $plugins = $query
             ->offset(($page - 1) * $perPage)
             ->limit($perPage)
-            ->get();
+            ->get()
+            ->unique('slug');
 
         return [
             'plugins' => $plugins,
@@ -51,19 +57,31 @@ class QueryPluginsService
     /** @param Builder<Plugin> $query */
     private static function applySearch(Builder $query, string $search): void
     {
-        $query->where(function (Builder $q) use ($search) {
-            $q
-                ->whereFullText('slug', $search)
-                ->orWhereFullText('name', $search)
-                ->orWhereFullText('short_description', $search)
-                ->orWhereFullText('description', $search);
-        });
+        $slug = Regex::replace('/[^a-z0-9-]+/i', '-', $search);
+        $query->where('slug', $slug); // need an initial condition or it retrieves everything
+
+        $q = Plugin::query();
+
+        // I can't make %> work this way, only whereRaw works.  TODO: find out why.
+        // $slug_similar = $q->clone()->where('slug', '%>', $search);
+
+        $slug_similar = $q->clone()->whereRaw("slug %> '$search'");
+        $name_exact = $q->clone()->where('name', $search);
+        $name_similar = $q->clone()->whereRaw("name %> '$search'");
+        $short_description_similar = $q->clone()->whereRaw("short_description %> '$search'");
+        $description_fulltext = $q->clone()->whereFullText('description', $search);
+
+        $query->unionAll($name_exact);
+        $query->unionAll($slug_similar);
+        $query->unionAll($name_similar);
+        $query->unionAll($short_description_similar);
+        $query->unionAll($description_fulltext);
     }
 
     /** @param Builder<Plugin> $query */
     private static function applyAuthor(Builder $query, string $author): void
     {
-        $query->whereLike('author', $author);
+        $query->whereRaw("author %> '$author'");
     }
 
     /** @param Builder<Plugin> $query */
@@ -86,5 +104,15 @@ class QueryPluginsService
             'top-rated', 'popular', 'featured' => $query->reorder('rating', 'desc'),
             default => $query->reorder('active_installs', 'desc'),
         };
+    }
+
+    private static function normalizeSearchString(?string $search): ?string
+    {
+        if ($search === null) {
+            return null;
+        }
+        $search = trim($search);
+        $search = Regex::replace('/\s+/i', ' ', $search);
+        return Regex::replace('/[^\w.,!?@#$_-]/i', ' ', $search); // strip most punctuation, allow a small subset
     }
 }
