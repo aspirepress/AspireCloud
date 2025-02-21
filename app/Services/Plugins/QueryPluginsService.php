@@ -28,6 +28,8 @@ class QueryPluginsService
         string $browse = 'popular',
     ): array {
         $search = self::normalizeSearchString($search);
+        $tag = self::normalizeSearchString($tag);
+        $author = self::normalizeSearchString($author);
 
         $query = Plugin::query()
             ->when($browse, self::applyBrowse(...))
@@ -75,7 +77,7 @@ class QueryPluginsService
     /** @param Builder<Plugin> $query */
     private static function applyAuthor(Builder $query, string $author): void
     {
-        $query->whereLike('author', "%{$author}%");
+        $query->whereRaw("author %> '$author'");
     }
 
     /** @param Builder<Plugin> $query */
