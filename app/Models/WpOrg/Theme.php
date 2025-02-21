@@ -166,8 +166,20 @@ final class Theme extends BaseModel
 
     public function getDownloadLink(): string
     {
-        $link = $this->attributes['download_link'] ?? '';
-        return $this->shouldRewriteMetadata() ? self::rewriteDotOrgUrl($link) : $link;
+        $orig_link = $this->attributes['download_link'] ?? '';
+        if (!$this->shouldRewriteMetadata()) {
+            return $orig_link;
+        }
+
+        $link = self::rewriteDotOrgUrl($orig_link);
+
+        if (Regex::match('#/theme/([^/.]+)\.zip$#i', $link)) {
+            // no dots in the filename before the extension, which means this link isn't useful for caching.
+            // replace it with the url for the current version instead, or the unrewritten link if that doesn't exist.
+            return $this->versions[$this->version] ?? $orig_link; // ->versions rewrites the urls itself
+        }
+
+        return $link;
     }
 
     public function getScreenshotUrl(): string
