@@ -27,6 +27,8 @@ class QueryPluginsService
         ?string $author = null,
         string $browse = 'popular',
     ): array {
+        $search = self::normalizeSearchString($search);
+
         $query = Plugin::query()
             ->when($browse, self::applyBrowse(...))
             ->when($search, self::applySearch(...))
@@ -57,18 +59,16 @@ class QueryPluginsService
 
         $q = Plugin::query();
 
-        $slug_contains = $q->clone()->where('slug', 'like', "%$slug%");
+        $slug_similar = $q->clone()->whereRaw("slug %> '$search'");
         $name_exact = $q->clone()->where('name', $search);
-        $name_contains = $q->clone()->where('name', 'like', "%$search%");
-        $short_description_contains = $q->clone()->where('short_description', 'like', "%$search%");
-        $short_description_fulltext = $q->clone()->whereFullText('short_description', $search);
+        $name_similar = $q->clone()->whereRaw("name %> '$search'");
+        $short_description_similar = $q->clone()->whereRaw("short_description %> '$search'");
         $description_fulltext = $q->clone()->whereFullText('description', $search);
 
-        $query->unionAll($slug_contains);
         $query->unionAll($name_exact);
-        $query->unionAll($name_contains);
-        $query->unionAll($short_description_contains);
-        $query->unionAll($short_description_fulltext);
+        $query->unionAll($slug_similar);
+        $query->unionAll($name_similar);
+        $query->unionAll($short_description_similar);
         $query->unionAll($description_fulltext);
     }
 
@@ -98,5 +98,15 @@ class QueryPluginsService
             'top-rated', 'popular', 'featured' => $query->reorder('rating', 'desc'),
             default => $query->reorder('active_installs', 'desc'),
         };
+    }
+
+    private static function normalizeSearchString(?string $search): ?string
+    {
+        if ($search === null) {
+            return null;
+        }
+        $search = trim($search);
+        $search = Regex::replace('/\s+/i', ' ', $search);
+        return Regex::replace('/[^\w.,!?@#$_-]/i', ' ', $search); // strip most punctuation, allow a small subset
     }
 }
