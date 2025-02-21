@@ -62,6 +62,9 @@ class QueryPluginsService
 
         $q = Plugin::query();
 
+        // I can't make %> work this way, only whereRaw works.  TODO: find out why.
+        // $slug_similar = $q->clone()->where('slug', '%>', $search);
+
         $slug_similar = $q->clone()->whereRaw("slug %> '$search'");
         $name_exact = $q->clone()->where('name', $search);
         $name_similar = $q->clone()->whereRaw("name %> '$search'");
