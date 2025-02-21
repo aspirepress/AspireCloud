@@ -75,7 +75,7 @@ class QueryPluginsService
     /** @param Builder<Plugin> $query */
     private static function applyAuthor(Builder $query, string $author): void
     {
-        $query->whereLike('author', $author);
+        $query->whereLike('author', "%{$author}%");
     }
 
     /** @param Builder<Plugin> $query */
