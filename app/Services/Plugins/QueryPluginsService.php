@@ -43,7 +43,8 @@ class QueryPluginsService
         $plugins = $query
             ->offset(($page - 1) * $perPage)
             ->limit($perPage)
-            ->get();
+            ->get()
+            ->unique('slug');
 
         return [
             'plugins' => $plugins,

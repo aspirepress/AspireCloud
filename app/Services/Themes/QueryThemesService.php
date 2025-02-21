@@ -37,6 +37,7 @@ class QueryThemesService
             ->get();
 
         $collection = collect($themes)
+            ->unique('slug')
             ->map(fn($theme) => (new ThemeResource($theme))->additional(['fields' => $req->fields]));
 
         return new ThemeCollection($collection, $page, (int) ceil($total / $perPage), $total);
