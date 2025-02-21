@@ -113,6 +113,7 @@ class QueryPluginsService
         }
         $search = trim($search);
         $search = Regex::replace('/\s+/i', ' ', $search);
-        return Regex::replace('/[^\w.,!?@#$_-]/i', ' ', $search); // strip most punctuation, allow a small subset
+        $search = Regex::replace('/[^\w.,!?@#$_-]/i', ' ', $search); // strip most punctuation, allow a small subset
+        return Regex::replace('/-+/', '-', $search);                 // collapse any consecutive dashes from the above
     }
 }
