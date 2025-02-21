@@ -6,7 +6,7 @@ use App\Models\WpOrg\ClosedPlugin;
 use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\Theme;
 
-describe('Download URL Rewrites', function () {
+describe('Download URL Rewrites (Plugins)', function () {
     $no_version_in_download_link = [
         'slug' => '0-errors',
         'name' => '0-Errors',
@@ -70,7 +70,7 @@ describe('Download URL Rewrites', function () {
 
     it('returns original url if no version found', function () use ($no_version_in_download_link) {
         $metadata = $no_version_in_download_link;
-        unset($metadata['versions']['0.2']);
+        unset($metadata['versions'][$metadata['version']]);
         $plugin = Plugin::fromSyncMetadata($metadata);
         expect($plugin->download_link)->toBe('https://downloads.wordpress.org/plugin/0-errors.zip');
     });
