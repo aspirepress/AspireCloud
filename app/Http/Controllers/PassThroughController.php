@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 use function Safe\json_encode;
 
-class CatchAllController extends Controller
+class PassThroughController extends Controller
 {
     public function __invoke(Request $request): Response
     {

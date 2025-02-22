@@ -10,7 +10,7 @@ use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
 use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
 use App\Http\Controllers\API\WpOrg\Themes\ThemeController;
 use App\Http\Controllers\API\WpOrg\Themes\ThemeUpdatesController;
-use App\Http\Controllers\CatchAllController;
+use App\Http\Controllers\PassThroughController;
 use App\Http\Middleware\NormalizeWpOrgRequest;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
@@ -39,32 +39,32 @@ Route::prefix('/')
         $router->get('/themes/info/{version}', [ThemeController::class, 'info'])->where(['version' => '1.[012]']);
         $router->match(['get', 'post'], '/themes/update-check/{version}', ThemeUpdatesController::class)->where(['version' => '1.[01]']);
 
-        // CatchAll passes the request through to .org (and probably should be renamed)
+        /// Pass-through routes still going to .org
 
-        $router->any('/core/checksums/{version}', CatchAllController::class)->where(['version' => '1.0']);
-        $router->any('/core/credits/{version}', CatchAllController::class)->where(['version' => '1.[01]']);
-        $router->any('/core/handbook/{version}', CatchAllController::class)->where(['version' => '1.0']);
-        $router->any('/core/stable-check/{version}', CatchAllController::class)->where(['version' => '1.0']);
-        $router->any('/core/version-check/{version}', CatchAllController::class)->where(['version' => '1.[67]']);
+        $router->any('/core/checksums/{version}', PassThroughController::class)->where(['version' => '1.0']);
+        $router->any('/core/credits/{version}', PassThroughController::class)->where(['version' => '1.[01]']);
+        $router->any('/core/handbook/{version}', PassThroughController::class)->where(['version' => '1.0']);
+        $router->any('/core/stable-check/{version}', PassThroughController::class)->where(['version' => '1.0']);
+        $router->any('/core/version-check/{version}', PassThroughController::class)->where(['version' => '1.[67]']);
 
-        $router->any('/events/{version}', CatchAllController::class)->where(['version' => '1.0']);
+        $router->any('/events/{version}', PassThroughController::class)->where(['version' => '1.0']);
 
-        $router->any('/patterns/{version}', CatchAllController::class)->where(['version' => '1.0']);
+        $router->any('/patterns/{version}', PassThroughController::class)->where(['version' => '1.0']);
 
         // /plugins endpoints are implemented for version 1.2, older versions are still pass-through
-        $router->any('/plugins/info/{version}', CatchAllController::class)->where(['version' => '1.[01]']);
-        $router->any('/plugins/update-check/{version}', CatchAllController::class)->where(['version' => '1.0']);
+        $router->any('/plugins/info/{version}', PassThroughController::class)->where(['version' => '1.[01]']);
+        $router->any('/plugins/update-check/{version}', PassThroughController::class)->where(['version' => '1.0']);
 
-        $router->any('/stats/locale/{version}', CatchAllController::class)->where(['version' => '1.0']);
-        $router->any('/stats/mysql/{version}', CatchAllController::class)->where(['version' => '1.0']);
-        $router->any('/stats/php/{version}', CatchAllController::class)->where(['version' => '1.0']);
-        $router->any('/stats/plugin/{version}/downloads.php', CatchAllController::class)->where(['version' => '1.0']);
-        $router->any('/stats/plugin/{version}/{slug}', CatchAllController::class)->where(['version' => '1.0']);
-        $router->any('/stats/wordpress/{version}', CatchAllController::class)->where(['version' => '1.0']);
+        $router->any('/stats/locale/{version}', PassThroughController::class)->where(['version' => '1.0']);
+        $router->any('/stats/mysql/{version}', PassThroughController::class)->where(['version' => '1.0']);
+        $router->any('/stats/php/{version}', PassThroughController::class)->where(['version' => '1.0']);
+        $router->any('/stats/plugin/{version}/downloads.php', PassThroughController::class)->where(['version' => '1.0']);
+        $router->any('/stats/plugin/{version}/{slug}', PassThroughController::class)->where(['version' => '1.0']);
+        $router->any('/stats/wordpress/{version}', PassThroughController::class)->where(['version' => '1.0']);
 
-        $router->any('/translations/core/{version}', CatchAllController::class)->where(['version' => '1.0']);
-        $router->any('/translations/plugins/{version}', CatchAllController::class)->where(['version' => '1.0']);
-        $router->any('/translations/themes/{version}', CatchAllController::class)->where(['version' => '1.0']);
+        $router->any('/translations/core/{version}', PassThroughController::class)->where(['version' => '1.0']);
+        $router->any('/translations/plugins/{version}', PassThroughController::class)->where(['version' => '1.0']);
+        $router->any('/translations/themes/{version}', PassThroughController::class)->where(['version' => '1.0']);
 
         // @formatter:on
     });
