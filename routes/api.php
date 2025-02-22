@@ -3,6 +3,7 @@
 // Note: api routes are not prefixed, i.e. all routes in here are from the root like web routes
 
 use App\Http\Controllers\API\WpOrg\Core\ImportersController;
+use App\Http\Controllers\API\WpOrg\Core\ServeHappyController;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
 use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
@@ -39,7 +40,7 @@ Route::prefix('/')
 
         $router->get('/core/importers/{version}', ImportersController::class)->where(['version' => '1.[01]']);
 
-        $router->any('/core/serve-happy/{version}', CatchAllController::class)->where(['version' => '1.0']);
+        $router->any('/core/serve-happy/{version}', ServeHappyController::class)->where(['version' => '1.0']);
         $router->any('/core/stable-check/{version}', CatchAllController::class)->where(['version' => '1.0']);
         $router->any('/core/version-check/{version}', CatchAllController::class)->where(['version' => '1.[67]']);
 
