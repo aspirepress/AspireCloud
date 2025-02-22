@@ -142,10 +142,10 @@ final class Plugin extends BaseModel
             'version' => $metadata['version'],
             'author' => $metadata['author'] ?? '',
             'requires' => $metadata['requires'],
-            'requires_php' => $metadata['requires_php'] ?: null,
+            'requires_php' => ($metadata['requires_php'] ?? null) ?: null,
             'tested' => $metadata['tested'] ?? '',
             'download_link' => $metadata['download_link'] ?? '',
-            'added' => Carbon::parse($metadata['added']),
+            'added' => ($metadata['added'] ?? null) ? Carbon::parse($metadata['added']) : null,
             'last_updated' => ($metadata['last_updated'] ?? null) ? Carbon::parse($metadata['last_updated']) : null,
             'author_profile' => $metadata['author_profile'] ?? null,
             'rating' => $metadata['rating'] ?? 0,
@@ -153,14 +153,14 @@ final class Plugin extends BaseModel
             'support_threads' => $metadata['support_threads'] ?? 0,
             'support_threads_resolved' => $metadata['support_threads_resolved'] ?? 0,
             'active_installs' => $metadata['active_installs'] ?? 0,
-            'downloaded' => $metadata['downloaded'] ?? '',
-            'homepage' => $metadata['homepage'] ?: null,
-            'donate_link' => $metadata['donate_link'] ?: null,
-            'business_model' => $metadata['business_model'] ?: null,
-            'commercial_support_url' => $metadata['commercial_support_url'] ?: null,
-            'support_url' => $metadata['support_url'] ?: null,
-            'preview_link' => $metadata['preview_link'] ?: null,
-            'repository_url' => $metadata['repository_url'] ?: null,
+            'downloaded' => ($metadata['downloaded'] ?? 0) ?: 0,
+            'homepage' => ($metadata['homepage'] ?? null) ?: null,
+            'donate_link' => ($metadata['donate_link'] ?? null) ?: null,
+            'business_model' => ($metadata['business_model'] ?? null) ?: null,
+            'commercial_support_url' => ($metadata['commercial_support_url'] ?? null) ?: null,
+            'support_url' => ($metadata['support_url'] ?? null) ?: null,
+            'preview_link' => ($metadata['preview_link'] ?? null) ?: null,
+            'repository_url' => ($metadata['repository_url'] ?? null) ?: null,
             'ac_origin' => $syncmeta['origin'],
             'ac_raw_metadata' => $metadata,
         ]);
@@ -231,8 +231,20 @@ final class Plugin extends BaseModel
 
     public function getDownloadLink(): string
     {
-        $link = $this->attributes['download_link'] ?? '';
-        return $this->shouldRewriteMetadata() ? self::rewriteDotOrgUrl($link) : $link;
+        $orig_link = $this->attributes['download_link'] ?? '';
+        if (!$this->shouldRewriteMetadata()) {
+            return $orig_link;
+        }
+
+        $link = self::rewriteDotOrgUrl($orig_link);
+
+        if (Regex::match('#/plugin/([^/.]+)\.zip$#i', $link)) {
+            // no dots in the filename before the extension, which means this link isn't useful for caching.
+            // replace it with the url for the current version instead, or the unrewritten link if that doesn't exist.
+            return $this->versions[$this->version] ?? $orig_link; // ->versions rewrites the urls itself
+        }
+
+        return $link;
     }
 
     /** @return array<string,mixed> */

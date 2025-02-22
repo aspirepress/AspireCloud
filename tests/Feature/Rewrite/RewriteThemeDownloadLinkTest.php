@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Models\WpOrg\ClosedPlugin;
 use App\Models\WpOrg\Theme;
 
-describe('Sync Themes', function () {
+describe('Download URL Rewrites (Plugins)', function () {
     $md_100b = [
         'slug' => '100-bytes',
         'name' => '100 Bytes',
@@ -40,7 +39,7 @@ describe('Sync Themes', function () {
         'sections' => [
             'description' => '100 Bytes is a theme that aims to look as optimal as possible to deliver your message to your audience using WordPress as a content manager. The idea is simple, make a theme that looks good everywhere, with as little CSS code as possible. In this case the limit is 100 Bytes of CSS information. Actually the compressed CSS code contains 82 bytes of information, but 100 bytes sounds better.',
         ],
-        'download_link' => 'https://downloads.wordpress.org/theme/100-bytes.1.1.3.zip',
+        'download_link' => 'https://downloads.wordpress.org/theme/100-bytes.zip',
         'tags' => [
             'blog' => 'Blog',
             'full-width-template' => 'Full width template',
@@ -81,64 +80,15 @@ describe('Sync Themes', function () {
         ],
     ];
 
-    it('loads as Theme', function () use ($md_100b) {
+    it('uses link from version if no version in download_link', function () use ($md_100b) {
         $theme = Theme::fromSyncMetadata($md_100b);
-
-        expect($theme->slug)
-            ->toBe('100-bytes')
-            ->and($theme->name)->toBe('100 Bytes')
-            ->and($theme->version)->toBe('1.1.3')
-            ->and($theme->preview_url)->toBe('https://wp-themes.com/100-bytes/')
-            ->and($theme->ratings)->toBe([1 => 11, 2 => 22, 3 => 33, 4 => 44, 5 => 55])
-            ->and($theme->rating)->toBe(0)
-            ->and($theme->num_ratings)->toBe(0)
-            ->and($theme->reviews_url)->toBe('https://wordpress.org/support/theme/100-bytes/reviews/')
-            ->and($theme->downloaded)->toBe(1466)
-            ->and($theme->active_installs)->toBe(50)
-            ->and($theme->last_updated)->toBeBetween(new DateTime('2024-01-13'), new DateTime('2024-01-14'))
-            ->and($theme->creation_time)->toBeBetween(new DateTime('2023-05-31'), new DateTime('2023-06-01'))
-            ->and($theme->homepage)->toBe('https://wordpress.org/themes/100-bytes/')
-            ->and($theme->sections['description'])->toBe(
-                '100 Bytes is a theme that aims to look as optimal as possible to deliver your message to your audience using WordPress as a content manager. The idea is simple, make a theme that looks good everywhere, with as little CSS code as possible. In this case the limit is 100 Bytes of CSS information. Actually the compressed CSS code contains 82 bytes of information, but 100 bytes sounds better.',
-            )
-            ->and($theme->tagsArray())->toBe([
-                'blog' => 'Blog',
-                'full-width-template' => 'Full width template',
-                'one-column' => 'One column',
-            ])
-            ->and($theme->requires)->toBeEmpty()
-            ->and($theme->requires_php)->toBe('5.6')
-            ->and($theme->is_commercial)->toBeFalse()
-            ->and($theme->external_support_url)->toBeNull()
-            ->and($theme->is_community)->toBeFalse()
-            ->and($theme->external_repository_url)->toBeNull();
-
-        // test url rewrites
         expect($theme->download_link)->toBe('https://api.aspiredev.org/download/theme/100-bytes.1.1.3.zip');
-
-        expect($theme->versions)->toBe([
-            '1.0' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.zip',
-            '1.0.1' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.1.zip',
-            '1.0.2' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.2.zip',
-            '1.0.3' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.3.zip',
-            '1.0.4' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.4.zip',
-            '1.0.5' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.5.zip',
-            '1.0.6' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.6.zip',
-            '1.0.7' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.7.zip',
-            '1.0.8' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.8.zip',
-            '1.0.9' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.9.zip',
-            '1.1.0' => 'https://api.aspiredev.org/download/theme/100-bytes.1.1.0.zip',
-            '1.1.1' => 'https://api.aspiredev.org/download/theme/100-bytes.1.1.1.zip',
-            '1.1.2' => 'https://api.aspiredev.org/download/theme/100-bytes.1.1.2.zip',
-            '1.1.3' => 'https://api.aspiredev.org/download/theme/100-bytes.1.1.3.zip',
-        ]);
-
-        expect($theme->screenshot_url)->toBe(
-            'https://api.aspiredev.org/download/assets/theme/100-bytes/1.1.3/screenshot.png',
-        );
     });
 
-    it('throws an exception if loaded as ClosedPlugin', function () use ($md_100b) {
-        expect(fn() => ClosedPlugin::fromSyncMetadata($md_100b))->toThrow(InvalidArgumentException::class);
+    it('returns original url if no version found', function () use ($md_100b) {
+        $metadata = $md_100b;
+        unset($metadata['versions'][$metadata['version']]);
+        $plugin = Theme::fromSyncMetadata($metadata);
+        expect($plugin->download_link)->toBe('https://downloads.wordpress.org/theme/100-bytes.zip');
     });
 });

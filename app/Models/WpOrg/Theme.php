@@ -131,25 +131,25 @@ final class Theme extends BaseModel
             'author_id' => $author->id,
             'slug' => $metadata['slug'],
             'name' => $metadata['name'],
-            'description' => $metadata['sections']['description'] ?? null,
+            'description' => ($metadata['sections']['description'] ?? null) ?: null,
             'version' => $metadata['version'],
             'download_link' => $metadata['download_link'],
-            'requires' => $metadata['requires'] ?? null,
-            'requires_php' => $metadata['requires_php'] ?? null,
+            'requires' => ($metadata['requires'] ?? null) ?: null,
+            'requires_php' => ($metadata['requires_php'] ?? null) ?: null,
             'last_updated' => Carbon::parse($metadata['last_updated_time']),
             'creation_time' => Carbon::parse($metadata['creation_time']),
-            'preview_url' => $metadata['preview_url'] ?? null,
-            'screenshot_url' => $metadata['screenshot_url'] ?? null,
+            'preview_url' => ($metadata['preview_url'] ?? null) ?: null,
+            'screenshot_url' => ($metadata['screenshot_url'] ?? null) ?: null,
             'rating' => $metadata['rating'] ?? 0,
             'num_ratings' => $metadata['num_ratings'] ?? 0,
-            'reviews_url' => $metadata['reviews_url'] ?? null,
+            'reviews_url' => ($metadata['reviews_url'] ?? null) ?: null,
             'downloaded' => $metadata['downloaded'] ?? 0,
             'active_installs' => $metadata['active_installs'] ?? 0,
-            'homepage' => $metadata['homepage'] ?? null,
-            'is_commercial' => $metadata['is_commercial'] ?? false,
-            'external_support_url' => $metadata['external_support_url'] ?? null,
-            'is_community' => $metadata['is_community'] ?? false,
-            'external_repository_url' => $metadata['external_repository_url'] ?? null,
+            'homepage' => ($metadata['homepage'] ?? null) ?: null,
+            'is_commercial' => ($metadata['is_commercial'] ?? null) ?: false,
+            'external_support_url' => ($metadata['external_support_url'] ?? null) ?: null,
+            'is_community' => ($metadata['is_community'] ?? null) ?: false,
+            'external_repository_url' => ($metadata['external_repository_url'] ?? null) ?: null,
             'ac_origin' => $syncmeta['origin'],
             'ac_raw_metadata' => $ac_raw_metadata,
         ]);
@@ -166,8 +166,20 @@ final class Theme extends BaseModel
 
     public function getDownloadLink(): string
     {
-        $link = $this->attributes['download_link'] ?? '';
-        return $this->shouldRewriteMetadata() ? self::rewriteDotOrgUrl($link) : $link;
+        $orig_link = $this->attributes['download_link'] ?? '';
+        if (!$this->shouldRewriteMetadata()) {
+            return $orig_link;
+        }
+
+        $link = self::rewriteDotOrgUrl($orig_link);
+
+        if (Regex::match('#/theme/([^/.]+)\.zip$#i', $link)) {
+            // no dots in the filename before the extension, which means this link isn't useful for caching.
+            // replace it with the url for the current version instead, or the unrewritten link if that doesn't exist.
+            return $this->versions[$this->version] ?? $orig_link; // ->versions rewrites the urls itself
+        }
+
+        return $link;
     }
 
     public function getScreenshotUrl(): string
