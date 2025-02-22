@@ -17,7 +17,7 @@ class PluginSeeder extends Seeder
 
     private function createAspireUpdatePlugin(): void
     {
-        Plugin::query()->where('slug', 'aspireupdate')->delete();
+        // Plugin::query()->where('slug', 'aspireupdate')->delete();
 
         if (Plugin::query()->where('slug', 'aspireupdate')->where('ac_origin', 'git')->exists()) {
             return;
@@ -115,8 +115,6 @@ class PluginSeeder extends Seeder
             "active_installs" => 0,
             "homepage" => "https://aspirepress.org/",
             "external" => "xxx",
-
-            "added" => "2025-02-21T19:06:33Z",
 
             'aspiresync_meta' => [
                 'type' => 'plugin',

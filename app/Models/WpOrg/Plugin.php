@@ -145,7 +145,7 @@ final class Plugin extends BaseModel
             'requires_php' => ($metadata['requires_php'] ?? null) ?: null,
             'tested' => $metadata['tested'] ?? '',
             'download_link' => $metadata['download_link'] ?? '',
-            'added' => Carbon::parse($metadata['added']),
+            'added' => ($metadata['added'] ?? null) ? Carbon::parse($metadata['added']) : null,
             'last_updated' => ($metadata['last_updated'] ?? null) ? Carbon::parse($metadata['last_updated']) : null,
             'author_profile' => $metadata['author_profile'] ?? null,
             'rating' => $metadata['rating'] ?? 0,
