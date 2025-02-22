@@ -2,6 +2,7 @@
 
 // Note: api routes are not prefixed, i.e. all routes in here are from the root like web routes
 
+use App\Http\Controllers\API\WpOrg\Core\BrowseHappyController;
 use App\Http\Controllers\API\WpOrg\Core\ImportersController;
 use App\Http\Controllers\API\WpOrg\Core\ServeHappyController;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
@@ -33,7 +34,7 @@ Route::prefix('/')
         $router->any('/stats/plugin/{version}/downloads.php', CatchAllController::class)->where(['version' => '1.0']);
         $router->any('/stats/plugin/{version}/{slug}', CatchAllController::class)->where(['version' => '1.0']);
 
-        $router->any('/core/browse-happy/{version}', CatchAllController::class)->where(['version' => '1.1']);
+        $router->any('/core/browse-happy/{version}', BrowseHappyController::class)->where(['version' => '1.1']);
         $router->any('/core/checksums/{version}', CatchAllController::class)->where(['version' => '1.0']);
         $router->any('/core/credits/{version}', CatchAllController::class)->where(['version' => '1.[01]']);
         $router->any('/core/handbook/{version}', CatchAllController::class)->where(['version' => '1.0']);
