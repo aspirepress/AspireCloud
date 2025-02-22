@@ -109,9 +109,9 @@ describe('Sync Themes', function () {
             ->and($theme->requires)->toBeEmpty()
             ->and($theme->requires_php)->toBe('5.6')
             ->and($theme->is_commercial)->toBeFalse()
-            ->and($theme->external_support_url)->toBe('')
+            ->and($theme->external_support_url)->toBeNull()
             ->and($theme->is_community)->toBeFalse()
-            ->and($theme->external_repository_url)->toBe('');
+            ->and($theme->external_repository_url)->toBeNull();
 
         // test url rewrites
         expect($theme->download_link)->toBe('https://api.aspiredev.org/download/theme/100-bytes.1.1.3.zip');
