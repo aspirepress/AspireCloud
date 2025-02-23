@@ -12,7 +12,8 @@ class DownloadMissedAsset
     {
         Log::debug("Dispatching new DownloadAssetJob", ['event' => $event]);
 
-        dispatch_sync(new DownloadAssetJob(
+        dispatch(
+            new DownloadAssetJob(
             type: $event->type,
             slug: $event->slug,
             file: $event->file,
