@@ -14,11 +14,12 @@ class DownloadMissedAsset
 
         dispatch(
             new DownloadAssetJob(
-            type: $event->type,
-            slug: $event->slug,
-            file: $event->file,
-            upstreamUrl: $event->upstreamUrl,
-            revision: $event->revision,
-        ));
+                type: $event->type,
+                slug: $event->slug,
+                file: $event->file,
+                upstreamUrl: $event->upstreamUrl,
+                revision: $event->revision,
+            ),
+        );
     }
 }
