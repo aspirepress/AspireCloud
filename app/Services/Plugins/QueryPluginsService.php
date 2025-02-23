@@ -97,12 +97,12 @@ class QueryPluginsService
      */
     private static function applyBrowse(Builder $query, string $browse): void
     {
-        // TODO: replicate 'featured' browse (currently it's identical to 'popular')
+        // TODO: replicate 'featured' browse (currently it's identical to 'top-rated')
         match ($browse) {
             'new' => $query->reorder('added', 'desc'),
             'updated' => $query->reorder('last_updated', 'desc'),
-            'top-rated', 'popular', 'featured' => $query->reorder('rating', 'desc'),
-            default => $query->reorder('active_installs', 'desc'),
+            'top-rated', 'featured' => $query->reorder('rating', 'desc'),
+            default => $query->reorder('active_installs', 'desc'),  // 'popular' is also the default
         };
     }
 
