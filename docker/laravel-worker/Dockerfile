@@ -1,4 +1,4 @@
-FROM php:8.3-cli AS base
+FROM php:8.4.4-cli-bookworm AS base
 
 COPY --from=composer:2.8.5 /usr/bin/composer /usr/bin/composer
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.7.14/install-php-extensions /usr/local/bin/
