@@ -48,9 +48,9 @@ class QueryThemesService
     {
         // TODO: replicate 'featured' browse (currently it's identical to 'popular')
         match ($browse) {
-            'popular', 'featured' => $query->reorder('rating', 'desc'),
+            'featured' => $query->reorder('rating', 'desc'),
             'new' => $query->reorder('creation_time', 'desc'),
-            default => null,
+            default => $query->reorder('active_installs', 'desc'), // 'popular' is also the default
         };
     }
 
