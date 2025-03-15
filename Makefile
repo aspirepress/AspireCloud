@@ -39,7 +39,7 @@ clean: ## Remove all Docker containers, volumes, etc
 up: ## Starts the Docker containers
 	docker compose up -d
 
-build: install-composer install-npm build-js
+build: install-php install-js build-js
 
 down: ## Stops the Docker containers
 	docker compose down
@@ -50,7 +50,7 @@ unit: ## Run unit tests
 functional: reset-testing-database ## Run functional tests
 	bin/dcrun vendor/bin/pest --testsuite=Feature ${OPTS}
 
-test-bruno: ## Run bruno tests (npm install -g @usebruno/cli)
+test-bruno: ## Run bruno tests (yarn global add @usebruno/cli)
 	cd bruno && bru run -r . --env 'Local API'
 
 test: unit functional ## Run all tests
@@ -64,14 +64,14 @@ quality: ## Run all quality checks
 quality-baseline: ## Run all static analysis checks with baseline
 	bin/dcrun vendor/bin/phpstan analyse -b baseline.neon $(PHPSTAN_XDEBUG) src tests
 
-install-composer: ## Install composer dependencies
+install-php: ## Install composer dependencies
 	bin/dcrun composer install
 
-install-npm:
-	bin/dcrun npm ci
+install-js:
+	bin/dcrun yarn
 
 build-js:
-	bin/dcrun npm run build
+	bin/dcrun yarn run build
 
 logs-%: ## View logs (follow mode) for the container where % is a service name (webapp, postgres, node, nginx, smtp, rabbitmq)
 	docker compose logs -f $*
