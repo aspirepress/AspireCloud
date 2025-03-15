@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: docker
+    directory: /docker/cli
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /docker/laravel-worker
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /docker/webapp
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
