@@ -18,7 +18,8 @@ COPY ./docker/webapp/php.ini /usr/local/etc/php/php.ini
 RUN useradd --uid 100000 --create-home --shell /bin/bash app \
     && chown -R app:app /config /data \
     && apt update \
-    && apt install -y nodejs npm postgresql-client
+    && apt install -y nodejs npm postgresql-client \
+    && npm install -g yarn
 
 WORKDIR /app
 
@@ -45,7 +46,7 @@ USER app
 RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --working-dir=/app \
     && mkdir -p storage/logs storage/app/public storage/app/private storage/framework/sessions storage/framework/views storage/framework/cache/data
 
-RUN npm ci && rm -rf public/build && npm run build
+RUN yarn install && rm -rf public/build && npm run build
 
 USER root
 
