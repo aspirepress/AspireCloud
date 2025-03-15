@@ -12,13 +12,15 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: ["main"]
-  schedule:
-    - cron: "0 0 * * 1"
+  workflow_dispatch: ~
+  # this action is too slow to be worth running automatically on all PRs, and is only worth it for a JS-heavy codebase.
+  # push:
+  #   branches: ["main"]
+  # pull_request:
+  #   # The branches below must be a subset of the branches above
+  #   branches: ["main"]
+  # schedule:
+  #   - cron: "0 0 * * 1"
 
 permissions:
   contents: read
