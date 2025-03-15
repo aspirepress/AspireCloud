@@ -15,7 +15,7 @@ COPY ./docker/webapp/php.ini /usr/local/etc/php/php.ini
 
 # frankenphp sets XDG_CONFIG_HOME=/config and XDG_DATA_HOME=/data, and I won't change these in case they're hardwired
 
-RUN useradd --create-home --shell /bin/bash app \
+RUN useradd --uid 100000 --create-home --shell /bin/bash app \
     && chown -R app:app /config /data \
     && apt update \
     && apt install -y nodejs npm postgresql-client
