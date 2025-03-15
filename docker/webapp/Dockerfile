@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp:1.4.1-php8.4.3-bookworm AS base
+FROM dunglas/frankenphp:1.4.4-php8.4.4-bookworm AS base
 
 COPY --from=composer:2.8.5 /usr/bin/composer /usr/bin/composer
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.7.14/install-php-extensions /usr/local/bin/
@@ -15,7 +15,7 @@ COPY ./docker/webapp/php.ini /usr/local/etc/php/php.ini
 
 # frankenphp sets XDG_CONFIG_HOME=/config and XDG_DATA_HOME=/data, and I won't change these in case they're hardwired
 
-RUN useradd --create-home --shell /bin/bash app \
+RUN useradd --uid 100000 --create-home --shell /bin/bash app \
     && chown -R app:app /config /data \
     && apt update \
     && apt install -y nodejs npm postgresql-client

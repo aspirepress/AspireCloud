@@ -4,10 +4,10 @@ services:
             context: .
             dockerfile: docker/webapp/Dockerfile
             target: dev
-        ports:
-            - ${LOCAL_HTTP_PORT:-8099}:80
         volumes:
             - .:/app
+            - ./docker/webapp/Caddyfile:/etc/caddy/Caddyfile
+            - ./docker/webapp/php.ini:/usr/local/etc/php/php.ini
         networks:
             traefik: ~
             app-net: ~
@@ -31,8 +31,6 @@ services:
             - POSTGRES_PASSWORD=password
             - PGDATA=/opt/pgdata
             - POSTGRES_DB=aspirecloud
-        ports:
-            - "${LOCAL_POSTGRES_PORT:-5432}:5432"
         volumes:
             - postgresdata:/opt/pgdata
         networks:
@@ -68,8 +66,6 @@ services:
     mailpit:
         image: axllent/mailpit:v1.21.4
         restart: unless-stopped
-        ports:
-            - "${LOCAL_MAILPIT_PORT:-8025}:8025"
         networks:
             app-net: ~
             aspire-net:

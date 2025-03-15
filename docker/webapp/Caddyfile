@@ -10,4 +10,5 @@ http:// {
     root * /app/public
     php_server
     log
+    encode zstd gzip
 }
