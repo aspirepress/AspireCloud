@@ -48,21 +48,21 @@ beforeEach(function () {
 });
 
 it('returns 400 when slug is missing', function () {
-    $response = makeApiRequest('GET', '/themes/info/1.2?action=theme_information');
+    $response = $this->get('/themes/info/1.2?action=theme_information');
 
     $response->assertStatus(400)
         ->assertJson(['error' => 'The slug field is required.']);
 });
 
 it('returns 404 when theme does not exist', function () {
-    $response = makeApiRequest('GET', '/themes/info/1.2?action=theme_information&slug=non-existent-theme');
+    $response = $this->get('/themes/info/1.2?action=theme_information&slug=non-existent-theme');
 
     $response->assertStatus(404)
         ->assertJson(['error' => 'Theme not found']);
 });
 
 it('returns theme_information in wp.org format (v1.1)', function () {
-    $response = makeApiRequest('GET', '/themes/info/1.1?action=theme_information&slug=my-theme');
+    $response = $this->get('/themes/info/1.1?action=theme_information&slug=my-theme');
 
     $response->assertStatus(200)
         ->assertJson([
@@ -74,7 +74,7 @@ it('returns theme_information in wp.org format (v1.1)', function () {
 });
 
 it('returns theme_information in wp.org format (v1.2)', function () {
-    $response = makeApiRequest('GET', '/themes/info/1.2?action=theme_information&slug=my-theme');
+    $response = $this->get('/themes/info/1.2?action=theme_information&slug=my-theme');
 
     $response->assertStatus(200)
         ->assertJson(['name' => 'My Theme']);
@@ -83,7 +83,7 @@ it('returns theme_information in wp.org format (v1.2)', function () {
 });
 
 it('returns theme query results in wp.org format (v1.1)', function () {
-    $response = makeApiRequest('GET', '/themes/info/1.1?action=query_themes');
+    $response = $this->get('/themes/info/1.1?action=query_themes');
 
     $response->assertStatus(200)
         ->assertJson(['info' => ['page' => 1, 'pages' => 1, 'results' => 1]]);
@@ -92,7 +92,7 @@ it('returns theme query results in wp.org format (v1.1)', function () {
 });
 
 it('returns theme query results in wp.org format (v1.2)', function () {
-    $response = makeApiRequest('GET', '/themes/info/1.2?action=query_themes');
+    $response = $this->get('/themes/info/1.2?action=query_themes');
 
     $response->assertStatus(200)
         ->assertJson(['info' => ['page' => 1, 'pages' => 1, 'results' => 1]]);

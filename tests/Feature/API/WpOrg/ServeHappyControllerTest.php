@@ -1,7 +1,7 @@
 <?php
 
 it('serves happy', function () {
-    $response = makeApiRequest('GET', '/core/serve-happy/1.0?php_version=8.3');
+    $response = $this->get('/core/serve-happy/1.0?php_version=8.3');
 
     $response
         ->assertStatus(200)
@@ -15,7 +15,7 @@ it('serves happy', function () {
 });
 
 it('shows false for insecure versions', function () {
-    $response = makeApiRequest('GET', '/core/serve-happy/1.0?php_version=5.3');
+    $response = $this->get('/core/serve-happy/1.0?php_version=5.3');
 
     $response
         ->assertStatus(200)
@@ -30,9 +30,8 @@ it('shows false for insecure versions', function () {
 
 it('requires php_version param', function () {
     // upstream throws 400 and returns a json error, but wp only checks for a 200 status, so these are fine
-    $response = makeApiRequest('GET', '/core/serve-happy/1.0');
+    $response = $this->get('/core/serve-happy/1.0');
     $response->assertStatus(302); // laravel's validation failure behavior for non-json requests
-
-    $response = makeApiRequest('GET', '/core/serve-happy/1.0', [], ['Accept' => 'application/json']);
+    $response = $this->get('/core/serve-happy/1.0', ['Accept' => 'application/json']);
     $response->assertStatus(422);
 });

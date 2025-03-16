@@ -10,18 +10,16 @@ beforeEach(function () {
 
 it('returns 400 when slug is missing', function () {
     Plugin::factory(10)->create();
-    $response = makeApiRequest('GET', '/plugins/info/1.2?action=plugin_information');
+    $response = $this->get('/plugins/info/1.2?action=plugin_information');
 
     $response
         ->assertStatus(400)
-        ->assertJson([
-            'error' => 'Slug is required',
-        ]);
+        ->assertJson(['error' => 'Slug is required']);
 });
 
 it('returns 404 when plugin does not exist', function () {
     Plugin::factory(10)->create();
-    $response = makeApiRequest('GET', '/plugins/info/1.2?action=plugin_information&slug=non-existent-plugin');
+    $response = $this->get('/plugins/info/1.2?action=plugin_information&slug=non-existent-plugin');
 
     $response
         ->assertStatus(404)
@@ -37,10 +35,7 @@ it('returns plugin information in wp.org format', function () {
     ]);
     Plugin::factory(9)->create();
 
-    $response = makeApiRequest(
-        'GET',
-        '/plugins/info/1.2?action=plugin_information&slug=jwt-authentication-for-wp-rest-api',
-    );
+    $response = $this->get('/plugins/info/1.2?action=plugin_information&slug=jwt-authentication-for-wp-rest-api');
 
     $response
         ->assertStatus(200)
@@ -61,7 +56,7 @@ it('returns closed plugin information in wp.org format', function () {
         'reason' => 'author-request',
     ]);
 
-    $response = makeApiRequest('GET', '/plugins/info/1.2?action=plugin_information&request[slug]=0gravatar');
+    $response = $this->get('/plugins/info/1.2?action=plugin_information&request[slug]=0gravatar');
 
     $response
         ->assertStatus(404)
@@ -86,7 +81,7 @@ it('returns search results by tag in wp.org format', function () {
 
     expect(Plugin::query()->count())->toBe(10);
 
-    $response = makeApiRequest('GET', '/plugins/info/1.2?action=query_plugins&tag=' . $tagToQuery);
+    $response = $this->get("/plugins/info/1.2?action=query_plugins&tag=$tagToQuery");
 
     $response->assertStatus(200);
     assertWpPluginAPIStructureForSearch($response);
@@ -119,7 +114,7 @@ it('returns search results by query string in wp.org format', function () {
 
     expect(Plugin::query()->count())->toBe(10);
 
-    $response = makeApiRequest('GET', '/plugins/info/1.2?action=query_plugins&search=' . $query);
+    $response = $this->get("/plugins/info/1.2?action=query_plugins&search=$query");
 
     $response->assertStatus(200);
     assertWpPluginAPIStructureForSearch($response);
@@ -152,10 +147,7 @@ it('returns search results by tag and author in wp.org format', function () {
 
     expect(Plugin::query()->count())->toBe(10);
 
-    $response = makeApiRequest(
-        'GET',
-        '/plugins/info/1.2?action=query_plugins&tag=' . $tagToQuery . '&author=' . $author,
-    );
+    $response = $this->get("/plugins/info/1.2?action=query_plugins&tag=$tagToQuery&author=$author");
 
     $response->assertStatus(200);
     assertWpPluginAPIStructureForSearch($response);
@@ -180,7 +172,7 @@ it('returns a valid pagination', function () {
     Plugin::factory(10)->create();
     expect(Plugin::query()->count())->toBe(10);
 
-    $response = makeApiRequest('GET', '/plugins/info/1.2?action=query_plugins&per_page=' . $perPage . '&page=' . $page);
+    $response = $this->get("/plugins/info/1.2?action=query_plugins&per_page=$perPage&page=$page");
 
     $response->assertStatus(200);
     assertWpPluginAPIStructureForSearch($response);

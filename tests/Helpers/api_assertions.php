@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Testing\TestResponse;
 
-function assertWpThemeBaseStructure($json)
+function assertWpThemeBaseStructure(AssertableJson $json): AssertableJson
 {
     return $json
         ->has('name')
@@ -20,7 +20,7 @@ function assertWpThemeBaseStructure($json)
         ->has('description');
 }
 
-function assertWpThemeInfoBaseStructure($json)
+function assertWpThemeInfoBaseStructure(AssertableJson $json): AssertableJson
 {
     return $json
         ->has('name')
