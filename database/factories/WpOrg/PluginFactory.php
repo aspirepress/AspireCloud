@@ -189,14 +189,7 @@ class PluginFactory extends Factory
         $count = $this->faker->numberBetween(3, 8);
 
         for ($i = 0; $i < $count; $i++) {
-            $version = $this->faker->semver();
-            $versions[$version] = [
-                'url' => $this->faker->url(),
-                'package' => $this->faker->url(),
-                'requires' => $this->faker->semver(),
-                'requires_php' => $this->faker->randomElement(['7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3']),
-                'released' => $this->faker->dateTime()->format('Y-m-d'),
-            ];
+            $versions[$this->faker->semver()] = $this->faker->url();
         }
 
         return $versions;
