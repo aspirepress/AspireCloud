@@ -2874,21 +2874,21 @@
         },
         {
             "name": "laravel/telescope",
-            "version": "v5.2.6",
+            "version": "v5.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/telescope.git",
-                "reference": "7ee46fbea8e3b01108575c8edf7377abddfe8bb9"
+                "reference": "4937ee4c7243fae39fdb3e990a18af2546c2ed3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/telescope/zipball/7ee46fbea8e3b01108575c8edf7377abddfe8bb9",
-                "reference": "7ee46fbea8e3b01108575c8edf7377abddfe8bb9",
+                "url": "https://api.github.com/repos/laravel/telescope/zipball/4937ee4c7243fae39fdb3e990a18af2546c2ed3b",
+                "reference": "4937ee4c7243fae39fdb3e990a18af2546c2ed3b",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "laravel/framework": "^8.37|^9.0|^10.0|^11.0",
+                "laravel/framework": "^8.37|^9.0|^10.0|^11.0|^12.0",
                 "php": "^8.0",
                 "symfony/console": "^5.3|^6.0|^7.0",
                 "symfony/var-dumper": "^5.0|^6.0|^7.0"
@@ -2897,9 +2897,9 @@
                 "ext-gd": "*",
                 "guzzlehttp/guzzle": "^6.0|^7.0",
                 "laravel/octane": "^1.4|^2.0|dev-develop",
-                "orchestra/testbench": "^6.40|^7.37|^8.17|^9.0",
+                "orchestra/testbench": "^6.40|^7.37|^8.17|^9.0|^10.0",
                 "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^9.0|^10.5"
+                "phpunit/phpunit": "^9.0|^10.5|^11.5"
             },
             "type": "library",
             "extra": {
@@ -2937,9 +2937,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/telescope/issues",
-                "source": "https://github.com/laravel/telescope/tree/v5.2.6"
+                "source": "https://github.com/laravel/telescope/tree/v5.5.1"
             },
-            "time": "2024-11-25T20:34:58+00:00"
+            "time": "2025-03-10T17:13:23+00:00"
         },
         {
             "name": "laravel/tinker",
