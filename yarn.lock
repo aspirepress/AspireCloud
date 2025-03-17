@@ -157,22 +157,21 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.25.1.tgz#7d79922cb2d88f9048f06393dbf62d2e4accb584"
   integrity sha512-Y1EQdcfwMSeQN/ujR5VayLOJ1BHaK+ssyk0AEzPjC+t1lITgsnccPqFjb6V+LsTp/9Iov4ysfjxLaGJ9RPtkVg==
 
-"@inertiajs/core@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/@inertiajs/core/-/core-1.3.0.tgz"
-  integrity sha512-TJ8R1eUYY473m9DaKlCPRdHTdznFWTDuy5VvEzXg3t/hohbDQedLj46yn/uAqziJPEUZJrSftZzPI2NMzL9tQA==
+"@inertiajs/core@2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@inertiajs/core/-/core-2.0.5.tgz#00be39368dbfa1f00a89a9055d710c31e0243e00"
+  integrity sha512-AEhWsfkn+rHCO35mArmLQVVkbzETJby8QZ9iwRxTz891kbWS+ZAiEPa7ROJkDg3iaPYKVGBnI126xCUVxxesJg==
   dependencies:
-    axios "^1.6.0"
+    axios "^1.8.2"
     deepmerge "^4.0.0"
-    nprogress "^0.2.0"
     qs "^6.9.0"
 
-"@inertiajs/vue3@^1.0.14":
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/@inertiajs/vue3/-/vue3-1.3.0.tgz"
-  integrity sha512-GizqdCM3u4JWunit3uUbW4fEmTLKQTi1W7VvPRdrNy8XDt4Qy2cCmfFjq+aH5tHBSS3fI/ngYuhN7XvwqNaKvw==
+"@inertiajs/vue3@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@inertiajs/vue3/-/vue3-2.0.5.tgz#52235d5ace31701a27fcabfa4641ea54c85d6264"
+  integrity sha512-FdXJ/yY4rTpRygEHJY7b/Wc/02nI4PZPyLRy4dr/7dVFaVKGljVm1bcX8oBVowXxw7reT01sW2YwjqTSUmXjbg==
   dependencies:
-    "@inertiajs/core" "1.3.0"
+    "@inertiajs/core" "2.0.5"
     lodash.clonedeep "^4.5.0"
     lodash.isequal "^4.5.0"
 
@@ -505,7 +504,7 @@ autoprefixer@^10.4.16:
     picocolors "^1.1.1"
     postcss-value-parser "^4.2.0"
 
-axios@^1.6.0, axios@^1.8.3:
+axios@^1.8.2, axios@^1.8.3:
   version "1.8.3"
   resolved "https://registry.npmjs.org/axios/-/axios-1.8.3.tgz"
   integrity sha512-iP4DebzoNlP/YN2dpwCgb8zoCmhtkajzS48JvwmkSkXvPI3DHc7m+XYL5tGnSlJtR6nImXZmdCuN5aP8dh1d8A==
@@ -1121,11 +1120,6 @@ normalize-range@^0.1.2:
   version "0.1.2"
   resolved "https://registry.npmjs.org/normalize-range/-/normalize-range-0.1.2.tgz"
   integrity sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==
-
-nprogress@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.npmjs.org/nprogress/-/nprogress-0.2.0.tgz"
-  integrity sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==
 
 object-assign@^4.0.1:
   version "4.1.1"
