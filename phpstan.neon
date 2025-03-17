@@ -11,4 +11,11 @@ parameters:
     checkOctaneCompatibility: true
     noEnvCallsOutsideOfConfig: true
     checkModelAppends: true
+    treatPhpDocTypesAsCertain: false
+
+    ignoreErrors:
+        # Can occasionally catch a mistake, but usually just forbids using assert() in places that actually need it
+        - '#will always evaluate to true#'
+
+
 

@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read string $id
  * @property-read string $slug
  * @property-read string $name
- * @property-read Collection<Plugin> $plugins
+ * @property-read Collection<int,Plugin> $plugins
  */
 final class PluginTag extends BaseModel
 {
