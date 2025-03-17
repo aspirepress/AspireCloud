@@ -4,15 +4,18 @@
 
 name: Scorecard supply-chain security
 on:
-  # For Branch-Protection check. Only the default branch is supported. See
-  # https://github.com/ossf/scorecard/blob/main/docs/checks.md#branch-protection
-  branch_protection_rule:
-  # To guarantee Maintained check is occasionally updated. See
-  # https://github.com/ossf/scorecard/blob/main/docs/checks.md#maintained
-  schedule:
-    - cron: '20 7 * * 2'
-  push:
-    branches: ["main"]
+  workflow_dispatch: ~
+
+  ## For Branch-Protection check. Only the default branch is supported. See
+  ## https://github.com/ossf/scorecard/blob/main/docs/checks.md#branch-protection
+  # branch_protection_rule:
+
+  ## To guarantee Maintained check is occasionally updated. See
+  ## https://github.com/ossf/scorecard/blob/main/docs/checks.md#maintained
+  # schedule:
+  #   - cron: '20 7 * * 2'
+  # push:
+  #   branches: ["main"]
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -20,7 +23,7 @@ permissions: read-all
 jobs:
   analysis:
     name: Scorecard analysis
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       # Needed to upload the results to code-scanning dashboard.
       security-events: write

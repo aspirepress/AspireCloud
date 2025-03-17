@@ -11,7 +11,7 @@ permissions: # added using https://github.com/step-security/secure-repo
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Harden the runner (Audit all outbound calls)

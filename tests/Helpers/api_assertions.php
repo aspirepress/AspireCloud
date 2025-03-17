@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Testing\TestResponse;
 
-function assertWpThemeBaseStructure($json)
+function assertWpThemeBaseStructure(AssertableJson $json): AssertableJson
 {
     return $json
         ->has('name')
@@ -20,7 +20,7 @@ function assertWpThemeBaseStructure($json)
         ->has('description');
 }
 
-function assertWpThemeInfoBaseStructure($json)
+function assertWpThemeInfoBaseStructure(AssertableJson $json): AssertableJson
 {
     return $json
         ->has('name')
@@ -94,53 +94,6 @@ function assertWpThemeAPIStructure1_2_theme_information(TestResponse $response):
             ->has('creation_time')
             ->whereType('author', 'array'),
     );
-}
-
-function assertWpPluginAPIStructure(TestResponse $response): TestResponse
-{
-    return $response->assertJsonStructure([
-        'name',
-        'slug',
-        'version',
-        'author',
-        'author_profile',
-        'requires',
-        'tested',
-        'requires_php',
-        'rating',
-        'ratings'      => [
-            5,
-            4,
-            3,
-            2,
-            1,
-        ],
-        'num_ratings',
-        'support_threads',
-        'support_threads_resolved',
-        'active_installs',
-        'last_updated',
-        'added',
-        'homepage',
-        'sections'     => [
-            'description',
-            'installation',
-            'changelog',
-            'reviews',
-        ],
-        'download_link',
-        'tags'         => [],
-        'versions',
-        'donate_link',
-        'contributors' => [
-            '*' => [
-                'profile',
-                'avatar',
-                'display_name',
-            ],
-        ],
-        'screenshots',
-    ]);
 }
 
 function assertWpPluginAPIStructureForSearch(TestResponse $response): TestResponse
