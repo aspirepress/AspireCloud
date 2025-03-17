@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f9e20f065548595819cfb1a16730b94c",
+    "content-hash": "8293a1f605faa5f833ab6a05e0230b6d",
     "packages": [
         {
             "name": "amphp/amp",
@@ -9608,40 +9608,40 @@
         },
         {
             "name": "larastan/larastan",
-            "version": "v2.10.0",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/larastan/larastan.git",
-                "reference": "05519d721277604487a3ca71bdee87739d8d8716"
+                "reference": "d84d5a3b6536a586899ad6855a3e098473703690"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/larastan/larastan/zipball/05519d721277604487a3ca71bdee87739d8d8716",
-                "reference": "05519d721277604487a3ca71bdee87739d8d8716",
+                "url": "https://api.github.com/repos/larastan/larastan/zipball/d84d5a3b6536a586899ad6855a3e098473703690",
+                "reference": "d84d5a3b6536a586899ad6855a3e098473703690",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "iamcal/sql-parser": "^0.5.0",
-                "illuminate/console": "^9.52.20 || ^10.48.28 || ^11.41.3",
-                "illuminate/container": "^9.52.20 || ^10.48.28 || ^11.41.3",
-                "illuminate/contracts": "^9.52.20 || ^10.48.28 || ^11.41.3",
-                "illuminate/database": "^9.52.20 || ^10.48.28 || ^11.41.3",
-                "illuminate/http": "^9.52.20 || ^10.48.28 || ^11.41.3",
-                "illuminate/pipeline": "^9.52.20 || ^10.48.28 || ^11.41.3",
-                "illuminate/support": "^9.52.20 || ^10.48.28 || ^11.41.3",
-                "php": "^8.0.2",
-                "phpstan/phpstan": "^1.12.17"
+                "illuminate/console": "^11.41.3 || ^12.0",
+                "illuminate/container": "^11.41.3 || ^12.0",
+                "illuminate/contracts": "^11.41.3 || ^12.0",
+                "illuminate/database": "^11.41.3 || ^12.0",
+                "illuminate/http": "^11.41.3 || ^12.0",
+                "illuminate/pipeline": "^11.41.3 || ^12.0",
+                "illuminate/support": "^11.41.3 || ^12.0",
+                "php": "^8.2",
+                "phpstan/phpstan": "^2.1.3"
             },
             "require-dev": {
                 "doctrine/coding-standard": "^12.0",
-                "laravel/framework": "^9.52.20 || ^10.48.28 || ^11.41.3",
-                "mockery/mockery": "^1.5.1",
-                "nikic/php-parser": "^4.19.1",
-                "orchestra/canvas": "^7.11.1 || ^8.11.0 || ^9.0.2",
-                "orchestra/testbench-core": "^7.33.0 || ^8.13.0 || ^9.0.9",
-                "phpstan/phpstan-deprecation-rules": "^1.2",
-                "phpunit/phpunit": "^9.6.13 || ^10.5.16"
+                "laravel/framework": "^11.41.3 || ^12.0",
+                "mockery/mockery": "^1.6",
+                "nikic/php-parser": "^5.3",
+                "orchestra/canvas": "^v9.1.3 || ^10.0",
+                "orchestra/testbench-core": "^9.5.2 || ^10.0",
+                "phpstan/phpstan-deprecation-rules": "^2.0.0",
+                "phpunit/phpunit": "^10.5.35 || ^11.3.6"
             },
             "suggest": {
                 "orchestra/testbench": "Using Larastan for analysing a package needs Testbench"
@@ -9654,7 +9654,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -9676,7 +9676,7 @@
                     "email": "enunomaduro@gmail.com"
                 }
             ],
-            "description": "Larastan - Discover bugs in your code without running it. A phpstan/phpstan extension for Laravel",
+            "description": "Larastan - Discover bugs in your code without running it. A phpstan/phpstan wrapper for Laravel",
             "keywords": [
                 "PHPStan",
                 "code analyse",
@@ -9689,7 +9689,7 @@
             ],
             "support": {
                 "issues": "https://github.com/larastan/larastan/issues",
-                "source": "https://github.com/larastan/larastan/tree/v2.10.0"
+                "source": "https://github.com/larastan/larastan/tree/v3.2.0"
             },
             "funding": [
                 {
@@ -9697,7 +9697,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-14T21:52:58+00:00"
+            "time": "2025-03-14T21:54:26+00:00"
         },
         {
             "name": "laravel/pail",
@@ -10602,20 +10602,20 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.21",
+            "version": "2.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "14276fdef70575106a3392a4ed553c06a984df28"
+                "reference": "f9adff3b87c03b12cc7e46a30a524648e497758f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/14276fdef70575106a3392a4ed553c06a984df28",
-                "reference": "14276fdef70575106a3392a4ed553c06a984df28",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/f9adff3b87c03b12cc7e46a30a524648e497758f",
+                "reference": "f9adff3b87c03b12cc7e46a30a524648e497758f",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2|^8.0"
+                "php": "^7.4|^8.0"
             },
             "conflict": {
                 "phpstan/phpstan-shim": "*"
@@ -10656,7 +10656,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-09T09:24:50+00:00"
+            "time": "2025-03-09T09:30:48+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -13071,26 +13071,27 @@
         },
         {
             "name": "thecodingmachine/phpstan-safe-rule",
-            "version": "v1.2.0",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thecodingmachine/phpstan-safe-rule.git",
-                "reference": "8a7b88e0d54f209a488095085f183e9174c40e1e"
+                "reference": "33dcbc3228c55ea4c364ecf74a3661cf7b7f168d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thecodingmachine/phpstan-safe-rule/zipball/8a7b88e0d54f209a488095085f183e9174c40e1e",
-                "reference": "8a7b88e0d54f209a488095085f183e9174c40e1e",
+                "url": "https://api.github.com/repos/thecodingmachine/phpstan-safe-rule/zipball/33dcbc3228c55ea4c364ecf74a3661cf7b7f168d",
+                "reference": "33dcbc3228c55ea4c364ecf74a3661cf7b7f168d",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1 || ^8.0",
-                "phpstan/phpstan": "^1.0",
-                "thecodingmachine/safe": "^1.0 || ^2.0"
+                "nikic/php-parser": "^5",
+                "php": "^8.1",
+                "phpstan/phpstan": "^2.0",
+                "thecodingmachine/safe": "^1.2 || ^2.0 || ^3.0"
             },
             "require-dev": {
                 "php-coveralls/php-coveralls": "^2.1",
-                "phpunit/phpunit": "^7.5.2 || ^8.0",
+                "phpunit/phpunit": "^10.4",
                 "squizlabs/php_codesniffer": "^3.4"
             },
             "type": "phpstan-extension",
@@ -13101,7 +13102,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "2.0-dev"
                 }
             },
             "autoload": {
@@ -13122,9 +13123,9 @@
             "description": "A PHPStan rule to detect safety issues. Must be used in conjunction with thecodingmachine/safe",
             "support": {
                 "issues": "https://github.com/thecodingmachine/phpstan-safe-rule/issues",
-                "source": "https://github.com/thecodingmachine/phpstan-safe-rule/tree/v1.2.0"
+                "source": "https://github.com/thecodingmachine/phpstan-safe-rule/tree/v1.4.0"
             },
-            "time": "2022-01-17T10:12:29+00:00"
+            "time": "2025-02-11T12:41:29+00:00"
         },
         {
             "name": "theseer/tokenizer",
