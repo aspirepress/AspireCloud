@@ -1,5 +1,17 @@
 version: 2
 updates:
+  - package-ecosystem: npm
+    versioning-strategy: lockfile-only
+    directory: /
+    schedule:
+      interval: daily
+
+  - package-ecosystem: composer
+    versioning-strategy: lockfile-only
+    directory: /
+    schedule:
+      interval: daily
+
   - package-ecosystem: docker
     directory: /docker/cli
     schedule:
@@ -12,10 +24,5 @@ updates:
 
   - package-ecosystem: docker
     directory: /docker/webapp
-    schedule:
-      interval: daily
-
-  - package-ecosystem: npm
-    directory: /
     schedule:
       interval: daily
