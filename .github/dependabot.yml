@@ -26,3 +26,8 @@ updates:
     directory: /docker/webapp
     schedule:
       interval: daily
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
