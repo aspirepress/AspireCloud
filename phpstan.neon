@@ -17,5 +17,5 @@ parameters:
         # Can occasionally catch a mistake, but usually just forbids using assert() in places that actually need it
         - '#will always evaluate to true#'
 
-
-
+        # BelongsToMany is totally broken with larastan now, but things are even more broken without it.
+        - "#should return.*BelongsToMany<#"

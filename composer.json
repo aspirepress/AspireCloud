@@ -50,6 +50,8 @@
         }
     },
     "scripts": {
+        "phpstan": "phpstan --memory-limit=2G --verbose",
+        "pint": "pint",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
