@@ -40,7 +40,9 @@ it('returns plugin information in wp.org format', function () {
     $this
         ->getJson(plugin_information_uri('rot-26-encrypted-passwords'))
         ->assertStatus(200)
-        ->assertJson(fn(AssertableJson $json) => $json
+        ->assertJson(
+            fn(AssertableJson $json)
+                => $json
             ->hasAll([
                 'active_installs',
                 'added',

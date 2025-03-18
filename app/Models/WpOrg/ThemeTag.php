@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read string $id
  * @property-read string $theme_id
  * @property-read string $slug
- * @property-read Collection<Theme> $themes
+ * @property-read Collection<int, Theme> $themes
  */
 final class ThemeTag extends BaseModel
 {
