@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b6e400beded0f753aa9178bd0b14b0e0",
+    "content-hash": "0a60a15243835488ce541380fdf5e5e5",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1080,6 +1080,63 @@
             "time": "2025-02-28T13:11:00+00:00"
         },
         {
+            "name": "brick/money",
+            "version": "0.10.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/brick/money.git",
+                "reference": "779c1d3b708e4dd37fe8a32a189b9f241b52f194"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/brick/money/zipball/779c1d3b708e4dd37fe8a32a189b9f241b52f194",
+                "reference": "779c1d3b708e4dd37fe8a32a189b9f241b52f194",
+                "shasum": ""
+            },
+            "require": {
+                "brick/math": "~0.12.0|~0.13.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "brick/varexporter": "~0.5.0",
+                "ext-dom": "*",
+                "ext-pdo": "*",
+                "php-coveralls/php-coveralls": "^2.2",
+                "phpunit/phpunit": "^10.1",
+                "vimeo/psalm": "6.3.0"
+            },
+            "suggest": {
+                "ext-intl": "Required to format Money objects"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Brick\\Money\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Money and currency library",
+            "keywords": [
+                "brick",
+                "currency",
+                "money"
+            ],
+            "support": {
+                "issues": "https://github.com/brick/money/issues",
+                "source": "https://github.com/brick/money/tree/0.10.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/BenMorel",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-03-05T13:00:01+00:00"
+        },
+        {
             "name": "carbonphp/carbon-doctrine-types",
             "version": "3.2.0",
             "source": {
@@ -1594,6 +1651,79 @@
                 }
             ],
             "time": "2024-10-09T13:47:03+00:00"
+        },
+        {
+            "name": "dshafik/bag",
+            "version": "2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dshafik/bag.git",
+                "reference": "1f6fc615d7b73ec2ac476140a64ee7d1709e3fa4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dshafik/bag/zipball/1f6fc615d7b73ec2ac476140a64ee7d1709e3fa4",
+                "reference": "1f6fc615d7b73ec2ac476140a64ee7d1709e3fa4",
+                "shasum": ""
+            },
+            "require": {
+                "brick/money": "^0.8.1 || ^0.9.0 || ^0.10.0",
+                "illuminate/collections": "^10|^11|^12",
+                "illuminate/database": "^10|^11|^12",
+                "illuminate/support": "^10|^11|^12",
+                "illuminate/validation": "^10|^11|^12",
+                "league/pipeline": "^1.0",
+                "nette/php-generator": "^4.1",
+                "php": "^8.2|^8.3|^8.4",
+                "prinsfrank/standards": "^3.8",
+                "ramsey/uuid": "^4.7"
+            },
+            "require-dev": {
+                "captainhook/captainhook-phar": "^5.23",
+                "captainhook/hook-installer": "^1.0",
+                "larastan/larastan": "^2.0|^3.0",
+                "laravel/pint": "^1.15",
+                "laravel/prompts": "^0.1.25 || ^0.2.0 || ^0.3.0",
+                "orchestra/pest-plugin-testbench": "^2.0|^3.0",
+                "pestphp/pest": "^2.0|^3.0",
+                "pestphp/pest-plugin-faker": "^2.0|^3.0",
+                "pestphp/pest-plugin-type-coverage": "^2.0|^3.0",
+                "ramsey/conventional-commits": "^1.5.1",
+                "roave/security-advisories": "dev-latest",
+                "symfony/var-dumper": "*"
+            },
+            "suggest": {
+                "barryvdh/laravel-debugbar": "Integrates with Laravel Debugbar"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "\\Bag\\BagServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Bag\\": "src/Bag"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Davey Shafik",
+                    "email": "davey@php.net"
+                }
+            ],
+            "description": "A comprehensive immutable value objects implementation",
+            "support": {
+                "issues": "https://github.com/dshafik/bag/issues",
+                "source": "https://github.com/dshafik/bag/tree/2.5.0"
+            },
+            "time": "2025-03-29T21:12:43+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -3437,6 +3567,62 @@
             "time": "2024-09-21T08:32:55+00:00"
         },
         {
+            "name": "league/pipeline",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/pipeline.git",
+                "reference": "9069ddfdbd5582f8a563e00cffdbeffb9a0acd01"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/pipeline/zipball/9069ddfdbd5582f8a563e00cffdbeffb9a0acd01",
+                "reference": "9069ddfdbd5582f8a563e00cffdbeffb9a0acd01",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.0 || ^10.0 || ^11.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\Pipeline\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net",
+                    "role": "Author"
+                },
+                {
+                    "name": "Woody Gilk",
+                    "email": "woody.gilk@gmail.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "A plug and play pipeline implementation.",
+            "keywords": [
+                "composition",
+                "design pattern",
+                "pattern",
+                "pipeline",
+                "sequential"
+            ],
+            "support": {
+                "issues": "https://github.com/thephpleague/pipeline/issues",
+                "source": "https://github.com/thephpleague/pipeline/tree/1.1.0"
+            },
+            "time": "2025-02-06T08:48:15+00:00"
+        },
+        {
             "name": "league/uri",
             "version": "7.5.1",
             "source": {
@@ -3949,6 +4135,75 @@
                 }
             ],
             "time": "2025-02-20T17:33:38+00:00"
+        },
+        {
+            "name": "nette/php-generator",
+            "version": "v4.1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nette/php-generator.git",
+                "reference": "42806049a7774a2bd316c958f5dcf01c6b5c56fa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nette/php-generator/zipball/42806049a7774a2bd316c958f5dcf01c6b5c56fa",
+                "reference": "42806049a7774a2bd316c958f5dcf01c6b5c56fa",
+                "shasum": ""
+            },
+            "require": {
+                "nette/utils": "^3.2.9 || ^4.0",
+                "php": "8.0 - 8.4"
+            },
+            "require-dev": {
+                "jetbrains/phpstorm-attributes": "dev-master",
+                "nette/tester": "^2.4",
+                "nikic/php-parser": "^4.18 || ^5.0",
+                "phpstan/phpstan": "^1.0",
+                "tracy/tracy": "^2.8"
+            },
+            "suggest": {
+                "nikic/php-parser": "to use ClassType::from(withBodies: true) & ClassType::fromCode()"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.1-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0-only",
+                "GPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                },
+                {
+                    "name": "Nette Community",
+                    "homepage": "https://nette.org/contributors"
+                }
+            ],
+            "description": "🐘 Nette PHP Generator: generates neat PHP code for you. Supports new PHP 8.4 features.",
+            "homepage": "https://nette.org",
+            "keywords": [
+                "code",
+                "nette",
+                "php",
+                "scaffolding"
+            ],
+            "support": {
+                "issues": "https://github.com/nette/php-generator/issues",
+                "source": "https://github.com/nette/php-generator/tree/v4.1.8"
+            },
+            "time": "2025-03-31T00:29:29+00:00"
         },
         {
             "name": "nette/schema",
@@ -4786,6 +5041,111 @@
                 }
             ],
             "time": "2024-11-21T20:00:02+00:00"
+        },
+        {
+            "name": "prinsfrank/enums",
+            "version": "v1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrinsFrank/enums.git",
+                "reference": "3acfedf3fca35d6c6c134b45de489edff6306a2b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrinsFrank/enums/zipball/3acfedf3fca35d6c6c134b45de489edff6306a2b",
+                "reference": "3acfedf3fca35d6c6c134b45de489edff6306a2b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1 || ^8.2 || ^8.3 || ^8.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.43",
+                "phpstan/phpstan": "^1.10",
+                "phpstan/phpstan-strict-rules": "^1.5",
+                "phpunit/phpunit": "^10.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PrinsFrank\\Enums\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Adds missing strictly typed methods to work with enums",
+            "support": {
+                "issues": "https://github.com/PrinsFrank/enums/issues",
+                "source": "https://github.com/PrinsFrank/enums/tree/v1.4.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/PrinsFrank",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-12-29T14:11:26+00:00"
+        },
+        {
+            "name": "prinsfrank/standards",
+            "version": "v3.12.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrinsFrank/standards.git",
+                "reference": "26a8eedbfa3492086937c8009ce6b832d6df2a1f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrinsFrank/standards/zipball/26a8eedbfa3492086937c8009ce6b832d6df2a1f",
+                "reference": "26a8eedbfa3492086937c8009ce6b832d6df2a1f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-intl": "*",
+                "ext-mbstring": "*",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "prinsfrank/enums": "^1.4"
+            },
+            "require-dev": {
+                "composer/composer": "^2.3",
+                "dbrekelmans/bdi": "^1.0",
+                "ext-dom": "*",
+                "friendsofphp/php-cs-fixer": "^3.8",
+                "phpstan/phpstan": "^2",
+                "phpstan/phpstan-strict-rules": "^2",
+                "phpunit/phpunit": "^11.2.6",
+                "prinsfrank/transliteration": "^1.0",
+                "symfony/panther": "dev-main"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PrinsFrank\\Standards\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A collection of standards as PHP Enums: ISO3166, ISO4217, ISO639...",
+            "support": {
+                "issues": "https://github.com/PrinsFrank/standards/issues",
+                "source": "https://github.com/PrinsFrank/standards/tree/v3.12.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/PrinsFrank",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-03-31T18:45:12+00:00"
         },
         {
             "name": "psr/cache",
