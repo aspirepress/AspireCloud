@@ -8,28 +8,17 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
-    Storage::fake('local');
+    Storage::fake();
     Queue::fake();
-    Http::fake();
+    Http::fake([
+        '*' => Http::response('bob', 200, ['Content-Type' => 'application/zip', 'Content-Length' => 3]),
+    ]);
+
 });
 
 describe('S3 Asset Storage', function () {
-    beforeEach(function () {
-        Storage::fake('s3');
-        Http::fake();
-        Queue::fake();
-    });
-
     it('stores downloaded plugin in S3', function () {
         // Arrange
-        Storage::fake('s3');
-        $pluginContent = '';
-        Http::fake([
-            '*' => Http::response($pluginContent, 200, [
-                'Content-Type' => 'application/zip',
-                'Content-Length' => strlen($pluginContent),
-            ]),
-        ]);
 
         // Act
         $job = new DownloadAssetJob(
@@ -44,48 +33,24 @@ describe('S3 Asset Storage', function () {
         // Assert
         Storage::disk('s3')->assertExists('plugins/test-plugin/test-plugin.1.0.0.zip');
         expect(Storage::disk('s3')->get('plugins/test-plugin/test-plugin.1.0.0.zip'))
-            ->toBe($pluginContent);
+            ->toBe('bob');
     });
 
     it('stores downloaded theme in S3', function () {
-        // Arrange
-        Storage::fake('s3');
-        $themeContent = '';
-        Http::fake([
-            '*' => Http::response($themeContent, 200, [
-                'Content-Type' => 'application/zip',
-                'Content-Length' => strlen($themeContent),
-            ]),
-        ]);
-
-        // Act
         $job = new DownloadAssetJob(
             AssetType::THEME,
             'test-theme',
             'test-theme.1.0.0.zip',
             'https://downloads.wordpress.org/theme/test-theme.1.0.0.zip',
         );
-
         $job->handle();
 
-        // Assert
-        Storage::disk('s3')->assertExists('themes/test-theme/test-theme.1.0.0.zip');
-        expect(Storage::disk('s3')->get('themes/test-theme/test-theme.1.0.0.zip'))
-            ->toBe($themeContent);
+        $path = 'themes/test-theme/test-theme.1.0.0.zip';
+        Storage::disk('s3')->assertExists($path);
+        expect(Storage::disk('s3')->get($path))->toBe('bob');
     });
 
     it('stores asset images in S3', function () {
-        // Arrange
-        Storage::fake('s3');
-        $imageContent = '';
-        Http::fake([
-            '*' => Http::response($imageContent, 200, [
-                'Content-Type' => 'image/png',
-                'Content-Length' => strlen($imageContent),
-            ]),
-        ]);
-
-        // Act
         $job = new DownloadAssetJob(
             AssetType::PLUGIN_SCREENSHOT,
             'test-plugin',
@@ -98,64 +63,38 @@ describe('S3 Asset Storage', function () {
 
         $job->handle();
 
-        // Assert
         Storage::disk('s3')->assertExists($path);
-        expect(Storage::disk('s3')->get($path))
-            ->toBe($imageContent);
+        expect(Storage::disk('s3')->get($path))->toBe('bob');
     });
 
     it('creates correct S3 URL for assets', function () {
-        // Arrange
-        Storage::fake('s3');
-        $imageContent = '';
-        Http::fake([
-            '*' => Http::response($imageContent),
-        ]);
-
-        // Act
         $job = new DownloadAssetJob(
             AssetType::PLUGIN_BANNER,
             'test-plugin',
             'banner-772x250.jpg',
             'https://ps.w.org/test-plugin/assets/banner-772x250.jpg',
         );
-
         $job->handle();
 
-        // Assert
         $asset = Asset::first();
         $url = Storage::disk('s3')->url($asset->local_path);
 
-        expect($url)
-            ->toContain('banner-772x250.jpg')
-            ->toContain('test-plugin');
+        expect($url)->toEndWith('test-plugin/banner-772x250.jpg');
     });
 
     it('downloads and stores asset correctly on S3', function () {
-        // Arrange
-        Storage::fake('s3');
-        $fileContent = '';
-        Http::fake([
-            '*' => Http::response('', 200, [
-                'Content-Type' => 'application/zip',
-                'Content-Length' => strlen($fileContent),
-            ]),
-        ]);
-
         $job = new DownloadAssetJob(
             AssetType::PLUGIN,
             'test-plugin',
             'test-plugin.1.0.0.zip',
             'https://downloads.wordpress.org/plugin/test-plugin.1.0.0.zip',
         );
-
-        // Act
         $job->handle();
 
-        // Assert
         Storage::disk('s3')->assertExists('plugins/test-plugin/test-plugin.1.0.0.zip');
+
         expect(Storage::disk('s3')->get('plugins/test-plugin/test-plugin.1.0.0.zip'))
-            ->toBe($fileContent)
+            ->toBe('bob')
             ->and(Asset::count())->toBe(1);
 
         $asset = Asset::first();
