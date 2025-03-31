@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Services\Repo\BarePluginRepo;
-use Illuminate\Validation\ValidationException;
 
 test('BarePluginRepo basics', function () {
     $repo = new BarePluginRepo();
