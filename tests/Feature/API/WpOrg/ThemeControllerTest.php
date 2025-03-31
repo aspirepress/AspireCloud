@@ -16,6 +16,7 @@ beforeEach(function () {
         'author' => 'Tmeister',
         'author_url' => 'https://wp-themes.com/author/tmeister',
     ]);
+
     Theme::create([
         'slug' => 'my-theme',
         'name' => 'My Theme',
@@ -50,52 +51,150 @@ beforeEach(function () {
 it('returns 400 when slug is missing', function () {
     $response = $this->get('/themes/info/1.2?action=theme_information');
 
-    $response->assertStatus(400)
+    $response
+        ->assertStatus(400)
         ->assertJson(['error' => 'The slug field is required.']);
 });
 
 it('returns 404 when theme does not exist', function () {
     $response = $this->get('/themes/info/1.2?action=theme_information&slug=non-existent-theme');
 
-    $response->assertStatus(404)
+    $response
+        ->assertStatus(404)
         ->assertJson(['error' => 'Theme not found']);
 });
 
 it('returns theme_information in wp.org format (v1.1)', function () {
     $response = $this->get('/themes/info/1.1?action=theme_information&slug=my-theme');
 
-    $response->assertStatus(200)
-        ->assertJson([
+    $response
+        ->assertStatus(200)
+        ->assertExactJson([
+            'author' => 'tmeister',
+            'download_link' => 'https://api.aspiredev.org/download/my-theme',
+            'downloaded' => 1000,
+            'homepage' => 'https://wordpress.org/themes/my-theme/',
+            'last_updated' => '2025-01-18',
+            'last_updated_time' => '2025-01-18 20:50:36',
             'name' => 'My Theme',
-            'tags' => ['black' => 'black', 'blue' => 'blue', 'red' => 'red', 'white' => 'white'],
+            'num_ratings' => 6,
+            'preview_url' => 'https://wp-themes.com/my-theme',
+            'rating' => 5,
+            'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
+            'sections' => [],
+            'slug' => 'my-theme',
+            'tags' => [
+                'black' => 'black',
+                'blue' => 'blue',
+                'red' => 'red',
+                'white' => 'white',
+            ],
+            'version' => '1.2.1',
         ]);
-
-    assertWpThemeAPIStructure1_1_theme_information($response);
 });
 
 it('returns theme_information in wp.org format (v1.2)', function () {
     $response = $this->get('/themes/info/1.2?action=theme_information&slug=my-theme');
 
-    $response->assertStatus(200)
-        ->assertJson(['name' => 'My Theme']);
-
-    assertWpThemeAPIStructure1_2_theme_information($response);
+    $response
+        ->assertStatus(200)
+        ->assertExactJson([
+            'author' => [
+                'author' => 'Tmeister',
+                'author_url' => 'https://wp-themes.com/author/tmeister',
+                'avatar' => 'https://avatars.wp.org/tmeister',
+                'display_name' => 'Tmeister',
+                'profile' => 'https://profiles.wp.org/tmeister',
+                'user_nicename' => 'tmeister',
+            ],
+            'creation_time' => '2011-11-11 11:11:11',
+            'download_link' => 'https://api.aspiredev.org/download/my-theme',
+            'downloaded' => 1000,
+            'external_repository_url' => 'https://test.com',
+            'external_support_url' => false,
+            'homepage' => 'https://wordpress.org/themes/my-theme/',
+            'is_commercial' => false,
+            'is_community' => true,
+            'last_updated' => '2025-01-18',
+            'last_updated_time' => '2025-01-18 20:50:36',
+            'name' => 'My Theme',
+            'num_ratings' => 6,
+            'preview_url' => 'https://wp-themes.com/my-theme',
+            'rating' => 5,
+            'requires' => null,
+            'requires_php' => '5.6',
+            'reviews_url' => 'https://wp-themes.com/my-theme/reviews',
+            'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
+            'sections' => [],
+            'slug' => 'my-theme',
+            'tags' => [
+                'black' => 'black',
+                'blue' => 'blue',
+                'red' => 'red',
+                'white' => 'white',
+            ],
+            'version' => '1.2.1',
+        ]);
 });
 
 it('returns theme query results in wp.org format (v1.1)', function () {
-    $response = $this->get('/themes/info/1.1?action=query_themes');
-
-    $response->assertStatus(200)
-        ->assertJson(['info' => ['page' => 1, 'pages' => 1, 'results' => 1]]);
-
-    assertWpThemeAPIStructure1_1_query_themes($response);
+    $this
+        ->get('/themes/info/1.1?action=query_themes')
+        ->assertStatus(200)
+        ->assertExactJson([
+            'info' => ['page' => 1, 'pages' => 1, 'results' => 1],
+            'themes' => [
+                [
+                    'author' => 'tmeister',
+                    'description' => 'My Theme',
+                    'homepage' => 'https://wordpress.org/themes/my-theme/',
+                    'name' => 'My Theme',
+                    'num_ratings' => 6,
+                    'preview_url' => 'https://wp-themes.com/my-theme',
+                    'rating' => 5,
+                    'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
+                    'slug' => 'my-theme',
+                    'version' => '1.2.1',
+                ],
+            ],
+        ]);
 });
 
 it('returns theme query results in wp.org format (v1.2)', function () {
-    $response = $this->get('/themes/info/1.2?action=query_themes');
+    $this
+        ->get('/themes/info/1.2?action=query_themes')
+        ->assertStatus(200)
+        ->assertExactJson([
+            'info' => ['page' => 1, 'pages' => 1, 'results' => 1],
+            'themes' => [
+                [
+                    'author' => [
+                        'author' => 'Tmeister',
+                        'author_url' => 'https://wp-themes.com/author/tmeister',
+                        'avatar' => 'https://avatars.wp.org/tmeister',
+                        'display_name' => 'Tmeister',
+                        'profile' => 'https://profiles.wp.org/tmeister',
+                        'user_nicename' => 'tmeister',
+                    ],
+                    'description' => 'My Theme',
+                    'external_repository_url' => 'https://test.com',
+                    'external_support_url' => false,
+                    'homepage' => 'https://wordpress.org/themes/my-theme/',
+                    'is_commercial' => false,
+                    'is_community' => true,
+                    'name' => 'My Theme',
+                    'num_ratings' => 6,
+                    'preview_url' => 'https://wp-themes.com/my-theme',
+                    'rating' => 5,
+                    'requires' => null,
+                    'requires_php' => '5.6',
+                    'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
+                    'slug' => 'my-theme',
+                    'version' => '1.2.1',
+                ],
+            ],
+        ]);
 
-    $response->assertStatus(200)
-        ->assertJson(['info' => ['page' => 1, 'pages' => 1, 'results' => 1]]);
-
-    assertWpThemeAPIStructure1_2_query_themes($response);
 });
+
+it('returns hot tags results in wp.org format (v1.1)', function () {});
