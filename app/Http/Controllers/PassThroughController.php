@@ -15,8 +15,14 @@ use function Safe\json_encode;
 
 class PassThroughController extends Controller
 {
+    public static bool $expectsHit = false; // hack for tests
+
     public function __invoke(Request $request): Response
     {
+        if (app()->environment('testing') && !self::$expectsHit) {
+            throw new \RuntimeException('Unexpected request to pass-through controller in testing environment');
+        }
+
         $requestData = $request->all();
         $ua = $request->header('User-Agent');
         $path = $request->path();
