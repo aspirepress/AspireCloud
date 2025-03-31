@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response as ClientResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,45 +14,33 @@ use function Safe\json_encode;
 
 class PassThroughController extends Controller
 {
+    public static bool $expectsHit = false; // hack for tests
+
     public function __invoke(Request $request): Response
     {
+        if (app()->environment('testing') && !self::$expectsHit) {
+            throw new \RuntimeException('Unexpected request to pass-through controller in testing environment');
+        }
+
         $requestData = $request->all();
         $ua = $request->header('User-Agent');
         $path = $request->path();
         $queryParams = $request->query();
 
-        // If path is root, return a 200 OK empty response
-        if ($path === '/') {
-            return response()->noContent(200);
-        }
+        $response = Http::withHeaders(['User-Agent' => $ua, 'Accept' => '*/*'])
+            ->asForm()
+            ->send(
+                $request->getMethod(),
+                "https://api.wordpress.org/$path",
+                ['query' => $queryParams, 'form_params' => $requestData],
+            );
 
-        try {
-            $response = Http::withHeaders([
-                'User-Agent' => $ua,
-                'Accept' => '*/*',
-            ])->asForm()->send($request->getMethod(), 'https://api.wordpress.org/' . $path, [
-                'query' => $queryParams,
-                'form_params' => $requestData,
-            ]);
-        } catch (RequestException $e) {
-            $statusCode = $e->response->status();
-
-            return response()->noContent($statusCode);
-        }
-
-        // Get content type and status code
-        $contentType = $response->header('Content-Type');
-        $statusCode = $response->status();
         $content = $response->body();
-
-        // Log request and response in DB
-        $this->saveData($request, $response, $content);
-
-        // Forward response through
-        return response($content, $statusCode)->header('Content-Type', $contentType);
+        $this->logRequestAndResponse($request, $response, $content);
+        return response($content, $response->status(), ['Content-Type', $response->header('Content-Type')]);
     }
 
-    private function saveData(Request $request, ClientResponse $response, string $content): void
+    private function logRequestAndResponse(Request $request, ClientResponse $response, string $content): void
     {
         DB::table('request_data')->insert([
             'id' => Str::uuid()->toString(),

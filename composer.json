@@ -7,11 +7,11 @@
     "require": {
         "php": "^8.3",
         "ext-mbstring": "*",
-        "inertiajs/inertia-laravel": "2.*",
-        "laravel/framework": "12.*",
+        "inertiajs/inertia-laravel": "^2.0.1",
+        "laravel/framework": "^12.4.1",
         "laravel/jetstream": "^5.3.5",
         "laravel/sanctum": "^4.0.8",
-        "laravel/telescope": "^5.5.1",
+        "laravel/telescope": "^5.6.0",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.29",
         "predis/predis": "^2.3.0",
@@ -19,23 +19,23 @@
         "spatie/laravel-permission": "^6.16.0",
         "symfony/http-client": "^7.2.4",
         "symfony/mailgun-mailer": "^7.2",
-        "thecodingmachine/safe": "3.*",
+        "thecodingmachine/safe": "^3.0.2",
         "tightenco/ziggy": "^2.5.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5.5",
         "fakerphp/faker": "^1.24.1",
-        "larastan/larastan": "3.*",
+        "larastan/larastan": "^3.2",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.21.2",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^8.7",
-        "pestphp/pest": "^3.7.4",
+        "pestphp/pest": "^3.8.0",
         "pestphp/pest-plugin-laravel": "^3.1",
-        "phpstan/phpstan": "2.*",
+        "phpstan/phpstan": "^2.1.11",
         "roave/security-advisories": "dev-latest",
         "spatie/laravel-web-tinker": "^1.10.1",
-        "thecodingmachine/phpstan-safe-rule": "1.*"
+        "thecodingmachine/phpstan-safe-rule": "^1.4"
     },
     "autoload": {
         "psr-4": {

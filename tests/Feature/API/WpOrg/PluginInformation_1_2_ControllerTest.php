@@ -257,3 +257,23 @@ it('returns a valid pagination', function () {
         ->and($responseData['info']['pages'])->toBe(5)
         ->and($responseData['info']['results'])->toBe(10);
 });
+
+it('returns hot tags results in wp.org format (v1.2)', function () {
+    expect(Plugin::count())->toBe(0);
+
+    Plugin::factory()->count(5)->withSpecificTags(['black', 'white'])->create();
+    Plugin::factory()->count(2)->withSpecificTags(['black', 'blue'])->create();
+    Plugin::factory()->count(1)->withSpecificTags(['blue', 'white', 'red'])->create();
+
+    expect(Plugin::count())->toBe(8);
+
+    $this
+        ->get('/plugins/info/1.2?action=hot_tags')
+        ->assertStatus(200)
+        ->assertExactJson([
+            'black' => ['count' => 7, 'name' => 'black', 'slug' => 'black'],
+            'blue' => ['count' => 3, 'name' => 'blue', 'slug' => 'blue'],
+            'red' => ['count' => 1, 'name' => 'red', 'slug' => 'red'],
+            'white' => ['count' => 6, 'name' => 'white', 'slug' => 'white'],
+        ]);
+});

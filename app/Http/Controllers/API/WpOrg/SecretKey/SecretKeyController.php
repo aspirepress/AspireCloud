@@ -20,7 +20,7 @@ class SecretKeyController extends Controller
         $response = match ($version) {
             '1.0' => $this->generateKey_1_0(),
             '1.1' => $this->generateKey_1_1(),
-            default => throw new NotFoundHttpException('unsupported version'),
+            default => throw new NotFoundHttpException('unsupported version'), // @codeCoverageIgnore
         };
 
         return response($response, 200, ['Content-Type' => 'text/plain']);
