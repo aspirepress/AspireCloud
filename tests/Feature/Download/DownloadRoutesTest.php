@@ -1,13 +1,15 @@
 <?php
 
 use App\Enums\AssetType;
+use App\Events\AssetCacheHit;
 use App\Jobs\DownloadAssetJob;
+use App\Models\WpOrg\Asset;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
-    Storage::fake('local');
+    Storage::fake();
     Queue::fake();
     Http::fake();
 });
@@ -163,5 +165,23 @@ describe('Download Routes', function () {
             ->and($job->slug)->toBe('test-theme')
             ->and($job->upstreamUrl)->toBe('https://ts.w.org/wp-content/themes/test-theme/screenshot-1.png?rev=123')
             ->and($job->revision)->toBe('123');
+    });
+
+    it('fires AssetCacheHit event when asset is found in cache', function () use ($getJob) {
+        Storage::fake();
+        Event::fake();
+
+        $asset = Asset::create([
+            'asset_type' => AssetType::PLUGIN->value,
+            'slug' => 'test-plugin',
+            'version' => '1.0.0',
+            'revision' => null,
+            'upstream_path' => '/dummy/path/here',
+            'local_path' => 'plugins/test-plugin/test-plugin.1.0.0.zip',
+        ]);
+
+        Storage::disk('s3')->put($asset->local_path, 'bob');
+        $this->get('/download/plugin/test-plugin.1.0.0.zip')->assertOk();
+        Event::assertDispatched(AssetCacheHit::class);
     });
 });
