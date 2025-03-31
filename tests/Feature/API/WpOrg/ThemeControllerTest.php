@@ -64,7 +64,7 @@ it('returns 404 when theme does not exist', function () {
         ->assertJson(['error' => 'Theme not found']);
 });
 
-it('returns theme_information in wp.org format (v1.1)', function () {
+it('returns theme_information (v1.1)', function () {
     $response = $this->get('/themes/info/1.1?action=theme_information&slug=my-theme');
 
     $response
@@ -93,7 +93,7 @@ it('returns theme_information in wp.org format (v1.1)', function () {
         ]);
 });
 
-it('returns theme_information in wp.org format (v1.2)', function () {
+it('returns theme_information (v1.2)', function () {
     $response = $this->get('/themes/info/1.2?action=theme_information&slug=my-theme');
 
     $response
@@ -137,7 +137,7 @@ it('returns theme_information in wp.org format (v1.2)', function () {
         ]);
 });
 
-it('returns theme query results in wp.org format (v1.1)', function () {
+it('returns theme query results (v1.1)', function () {
     $this
         ->get('/themes/info/1.1?action=query_themes')
         ->assertStatus(200)
@@ -160,7 +160,7 @@ it('returns theme query results in wp.org format (v1.1)', function () {
         ]);
 });
 
-it('returns theme query results in wp.org format (v1.2)', function () {
+it('returns theme query results (v1.2)', function () {
     $this
         ->get('/themes/info/1.2?action=query_themes')
         ->assertStatus(200)
@@ -197,7 +197,7 @@ it('returns theme query results in wp.org format (v1.2)', function () {
 
 });
 
-it('returns hot tags results in wp.org format (v1.1)', function () {
+it('returns hot tags results (v1.1)', function () {
     $this
         ->get('/themes/info/1.1?action=hot_tags')
         ->assertStatus(200)
@@ -208,4 +208,70 @@ it('returns hot tags results in wp.org format (v1.1)', function () {
             'white' => ['count' => 1, 'name' => 'white', 'slug' => 'white'],
         ]);
     // TODO: test the actual hot tags sorting algorithm with multiple plugins
+});
+
+it('returns latest feature list when no wp version given (v1.2)', function () {
+    $this
+        ->get('/themes/info/1.2?action=feature_list')
+        ->assertStatus(200)
+        ->assertExactJsonStructure(['Features', 'Layout', 'Subject'])
+        ->assertJsonCount(26, 'Features')
+        ->assertJsonCount(8, 'Layout')
+        ->assertJsonCount(9, 'Subject');
+});
+
+it('returns feature list for wp version < 3.7.999 (v1.2)', function () {
+    $this
+        ->get('/themes/info/1.2?action=feature_list&wp_version=3.7.998')
+        ->assertStatus(200)
+        ->assertExactJsonStructure(['Colors', 'Columns', 'Features', 'Subject', 'Width'])
+        ->assertJsonCount(15, 'Colors')
+        ->assertJsonCount(6, 'Columns')
+        ->assertJsonCount(19, 'Features')
+        ->assertJsonCount(3, 'Subject')
+        ->assertJsonCount(2, 'Width');
+});
+
+it('returns latest feature list when no user-agent set (v1.1)', function () {
+    $this
+        ->get('/themes/info/1.1?action=feature_list')
+        ->assertStatus(200)
+        ->assertExactJsonStructure(['Features', 'Layout', 'Subject'])
+        ->assertJsonCount(26, 'Features')
+        ->assertJsonCount(8, 'Layout')
+        ->assertJsonCount(9, 'Subject');
+});
+
+// perverse, but something should test it
+it('returns latest feature list in serialized object format (v1.0)', function () {
+    $body = $this
+        ->get('/themes/info/1.0?action=feature_list')
+        ->assertStatus(200)
+        ->content();
+
+    $response = unserialize($body);
+    expect($response)->toBeObject();
+    expect($response)->toHaveProperty('Features');
+    expect($response)->toHaveProperty('Layout');
+    expect($response)->toHaveProperty('Subject');
+    expect($response->Features)->toBeArray()->toHaveCount(26);
+    expect($response->Layout)->toBeArray()->toHaveCount(8);
+    expect($response->Subject)->toBeArray()->toHaveCount(9);
+});
+
+it('returns feature list for wp version < 3.7.999 (v1.1)', function () {
+    $this
+        ->withHeader('User-Agent', 'WordPress/3.7.998')
+        ->get('/themes/info/1.1?action=feature_list')
+        ->assertStatus(200)
+        ->assertExactJsonStructure(['Colors', 'Columns', 'Features', 'Subject', 'Width'])
+        ->assertJsonCount(15, 'Colors')
+        ->assertJsonCount(6, 'Columns')
+        ->assertJsonCount(19, 'Features')
+        ->assertJsonCount(3, 'Subject')
+        ->assertJsonCount(2, 'Width');
+});
+
+it('rejects invalid action with 404 not found', function () {
+    $response = $this->get('/themes/info/1.2?action=bogus')->assertNotFound();
 });

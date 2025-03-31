@@ -44,6 +44,9 @@ class ThemeUpdatesController extends Controller
     {
         $version = request()->route('version');
         if ($version === '1.0') {
+            if ($response instanceof ThemeUpdateCheckResponse) {
+                $response = $response->toArray();
+            }
             return response(serialize((object) $response), $statusCode);
         }
         return response()->json($response, $statusCode);

@@ -202,3 +202,60 @@ it('returns theme updates - no_updates', function () {
             'translations' => [],
         ]);
 });
+
+it('returns 400 when input is invalid', function () {
+    // It was actually tricky to find a value that triggered validation failure: most syntax issues throw 500
+    $this
+        ->post('/themes/update-check/1.1', [
+            'themes' => json_encode([
+                "active" => 1,  // should be a string
+                "themes" => [
+                    "my-theme" => [
+                        "Name" => "my-theme",
+                        "Title" => "My Theme",
+                        "Version" => "1.3.0.1",
+                        "Author" => "Author",
+                    ],
+                ],
+            ]),
+            "locale" => "[]",
+            "translations" => "[]",
+        ])
+        ->assertStatus(400)
+        ->assertExactJson(['error' => 'The active field must be a string.']);
+});
+
+it('returns in serialized object format (v1.0)', function () {
+    $content = $this
+        ->post('/themes/update-check/1.0', [
+            "locale" => "[]",
+            "translations" => "[]",
+            'themes' => json_encode([
+                "active" => "my-theme",
+                "themes" => [
+                    "my-theme" => [
+                        "Name" => "my-theme",
+                        "Title" => "My Theme",
+                        "Version" => "1.2.0",
+                        "Author" => "Author",
+                    ],
+                ],
+            ]),
+        ])
+        ->assertStatus(200)
+        ->content();
+
+    $response = unserialize($content);
+    expect($response)->toBeObject();
+    expect($response->themes)->toEqual([
+        "my-theme" => [
+            "name" => "My Theme",
+            "theme" => "my-theme",
+            "new_version" => "1.2.1",
+            "url" => "https://api.aspiredev.org/download/my-theme",
+            "package" => "https://api.aspiredev.org/download/my-theme",
+            "requires" => null,
+            "requires_php" => "5.6",
+        ],
+    ]);
+});
