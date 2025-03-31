@@ -33,6 +33,22 @@ describe('Download Routes', function () {
             ->and($job->revision)->toBeNull();
     });
 
+    it('rejects invalid core download requests', function () {
+        // rejected by route pattern
+        $this->get('/download/wordpress-.zip')->assertNotFound();
+        $this->get('/download/wordpress-1.2.3.svg')->assertNotFound();
+        $this->get('/download/wordpress-1.2.3.zip.zip')->assertNotFound();
+        $this->get('/download/wordpress-1.2.3.zip.tar.gz')->assertNotFound();
+        $this->get('/download/wordpress-1.2.3.tar.gz.zip')->assertNotFound();
+
+        // rejected by controller validation
+        $this->get('/download/wordpress-0.zip')->assertStatus(400);
+        $this->get('/download/wordpress-123.zip')->assertStatus(400);
+        $this->get('/download/wordpress-1.2.3.4.zip')->assertStatus(400);
+        $this->get('/download/wordpress-1..zip')->assertStatus(400);
+        $this->get('/download/wordpress-1.2.3..zip')->assertStatus(400);
+    });
+
     it('handles plugin download requests', function () use ($getJob) {
         $response = $this->get('/download/plugin/test-plugin.1.0.0.zip');
 
@@ -45,6 +61,22 @@ describe('Download Routes', function () {
             ->and($job->slug)->toBe('test-plugin')
             ->and($job->upstreamUrl)->toBe('https://downloads.wordpress.org/plugin/test-plugin.1.0.0.zip')
             ->and($job->revision)->toBeNull();
+    });
+
+    it('rejects invalid plugin download requests', function () {
+        // rejected by route pattern
+        $this->get('/download/plugin/test-plugin.1.2.3.svg')->assertNotFound();
+        $this->get('/download/plugin/test-plugin.1.2.3.zip.tar.gz')->assertNotFound();
+
+        // rejected by controller validation
+        // This _would_ be an issue with some plugins on .org, but we do not rewrite plugin urls without a version.
+        $this->get('/download/plugin/test-plugin.zip')->assertBadRequest();
+
+        // should perhaps be rejected, but are not currently.
+        // $this->get('/download/plugin/test-plugin.1..zip')->assertBadRequest();
+        // $this->get('/download/plugin/test-plugin.1.2.3.zip.zip')->assertNotFound();
+        // $this->get('/download/plugin/test-plugin.1.2.3.tar.gz.zip')->assertNotFound();
+        // $this->get('/download/plugin/test-plugin.1.2.3..zip')->assertBadRequest();
     });
 
     it('handles theme download requests', function () use ($getJob) {
@@ -60,6 +92,23 @@ describe('Download Routes', function () {
             ->and($job->upstreamUrl)->toBe('https://downloads.wordpress.org/theme/test-theme.1.0.0.zip')
             ->and($job->revision)->toBeNull();
     });
+
+    it('rejects invalid theme download requests', function () {
+        // rejected by route pattern
+        $this->get('/download/theme/test-theme.1.2.3.svg')->assertNotFound();
+        $this->get('/download/theme/test-theme.1.2.3.zip.tar.gz')->assertNotFound();
+
+        // rejected by controller validation
+        // This _would_ be an issue with some themes on .org, but we do not rewrite theme urls without a version.
+        $this->get('/download/theme/test-theme.zip')->assertBadRequest();
+
+        // should perhaps be rejected, but are not currently.
+        // $this->get('/download/theme/test-theme.1..zip')->assertBadRequest();
+        // $this->get('/download/theme/test-theme.1.2.3.zip.zip')->assertNotFound();
+        // $this->get('/download/theme/test-theme.1.2.3.tar.gz.zip')->assertNotFound();
+        // $this->get('/download/theme/test-theme.1.2.3..zip')->assertBadRequest();
+    });
+
 
     it('handles plugin asset download requests', function () use ($getJob) {
         $response = $this->get('/download/assets/plugin/test-plugin/head/screenshot-1.png');
