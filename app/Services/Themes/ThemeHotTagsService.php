@@ -2,8 +2,8 @@
 
 namespace App\Services\Themes;
 
-use App\Data\WpOrg\Themes\ThemeHotTagsResponse;
 use App\Models\WpOrg\ThemeTag;
+use App\Values\WpOrg\Themes\ThemeHotTagsResponse;
 
 class ThemeHotTagsService
 {

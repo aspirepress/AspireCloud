@@ -2,8 +2,8 @@
 
 namespace App\Services\Plugins;
 
-use App\Data\WpOrg\Themes\ThemeHotTagsResponse;
 use App\Models\WpOrg\PluginTag;
+use App\Values\WpOrg\Themes\ThemeHotTagsResponse;
 
 class PluginHotTagsService
 {

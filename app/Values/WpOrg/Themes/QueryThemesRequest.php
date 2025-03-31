@@ -2,9 +2,11 @@
 
 namespace App\Values\WpOrg\Themes;
 
+use Bag\Attributes\StripExtraParameters;
 use Bag\Bag;
 use Illuminate\Http\Request;
 
+#[StripExtraParameters]
 readonly class QueryThemesRequest extends Bag
 {
     use ThemeFields;

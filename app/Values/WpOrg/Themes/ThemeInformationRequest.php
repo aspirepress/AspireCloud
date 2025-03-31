@@ -2,28 +2,29 @@
 
 namespace App\Values\WpOrg\Themes;
 
+use Bag\Attributes\StripExtraParameters;
 use Bag\Bag;
 use Illuminate\Http\Request;
-use Spatie\LaravelData\Attributes\Validation\Required;
 
+#[StripExtraParameters]
 readonly class ThemeInformationRequest extends Bag
 {
     use ThemeFields;
 
     public const ACTION = 'theme_information';
 
-    /**
-     * @param ?array<string,bool> $fields
-     */
+    /** @param array<string,bool>|null $fields */
     public function __construct(
-        #[Required]
         public string $slug,
         public ?array $fields = null,
     ) {}
 
-    public static function fromRequest(Request $request): self
+    public static function fromRequest(Request $request): static
     {
-        $req = $request->all();
+        // this sort of defeats the purpose of Bag, but Bag doesn't throw validation failure on missing props, since it
+        // checks for missing props before it runs validation rules (which is why overriding rules() won't work either).
+        // TODO: generalize from on request classes to convert MissingPropertiesException to ValidationException
+        $req = $request->validate(['slug' => 'required']);
 
         $defaultFields = [
             'sections' => true,
@@ -41,8 +42,8 @@ readonly class ThemeInformationRequest extends Bag
             $defaultFields['creation_time'] = true;
         }
 
-        $req['fields'] = self::getFields($request, $defaultFields);
-        self::validate($req);
+        $req['fields'] = static::getFields($request, $defaultFields);
+
         return static::from($req);
     }
 }

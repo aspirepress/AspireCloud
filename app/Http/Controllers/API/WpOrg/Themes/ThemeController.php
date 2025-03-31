@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\API\WpOrg\Themes;
 
-use App\Data\WpOrg\Themes\QueryThemesRequest;
-use App\Data\WpOrg\Themes\ThemeInformationRequest;
 use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ThemeCollection;
@@ -12,6 +10,8 @@ use App\Services\Themes\FeatureListService;
 use App\Services\Themes\QueryThemesService;
 use App\Services\Themes\ThemeHotTagsService;
 use App\Services\Themes\ThemeInformationService;
+use App\Values\WpOrg\Themes\QueryThemesRequest;
+use App\Values\WpOrg\Themes\ThemeInformationRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -49,7 +49,7 @@ class ThemeController extends Controller
 
     private function doQueryThemes(Request $request): JsonResponse|Response
     {
-        $req = QueryThemesRequest::from($request);
+        $req = QueryThemesRequest::fromRequest($request);
         $themes = $this->queryThemes->queryThemes($req);
         return $this->sendResponse($themes);
     }
@@ -57,7 +57,7 @@ class ThemeController extends Controller
     private function doThemeInformation(Request $request): JsonResponse|Response
     {
         // NOTE: upstream requires slug query parameter to be request[slug], just slug is not recognized
-        $response = $this->themeInfo->info(ThemeInformationRequest::from($request));
+        $response = $this->themeInfo->info(ThemeInformationRequest::fromRequest($request));
         return $this->sendResponse($response);
     }
 

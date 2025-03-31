@@ -2,10 +2,10 @@
 
 namespace App\Services\Themes;
 
-use App\Data\WpOrg\Themes\ThemeInformationRequest;
 use App\Exceptions\NotFoundException;
 use App\Http\Resources\ThemeResource;
 use App\Models\WpOrg\Theme;
+use App\Values\WpOrg\Themes\ThemeInformationRequest;
 
 class ThemeInformationService
 {

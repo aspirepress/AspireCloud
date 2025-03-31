@@ -2,11 +2,11 @@
 
 namespace App\Services\Themes;
 
-use App\Data\WpOrg\Themes\QueryThemesRequest;
 use App\Http\Resources\ThemeCollection;
 use App\Http\Resources\ThemeResource;
 use App\Models\WpOrg\Theme;
 use App\Utils\Regex;
+use App\Values\WpOrg\Themes\QueryThemesRequest;
 use Illuminate\Database\Eloquent\Builder;
 
 class QueryThemesService
