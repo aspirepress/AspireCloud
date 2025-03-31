@@ -197,4 +197,15 @@ it('returns theme query results in wp.org format (v1.2)', function () {
 
 });
 
-it('returns hot tags results in wp.org format (v1.1)', function () {});
+it('returns hot tags results in wp.org format (v1.1)', function () {
+    $this
+        ->get('/themes/info/1.1?action=hot_tags')
+        ->assertStatus(200)
+        ->assertExactJson([
+            'black' => ['count' => 1, 'name' => 'black', 'slug' => 'black'],
+            'blue' => ['count' => 1, 'name' => 'blue', 'slug' => 'blue'],
+            'red' => ['count' => 1, 'name' => 'red', 'slug' => 'red'],
+            'white' => ['count' => 1, 'name' => 'white', 'slug' => 'white'],
+        ]);
+    // TODO: test the actual hot tags sorting algorithm with multiple plugins
+});
