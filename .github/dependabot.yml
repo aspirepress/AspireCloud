@@ -1,16 +1,30 @@
 version: 2
 updates:
+  # limit routine package updates to the declared constraints, and group them all into a single weekly PR
+
   - package-ecosystem: npm
     versioning-strategy: lockfile-only
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
+    groups:
+      default-group:
+        applies-to: version-updates
+        patterns:
+          - '*'
 
   - package-ecosystem: composer
     versioning-strategy: lockfile-only
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
+    groups:
+      default-group:
+        applies-to: version-updates
+        patterns:
+          - '*'
+
+  # Package ecosystems below have lower traffic and we don't benefit much from weekly batches
 
   - package-ecosystem: docker
     directory: /docker/cli
