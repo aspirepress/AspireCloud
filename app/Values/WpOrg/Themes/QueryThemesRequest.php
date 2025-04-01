@@ -3,6 +3,7 @@
 namespace App\Values\WpOrg\Themes;
 
 use Bag\Attributes\StripExtraParameters;
+use Bag\Attributes\Transforms;
 use Bag\Bag;
 use Illuminate\Http\Request;
 
@@ -28,7 +29,9 @@ readonly class QueryThemesRequest extends Bag
         public int $per_page = 24,
     ) {}
 
-    public static function fromRequest(Request $request): self
+    /** @return array<string, mixed> */
+    #[Transforms(Request::class)]
+    public static function fromRequest(Request $request): array
     {
         $req = $request->query();
 
@@ -48,6 +51,6 @@ readonly class QueryThemesRequest extends Bag
         ];
 
         $req['fields'] = self::getFields($request, $defaultFields);
-        return static::from($req);
+        return $req;
     }
 }

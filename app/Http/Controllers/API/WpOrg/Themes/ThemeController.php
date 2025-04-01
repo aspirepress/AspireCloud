@@ -49,7 +49,7 @@ class ThemeController extends Controller
 
     private function doQueryThemes(Request $request): JsonResponse|Response
     {
-        $req = QueryThemesRequest::fromRequest($request);
+        $req = QueryThemesRequest::from($request);
         $themes = $this->queryThemes->queryThemes($req);
         return $this->sendResponse($themes);
     }
