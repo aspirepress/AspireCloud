@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Data\WpOrg\Plugins;
+namespace App\Values\WpOrg\Plugins;
 
+use Bag\Bag;
 use Illuminate\Support\Collection;
-use Spatie\LaravelData\Data;
 
-class PluginHotTagsResponse extends Data
+readonly class PluginHotTagsResponse extends Bag
 {
     public function __construct(
         public string $slug,
@@ -15,6 +15,7 @@ class PluginHotTagsResponse extends Data
 
     /**
      * Static method to create an instance from a Plugin model.
+     *
      * @param Collection<int,covariant array{
      *   slug: string,
      *   name: string,
@@ -24,7 +25,8 @@ class PluginHotTagsResponse extends Data
      */
     public static function fromCollection(Collection $pluginTags): Collection
     {
-        return $pluginTags->mapWithKeys(fn($plugin) => [
+        return $pluginTags->mapWithKeys(fn($plugin)
+            => [
             $plugin['slug'] => self::from($plugin),
         ]);
     }

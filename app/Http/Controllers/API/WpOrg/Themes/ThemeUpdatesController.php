@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API\WpOrg\Themes;
 
-use App\Data\WpOrg\Themes\ThemeUpdateCheckRequest;
-use App\Data\WpOrg\Themes\ThemeUpdateCheckResponse;
 use App\Http\Controllers\Controller;
 use App\Models\WpOrg\Theme;
+use App\Values\WpOrg\Themes\ThemeUpdateCheckRequest;
+use App\Values\WpOrg\Themes\ThemeUpdateCheckResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

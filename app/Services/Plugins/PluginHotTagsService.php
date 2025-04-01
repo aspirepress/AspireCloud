@@ -2,8 +2,8 @@
 
 namespace App\Services\Plugins;
 
-use App\Data\WpOrg\Themes\ThemeHotTagsResponse;
 use App\Models\WpOrg\PluginTag;
+use App\Values\WpOrg\Plugins\PluginHotTagsResponse;
 
 class PluginHotTagsService
 {
@@ -28,6 +28,6 @@ class PluginHotTagsService
                     'count' => (int) $tag->plugins_count,
                 ];
             });
-        return ThemeHotTagsResponse::fromCollection($hotTags)->toArray();
+        return PluginHotTagsResponse::fromCollection($hotTags)->toArray();
     }
 }

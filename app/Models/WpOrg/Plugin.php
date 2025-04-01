@@ -2,7 +2,6 @@
 
 namespace App\Models\WpOrg;
 
-use App\Data\Props\PluginProps;
 use App\Models\BaseModel;
 use App\Utils\Regex;
 use Carbon\Carbon;
@@ -115,16 +114,6 @@ final class Plugin extends BaseModel
     //endregion
 
     //region Constructors
-
-    /** @param PluginProps|array<string, mixed> $props */
-    public static function create(PluginProps|array $props): self
-    {
-        if (is_array($props)) {
-            $props = PluginProps::from($props);
-        }
-        assert($props instanceof PluginProps);
-        return self::_create($props->toArray());
-    }
 
     /** @param array<string,mixed> $metadata */
     public static function fromSyncMetadata(array $metadata): self

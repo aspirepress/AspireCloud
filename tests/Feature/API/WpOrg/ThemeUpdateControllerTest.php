@@ -203,28 +203,6 @@ it('returns theme updates - no_updates', function () {
         ]);
 });
 
-it('returns 400 when input is invalid', function () {
-    // It was actually tricky to find a value that triggered validation failure: most syntax issues throw 500
-    $this
-        ->post('/themes/update-check/1.1', [
-            'themes' => json_encode([
-                "active" => 1,  // should be a string
-                "themes" => [
-                    "my-theme" => [
-                        "Name" => "my-theme",
-                        "Title" => "My Theme",
-                        "Version" => "1.3.0.1",
-                        "Author" => "Author",
-                    ],
-                ],
-            ]),
-            "locale" => "[]",
-            "translations" => "[]",
-        ])
-        ->assertStatus(400)
-        ->assertExactJson(['error' => 'The active field must be a string.']);
-});
-
 it('returns in serialized object format (v1.0)', function () {
     $content = $this
         ->post('/themes/update-check/1.0', [

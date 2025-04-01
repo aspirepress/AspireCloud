@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Data\WpOrg\Themes;
+namespace App\Values\WpOrg\Themes;
 
 use App\Models\WpOrg\Theme;
+use Bag\Bag;
 use Illuminate\Support\Collection;
-use Spatie\LaravelData\Data;
 
-class ThemeUpdateCheckResponse extends Data
+readonly class ThemeUpdateCheckResponse extends Bag
 {
     /**
      * @param Collection<string,ThemeUpdateData> $themes

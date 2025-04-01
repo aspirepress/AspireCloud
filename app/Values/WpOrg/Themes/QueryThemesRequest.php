@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Data\WpOrg\Themes;
+namespace App\Values\WpOrg\Themes;
 
+use Bag\Attributes\StripExtraParameters;
+use Bag\Bag;
 use Illuminate\Http\Request;
-use Spatie\LaravelData\Data;
 
-class QueryThemesRequest extends Data
+#[StripExtraParameters]
+readonly class QueryThemesRequest extends Bag
 {
     use ThemeFields;
 
@@ -16,14 +18,14 @@ class QueryThemesRequest extends Data
      * @param string|array<string,bool> $fields
      */
     public function __construct(
-        public readonly ?string $search = null, // text to search
-        public readonly ?array $tags = null,    // tag or set of tags
-        public readonly ?string $theme = null,  // slug of a specific theme
-        public readonly ?string $author = null, // wp.org username of author
-        public readonly ?string $browse = null, // one of popular|featured|updated|new
-        public readonly mixed $fields = null,
-        public readonly int $page = 1,
-        public readonly int $per_page = 24,
+        public ?string $search = null, // text to search
+        public ?array $tags = null,    // tag or set of tags
+        public ?string $theme = null,  // slug of a specific theme
+        public ?string $author = null, // wp.org username of author
+        public ?string $browse = null, // one of popular|featured|updated|new
+        public mixed $fields = null,
+        public int $page = 1,
+        public int $per_page = 24,
     ) {}
 
     public static function fromRequest(Request $request): self
@@ -40,9 +42,9 @@ class QueryThemesRequest extends Data
 
         $defaultFields = [
             'description' => true,
-            'rating'      => true,
-            'homepage'    => true,
-            'template'    => true,
+            'rating' => true,
+            'homepage' => true,
+            'template' => true,
         ];
 
         $req['fields'] = self::getFields($request, $defaultFields);

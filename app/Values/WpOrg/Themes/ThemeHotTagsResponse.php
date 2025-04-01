@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Data\WpOrg\Themes;
+namespace App\Values\WpOrg\Themes;
 
+use Bag\Bag;
 use Illuminate\Support\Collection;
-use Spatie\LaravelData\Data;
 
-class ThemeHotTagsResponse extends Data
+readonly class ThemeHotTagsResponse extends Bag
 {
     public function __construct(
         public string $slug,
@@ -15,6 +15,7 @@ class ThemeHotTagsResponse extends Data
 
     /**
      * Static method to create an instance from a Theme model.
+     *
      * @param Collection<int,covariant array{
      *   slug: string,
      *   name: string,
@@ -24,7 +25,8 @@ class ThemeHotTagsResponse extends Data
      */
     public static function fromCollection(Collection $themeTags): Collection
     {
-        return $themeTags->mapWithKeys(fn($theme) => [
+        return $themeTags->mapWithKeys(fn($theme)
+            => [
             $theme['slug'] => self::from($theme),
         ]);
     }

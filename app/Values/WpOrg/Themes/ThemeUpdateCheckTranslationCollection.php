@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Data\WpOrg\Themes;
+namespace App\Values\WpOrg\Themes;
 
+use Bag\Bag;
 use Illuminate\Http\Request;
-use Spatie\LaravelData\Data;
 
 use function Safe\json_decode;
 
-class ThemeUpdateCheckTranslationCollection extends Data
+readonly class ThemeUpdateCheckTranslationCollection extends Bag
 {
     /**
      * @param ?array<string,mixed> $themes
@@ -15,10 +15,10 @@ class ThemeUpdateCheckTranslationCollection extends Data
      * @param ?string[] $locale
      */
     public function __construct(
-        public readonly ?string $active = null, // text to search
-        public readonly ?array $themes = null,
-        public readonly ?array $translations = null,
-        public readonly ?array $locale = null,
+        public ?string $active = null, // text to search
+        public ?array $themes = null,
+        public ?array $translations = null,
+        public ?array $locale = null,
     ) {}
 
     public static function fromRequest(Request $request): self

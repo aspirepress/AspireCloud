@@ -129,19 +129,5 @@ class PluginSeeder extends Seeder
         ];
 
         Plugin::fromSyncMetadata($metadata)->save();
-
-        // not working yet, Repo and PluginProps both need more time in the oven
-        // $this->gitPluginRepo->createPlugin(
-        //     slug: $metadata['slug'],
-        //     name: $metadata['name'],
-        //     short_description: mb_substr($metadata['short_description'], 0, 150),
-        //     description: $metadata['sections']['description'],
-        //     version: $metadata['version'],
-        //     author: $metadata['author'],
-        //     requires: $metadata['requires'],
-        //     tested: $metadata['tested'],
-        //     download_link: $metadata['download_link'],
-        //     extra: $metadata,
-        // );
     }
 }

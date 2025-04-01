@@ -2,7 +2,6 @@
 
 namespace App\Models\WpOrg;
 
-use App\Data\Props\ThemeProps;
 use App\Models\BaseModel;
 use App\Utils\Regex;
 use Carbon\Carbon;
@@ -100,16 +99,6 @@ final class Theme extends BaseModel
     //endregion
 
     //region Constructors
-
-    /** @param ThemeProps|array<string, mixed> $props */
-    public static function create(array|ThemeProps $props): self
-    {
-        if (is_array($props)) {
-            $props = ThemeProps::from($props);
-        }
-        assert($props instanceof ThemeProps);
-        return self::_create($props->toArray());
-    }
 
     /**
      * TODO: move to WpOrgThemeRepo

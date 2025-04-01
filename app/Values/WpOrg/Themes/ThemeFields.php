@@ -1,41 +1,41 @@
 <?php
 
-namespace App\Data\WpOrg\Themes;
+namespace App\Values\WpOrg\Themes;
 
 use Illuminate\Http\Request;
 
 trait ThemeFields
 {
     public const allFields = [
-        'description'             => false,
-        'downloaded'              => false,
-        'downloadlink'            => false,
-        'last_updated'            => false,
-        'creation_time'           => false,
-        'parent'                  => false,
-        'rating'                  => false,
-        'ratings'                 => false,
-        'reviews_url'             => false,
-        'screenshot_count'        => false,
-        'screenshot_url'          => true,
-        'screenshots'             => false,
-        'sections'                => false,
-        'tags'                    => false,
-        'template'                => false,
-        'versions'                => false,
-        'theme_url'               => false,
-        'homepage'                => false,
-        'extended_author'         => false,
-        'photon_screenshots'      => false,
-        'active_installs'         => false,
-        'requires'                => false,
-        'requires_php'            => false,
-        'trac_tickets'            => false,
-        'is_commercial'           => false,
-        'is_community'            => false,
+        'description' => false,
+        'downloaded' => false,
+        'downloadlink' => false,
+        'last_updated' => false,
+        'creation_time' => false,
+        'parent' => false,
+        'rating' => false,
+        'ratings' => false,
+        'reviews_url' => false,
+        'screenshot_count' => false,
+        'screenshot_url' => true,
+        'screenshots' => false,
+        'sections' => false,
+        'tags' => false,
+        'template' => false,
+        'versions' => false,
+        'theme_url' => false,
+        'homepage' => false,
+        'extended_author' => false,
+        'photon_screenshots' => false,
+        'active_installs' => false,
+        'requires' => false,
+        'requires_php' => false,
+        'trac_tickets' => false,
+        'is_commercial' => false,
+        'is_community' => false,
         'external_repository_url' => false,
-        'external_support_url'    => false,
-        'upload_date'             => false,
+        'external_support_url' => false,
+        'upload_date' => false,
     ];
 
     /**

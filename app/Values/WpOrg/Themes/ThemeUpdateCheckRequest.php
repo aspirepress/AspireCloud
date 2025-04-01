@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Data\WpOrg\Themes;
+namespace App\Values\WpOrg\Themes;
 
+use Bag\Bag;
 use Illuminate\Http\Request;
-use Spatie\LaravelData\Data;
 
 use function Safe\json_decode;
 
-class ThemeUpdateCheckRequest extends Data
+readonly class ThemeUpdateCheckRequest extends Bag
 {
     /**
      * @phpstan-type TranslationMetadata array{
@@ -19,23 +19,23 @@ class ThemeUpdateCheckRequest extends Data
      */
 
     /**
-     * @param string $active                    // Active theme slug
+     * @param string $active // Active theme slug
      * @param array<string,array{
      *     "Version": string,
-     * }> $themes                               // Array of theme slugs and their current versions
+     * }> $themes // Array of theme slugs and their current versions
      * @param array<string,array<string,array{
      *     POT-Creation-Date: string,
      *     PO-Revision-Date: string,
      *     Project-Id-Version: string,
      *     X-Generator: string
      * }>> $translations
-     * @param string[] $locale             // Array of locale strings
+     * @param string[] $locale // Array of locale strings
      */
     public function __construct(
-        public readonly ?string $active = null, // text to search
-        public readonly ?array $themes = null,
-        public readonly ?array $translations = null,
-        public readonly ?array $locale = null,
+        public ?string $active = null, // text to search
+        public ?array $themes = null,
+        public ?array $translations = null,
+        public ?array $locale = null,
     ) {}
 
     public static function fromRequest(Request $request): self
