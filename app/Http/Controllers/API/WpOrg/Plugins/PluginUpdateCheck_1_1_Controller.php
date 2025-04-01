@@ -3,27 +3,24 @@
 namespace App\Http\Controllers\API\WpOrg\Plugins;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Plugins\PluginUpdateRequest;
 use App\Http\Resources\Plugins\PluginUpdateCollection;
 use App\Services\Plugins\PluginUpdateService;
+use App\Values\WpOrg\Plugins\PluginUpdateCheckRequest;
 use Illuminate\Http\JsonResponse;
-
-use function Safe\json_decode;
+use Illuminate\Http\Request;
 
 class PluginUpdateCheck_1_1_Controller extends Controller
 {
     public function __construct(
-        private readonly PluginUpdateService $pluginService,
+        private readonly PluginUpdateService $updateService,
     ) {}
 
-    public function __invoke(PluginUpdateRequest $request): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
-        $pluginsData = json_decode($request->plugins, true);
+        // Bag's Laravel autoconversion doesn't work right, so do it by hand.
+        $req = PluginUpdateCheckRequest::from($request);
 
-        $result = $this->pluginService->processPlugins(
-            plugins: $pluginsData['plugins'],
-            includeAll: $request->boolean('all'),
-        );
+        $result = $this->updateService->checkForUpdates($req);
 
         $response = [
             'plugins' => new PluginUpdateCollection($result['updates']),
@@ -31,7 +28,7 @@ class PluginUpdateCheck_1_1_Controller extends Controller
         ];
 
         // Only include no_update when 'all' parameter is true
-        if ($request->boolean('all')) {
+        if ($req->all) {
             $response['no_update'] = new PluginUpdateCollection($result['no_updates']);
         }
 

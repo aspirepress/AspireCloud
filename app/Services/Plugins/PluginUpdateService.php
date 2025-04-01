@@ -3,10 +3,16 @@
 namespace App\Services\Plugins;
 
 use App\Models\WpOrg\Plugin;
+use App\Values\WpOrg\Plugins\PluginUpdateCheckRequest;
 use Illuminate\Support\Collection;
 
 class PluginUpdateService
 {
+    public function checkForUpdates(PluginUpdateCheckRequest $req): array
+    {
+        return $this->processPlugins($req->plugins, includeAll: $req->all);
+    }
+
     /**
      * Process the plugins and check for updates
      *
@@ -16,7 +22,7 @@ class PluginUpdateService
      *     no_updates: Collection<string, array<string, mixed>>
      * }
      */
-    public function processPlugins(array $plugins, bool $includeAll): array
+    private function processPlugins(array $plugins, bool $includeAll): array
     {
         $updates = collect();
         $noUpdates = collect();
