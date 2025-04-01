@@ -2,6 +2,7 @@
 
 namespace App\Values\WpOrg\Themes;
 
+use Bag\Attributes\Transforms;
 use Bag\Bag;
 use Illuminate\Http\Request;
 
@@ -21,17 +22,19 @@ readonly class ThemeUpdateCheckTranslationCollection extends Bag
         public ?array $locale = null,
     ) {}
 
-    public static function fromRequest(Request $request): self
+    /** @return array<string, mixed> */
+    #[Transforms(Request::class)]
+    public static function fromRequest(Request $request): array
     {
         $themes = $request->post('themes');
         $locale = $request->post('locale');
         $translations = $request->post('translations');
         $themeData = json_decode($themes, true);
-        return static::from([
+        return [
             'active' => $themeData['active'],
             'themes' => $themeData['themes'],
             'locale' => json_decode($locale, true),
             'translations' => json_decode($translations, true),
-        ]);
+        ];
     }
 }
