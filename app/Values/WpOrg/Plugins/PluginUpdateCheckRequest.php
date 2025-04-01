@@ -8,16 +8,17 @@ use Illuminate\Http\Request;
 
 use function Safe\json_decode;
 
+/**
+ * @phpstan-type TranslationMetadata array{
+ *     POT-Creation-Date: string,
+ *     PO-Revision-Date: string,
+ *     Project-Id-Version: string,
+ *     X-Generator: string
+ * }
+ */
 readonly class PluginUpdateCheckRequest extends Bag
 {
     /**
-     * @phpstan-type TranslationMetadata array{
-     *     POT-Creation-Date: string,                // Creation date of the POT file
-     *     PO-Revision-Date: string,                 // Revision date of the PO file
-     *     Project-Id-Version: string,               // Project version info
-     *     X-Generator: string                       // Generator software info
-     * }
-     *
      * @param array<string, array{"Version": string}> $plugins
      * @param array<string, array<string, TranslationMetadata>> $translations
      * @param list<string> $locale

@@ -8,26 +8,18 @@ use Illuminate\Support\Collection;
 
 class PluginUpdateService
 {
-    public function checkForUpdates(PluginUpdateCheckRequest $req): array
-    {
-        return $this->processPlugins($req->plugins, includeAll: $req->all);
-    }
-
     /**
-     * Process the plugins and check for updates
-     *
-     * @param array<string, array{Version?: string}> $plugins
      * @return array{
      *     updates: Collection<string, array<string, mixed>>,
      *     no_updates: Collection<string, array<string, mixed>>
      * }
      */
-    private function processPlugins(array $plugins, bool $includeAll): array
+    public function checkForUpdates(PluginUpdateCheckRequest $req): array
     {
         $updates = collect();
         $noUpdates = collect();
 
-        foreach ($plugins as $pluginFile => $pluginData) {
+        foreach ($req->plugins as $pluginFile => $pluginData) {
             $plugin = $this->findPlugin($pluginFile, $pluginData);
 
             if (!$plugin) {
@@ -38,7 +30,7 @@ class PluginUpdateService
 
             if (version_compare($plugin->version, $pluginData['Version'] ?? '', '>')) {
                 $updates->put($pluginFile, $updateData);
-            } elseif ($includeAll) {
+            } elseif ($req->all) {
                 // Only collect no_updates when includeAll is true
                 $noUpdates->put($pluginFile, $updateData);
             }
@@ -85,11 +77,11 @@ class PluginUpdateService
     private function formatPluginData(Plugin $plugin, string $pluginFile): array
     {
         return [
-            'id' => "w.org/plugins/{$plugin->slug}",
+            'id' => "w.org/plugins/$plugin->slug",
             'slug' => $plugin->slug,
             'plugin' => $pluginFile,
             'new_version' => $plugin->version,
-            'url' => "https://wordpress.org/plugins/{$plugin->slug}/",
+            'url' => "https://wordpress.org/plugins/$plugin->slug/",
             'package' => $plugin->download_link,
             'icons' => $plugin->icons,
             'banners' => $plugin->banners,
