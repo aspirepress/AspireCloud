@@ -197,6 +197,50 @@ it('returns theme query results (v1.2)', function () {
 
 });
 
+it('returns theme query results for tag (v1.2)', function () {
+    $this
+        ->get('/themes/info/1.2?action=query_themes&tag=black')
+        ->assertStatus(200)
+        ->assertExactJson([
+            'info' => ['page' => 1, 'pages' => 1, 'results' => 1],
+            'themes' => [
+                [
+                    'author' => [
+                        'author' => 'Tmeister',
+                        'author_url' => 'https://wp-themes.com/author/tmeister',
+                        'avatar' => 'https://avatars.wp.org/tmeister',
+                        'display_name' => 'Tmeister',
+                        'profile' => 'https://profiles.wp.org/tmeister',
+                        'user_nicename' => 'tmeister',
+                    ],
+                    'description' => 'My Theme',
+                    'external_repository_url' => 'https://test.com',
+                    'external_support_url' => false,
+                    'homepage' => 'https://wordpress.org/themes/my-theme/',
+                    'is_commercial' => false,
+                    'is_community' => true,
+                    'name' => 'My Theme',
+                    'num_ratings' => 6,
+                    'preview_url' => 'https://wp-themes.com/my-theme',
+                    'rating' => 5,
+                    'requires' => null,
+                    'requires_php' => '5.6',
+                    'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
+                    'slug' => 'my-theme',
+                    'version' => '1.2.1',
+                ],
+            ],
+        ]);
+
+    $this
+        ->get('/themes/info/1.2?action=query_themes&tag=orange')
+        ->assertStatus(200)
+        ->assertExactJson([
+            'info' => ['page' => 1, 'pages' => 0, 'results' => 0],  // page 1 of 0 is a bit odd but it is correct
+            'themes' => [],
+        ]);
+});
+
 it('returns hot tags results (v1.1)', function () {
     $this
         ->get('/themes/info/1.1?action=hot_tags')

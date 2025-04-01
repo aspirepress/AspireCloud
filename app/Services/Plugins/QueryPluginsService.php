@@ -4,6 +4,7 @@ namespace App\Services\Plugins;
 
 use App\Models\WpOrg\Plugin;
 use App\Utils\Regex;
+use App\Values\WpOrg\Plugins\QueryPluginsRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -19,14 +20,15 @@ class QueryPluginsService
      *    total: int
      * }
      */
-    public function queryPlugins(
-        int $page,
-        int $perPage,
-        ?string $search = null,
-        ?string $tag = null, // TODO: make this work with more than one tag, the way Themes do
-        ?string $author = null,
-        string $browse = 'popular',
-    ): array {
+    public function queryPlugins(QueryPluginsRequest $req): array
+    {
+        $page = $req->page;
+        $perPage = $req->per_page;
+        $browse = $req->browse ?: 'popular';
+        $search = $req->search;
+        $tag = $req->tags[0] ?? null;   // TODO: multiple tags support
+        $author = $req->author;
+
         $search = self::normalizeSearchString($search);
         $tag = self::normalizeSearchString($tag);
         $author = self::normalizeSearchString($author);

@@ -6,6 +6,7 @@ use Bag\Attributes\StripExtraParameters;
 use Bag\Attributes\Transforms;
 use Bag\Bag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 #[StripExtraParameters]
 readonly class QueryThemesRequest extends Bag
@@ -33,15 +34,9 @@ readonly class QueryThemesRequest extends Bag
     #[Transforms(Request::class)]
     public static function fromRequest(Request $request): array
     {
-        $req = $request->query();
+        $query = $request->query();
 
-        // 'tag' is the query parameter, but we store it on the 'tags' field
-        // we could probably do this with a mapping and cast instead, but this works too,
-        // and we have to do custom processing on fields anyway.
-        if (is_array($req) && array_key_exists('tag', $req)) {
-            $req['tags'] = is_array($req['tag']) ? $req['tag'] : [$req['tag']];
-            unset($req['tag']);
-        }
+        $query['tags'] = (array)Arr::pull($query, 'tag', []);
 
         $defaultFields = [
             'description' => true,
@@ -50,7 +45,7 @@ readonly class QueryThemesRequest extends Bag
             'template' => true,
         ];
 
-        $req['fields'] = self::getFields($request, $defaultFields);
-        return $req;
+        $query['fields'] = self::getFields($request, $defaultFields);
+        return $query;
     }
 }
