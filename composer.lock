@@ -757,16 +757,16 @@
         },
         {
             "name": "dshafik/bag",
-            "version": "2.5.0",
+            "version": "2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dshafik/bag.git",
-                "reference": "1f6fc615d7b73ec2ac476140a64ee7d1709e3fa4"
+                "reference": "d83be64fa350600050ea6417a70322ca153e5c75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dshafik/bag/zipball/1f6fc615d7b73ec2ac476140a64ee7d1709e3fa4",
-                "reference": "1f6fc615d7b73ec2ac476140a64ee7d1709e3fa4",
+                "url": "https://api.github.com/repos/dshafik/bag/zipball/d83be64fa350600050ea6417a70322ca153e5c75",
+                "reference": "d83be64fa350600050ea6417a70322ca153e5c75",
                 "shasum": ""
             },
             "require": {
@@ -796,7 +796,9 @@
                 "symfony/var-dumper": "*"
             },
             "suggest": {
-                "barryvdh/laravel-debugbar": "Integrates with Laravel Debugbar"
+                "barryvdh/laravel-debugbar": "Integrates with Laravel Debugbar",
+                "spatie/laravel-typescript-transformer": "Easily transform Bag Value objects into TypeScript types within Laravel applications",
+                "spatie/typescript-transformer": "Easily transform Bag Value objects into TypeScript types"
             },
             "type": "library",
             "extra": {
@@ -824,9 +826,9 @@
             "description": "A comprehensive immutable value objects implementation",
             "support": {
                 "issues": "https://github.com/dshafik/bag/issues",
-                "source": "https://github.com/dshafik/bag/tree/2.5.0"
+                "source": "https://github.com/dshafik/bag/tree/2.5.1"
             },
-            "time": "2025-03-29T21:12:43+00:00"
+            "time": "2025-04-01T10:43:33+00:00"
         },
         {
             "name": "egulias/email-validator",
