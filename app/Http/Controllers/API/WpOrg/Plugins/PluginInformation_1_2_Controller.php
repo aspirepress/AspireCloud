@@ -51,25 +51,6 @@ class PluginInformation_1_2_Controller extends Controller
         return response()->json($resource, $status);
     }
 
-    // private function queryPlugins(QueryPluginsRequest $request): JsonResponse
-    // {
-    //     $result = $this->queryPlugins->queryPlugins(
-    //         page: $request->getPage(),
-    //         perPage: $request->getPerPage(),
-    //         search: $request->query('search'),
-    //         tag: $request->query('tag'),
-    //         author: $request->query('author'),
-    //         browse: $request->getBrowse(),
-    //     );
-    //
-    //     return response()->json(new PluginCollection(
-    //         PluginResource::collection($result['plugins']),
-    //         $result['page'],
-    //         $result['totalPages'],
-    //         $result['total'],
-    //     ));
-    // }
-
     private function queryPlugins(QueryPluginsRequest $request): JsonResponse
     {
         $result = $this->queryPlugins->queryPlugins($request);
