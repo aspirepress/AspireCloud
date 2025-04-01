@@ -25,8 +25,8 @@ readonly class ThemeUpdateCheckResponse extends Bag
     public static function fromData(Collection $themes, Collection $noUpdate): self
     {
         return new self(
-            themes: ThemeUpdateData::fromModelCollection($themes),
-            no_update: ThemeUpdateData::fromModelCollection($noUpdate),
+            themes: ThemeUpdateData::collect($themes)->keyBy('theme'),
+            no_update: ThemeUpdateData::collect($noUpdate)->keyBy('theme'),
             translations: [],
         );
     }

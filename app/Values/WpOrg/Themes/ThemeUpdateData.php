@@ -33,13 +33,4 @@ readonly class ThemeUpdateData extends Bag
             'requires_php' => $theme->requires_php,
         ];
     }
-
-    /**
-     * @param Collection<int,Theme> $themes
-     * @return Collection<string,static>
-     */
-    public static function fromModelCollection(Collection $themes): Collection
-    {
-        return $themes->mapWithKeys(fn($theme) => [$theme->slug => static::from($theme)]);
-    }
 }
