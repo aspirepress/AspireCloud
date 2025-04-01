@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API\WpOrg\Plugins;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Plugins\PluginInformationRequest;
 use App\Http\Resources\Plugins\ClosedPluginResource;
 use App\Http\Resources\Plugins\PluginCollection;
 use App\Http\Resources\Plugins\PluginResource;
@@ -11,6 +10,7 @@ use App\Models\WpOrg\ClosedPlugin;
 use App\Services\Plugins\PluginHotTagsService;
 use App\Services\Plugins\PluginInformationService;
 use App\Services\Plugins\QueryPluginsService;
+use App\Values\WpOrg\Plugins\PluginInformationRequest;
 use App\Values\WpOrg\Plugins\QueryPluginsRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,20 +27,15 @@ class PluginInformation_1_2_Controller extends Controller
     {
         return match ($request->query('action')) {
             'query_plugins' => $this->queryPlugins(QueryPluginsRequest::from($request)),
-            'plugin_information' => $this->pluginInformation(new PluginInformationRequest($request->all())),
+            'plugin_information' => $this->pluginInformation(PluginInformationRequest::from($request)),
             'hot_tags', 'popular_tags' => $this->hotTags($request),
             default => response()->json(['error' => 'Invalid action'], 400),
         };
     }
 
-    private function pluginInformation(PluginInformationRequest $request): JsonResponse
+    private function pluginInformation(PluginInformationRequest $req): JsonResponse
     {
-        $slug = $request->getSlug();
-        if (!$slug) {
-            return response()->json(['error' => 'Slug is required'], 400);
-        }
-
-        $plugin = $this->pluginInfo->findBySlug($request->getSlug());
+        $plugin = $this->pluginInfo->findBySlug($req->slug);
 
         if (!$plugin) {
             return response()->json(['error' => 'Plugin not found'], 404);

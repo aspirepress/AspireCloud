@@ -19,11 +19,10 @@ function query_plugin_uri(array $params = []): string
     return "/plugins/info/1.2?" . http_build_query(['action' => 'query_plugibs', ...$params]);
 }
 
-it('returns 400 when slug is missing', function () {
+it('returns 422 when slug is missing', function () {
     $this
         ->getJson('/plugins/info/1.2?action=plugin_information')
-        ->assertStatus(400)
-        ->assertJson(['error' => 'Slug is required']);
+        ->assertStatus(422);
 });
 
 it('returns 404 when plugin does not exist', function () {
