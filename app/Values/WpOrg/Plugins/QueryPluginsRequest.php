@@ -16,6 +16,7 @@ use Illuminate\Support\Arr;
 #[StripExtraParameters]
 readonly class QueryPluginsRequest extends Bag
 {
+    /** @param list<string>|null $tags */
     public function __construct(
         public ?string $search = null,  // text to search
         public ?array $tags = null,     // tag or set of tags

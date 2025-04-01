@@ -15,6 +15,7 @@ readonly class PluginInformationRequest extends Bag
 
     public function __construct(public string $slug) {}
 
+    /** @return array<string, mixed> */
     #[Transforms(Request::class)]
     public static function fromRequest(Request $request): array
     {
