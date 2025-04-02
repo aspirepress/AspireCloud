@@ -16,47 +16,25 @@ class PluginUpdateService
      */
     public function checkForUpdates(PluginUpdateCheckRequest $req): array
     {
-        $updates = collect();
-        $noUpdates = collect();
+        $bySlug = collect($req->plugins)
+            ->mapWithKeys(
+                fn($pluginData, $pluginFile) => [$this->extractSlug($pluginFile) => [$pluginFile, $pluginData]],
+            );
 
-        foreach ($req->plugins as $pluginFile => $pluginData) {
-            $plugin = $this->findPlugin($pluginFile, $pluginData);
+        $isUpdated = fn($plugin) => version_compare($plugin->version, $bySlug[$plugin->slug][1]['Version'] ?? '', '>');
 
-            if (!$plugin) {
-                continue;
-            }
+        $mkUpdate = function ($plugin) use ($bySlug) {
+            $file = $bySlug[$plugin->slug][0];
+            return [$file => $this->formatPluginData($plugin, $file)];
+        };
 
-            $updateData = $this->formatPluginData($plugin, $pluginFile);
+        [$updates, $no_updates] = Plugin::query()
+            ->whereIn('slug', $bySlug->keys())
+            ->get()
+            ->partition($isUpdated)
+            ->map(fn($collection) => $collection->mapWithKeys($mkUpdate));
 
-            if (version_compare($plugin->version, $pluginData['Version'] ?? '', '>')) {
-                $updates->put($pluginFile, $updateData);
-            } elseif ($req->all) {
-                // Only collect no_updates when includeAll is true
-                $noUpdates->put($pluginFile, $updateData);
-            }
-        }
-
-        return [
-            'updates' => $updates,
-            'no_updates' => $noUpdates,
-        ];
-    }
-
-    /**
-     * Find a plugin by its file path and data
-     *
-     * @param array{Version?: string} $pluginData
-     */
-    private function findPlugin(string $pluginFile, array $pluginData): ?Plugin
-    {
-        $slug = $this->extractSlug($pluginFile);
-        if (!$slug || empty($pluginData['Version'])) {
-            return null;
-        }
-
-        return Plugin::query()
-            ->where('slug', $slug)
-            ->first();
+        return compact('updates', 'no_updates');
     }
 
     /**
