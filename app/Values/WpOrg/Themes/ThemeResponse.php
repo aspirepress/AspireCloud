@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace App\Values\WpOrg\Themes;
 
 use App\Models\WpOrg\Theme;
+use App\Values\WpOrg\Author;
+use Bag\Attributes\Hidden;
 use Bag\Attributes\Transforms;
 use Bag\Bag;
 use Bag\Values\Optional;
 
 readonly class ThemeResponse extends Bag
 {
-
     public function __construct(
         public string $name,
         public string $slug,
         public string $version,
         public string $preview_url,
-        public Optional|string $author,
+        public Optional|Author|string $author,
         public Optional|string $description,
         public Optional|string $screenshot_url,
         public Optional|array $ratings, // TODO: ensure this casts to array correctly
@@ -40,6 +41,18 @@ readonly class ThemeResponse extends Bag
         public Optional|string $external_support_url,
         public Optional|bool $is_community,
         public Optional|string $external_repository_url,
+
+        #[Hidden]
+        public Optional|Author $extended_author,
+
+        // Always empty for now
+        public Optional|string $parent,
+        public Optional|int $screenshot_count,
+        public Optional|array $screenshots,
+        public Optional|string $theme_url,
+        public Optional|array $photon_screenshots,
+        public Optional|array $trac_tickets,
+        public Optional|string $upload_date,
     ) {}
 
     /**
@@ -47,7 +60,7 @@ readonly class ThemeResponse extends Bag
      * @noinspection ProperNullCoalescingOperatorUsageInspection (it's fine here)
      */
     #[Transforms(Theme::class)]
-    public function fromTheme(Theme $theme): array
+    public static function fromTheme(Theme $theme): array
     {
         // Note we fill in all fields, then strip out any not-requested Optional.  such silliness is compatibility.
 
@@ -57,7 +70,8 @@ readonly class ThemeResponse extends Bag
             'slug' => $theme->slug,
             'version' => $theme->version,
             'preview_url' => $theme->preview_url,
-            'author' => $theme->author->user_nicename ?? $none,
+            'author' => $theme->author ?? $none,
+            // gets converted to $theme->author->user_nicename unless extended_author=true
             'description' => $theme->description ?? $none,
             'screenshot_url' => $theme->screenshot_url ?? $none,
             'ratings' => $theme->ratings ?? $none,
@@ -80,6 +94,18 @@ readonly class ThemeResponse extends Bag
             'external_support_url' => $theme->is_commercial ? $theme->external_support_url : false ?? $none,
             'is_community' => $theme->is_community ?? $none,
             'external_repository_url' => $theme->is_community ? $theme->external_repository_url : '' ?? $none,
+
+            // hidden
+            'extended_author' => $theme->author,
+
+            // eventual support
+            'parent' => $none,
+            'screenshot_count' => $none,
+            'screenshots' => $none,
+            'theme_url' => $none,
+            'photon_screenshots' => $none,
+            'trac_tickets' => $none,
+            'upload_date' => $none,
         ];
     }
 }

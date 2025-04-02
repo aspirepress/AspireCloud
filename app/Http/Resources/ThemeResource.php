@@ -52,7 +52,6 @@ class ThemeResource extends JsonResource
         $tags = $resource->tagsArray();
         ksort($tags);
 
-        $screenshotBase = "https://wp-themes.com/wp-content/themes/{$resource->slug}/screenshot";
         return [
             'name' => $resource->name,
             'slug' => $resource->slug,
@@ -61,12 +60,6 @@ class ThemeResource extends JsonResource
             'author' => $this->whenField('extended_author', $author, $resource->author->user_nicename),
             'description' => $this->whenField('description', fn() => $resource->description),
             'screenshot_url' => $this->whenField('screenshot_url', fn() => $resource->screenshot_url),
-            // TODO: support screenshots metadata once I can track it down
-            // 'screenshot_count' => $this->whenField('screenshot_count', fn() => max($resource->screenshot_count ?? 1, 1)),
-            // 'screenshots' => $this->whenField('screenshots', function () use ($screenshotBase) {
-            //     $screenshotCount = max($resource->screenshot_count ?? 1, 1);
-            //     return collect(range(1, $screenshotCount))->map(fn($i) => "{$screenshotBase}-{$i}.png");
-            // }),
             'ratings' => $this->whenField('ratings', fn() => (object) $resource->ratings),  // need the object cast when all keys are numeric
             'rating' => $this->whenField('rating', fn() => $resource->rating),
             'num_ratings' => $this->whenField('rating', fn() => $resource->num_ratings),
@@ -81,15 +74,6 @@ class ThemeResource extends JsonResource
             'download_link' => $this->whenField('downloadlink', fn() => $resource->download_link ?? ''),
             'tags' => $this->whenField('tags', fn() => $tags),
             'versions' => $this->whenField('versions', fn() => $resource->versions),
-            // TODO: support parent
-            // 'parent' => $this->whenField('parent', function () use ($resource) {
-            //     $parent = $resource->parent_theme;
-            //     return $parent ? [
-            //         'slug' => $parent->slug,
-            //         'name' => $parent->name,
-            //         'homepage' => "https://wordpress.org/themes/{$parent->slug}/",
-            //     ] : new MissingValue();
-            // }),
             'requires' => $this->whenField('requires', $resource->requires),
             'requires_php' => $this->whenField('requires_php', $resource->requires_php),
             'is_commercial' => $this->whenField('is_commercial', fn() => $resource->is_commercial),
@@ -99,17 +83,10 @@ class ThemeResource extends JsonResource
         ];
     }
 
-    /**
-     * When the given field is included, the value is returned.
-     * Otherwise, the default value is returned.
-     * @param mixed $value
-     * @param mixed|null $default
-     */
-    private function whenField(string $fieldName, $value, $default = null): mixed
+    private function whenField(string $fieldName, mixed $value, mixed $default = null): mixed
     {
-        $include = false;
-        $includedFields = $this->additional['fields'] ?? [];
-        $include = $includedFields[$fieldName] ?? false;
+        $include = $this->additional['fields'][$fieldName] ?? false;
+        // calling with default: null behaves differently from leaving it out
         if (func_num_args() === 3) {
             return $this->when($include, $value, $default);
         }
