@@ -19,31 +19,29 @@ use function Safe\json_decode;
 readonly class ThemeUpdateCheckRequest extends Bag
 {
     /**
-     * @param string $active // Active theme slug
+     * @param string $active slug of currently active theme
      * @param array<string, array{"Version": string}> $themes
      * @param array<string, array<string, TranslationMetadata>> $translations
      * @param list<string> $locale
      */
     public function __construct(
-        public ?string $active = null, // text to search
-        public ?array $themes = null,
-        public ?array $translations = null,
-        public ?array $locale = null,
+        public string $active,
+        public array $themes,
+        public array $translations,
+        public array $locale,
     ) {}
 
     /** @return array<string, mixed> */
     #[Transforms(Request::class)]
     public static function fromRequest(Request $request): array
     {
-        $themes = $request->post('themes');
-        $locale = $request->post('locale');
-        $translations = $request->post('translations');
-        $themeData = json_decode($themes, true);
+        $decode = fn($key) => json_decode($request->post($key), true);
+        $themes = $decode('themes');
         return [
-            'active' => $themeData['active'],
-            'themes' => $themeData['themes'],
-            'locale' => json_decode($locale, true),
-            'translations' => json_decode($translations, true),
+            'active' => $themes['active'],
+            'themes' => $themes['themes'],
+            'locale' => $decode('locale'),
+            'translations' => $decode('translations'),
         ];
     }
 }

@@ -24,9 +24,9 @@ readonly class PluginUpdateCheckRequest extends Bag
      * @param list<string> $locale
      */
     public function __construct(
-        public ?array $plugins = null,
-        public ?array $translations = null,
-        public ?array $locale = null,
+        public array $plugins,
+        public array $translations,
+        public array $locale,
         public bool $all = false,
     ) {}
 
@@ -34,16 +34,12 @@ readonly class PluginUpdateCheckRequest extends Bag
     #[Transforms(Request::class)]
     public static function fromRequest(Request $request): array
     {
-        $plugins = $request->post('plugins');
-        $locale = $request->post('locale');
-        $translations = $request->post('translations');
-        $pluginData = json_decode($plugins, true);
-        $all = $request->boolean('all');
+        $decode = fn($key) => json_decode($request->post($key), true);
         return [
-            'plugins' => $pluginData['plugins'],
-            'locale' => json_decode($locale, true),
-            'translations' => json_decode($translations, true),
-            'all' => $all,
+            'plugins' => $decode('plugins')['plugins'],
+            'locale' => $decode('locale'),
+            'translations' => $decode('translations'),
+            'all' => $request->boolean('all'),
         ];
     }
 }
