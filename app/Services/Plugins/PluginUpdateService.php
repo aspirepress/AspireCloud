@@ -4,6 +4,8 @@ namespace App\Services\Plugins;
 
 use App\Models\WpOrg\Plugin;
 use App\Values\WpOrg\Plugins\PluginUpdateCheckRequest;
+use App\Values\WpOrg\Plugins\PluginUpdateCheckResponse;
+use App\Values\WpOrg\Plugins\PluginUpdateData;
 use Illuminate\Support\Collection;
 
 class PluginUpdateService
@@ -14,7 +16,7 @@ class PluginUpdateService
      *     no_updates: Collection<string, array<string, mixed>>
      * }
      */
-    public function checkForUpdates(PluginUpdateCheckRequest $req): array
+    public function checkForUpdates(PluginUpdateCheckRequest $req): PluginUpdateCheckResponse
     {
         $bySlug = collect($req->plugins)
             ->mapWithKeys(
@@ -25,7 +27,7 @@ class PluginUpdateService
 
         $mkUpdate = function ($plugin) use ($bySlug) {
             $file = $bySlug[$plugin->slug][0];
-            return [$file => $this->formatPluginData($plugin, $file)];
+            return [$file => PluginUpdateData::from($plugin)->with(plugin: $file)];
         };
 
         [$updates, $no_updates] = Plugin::query()
@@ -34,7 +36,7 @@ class PluginUpdateService
             ->partition($isUpdated)
             ->map(fn($collection) => $collection->mapWithKeys($mkUpdate));
 
-        return compact('updates', 'no_updates');
+        return PluginUpdateCheckResponse::from(plugins: $updates, no_update: $no_updates, translations: collect([]));
     }
 
     /**
@@ -45,30 +47,5 @@ class PluginUpdateService
         return str_contains($pluginFile, '/')
             ? explode('/', $pluginFile)[0]
             : pathinfo($pluginFile, PATHINFO_FILENAME);
-    }
-
-    /**
-     * Format plugin data for the response
-     *
-     * @return array<string, mixed>
-     */
-    private function formatPluginData(Plugin $plugin, string $pluginFile): array
-    {
-        return [
-            'id' => "w.org/plugins/$plugin->slug",
-            'slug' => $plugin->slug,
-            'plugin' => $pluginFile,
-            'new_version' => $plugin->version,
-            'url' => "https://wordpress.org/plugins/$plugin->slug/",
-            'package' => $plugin->download_link,
-            'icons' => $plugin->icons,
-            'banners' => $plugin->banners,
-            'banners_rtl' => [],
-            'requires' => $plugin->requires,
-            'tested' => $plugin->tested,
-            'requires_php' => $plugin->requires_php,
-            'requires_plugins' => $plugin->requires_plugins,
-            'compatibility' => $plugin->compatibility,
-        ];
     }
 }
