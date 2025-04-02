@@ -4,12 +4,12 @@ namespace App\Http\Controllers\API\WpOrg\Themes;
 
 use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ThemeCollection;
 use App\Services\Themes\FeatureListService;
 use App\Services\Themes\QueryThemesService;
 use App\Services\Themes\ThemeHotTagsService;
 use App\Services\Themes\ThemeInformationService;
 use App\Values\WpOrg\Themes\QueryThemesRequest;
+use App\Values\WpOrg\Themes\QueryThemesResponse;
 use App\Values\WpOrg\Themes\ThemeInformationRequest;
 use App\Values\WpOrg\Themes\ThemeResponse;
 use Illuminate\Http\JsonResponse;
@@ -59,7 +59,6 @@ class ThemeController extends Controller
         // NOTE: upstream requires slug query parameter to be request[slug], just slug is not recognized
         $req = ThemeInformationRequest::fromRequest($request);
         $response = $this->themeInfo->info($req);
-
         return $this->sendResponse($response);
     }
 
@@ -87,10 +86,10 @@ class ThemeController extends Controller
     /**
      * Send response based on API version.
      *
-     * @param array<string,mixed>|ThemeCollection|ThemeResponse $response
+     * @param array<string,mixed>|QueryThemesResponse|ThemeResponse $response
      */
     private function sendResponse(
-        array|ThemeCollection|ThemeResponse $response,
+        array|QueryThemesResponse|ThemeResponse $response,
         int $statusCode = 200,
     ): JsonResponse|Response {
         $version = request()->route('version');

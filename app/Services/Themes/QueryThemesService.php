@@ -2,16 +2,16 @@
 
 namespace App\Services\Themes;
 
-use App\Http\Resources\ThemeCollection;
-use App\Http\Resources\ThemeResource;
 use App\Models\WpOrg\Theme;
 use App\Utils\Regex;
 use App\Values\WpOrg\Themes\QueryThemesRequest;
+use App\Values\WpOrg\Themes\QueryThemesResponse;
+use App\Values\WpOrg\Themes\ThemeResponse;
 use Illuminate\Database\Eloquent\Builder;
 
 class QueryThemesService
 {
-    public function queryThemes(QueryThemesRequest $req): ThemeCollection
+    public function queryThemes(QueryThemesRequest $req): QueryThemesResponse
     {
         $page = $req->page;
         $perPage = $req->per_page;
@@ -36,11 +36,12 @@ class QueryThemesService
             ->with('author')
             ->get();
 
-        $collection = collect($themes)
-            ->unique('slug')
-            ->map(fn($theme) => (new ThemeResource($theme))->additional(['fields' => $req->fields]));
+        $collection = ThemeResponse::collect($themes)->map(fn($theme) => $theme->withFields($req->fields ?? []));
 
-        return new ThemeCollection($collection, $page, (int) ceil($total / $perPage), $total);
+        return QueryThemesResponse::from(
+            themes: $collection,
+            info: ['page' => $page, 'pages' => (int)ceil($total / $perPage), 'results' => $total],
+        );
     }
 
     /** @param Builder<Theme> $query */

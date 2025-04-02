@@ -30,8 +30,9 @@ readonly class ThemeInformationRequest extends Bag
             'sections' => true,
             'rating' => true,
             'downloaded' => true,
-            'downloadlink' => true,
+            'download_link' => true,
             'last_updated' => true,
+            'last_updated_time' => true,
             'homepage' => true,
             'tags' => true,
             'template' => true,
@@ -43,6 +44,7 @@ readonly class ThemeInformationRequest extends Bag
         }
 
         $req['fields'] = static::getFields($request, $defaultFields);
+        $req['last_updated_time'] = $req['last_updated'] ?? true;
 
         return static::from($req);
     }

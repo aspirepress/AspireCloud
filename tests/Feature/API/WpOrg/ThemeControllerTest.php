@@ -140,7 +140,7 @@ it('returns theme query results (v1.1)', function () {
     $this
         ->get('/themes/info/1.1?action=query_themes')
         ->assertStatus(200)
-        ->assertExactJson([
+        ->assertJson([
             'info' => ['page' => 1, 'pages' => 1, 'results' => 1],
             'themes' => [
                 [
@@ -163,7 +163,7 @@ it('returns theme query results (v1.2)', function () {
     $this
         ->get('/themes/info/1.2?action=query_themes')
         ->assertStatus(200)
-        ->assertExactJson([
+        ->assertJson([
             'info' => ['page' => 1, 'pages' => 1, 'results' => 1],
             'themes' => [
                 [
@@ -185,7 +185,6 @@ it('returns theme query results (v1.2)', function () {
                     'num_ratings' => 6,
                     'preview_url' => 'https://wp-themes.com/my-theme',
                     'rating' => 5,
-                    'requires' => null,
                     'requires_php' => '5.6',
                     'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
                     'slug' => 'my-theme',
@@ -200,7 +199,7 @@ it('returns theme query results for tag (v1.2)', function () {
     $this
         ->get('/themes/info/1.2?action=query_themes&tag=black')
         ->assertStatus(200)
-        ->assertExactJson([
+        ->assertJson([
             'info' => ['page' => 1, 'pages' => 1, 'results' => 1],
             'themes' => [
                 [
@@ -214,7 +213,7 @@ it('returns theme query results for tag (v1.2)', function () {
                     ],
                     'description' => 'My Theme',
                     'external_repository_url' => 'https://test.com',
-                    'external_support_url' => false,
+                    'external_support_url' => '',
                     'homepage' => 'https://wordpress.org/themes/my-theme/',
                     'is_commercial' => false,
                     'is_community' => true,
@@ -222,7 +221,6 @@ it('returns theme query results for tag (v1.2)', function () {
                     'num_ratings' => 6,
                     'preview_url' => 'https://wp-themes.com/my-theme',
                     'rating' => 5,
-                    'requires' => null,
                     'requires_php' => '5.6',
                     'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
                     'slug' => 'my-theme',

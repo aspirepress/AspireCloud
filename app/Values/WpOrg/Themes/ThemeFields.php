@@ -9,8 +9,8 @@ trait ThemeFields
     public const allFields = [
         'description' => false,
         'downloaded' => false,
-        'downloadlink' => false,
-        'last_updated' => false,
+        'download_link' => false,
+        'last_updated_time' => false,
         'creation_time' => false,
         'parent' => false,
         'rating' => false,

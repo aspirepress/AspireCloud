@@ -10,6 +10,7 @@ use Bag\Attributes\Hidden;
 use Bag\Attributes\Transforms;
 use Bag\Bag;
 use Bag\Values\Optional;
+use Illuminate\Support\Arr;
 
 readonly class ThemeResponse extends Bag
 {
@@ -107,5 +108,24 @@ readonly class ThemeResponse extends Bag
             'trac_tickets' => $none,
             'upload_date' => $none,
         ];
+    }
+
+    public function withFields(array $fields): static
+    {
+        $none = new Optional();
+        $extendedAuthor = Arr::pull($fields, 'extended_author', false);
+
+        $omit = collect($fields)
+            ->filter(fn($val, $key) => !$val)
+            ->mapWithKeys(fn($val, $key) => [$key => $none])
+            ->toArray();
+
+        $self = $this->with($omit);
+
+        if (!$extendedAuthor) {
+            $self = $self->with(['author' => $self->author->user_nicename]);
+        }
+
+        return $self;
     }
 }
