@@ -15,7 +15,8 @@ RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg -
     && apt install -y nodejs \
     && npm install -g yarn
 
-RUN useradd --uid 100000 --create-home --shell /bin/bash app
+RUN groupadd --gid 100000 app \
+    && useradd --uid 100000 --gid 100000 --create-home --shell /bin/bash app
 
 WORKDIR /app
 
