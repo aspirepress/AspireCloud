@@ -2,8 +2,9 @@
 
 namespace App\Values\WpOrg\Plugins;
 
+use App\Models\WpOrg\PluginTag;
+use Bag\Attributes\Transforms;
 use Bag\Bag;
-use Illuminate\Support\Collection;
 
 readonly class PluginHotTagsResponse extends Bag
 {
@@ -13,21 +14,10 @@ readonly class PluginHotTagsResponse extends Bag
         public int $count,
     ) {}
 
-    /**
-     * Static method to create an instance from a Plugin model.
-     *
-     * @param Collection<int,covariant array{
-     *   slug: string,
-     *   name: string,
-     *   count: int,
-     * }> $pluginTags
-     * @return Collection<string, covariant PluginHotTagsResponse>
-     */
-    public static function fromCollection(Collection $pluginTags): Collection
+    /** @return array{slug: string, name: string, count: int} */
+    #[Transforms(PluginTag::class)]
+    public static function fromPluginTag(PluginTag $tag): array
     {
-        return $pluginTags->mapWithKeys(fn($plugin)
-            => [
-            $plugin['slug'] => self::from($plugin),
-        ]);
+        return ['slug' => $tag->slug, 'name' => $tag->name, 'count' => $tag->plugins_count];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Values\WpOrg\Themes;
+namespace App\Values\WpOrg\Plugins;
 
 use Bag\Attributes\Transforms;
 use Bag\Bag;
@@ -16,19 +16,18 @@ use function Safe\json_decode;
  *     X-Generator: string
  * }
  */
-readonly class ThemeUpdateCheckRequest extends Bag
+readonly class PluginUpdateCheckRequest extends Bag
 {
     /**
-     * @param string $active slug of currently active theme
-     * @param array<string, array{"Version": string}> $themes
+     * @param array<string, array{"Version": string}> $plugins
      * @param array<string, array<string, TranslationMetadata>> $translations
      * @param list<string> $locale
      */
     public function __construct(
-        public string $active,
-        public array $themes,
+        public array $plugins,
         public array $translations,
         public array $locale,
+        public bool $all = false,
     ) {}
 
     /** @return array<string, mixed> */
@@ -36,12 +35,11 @@ readonly class ThemeUpdateCheckRequest extends Bag
     public static function fromRequest(Request $request): array
     {
         $decode = fn($key) => json_decode($request->post($key), true);
-        $themes = $decode('themes');
         return [
-            'active' => $themes['active'],
-            'themes' => $themes['themes'],
+            'plugins' => $decode('plugins')['plugins'],
             'locale' => $decode('locale'),
             'translations' => $decode('translations'),
+            'all' => $request->boolean('all'),
         ];
     }
 }

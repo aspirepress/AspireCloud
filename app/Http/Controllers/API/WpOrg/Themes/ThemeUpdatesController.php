@@ -13,21 +13,18 @@ use Illuminate\Validation\ValidationException;
 
 class ThemeUpdatesController extends Controller
 {
-    /**
-     * @return JsonResponse
-     */
     public function __invoke(Request $request): JsonResponse|Response
     {
         try {
-            $updateRequest = ThemeUpdateCheckRequest::fromRequest($request);
+            $req = ThemeUpdateCheckRequest::from($request);
 
             $themes = Theme::query()
-                ->whereIn('slug', array_keys($updateRequest->themes))
+                ->whereIn('slug', array_keys($req->themes))
                 ->get()
-                ->partition(function ($theme) use ($updateRequest) {
-                    return version_compare($theme->version, $updateRequest->themes[$theme->slug]['Version'], '>');
-                });
-            return $this->sendResponse(ThemeUpdateCheckResponse::fromData($themes[0], $themes[1]));
+                ->partition(fn($theme) => version_compare($theme->version, $req->themes[$theme->slug]['Version'], '>'));
+
+            return $this->sendResponse(ThemeUpdateCheckResponse::fromResults($themes[0], $themes[1]));
+
         } catch (ValidationException $e) {
             // Handle validation errors and return a custom response
             $firstErrorMessage = collect($e->errors())->flatten()->first();

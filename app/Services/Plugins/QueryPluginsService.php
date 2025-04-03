@@ -4,29 +4,25 @@ namespace App\Services\Plugins;
 
 use App\Models\WpOrg\Plugin;
 use App\Utils\Regex;
+use App\Values\WpOrg\Plugins\PluginResponse;
+use App\Values\WpOrg\Plugins\QueryPluginsRequest;
+use App\Values\WpOrg\Plugins\QueryPluginsResponse;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 
 class QueryPluginsService
 {
     /**
      * Query plugins with filters and pagination
-     *
-     * @return array{
-     *    plugins: Collection<int, Plugin>,
-     *    page: int,
-     *    totalPages: int,
-     *    total: int
-     * }
      */
-    public function queryPlugins(
-        int $page,
-        int $perPage,
-        ?string $search = null,
-        ?string $tag = null, // TODO: make this work with more than one tag, the way Themes do
-        ?string $author = null,
-        string $browse = 'popular',
-    ): array {
+    public function queryPlugins(QueryPluginsRequest $req): QueryPluginsResponse
+    {
+        $page = $req->page;
+        $perPage = $req->per_page;
+        $browse = $req->browse ?: 'popular';
+        $search = $req->search;
+        $tag = $req->tags[0] ?? null;   // TODO: multiple tags support
+        $author = $req->author;
+
         $search = self::normalizeSearchString($search);
         $tag = self::normalizeSearchString($tag);
         $author = self::normalizeSearchString($author);
@@ -38,20 +34,19 @@ class QueryPluginsService
             ->when($author, self::applyAuthor(...));
 
         $total = $query->count();
-        $totalPages = (int) ceil($total / $perPage);
+        $totalPages = (int)ceil($total / $perPage);
 
         $plugins = $query
             ->offset(($page - 1) * $perPage)
             ->limit($perPage)
             ->get()
-            ->unique('slug');
+            ->unique('slug')
+            ->map(fn($plugin) => PluginResponse::from($plugin)->asQueryPluginsResponse());
 
-        return [
+        return QueryPluginsResponse::from([
             'plugins' => $plugins,
-            'page' => $page,
-            'totalPages' => $totalPages,
-            'total' => $total,
-        ];
+            'info' => ['page' => $page, 'pages' => $totalPages, 'results' => $total],
+        ]);
     }
 
     /** @param Builder<Plugin> $query */

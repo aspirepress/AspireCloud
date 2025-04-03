@@ -9,25 +9,26 @@ use Illuminate\Support\Collection;
 readonly class ThemeUpdateCheckResponse extends Bag
 {
     /**
-     * @param Collection<string,ThemeUpdateData> $themes
-     * @param Collection<string,ThemeUpdateData> $no_update
+     * @param Collection<string, ThemeUpdateData> $themes
+     * @param Collection<string, ThemeUpdateData> $no_update
+     * @param Collection<array-key, mixed> $translations
      */
     public function __construct(
         public Collection $themes,
         public Collection $no_update,
-        public mixed $translations,
+        public Collection $translations,
     ) {}
 
     /**
-     * @param Collection<int,Theme> $themes
-     * @param Collection<int,Theme> $noUpdate
+     * @param iterable<array-key, Theme> $themes
+     * @param iterable<array-key, Theme> $no_update
      */
-    public static function fromData(Collection $themes, Collection $noUpdate): self
+    public static function fromResults(iterable $themes, iterable $no_update): self
     {
         return new self(
-            themes: ThemeUpdateData::fromModelCollection($themes),
-            no_update: ThemeUpdateData::fromModelCollection($noUpdate),
-            translations: [],
+            themes: ThemeUpdateData::collect($themes)->keyBy('theme'),
+            no_update: ThemeUpdateData::collect($no_update)->keyBy('theme'),
+            translations: collect(), // TODO
         );
     }
 }

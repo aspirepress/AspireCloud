@@ -3,8 +3,8 @@
 namespace App\Values\WpOrg\Themes;
 
 use App\Models\WpOrg\Theme;
+use Bag\Attributes\Transforms;
 use Bag\Bag;
-use Illuminate\Support\Collection;
 
 readonly class ThemeUpdateData extends Bag
 {
@@ -18,25 +18,18 @@ readonly class ThemeUpdateData extends Bag
         public ?string $requires_php,
     ) {}
 
-    public static function fromModel(Theme $theme): self
+    /** @return array<string, mixed> */
+    #[Transforms(Theme::class)]
+    public static function fromTheme(Theme $theme): array
     {
-        return new self(
-            name: $theme->name,
-            theme: $theme->slug,
-            new_version: $theme->version,
-            url: $theme->download_link,
-            package: $theme->download_link,
-            requires: $theme->requires,
-            requires_php: $theme->requires_php,
-        );
-    }
-
-    /**
-     * @param Collection<int,Theme> $themes
-     * @return Collection<string,ThemeUpdateData>
-     */
-    public static function fromModelCollection(Collection $themes): Collection
-    {
-        return $themes->mapWithKeys(fn($theme) => [$theme->slug => self::fromModel($theme)]);
+        return [
+            'name' => $theme->name,
+            'theme' => $theme->slug,
+            'new_version' => $theme->version,
+            'url' => $theme->download_link,
+            'package' => $theme->download_link,
+            'requires' => $theme->requires,
+            'requires_php' => $theme->requires_php,
+        ];
     }
 }
