@@ -52,7 +52,6 @@ readonly class ThemeResponse extends Bag
         public Optional|string $external_support_url,
         public Optional|bool $is_community,
         public Optional|string $external_repository_url,
-
         #[Hidden]
         public Optional|Author $extended_author,
 

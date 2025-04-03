@@ -10,7 +10,6 @@ use Bag\Collection;
 
 readonly class QueryPluginsResponse extends Bag
 {
-
     public function __construct(
         public Collection $plugins,
         public PageInfo $info,

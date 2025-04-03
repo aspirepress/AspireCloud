@@ -5,7 +5,6 @@ namespace App\Values\WpOrg\Themes;
 use App\Models\WpOrg\Theme;
 use Bag\Attributes\Transforms;
 use Bag\Bag;
-use Illuminate\Support\Collection;
 
 readonly class ThemeUpdateData extends Bag
 {

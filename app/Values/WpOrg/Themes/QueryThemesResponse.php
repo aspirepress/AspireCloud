@@ -10,7 +10,6 @@ use Bag\Collection;
 
 readonly class QueryThemesResponse extends Bag
 {
-
     public function __construct(
         public Collection $themes,
         public PageInfo $info,

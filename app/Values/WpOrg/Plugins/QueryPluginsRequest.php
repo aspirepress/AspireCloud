@@ -46,5 +46,3 @@ readonly class QueryPluginsRequest extends Bag
         return $query;
     }
 }
-
-

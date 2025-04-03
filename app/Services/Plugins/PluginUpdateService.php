@@ -6,7 +6,6 @@ use App\Models\WpOrg\Plugin;
 use App\Values\WpOrg\Plugins\PluginUpdateCheckRequest;
 use App\Values\WpOrg\Plugins\PluginUpdateCheckResponse;
 use App\Values\WpOrg\Plugins\PluginUpdateData;
-use Illuminate\Support\Collection;
 
 class PluginUpdateService
 {

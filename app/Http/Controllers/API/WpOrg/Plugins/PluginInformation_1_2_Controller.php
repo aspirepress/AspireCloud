@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API\WpOrg\Plugins;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Plugins\ClosedPluginResource;
 use App\Models\WpOrg\ClosedPlugin;
 use App\Services\Plugins\PluginHotTagsService;
 use App\Services\Plugins\PluginInformationService;
