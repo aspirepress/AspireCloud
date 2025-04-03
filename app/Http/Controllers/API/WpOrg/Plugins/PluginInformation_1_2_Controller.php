@@ -4,13 +4,13 @@ namespace App\Http\Controllers\API\WpOrg\Plugins;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Plugins\ClosedPluginResource;
-use App\Http\Resources\Plugins\PluginCollection;
-use App\Http\Resources\Plugins\PluginResource;
 use App\Models\WpOrg\ClosedPlugin;
 use App\Services\Plugins\PluginHotTagsService;
 use App\Services\Plugins\PluginInformationService;
 use App\Services\Plugins\QueryPluginsService;
+use App\Values\WpOrg\Plugins\ClosedPluginResponse;
 use App\Values\WpOrg\Plugins\PluginInformationRequest;
+use App\Values\WpOrg\Plugins\PluginResponse;
 use App\Values\WpOrg\Plugins\QueryPluginsRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -42,10 +42,10 @@ class PluginInformation_1_2_Controller extends Controller
         }
 
         if ($plugin instanceof ClosedPlugin) {
-            $resource = new ClosedPluginResource($plugin);
+            $resource = ClosedPluginResponse::from($plugin);
             $status = 404;
         } else {
-            $resource = new PluginResource($plugin);
+            $resource = PluginResponse::from($plugin)->asPluginInformationResponse();
             $status = 200;
         }
         return response()->json($resource, $status);
@@ -54,13 +54,7 @@ class PluginInformation_1_2_Controller extends Controller
     private function queryPlugins(QueryPluginsRequest $request): JsonResponse
     {
         $result = $this->queryPlugins->queryPlugins($request);
-
-        return response()->json(new PluginCollection(
-            PluginResource::collection($result['plugins']),
-            $result['page'],
-            $result['totalPages'],
-            $result['total'],
-        ));
+        return response()->json($result);
     }
 
     private function hotTags(Request $request): JsonResponse
