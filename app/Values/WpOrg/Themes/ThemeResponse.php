@@ -19,7 +19,6 @@ readonly class ThemeResponse extends Bag
      * @param Optional|array<string, mixed> $sections
      * @param Optional|array<string, mixed> $tags
      * @param Optional|array<string, mixed> $versions
-     * @param Optional|array<string, mixed> $requires
      * @param Optional|array<string, mixed> $screenshots
      * @param Optional|array<string, mixed> $photon_screenshots
      * @param Optional|array<string, mixed> $trac_tickets
@@ -46,7 +45,7 @@ readonly class ThemeResponse extends Bag
         public Optional|string $download_link,
         public Optional|array $tags,
         public Optional|array $versions,
-        public Optional|array $requires,
+        public Optional|string $requires,
         public Optional|string $requires_php,
         public Optional|bool $is_commercial,
         public Optional|string $external_support_url,
