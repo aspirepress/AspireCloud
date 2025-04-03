@@ -9,7 +9,8 @@ RUN install-php-extensions pdo pdo_pgsql zip intl opcache redis
 
 COPY ./docker/cli/php.ini /usr/local/etc/php/php.ini
 
-RUN useradd --uid 100000 --create-home --shell /bin/bash app
+RUN groupadd --gid 100000 app \
+    && useradd --uid 100000 --gid 100000 --create-home --shell /bin/bash app
 
 WORKDIR /app
 

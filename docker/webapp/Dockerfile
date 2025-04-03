@@ -15,7 +15,10 @@ RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg -
     && apt update && apt install -y nodejs \
     && npm install -g yarn
 
-RUN useradd --uid 100000 --create-home --shell /bin/bash app && chown -R app:app /config /data
+
+RUN groupadd --gid 100000 app \
+    && useradd --uid 100000 --gid 100000 --create-home --shell /bin/bash app \
+    && chown -R app:app /config /data
 
 WORKDIR /app
 
@@ -24,7 +27,7 @@ FROM base AS dev
 
 RUN install-php-extensions xdebug
 
-#USER app
+USER app
 
 ################
 FROM base AS prod
