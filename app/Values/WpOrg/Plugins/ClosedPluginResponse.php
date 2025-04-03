@@ -21,6 +21,7 @@ readonly class ClosedPluginResponse extends Bag
         public bool $closed = true,
     ) {}
 
+    /** @return array<string, mixed> */
     #[Transforms(ClosedPlugin::class)]
     public static function fromClosedPlugin(ClosedPlugin $plugin): array
     {

@@ -9,6 +9,13 @@ use Bag\Values\Optional;
 
 readonly class PluginUpdateData extends Bag
 {
+    /**
+     * @param Optional|list<string> $requires_plugins
+     * @param Optional|array<string, mixed> $compatibility
+     * @param Optional|array<string, mixed> $icons
+     * @param Optional|array<string, mixed> $banners
+     * @param Optional|array<string, mixed> $banners_rtl
+     */
     public function __construct(
         public string $id,
         public string $slug,

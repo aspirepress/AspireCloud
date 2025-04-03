@@ -14,6 +14,16 @@ use Illuminate\Support\Arr;
 
 readonly class ThemeResponse extends Bag
 {
+    /**
+     * @param Optional|array{'1': int, '2': int, '3': int, '4': int, '5': int, } $ratings
+     * @param Optional|array<string, mixed> $sections
+     * @param Optional|array<string, mixed> $tags
+     * @param Optional|array<string, mixed> $versions
+     * @param Optional|array<string, mixed> $requires
+     * @param Optional|array<string, mixed> $screenshots
+     * @param Optional|array<string, mixed> $photon_screenshots
+     * @param Optional|array<string, mixed> $trac_tickets
+     */
     public function __construct(
         public string $name,
         public string $slug,
@@ -87,14 +97,14 @@ readonly class ThemeResponse extends Bag
             'homepage' => "https://wordpress.org/themes/{$theme->slug}/",
             'sections' => $theme->sections ?? $none,
             'download_link' => $theme->download_link ?? $none,
-            'tags' => $theme->tagsArray() ?? $none,
+            'tags' => $theme->tagsArray(),
             'versions' => $theme->versions ?? $none,
             'requires' => $theme->requires ?? $none,
             'requires_php' => $theme->requires_php ?? $none,
             'is_commercial' => $theme->is_commercial ?? $none,
-            'external_support_url' => $theme->is_commercial ? $theme->external_support_url : false ?? $none,
+            'external_support_url' => $theme->external_support_url,
             'is_community' => $theme->is_community ?? $none,
-            'external_repository_url' => $theme->is_community ? $theme->external_repository_url : '' ?? $none,
+            'external_repository_url' => $theme->external_repository_url,
 
             // hidden
             'extended_author' => $theme->author,
@@ -110,6 +120,7 @@ readonly class ThemeResponse extends Bag
         ];
     }
 
+    /** @param array<string, bool> $fields */
     public function withFields(array $fields): static
     {
         $none = new Optional();

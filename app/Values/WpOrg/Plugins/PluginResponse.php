@@ -14,6 +14,18 @@ readonly class PluginResponse extends Bag
 {
     public const LAST_UPDATED_DATE_FORMAT = 'Y-m-d h:ia T'; // .org's goofy format: "2024-09-27 9:53pm GMT"
 
+    /**
+     * @param array<array-key, mixed> $banners
+     * @param array<array-key, array{src: string, caption: string}> $screenshots
+     * @param array<string, mixed> $contributors
+     * @param array<string, string> $versions
+     * @param array<string, string> $sections
+     * @param array{"1":int, "2":int, "3":int, "4":int, "5":int} $ratings
+     * @param list<string> $requires_plugins
+     * @param array<string, string> $icons
+     * @param array<string, string> $upgrade_notice
+     * @param array<string, string> $tags
+     */
     public function __construct(
         public string $name,
         public string $slug,
@@ -57,6 +69,7 @@ readonly class PluginResponse extends Bag
         public Optional|string|null $preview_link,
     ) {}
 
+    /** @return array<string, mixed> */
     #[Transforms(Plugin::class)]
     public static function fromPlugin(Plugin $plugin): array
     {

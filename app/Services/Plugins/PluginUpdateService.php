@@ -10,12 +10,6 @@ use Illuminate\Support\Collection;
 
 class PluginUpdateService
 {
-    /**
-     * @return array{
-     *     updates: Collection<string, array<string, mixed>>,
-     *     no_updates: Collection<string, array<string, mixed>>
-     * }
-     */
     public function checkForUpdates(PluginUpdateCheckRequest $req): PluginUpdateCheckResponse
     {
         $bySlug = collect($req->plugins)

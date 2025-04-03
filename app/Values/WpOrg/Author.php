@@ -18,6 +18,8 @@ readonly class Author extends Bag
     ) {}
 
     // I wish I didn't have to write this, but alas it serializes $model to json inside $user_nicename otherwise 🤦
+
+    /** @return array<string, mixed> */
     #[Transforms(AuthorModel::class)]
     public static function fromModel(AuthorModel $model): array
     {
