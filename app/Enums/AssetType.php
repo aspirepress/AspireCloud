@@ -4,7 +4,8 @@ namespace App\Enums;
 
 enum AssetType: string
 {
-    case CORE = 'core';
+    case CORE = 'core';     // this should eventually be replaced by RELEASE
+    case RELEASE = 'release';
     case PLUGIN = 'plugin';
     case THEME = 'theme';
     case PLUGIN_SCREENSHOT = 'plugin-screenshot';
@@ -24,6 +25,7 @@ enum AssetType: string
     {
         $baseUrl = match ($this) {
             self::CORE => 'https://wordpress.org/',
+            self::RELEASE => 'https://downloads.wordpress.org/release/',
             self::PLUGIN => 'https://downloads.wordpress.org/plugin/',
             self::THEME => 'https://downloads.wordpress.org/theme/',
             self::PLUGIN_SCREENSHOT,

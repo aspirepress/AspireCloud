@@ -4,6 +4,7 @@ use App\Http\Controllers\API\WpOrg\Downloads\DownloadCoreController;
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginAssetController;
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginController;
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginIconController;
+use App\Http\Controllers\API\WpOrg\Downloads\DownloadReleaseController;
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadThemeController;
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadThemeScreenshotController;
 use Illuminate\Routing\Router;
@@ -21,6 +22,11 @@ Route::prefix('/')
             ->get('/download/wordpress-{version}.{extension}', DownloadCoreController::class)
             ->where(['version' => '[\d.]+', 'extension' => 'zip|tar\.gz'])
             ->name('download.core');
+
+        $router
+            ->get('/download/release/wordpress-{version}.{extension}', DownloadReleaseController::class)
+            ->where(['version' => '[-a-z\d.]+', 'extension' => 'zip|tar\.gz'])
+            ->name('download.release');
 
         $router
             ->get('/download/plugin/{file}', DownloadPluginController::class)
