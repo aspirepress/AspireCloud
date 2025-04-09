@@ -21,7 +21,7 @@ readonly class ThemeInformationRequest extends Bag
     ) {}
 
     #[Transforms(Request::class)]
-    public static function _arrayFromRequest(Request $request): static
+    public static function _arrayFromRequest(Request $request): array
     {
         // this sort of defeats the purpose of Bag, but Bag doesn't throw validation failure on missing props, since it
         // checks for missing props before it runs validation rules (which is why overriding rules() won't work either).
@@ -48,6 +48,6 @@ readonly class ThemeInformationRequest extends Bag
         $req['fields'] = static::getFields($request, $defaultFields);
         $req['last_updated_time'] = $req['last_updated'] ?? true;
 
-        return static::from($req);
+        return $req;
     }
 }

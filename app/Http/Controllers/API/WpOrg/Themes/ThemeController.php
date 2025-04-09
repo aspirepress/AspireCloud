@@ -60,7 +60,7 @@ class ThemeController extends Controller
     private function doThemeInformation(Request $request): JsonResponse|Response
     {
         // NOTE: upstream requires slug query parameter to be request[slug], just slug is not recognized
-        $req = ThemeInformationRequest::fromRequest($request);
+        $req = ThemeInformationRequest::from($request);
         $response = $this->themeInfo->info($req);
         $response = $this->rewriter->rewriteThemeResponse($response);
         return $this->sendResponse($response);
