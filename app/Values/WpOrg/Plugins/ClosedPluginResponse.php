@@ -23,7 +23,7 @@ readonly class ClosedPluginResponse extends Bag
 
     /** @return array<string, mixed> */
     #[Transforms(ClosedPlugin::class)]
-    public static function fromClosedPlugin(ClosedPlugin $plugin): array
+    public static function _arrayFromClosedPlugin(ClosedPlugin $plugin): array
     {
         return [
             'name' => $plugin->name,

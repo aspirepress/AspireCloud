@@ -20,7 +20,7 @@ readonly class ThemeUpdateData extends Bag
 
     /** @return array<string, mixed> */
     #[Transforms(Theme::class)]
-    public static function fromTheme(Theme $theme): array
+    public static function _arrayFromTheme(Theme $theme): array
     {
         return [
             'name' => $theme->name,

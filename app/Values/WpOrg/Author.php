@@ -21,7 +21,7 @@ readonly class Author extends Bag
 
     /** @return array<string, mixed> */
     #[Transforms(AuthorModel::class)]
-    public static function fromModel(AuthorModel $model): array
+    public static function _arrayFromModel(AuthorModel $model): array
     {
         return [
             'user_nicename' => $model->user_nicename,

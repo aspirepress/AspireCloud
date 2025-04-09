@@ -16,7 +16,7 @@ readonly class PluginHotTagsResponse extends Bag
 
     /** @return array{slug: string, name: string, count: int} */
     #[Transforms(PluginTag::class)]
-    public static function fromPluginTag(PluginTag $tag): array
+    public static function _arrayFromPluginTag(PluginTag $tag): array
     {
         return ['slug' => $tag->slug, 'name' => $tag->name, 'count' => $tag->plugins_count];
     }

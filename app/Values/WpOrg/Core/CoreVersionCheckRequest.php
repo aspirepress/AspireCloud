@@ -37,7 +37,7 @@ readonly class CoreVersionCheckRequest extends Bag
     ) {}
 
     #[Transforms(Request::class)]
-    public static function fromRequest(Request $request): self
+    public static function _arrayFromRequest(Request $request): self
     {
         return self::from($request->all());
     }

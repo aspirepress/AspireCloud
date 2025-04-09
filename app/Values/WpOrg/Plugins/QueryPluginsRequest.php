@@ -30,7 +30,7 @@ readonly class QueryPluginsRequest extends Bag
 
     /** @return array<string, mixed> */
     #[Transforms(Request::class)]
-    public static function fromRequest(Request $request): array
+    public static function _arrayFromRequest(Request $request): array
     {
         $query = $request->query();
 

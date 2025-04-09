@@ -71,7 +71,7 @@ readonly class PluginResponse extends Bag
 
     /** @return array<string, mixed> */
     #[Transforms(Plugin::class)]
-    public static function fromPlugin(Plugin $plugin): array
+    public static function _arrayFromPlugin(Plugin $plugin): array
     {
         $none = new Optional();
 

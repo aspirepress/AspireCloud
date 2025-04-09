@@ -16,7 +16,7 @@ readonly class ThemeHotTagsResponse extends Bag
 
     /** @return array{slug: string, name: string, count: int} */
     #[Transforms(ThemeTag::class)]
-    public static function fromThemeTag(ThemeTag $tag): array
+    public static function _arrayFromThemeTag(ThemeTag $tag): array
     {
         return ['slug' => $tag->slug, 'name' => $tag->name, 'count' => $tag->themes_count];
     }

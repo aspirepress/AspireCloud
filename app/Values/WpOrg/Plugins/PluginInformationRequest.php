@@ -17,7 +17,7 @@ readonly class PluginInformationRequest extends Bag
 
     /** @return array<string, mixed> */
     #[Transforms(Request::class)]
-    public static function fromRequest(Request $request): array
+    public static function _arrayFromRequest(Request $request): array
     {
         // Bag throws 500 (RuntimeException) for missing fields, this throws a friendlier 422
         return $request->validate(['slug' => 'required']);

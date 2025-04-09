@@ -33,7 +33,7 @@ readonly class ThemeUpdateCheckRequest extends Bag
 
     /** @return array<string, mixed> */
     #[Transforms(Request::class)]
-    public static function fromRequest(Request $request): array
+    public static function _arrayFromRequest(Request $request): array
     {
         $decode = fn($key) => json_decode($request->post($key), true);
         $themes = $decode('themes');

@@ -69,7 +69,7 @@ readonly class ThemeResponse extends Bag
      * @noinspection ProperNullCoalescingOperatorUsageInspection (it's fine here)
      */
     #[Transforms(Theme::class)]
-    public static function fromTheme(Theme $theme): array
+    public static function _arrayFromTheme(Theme $theme): array
     {
         // Note we fill in all fields, then strip out any not-requested Optional.  such silliness is compatibility.
 

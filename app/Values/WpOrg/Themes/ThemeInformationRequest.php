@@ -3,6 +3,7 @@
 namespace App\Values\WpOrg\Themes;
 
 use Bag\Attributes\StripExtraParameters;
+use Bag\Attributes\Transforms;
 use Bag\Bag;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,8 @@ readonly class ThemeInformationRequest extends Bag
         public ?array $fields = null,
     ) {}
 
-    public static function fromRequest(Request $request): static
+    #[Transforms(Request::class)]
+    public static function _arrayFromRequest(Request $request): static
     {
         // this sort of defeats the purpose of Bag, but Bag doesn't throw validation failure on missing props, since it
         // checks for missing props before it runs validation rules (which is why overriding rules() won't work either).
