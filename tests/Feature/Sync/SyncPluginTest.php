@@ -152,17 +152,28 @@ describe('Sync Plugins', function () {
             ->and($plugin->banners)->toBeEmpty()
             ->and($plugin->preview_link)->toBeEmpty();
 
-        // test URL rewrites
         expect($plugin->download_link)
-            ->toBe('https://api.aspiredev.org/download/plugin/0-errors.0.2.zip')
+            ->toBe('https://downloads.wordpress.org/plugin/0-errors.0.2.zip')
             ->and($plugin->icons)->toBe(
-                ['default' => 'https://api.aspiredev.org/download/gp-icon/plugin/0-errors/head/0-errors.svg'],
+                ['default' => 'https://s.w.org/plugins/geopattern-icon/0-errors.svg'],
             )
             ->and($plugin->versions)->toBe([
-                '0.1' => 'https://api.aspiredev.org/download/plugin/0-errors.0.1.zip',
-                '0.2' => 'https://api.aspiredev.org/download/plugin/0-errors.0.2.zip',
-                'trunk' => 'https://api.aspiredev.org/download/plugin/0-errors.zip',
+                '0.1' => 'https://downloads.wordpress.org/plugin/0-errors.0.1.zip',
+                '0.2' => 'https://downloads.wordpress.org/plugin/0-errors.0.2.zip',
+                'trunk' => 'https://downloads.wordpress.org/plugin/0-errors.zip',
             ]);
+
+        // no longer doing url rewrites
+        // expect($plugin->download_link)
+        //     ->toBe('https://api.aspiredev.org/download/plugin/0-errors.0.2.zip')
+        //     ->and($plugin->icons)->toBe(
+        //         ['default' => 'https://api.aspiredev.org/download/gp-icon/plugin/0-errors/head/0-errors.svg'],
+        //     )
+        //     ->and($plugin->versions)->toBe([
+        //         '0.1' => 'https://api.aspiredev.org/download/plugin/0-errors.0.1.zip',
+        //         '0.2' => 'https://api.aspiredev.org/download/plugin/0-errors.0.2.zip',
+        //         'trunk' => 'https://api.aspiredev.org/download/plugin/0-errors.zip',
+        //     ]);
     });
 
     it('throws an exception if loaded as ClosedPlugin', function () use ($md_0errors) {

@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Models\WpOrg\Theme;
+use App\Services\UrlRewriteService;
+use App\Values\WpOrg\Themes\ThemeResponse;
 
 describe('Download URL Rewrites (Plugins)', function () {
     $md_100b = [
@@ -82,13 +84,23 @@ describe('Download URL Rewrites (Plugins)', function () {
 
     it('uses link from version if no version in download_link', function () use ($md_100b) {
         $theme = Theme::fromSyncMetadata($md_100b);
-        expect($theme->download_link)->toBe('https://api.aspiredev.org/download/theme/100-bytes.1.1.3.zip');
+        $orig = ThemeResponse::from($theme);
+        $svc = new UrlRewriteService();
+        $rewritten = $svc->rewriteThemeResponse($orig);
+
+        expect($orig->download_link)->toBe('https://downloads.wordpress.org/theme/100-bytes.zip');
+        expect($rewritten->download_link)->toBe('https://api.aspiredev.org/download/theme/100-bytes.1.1.3.zip');
     });
 
     it('returns original url if no version found', function () use ($md_100b) {
         $metadata = $md_100b;
         unset($metadata['versions'][$metadata['version']]);
-        $plugin = Theme::fromSyncMetadata($metadata);
-        expect($plugin->download_link)->toBe('https://downloads.wordpress.org/theme/100-bytes.zip');
+        $theme = Theme::fromSyncMetadata($metadata);
+        $orig = ThemeResponse::from($theme);
+        $svc = new UrlRewriteService();
+        $rewritten = $svc->rewriteThemeResponse($orig);
+
+        expect($orig->download_link)->toBe('https://downloads.wordpress.org/theme/100-bytes.zip');
+        expect($rewritten->download_link)->toBe('https://downloads.wordpress.org/theme/100-bytes.zip');
     });
 });

@@ -8,6 +8,7 @@ use App\Services\Themes\FeatureListService;
 use App\Services\Themes\QueryThemesService;
 use App\Services\Themes\ThemeHotTagsService;
 use App\Services\Themes\ThemeInformationService;
+use App\Services\UrlRewriteService;
 use App\Values\WpOrg\Themes\QueryThemesRequest;
 use App\Values\WpOrg\Themes\QueryThemesResponse;
 use App\Values\WpOrg\Themes\ThemeInformationRequest;
@@ -26,6 +27,7 @@ class ThemeController extends Controller
         private readonly ThemeInformationService $themeInfo,
         private readonly ThemeHotTagsService $hotTags,
         private readonly FeatureListService $featureList,
+        private readonly UrlRewriteService $rewriter,
     ) {}
 
     public function info(Request $request): JsonResponse|Response
@@ -51,6 +53,7 @@ class ThemeController extends Controller
     {
         $req = QueryThemesRequest::from($request);
         $themes = $this->queryThemes->queryThemes($req);
+        // $themes = $themes->with(['themes' => $themes->themes->map($this->rewriter->rewriteThemeResponse(...))]);
         return $this->sendResponse($themes);
     }
 
@@ -59,6 +62,7 @@ class ThemeController extends Controller
         // NOTE: upstream requires slug query parameter to be request[slug], just slug is not recognized
         $req = ThemeInformationRequest::fromRequest($request);
         $response = $this->themeInfo->info($req);
+        $response = $this->rewriter->rewriteThemeResponse($response);
         return $this->sendResponse($response);
     }
 

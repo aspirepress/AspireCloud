@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Models\WpOrg\Plugin;
+use App\Services\UrlRewriteService;
+use App\Values\WpOrg\Plugins\PluginResponse;
 
 describe('Download URL Rewrites (Plugins)', function () {
     it('uses link from version if no version in download_link', function () {
@@ -62,7 +64,12 @@ describe('Download URL Rewrites (Plugins)', function () {
             ],
         ];
         $plugin = Plugin::fromSyncMetadata($metadata);
-        expect($plugin->download_link)->toBe('https://api.aspiredev.org/download/plugin/0-errors.0.2.zip');
+        $orig = PluginResponse::from($plugin);
+        $svc = new UrlRewriteService();
+        $rewritten = $svc->rewritePluginResponse($orig);
+
+        expect($orig->download_link)->toBe('https://downloads.wordpress.org/plugin/0-errors.zip');
+        expect($rewritten->download_link)->toBe('https://api.aspiredev.org/download/plugin/0-errors.0.2.zip');
     });
 
     it('returns original url if no version found', function () {
@@ -128,6 +135,11 @@ describe('Download URL Rewrites (Plugins)', function () {
         ];
 
         $plugin = Plugin::fromSyncMetadata($metadata);
-        expect($plugin->download_link)->toBe('https://downloads.wordpress.org/plugin/acmesocial.zip');
+        $orig = PluginResponse::from($plugin);
+        $svc = new UrlRewriteService();
+        $rewritten = $svc->rewritePluginResponse($orig);
+
+        expect($orig->download_link)->toBe('https://downloads.wordpress.org/plugin/acmesocial.zip');
+        expect($rewritten->download_link)->toBe('https://downloads.wordpress.org/plugin/acmesocial.zip');
     });
 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\WpOrg\Themes;
 
 use App\Http\Controllers\Controller;
 use App\Models\WpOrg\Theme;
+use App\Services\UrlRewriteService;
 use App\Values\WpOrg\Themes\ThemeUpdateCheckRequest;
 use App\Values\WpOrg\Themes\ThemeUpdateCheckResponse;
 use Illuminate\Http\JsonResponse;
@@ -13,6 +14,8 @@ use Illuminate\Validation\ValidationException;
 
 class ThemeUpdatesController extends Controller
 {
+    public function __construct(private readonly UrlRewriteService $rewriter) {}
+
     public function __invoke(Request $request): JsonResponse|Response
     {
         try {
@@ -23,8 +26,8 @@ class ThemeUpdatesController extends Controller
                 ->get()
                 ->partition(fn($theme) => version_compare($theme->version, $req->themes[$theme->slug]['Version'], '>'));
 
-            return $this->sendResponse(ThemeUpdateCheckResponse::fromResults($themes[0], $themes[1]));
-
+            $response = ThemeUpdateCheckResponse::fromResults($themes[0], $themes[1]);
+            return $this->sendResponse($this->rewriter->rewriteThemeUpdateCheckResponse($response));
         } catch (ValidationException $e) {
             // Handle validation errors and return a custom response
             $firstErrorMessage = collect($e->errors())->flatten()->first();

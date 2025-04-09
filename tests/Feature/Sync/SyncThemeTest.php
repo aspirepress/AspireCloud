@@ -113,29 +113,27 @@ describe('Sync Themes', function () {
             ->and($theme->is_community)->toBeFalse()
             ->and($theme->external_repository_url)->toBeNull();
 
-        // test url rewrites
-        expect($theme->download_link)->toBe('https://api.aspiredev.org/download/theme/100-bytes.1.1.3.zip');
+        // rewrites are done on responses now
+        expect($theme->download_link)->toBe('https://downloads.wordpress.org/theme/100-bytes.1.1.3.zip');
 
         expect($theme->versions)->toBe([
-            '1.0' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.zip',
-            '1.0.1' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.1.zip',
-            '1.0.2' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.2.zip',
-            '1.0.3' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.3.zip',
-            '1.0.4' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.4.zip',
-            '1.0.5' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.5.zip',
-            '1.0.6' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.6.zip',
-            '1.0.7' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.7.zip',
-            '1.0.8' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.8.zip',
-            '1.0.9' => 'https://api.aspiredev.org/download/theme/100-bytes.1.0.9.zip',
-            '1.1.0' => 'https://api.aspiredev.org/download/theme/100-bytes.1.1.0.zip',
-            '1.1.1' => 'https://api.aspiredev.org/download/theme/100-bytes.1.1.1.zip',
-            '1.1.2' => 'https://api.aspiredev.org/download/theme/100-bytes.1.1.2.zip',
-            '1.1.3' => 'https://api.aspiredev.org/download/theme/100-bytes.1.1.3.zip',
+            '1.0' => 'https://downloads.wordpress.org/theme/100-bytes.1.0.zip',
+            '1.0.1' => 'https://downloads.wordpress.org/theme/100-bytes.1.0.1.zip',
+            '1.0.2' => 'https://downloads.wordpress.org/theme/100-bytes.1.0.2.zip',
+            '1.0.3' => 'https://downloads.wordpress.org/theme/100-bytes.1.0.3.zip',
+            '1.0.4' => 'https://downloads.wordpress.org/theme/100-bytes.1.0.4.zip',
+            '1.0.5' => 'https://downloads.wordpress.org/theme/100-bytes.1.0.5.zip',
+            '1.0.6' => 'https://downloads.wordpress.org/theme/100-bytes.1.0.6.zip',
+            '1.0.7' => 'https://downloads.wordpress.org/theme/100-bytes.1.0.7.zip',
+            '1.0.8' => 'https://downloads.wordpress.org/theme/100-bytes.1.0.8.zip',
+            '1.0.9' => 'https://downloads.wordpress.org/theme/100-bytes.1.0.9.zip',
+            '1.1.0' => 'https://downloads.wordpress.org/theme/100-bytes.1.1.0.zip',
+            '1.1.1' => 'https://downloads.wordpress.org/theme/100-bytes.1.1.1.zip',
+            '1.1.2' => 'https://downloads.wordpress.org/theme/100-bytes.1.1.2.zip',
+            '1.1.3' => 'https://downloads.wordpress.org/theme/100-bytes.1.1.3.zip',
         ]);
 
-        expect($theme->screenshot_url)->toBe(
-            'https://api.aspiredev.org/download/assets/theme/100-bytes/1.1.3/screenshot.png',
-        );
+        expect($theme->screenshot_url)->toBe('//ts.w.org/wp-content/themes/100-bytes/screenshot.png?ver=1.1.3');
     });
 
     it('throws an exception if loaded as ClosedPlugin', function () use ($md_100b) {

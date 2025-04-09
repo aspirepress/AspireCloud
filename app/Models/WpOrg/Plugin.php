@@ -3,7 +3,6 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
-use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\PluginFactory;
@@ -161,40 +160,6 @@ final class Plugin extends BaseModel
         return $instance;
     }
 
-    private static function rewriteDotOrgUrl(mixed $url): string
-    {
-        $base = config('app.aspirecloud.download.base');
-
-        // https://downloads.wordpress.org/plugin/elementor.3.26.5.zip
-        // => /download/plugin/elementor.3.26.5.zip
-        if (str_contains($url, '//downloads.')) {
-            return \Safe\preg_replace('#https?://.*?/#i', $base, $url);
-        }
-
-        // https://ps.w.org/elementor/assets/screenshot-1.gif?rev=3005087
-        // => /download/assets/plugin/elementor/3005087/screenshot-1.gif
-        if ($matches = Regex::match('#//ps\.w\.org/(.*?)/assets/(.*?)(?:\?rev=(.*))?$#i', $url)) {
-            $slug = $matches[1];
-            $file = $matches[2];
-            $revision = $matches[3] ?? 'head';
-            return $base . "assets/plugin/$slug/$revision/$file";
-        }
-
-        // https://s.w.org/plugins/geopattern-icon/addi-simple-slider_c8bcb2.svg
-        // => /download/gp-icon/plugin/addi-simple-slider/head/addi-simple-slider_c8bcb2.svg
-        if ($matches = Regex::match(
-            '#//s\.w\.org/plugins/geopattern-icon/((.*?)(?:_[^.]+)?\.svg)(?:\?rev=(.*))?$#i',
-            $url,
-        )) {
-            $file = $matches[1];
-            $slug = $matches[2];
-            $revision = $matches[3] ?? 'head';
-            return $base . "gp-icon/plugin/$slug/$revision/$file";
-        }
-
-        return $url;
-    }
-
     //endregion
 
     //region Getters
@@ -202,8 +167,7 @@ final class Plugin extends BaseModel
     /** @return array<string,mixed> */
     public function getBanners(): array
     {
-        $banners = $this->getMetadataArray('banners');
-        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $banners) : $banners;
+        return $this->getMetadataArray('banners');
     }
 
     /** @return array<string,mixed> */
@@ -218,29 +182,10 @@ final class Plugin extends BaseModel
         return $this->getMetadataArray('contributors');
     }
 
-    public function getDownloadLink(): string
-    {
-        $orig_link = $this->attributes['download_link'] ?? '';
-        if (!$this->shouldRewriteMetadata()) {
-            return $orig_link;
-        }
-
-        $link = self::rewriteDotOrgUrl($orig_link);
-
-        if (Regex::match('#/plugin/([^/.]+)\.zip$#i', $link)) {
-            // no dots in the filename before the extension, which means this link isn't useful for caching.
-            // replace it with the url for the current version instead, or the unrewritten link if that doesn't exist.
-            return $this->versions[$this->version] ?? $orig_link; // ->versions rewrites the urls itself
-        }
-
-        return $link;
-    }
-
     /** @return array<string,mixed> */
     public function getIcons(): array
     {
-        $icons = $this->getMetadataArray('icons');
-        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $icons) : $icons;
+        return $this->getMetadataArray('icons');
     }
 
     /** @return array<string,mixed> */
@@ -258,9 +203,7 @@ final class Plugin extends BaseModel
     /** @return array<string,mixed> */
     public function getScreenshots(): array
     {
-        $screenshots = $this->getMetadataArray('screenshots');
-        $rewrite = fn(array $screenshot) => [...$screenshot, 'src' => self::rewriteDotOrgUrl($screenshot['src'] ?? '')];
-        return $this->shouldRewriteMetadata() ? array_map($rewrite, $screenshots) : $screenshots;
+        return $this->getMetadataArray('screenshots');
     }
 
     /** @return array<string,string> */
@@ -284,8 +227,7 @@ final class Plugin extends BaseModel
     /** @return array<string,string> */
     public function getVersions(): array
     {
-        $versions = $this->getMetadataArray('versions');
-        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
+        return $this->getMetadataArray('versions');
     }
 
     /// private api
@@ -294,11 +236,6 @@ final class Plugin extends BaseModel
     private function getMetadataArray(string $field): array
     {
         return ($this->ac_raw_metadata[$field] ?? []) ?: []; // coerce false to empty array because lolphp and lolwp
-    }
-
-    private function shouldRewriteMetadata(): bool
-    {
-        return $this->ac_origin === 'wp_org';
     }
 
     //endregion
@@ -326,13 +263,6 @@ final class Plugin extends BaseModel
     public function contributors(): Attribute
     {
         return Attribute::make(get: $this->getContributors(...), set: self::_readonly(...));
-    }
-
-    /** @return Attribute<string, never> (actually Attribute<string,string> but we want it to _look_ read-only) */
-    public function downloadLink(): Attribute
-    {
-        // note: must be writable, since download_link appears in create()
-        return Attribute::make(get: $this->getDownloadLink(...));
     }
 
     /** @return Attribute<array<array-key, mixed>, never> */

@@ -3,7 +3,6 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
-use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -102,6 +101,7 @@ final class Theme extends BaseModel
 
     /**
      * TODO: move to WpOrgThemeRepo
+     *
      * @param array<string,mixed> $metadata
      */
     public static function fromSyncMetadata(array $metadata): self
@@ -153,45 +153,6 @@ final class Theme extends BaseModel
 
     //region Getters
 
-    public function getDownloadLink(): string
-    {
-        $orig_link = $this->attributes['download_link'] ?? '';
-        if (!$this->shouldRewriteMetadata()) {
-            return $orig_link;
-        }
-
-        $link = self::rewriteDotOrgUrl($orig_link);
-
-        if (Regex::match('#/theme/([^/.]+)\.zip$#i', $link)) {
-            // no dots in the filename before the extension, which means this link isn't useful for caching.
-            // replace it with the url for the current version instead, or the unrewritten link if that doesn't exist.
-            return $this->versions[$this->version] ?? $orig_link; // ->versions rewrites the urls itself
-        }
-
-        return $link;
-    }
-
-    public function getScreenshotUrl(): string
-    {
-        $url = $this->attributes['screenshot_url'] ?? '';
-        if (!$this->shouldRewriteMetadata()) {
-            return $url;
-        }
-
-        // //ts.w.org/wp-content/themes/abhokta/screenshot.png?ver=1.0.0
-        // /download/assets/theme/abhokta/1.0.0/screenshot.png
-
-        $base = config('app.aspirecloud.download.base');
-        $matches = Regex::match('#^.*?/themes/(.*?)/(.*?)(?:\?ver=(.*))?$#i', $url);
-        if (!$matches) {
-            return $url;
-        }
-        $slug = $matches[1];
-        $file = $matches[2];
-        $revision = $matches[3] ?? 'head';
-        return $base . "assets/theme/$slug/$revision/$file";
-    }
-
     /** @return array{"1":int, "2":int, "3":int, "4":int, "5":int} */
     public function getRatings(): array
     {
@@ -207,8 +168,7 @@ final class Theme extends BaseModel
     /** @return array<string, string> */
     public function getVersions(): array
     {
-        $versions = $this->getMetadataArray('versions');
-        return $this->shouldRewriteMetadata() ? array_map(self::rewriteDotOrgUrl(...), $versions) : $versions;
+        return $this->getMetadataArray('versions');
     }
 
     /// private api
@@ -219,40 +179,16 @@ final class Theme extends BaseModel
         return ($this->ac_raw_metadata[$field] ?? []) ?: [];    // coerce false into an array
     }
 
-    private function shouldRewriteMetadata(): bool
-    {
-        return $this->ac_origin === 'wp_org';
-    }
-
-    private static function rewriteDotOrgUrl(string $url): string
-    {
-        $base = config('app.aspirecloud.download.base');
-        return \Safe\preg_replace('#https?://.*?/#i', $base, $url); // TODO make this check for a .org url
-    }
-
     //endregion
 
     //region Attributes
 
     // TODO: tighten up getter types in generics
 
-    /** @return Attribute<string, never> */
-    public function downloadLink(): Attribute
-    {
-        // note: must be writable, since download_link appears in create()
-        return Attribute::make(get: $this->getDownloadLink(...));
-    }
-
     /** @return Attribute<array{"1":int, "2":int, "3":int, "4":int, "5":int}, never> */
     public function ratings(): Attribute
     {
         return Attribute::make(get: $this->getRatings(...), set: self::_readonly(...));
-    }
-
-    /** @return Attribute<string, never> */
-    public function screenshotUrl(): Attribute
-    {
-        return Attribute::make(get: $this->getScreenshotUrl(...));
     }
 
     /** @return Attribute<array<string, string>, never> */
