@@ -214,12 +214,6 @@ final class Plugin extends BaseModel
     }
 
     /** @return Attribute<array<array-key, mixed>, never> */
-    public function source(): Attribute
-    {
-        return $this->_arrayAccessor('source');
-    }
-
-    /** @return Attribute<array<array-key, mixed>, never> */
     public function upgradeNotice(): Attribute
     {
         return $this->_arrayAccessor('upgrade_notice');
