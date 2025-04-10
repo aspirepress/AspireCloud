@@ -151,63 +151,41 @@ final class Theme extends BaseModel
 
     //endregion
 
-    //region Getters
-
-    /** @return array{"1":int, "2":int, "3":int, "4":int, "5":int} */
-    public function getRatings(): array
-    {
-        return $this->getMetadataArray('ratings');
-    }
-
-    /** @return array<string, string> */
-    public function getSections(): array
-    {
-        return $this->getMetadataArray('sections');
-    }
-
-    /** @return array<string, string> */
-    public function getVersions(): array
-    {
-        return $this->getMetadataArray('versions');
-    }
-
-    /// private api
-
-    /** @return array<array-key, mixed> */
-    private function getMetadataArray(string $field): array
-    {
-        return ($this->ac_raw_metadata[$field] ?? []) ?: [];    // coerce false into an array
-    }
-
-    //endregion
-
     //region Attributes
-
     // TODO: tighten up getter types in generics
 
     /** @return Attribute<array{"1":int, "2":int, "3":int, "4":int, "5":int}, never> */
     public function ratings(): Attribute
     {
-        return Attribute::make(get: $this->getRatings(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('ratings');
     }
 
     /** @return Attribute<array<string, string>, never> */
     public function sections(): Attribute
     {
-        return Attribute::make(get: $this->getSections(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('sections');
     }
 
     /** @return Attribute<array<string, string>, never> */
     public function versions(): Attribute
     {
-        return Attribute::make(get: $this->getVersions(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('versions');
     }
 
     /// private api
 
-    private static function _readonly(): never
+    private function _arrayAccessor(string $name): Attribute
     {
-        throw new InvalidArgumentException('Cannot modify read-only attribute');
+        return Attribute::make(
+            get: fn() => $this->getMetadataArray($name),
+            set: fn() => throw new InvalidArgumentException("Cannot modify read-only property '$name'"),
+        );
+    }
+
+    /** @return array<array-key, mixed> */
+    private function getMetadataArray(string $field): array
+    {
+        return ($this->ac_raw_metadata[$field] ?? []) ?: [];    // coerce false into an array
     }
 
     //endregion

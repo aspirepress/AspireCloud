@@ -162,162 +162,81 @@ final class Plugin extends BaseModel
 
     //endregion
 
-    //region Getters
-
-    /** @return array<string,mixed> */
-    public function getBanners(): array
-    {
-        return $this->getMetadataArray('banners');
-    }
-
-    /** @return array<string,mixed> */
-    public function getCompatibility(): array
-    {
-        return $this->getMetadataArray('compatibility');
-    }
-
-    /** @return array<string,mixed> */
-    public function getContributors(): array
-    {
-        return $this->getMetadataArray('contributors');
-    }
-
-    /** @return array<string,mixed> */
-    public function getIcons(): array
-    {
-        return $this->getMetadataArray('icons');
-    }
-
-    /** @return array<string,mixed> */
-    public function getRatings(): array
-    {
-        return $this->getMetadataArray('ratings');
-    }
-
-    /** @return string[] */
-    public function getRequiresPlugins(): array
-    {
-        return $this->getMetadataArray('requires_plugins');
-    }
-
-    /** @return array<string,mixed> */
-    public function getScreenshots(): array
-    {
-        return $this->getMetadataArray('screenshots');
-    }
-
-    /** @return array<string,string> */
-    public function getSections(): array
-    {
-        return $this->getMetadataArray('sections');
-    }
-
-    /** @return array<string,mixed> */
-    public function getSource(): array
-    {
-        return $this->getMetadataArray('source');
-    }
-
-    /** @return array<string,mixed> */
-    public function getUpgradeNotice(): array
-    {
-        return $this->getMetadataArray('upgrade_notice');
-    }
-
-    /** @return array<string,string> */
-    public function getVersions(): array
-    {
-        return $this->getMetadataArray('versions');
-    }
-
-    /// private api
-
-    /** @return array<array-key,mixed> */
-    private function getMetadataArray(string $field): array
-    {
-        return ($this->ac_raw_metadata[$field] ?? []) ?: []; // coerce false to empty array because lolphp and lolwp
-    }
-
-    //endregion
-
     //region Attributes
-
-    // Note that Attributes are deeply magical in Laravel, and will not tolerate being subclassed or even having their
-    // construction delegated to a trait.  This is about as refactored as they are going to get.
-
     // TODO: tighten up getter types in generics
 
     /** @return Attribute<array<array-key, mixed>, never> */
     public function banners(): Attribute
     {
-        return Attribute::make(get: $this->getBanners(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('banners');
     }
 
     /** @return Attribute<array<array-key, mixed>, never> */
     public function compatibility(): Attribute
     {
-        return Attribute::make(get: $this->getCompatibility(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('compatibility');
     }
 
     /** @return Attribute<array<array-key, mixed>, never> */
     public function contributors(): Attribute
     {
-        return Attribute::make(get: $this->getContributors(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('contributors');
     }
 
     /** @return Attribute<array<array-key, mixed>, never> */
     public function icons(): Attribute
     {
-        return Attribute::make(get: $this->getIcons(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('icons');
     }
 
     /** @return Attribute<array{"1": int, "2": int, "3": int, "4": int, "5": int}, never> */
     public function ratings(): Attribute
     {
-        return Attribute::make(get: $this->getRatings(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('ratings');
     }
 
     /** @return Attribute<string[], never> */
     public function requiresPlugins(): Attribute
     {
-        return Attribute::make(get: $this->getRequiresPlugins(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('requires_plugins');
     }
 
     /** @return Attribute<array<array-key, mixed>, never> */
     public function screenshots(): Attribute
     {
-        return Attribute::make(get: $this->getScreenshots(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('screenshots');
     }
 
     /** @return Attribute<array<string, string>, never> */
     public function sections(): Attribute
     {
-        return Attribute::make(get: $this->getSections(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('sections');
     }
 
     /** @return Attribute<array<array-key, mixed>, never> */
     public function source(): Attribute
     {
-        return Attribute::make(get: $this->getSource(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('source');
     }
 
     /** @return Attribute<array<array-key, mixed>, never> */
     public function upgradeNotice(): Attribute
     {
-        return Attribute::make(get: $this->getUpgradeNotice(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('upgrade_notice');
     }
 
     /** @return Attribute<array<string, string>, never> */
     public function versions(): Attribute
     {
-        return Attribute::make(get: $this->getVersions(...), set: self::_readonly(...));
+        return $this->_arrayAccessor('versions');
     }
 
-    /// private api
-
-    private static function _readonly(): never
+    private function _arrayAccessor(string $name): Attribute
     {
-        throw new InvalidArgumentException('Cannot modify read-only attribute');
+        return Attribute::make(
+            get: fn() => $this->getMetadataArray($name),
+            set: fn() => throw new InvalidArgumentException("Cannot modify read-only property '$name'"),
+        );
     }
 
     //endregion
@@ -345,6 +264,16 @@ final class Plugin extends BaseModel
     public function tagsArray(): array
     {
         return $this->tags()->select('name', 'slug')->pluck('name', 'slug')->toArray();
+    }
+
+    //endregion
+
+    //region private api
+
+    /** @return array<array-key,mixed> */
+    private function getMetadataArray(string $field): array
+    {
+        return ($this->ac_raw_metadata[$field] ?? []) ?: []; // coerce false to empty array because lolphp and lolwp
     }
 
     //endregion
