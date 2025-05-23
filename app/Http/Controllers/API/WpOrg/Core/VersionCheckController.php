@@ -122,7 +122,7 @@ class VersionCheckController extends Controller
     /**
      * @return array<int, \stdClass>
      */
-    private function buildTranslations() : array
+    private function buildTranslations(): array
     {
         if (! $this->locale) {
             return [];
