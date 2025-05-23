@@ -34,7 +34,10 @@ class VersionCheckController extends Controller
         return response()->json($response);
     }
 
-    private function buildOffers() : array
+    /**
+     * @return array<int, \stdClass>
+     */
+    private function buildOffers(): array
     {
         $offers = [];
         $latestVersion = $this->getLatestVersion();
@@ -116,6 +119,9 @@ class VersionCheckController extends Controller
         return $offer;
     }
 
+    /**
+     * @return array<int, \stdClass>
+     */
     private function buildTranslations() : array
     {
         if (! $this->locale) {
@@ -148,6 +154,9 @@ class VersionCheckController extends Controller
         return '6.8';
     }
 
+    /**
+     * @return array<int, string>
+     */
     private function getOlderVersions(): array
     {
         // Probably pull from the database instead of hardcoding these.
@@ -239,7 +248,7 @@ class VersionCheckController extends Controller
 
         // Appears to depend on a comparison between
         // the installed version and the offered version.
-        $hasNewFiles = [];
-        return array_key_exists($version, $hasNewFiles);
+        // $hasNewFiles = [];
+        // return array_key_exists($version, $hasNewFiles);
     }
 }
