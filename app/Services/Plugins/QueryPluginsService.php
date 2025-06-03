@@ -52,21 +52,32 @@ class QueryPluginsService
     /** @param Builder<Plugin> $query */
     private static function applySearch(Builder $query, string $search): void
     {
-        $slug = Regex::replace('/[^a-z0-9-]+/i', '-', $search);
+        $lcsearch = mb_strtolower($search);
+        $slug = Regex::replace('/[^-\w]+/', '-', $lcsearch);
+
+        // Normalize trigram search string
+        $wordchars = Regex::replace('/\W+/', '', $lcsearch);
+
         $query->where('slug', $slug); // need an initial condition or it retrieves everything
 
         $q = Plugin::query();
 
-        // I can't make %> work this way, only whereRaw works.  TODO: find out why.
+        // Sadly I can't make %> work this way.  But it's already sanitized so interpolating it is safe.
         // $slug_similar = $q->clone()->where('slug', '%>', $search);
 
-        $slug_similar = $q->clone()->whereRaw("slug %> '$search'");
+        $slug_prefix = $q->clone()->whereLike('slug', "$slug%");
+        $slug_similar = $q->clone()->whereRaw("slug %> '$wordchars'");
+
         $name_exact = $q->clone()->where('name', $search);
-        $name_similar = $q->clone()->whereRaw("name %> '$search'");
-        $short_description_similar = $q->clone()->whereRaw("short_description %> '$search'");
+        $name_prefix = $q->clone()->whereLike('name', "$search%");
+        $name_similar = $q->clone()->whereRaw("name %> '$wordchars'");
+
+        $short_description_similar = $q->clone()->whereRaw("short_description %> '$wordchars'");
         $description_fulltext = $q->clone()->whereFullText('description', $search);
 
         $query->unionAll($name_exact);
+        $query->unionAll($slug_prefix);
+        $query->unionAll($name_prefix);
         $query->unionAll($slug_similar);
         $query->unionAll($name_similar);
         $query->unionAll($short_description_similar);

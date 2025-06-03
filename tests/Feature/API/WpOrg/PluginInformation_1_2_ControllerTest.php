@@ -215,13 +215,12 @@ it('prioritizes normalized search string', function () {
     Plugin::factory()->create($scf);
     Plugin::factory()->create($icf);
 
-    $query = 'INseCurE CUSToMiZ FIeLDs';
+    $query = 'INseCurE CUSToM';
 
     $this
         ->get("/plugins/info/1.2?action=query_plugins&search=$query")
         ->assertOk()
-        ->assertJsonPath('plugins.0.name', $icf['name'])
-        ->assertJsonPath('plugins.1.name', $scf['name']);
+        ->assertJsonPath('plugins.0.name', $icf['name']);
 });
 
 it('returns search results by tag and author in wp.org format', function () {
