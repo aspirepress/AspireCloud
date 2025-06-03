@@ -28,10 +28,10 @@ class QueryPluginsService
         $author = self::normalizeSearchString($author);
 
         $query = Plugin::query()
-            ->when($browse, self::applyBrowse(...))
-            ->when($search, self::applySearch(...))
+            ->when($search, self::applySearch(...))  // union of independent queries, so place first
             ->when($tag, self::applyTag(...))
-            ->when($author, self::applyAuthor(...));
+            ->when($author, self::applyAuthor(...))
+            ->when($browse, self::applyBrowse(...)); // orders results, so place last
 
         $total = $query->count();
         $totalPages = (int)ceil($total / $perPage);
