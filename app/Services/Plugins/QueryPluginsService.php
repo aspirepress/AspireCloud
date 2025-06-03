@@ -27,11 +27,16 @@ class QueryPluginsService
         $tag = self::normalizeSearchString($tag);
         $author = self::normalizeSearchString($author);
 
+        // Build the base query with filters
         $query = Plugin::query()
-            ->when($search, self::applySearch(...))  // union of independent queries, so place first
             ->when($tag, self::applyTag(...))
-            ->when($author, self::applyAuthor(...))
-            ->when($browse, self::applyBrowse(...)); // orders results, so place last
+            ->when($browse, self::applyBrowse(...)) // applies default sort order
+            ->when($author, self::applyAuthor(...)); // todo order by similarity to normalized search term
+
+        // If search is provided, use the weighted search which returns a new query
+        if ($search) {
+            $query = self::applySearchWeighted($query, $search, $req);
+        }
 
         $total = $query->count();
         $totalPages = (int)ceil($total / $perPage);
@@ -50,7 +55,7 @@ class QueryPluginsService
     }
 
     /** @param Builder<Plugin> $query */
-    private static function applySearch(Builder $query, string $search): void
+    public static function applySearch(Builder $query, string $search, QueryPluginsRequest $request): void
     {
         $lcsearch = mb_strtolower($search);
         $slug = Regex::replace('/[^-\w]+/', '-', $lcsearch);
@@ -82,16 +87,95 @@ class QueryPluginsService
         $query->unionAll($name_similar);
         $query->unionAll($short_description_similar);
         $query->unionAll($description_fulltext);
+
+        // ❌ Unfortunately this doesn't work since the similarity has to be in each union clause
+        // $column = self::browseToSortColumn($request->browse);
+        // $query->selectRaw("pow(3 * similarity(name, '$wordchars'), 2) * log($column) as score");
+        // $query->reorder('score', 'desc');
+    }
+
+    /**
+     * Apply weighted search with proper scoring for each union clause
+     *
+     * @param Builder<Plugin> $query
+     * @return Builder<Plugin> Returns a new query with weighted search applied
+     */
+    public static function applySearchWeighted(Builder $query, string $search, QueryPluginsRequest $request): Builder
+    {
+        $lcsearch = mb_strtolower($search);
+        $slug = Regex::replace('/[^-\w]+/', '-', $lcsearch);
+
+        // Normalize trigram search string
+        $wordchars = Regex::replace('/\W+/', '', $lcsearch);
+
+        // Get the sort column based on browse parameter
+        $sortColumn = self::browseToSortColumn($request->browse);
+
+        // Create a base query for the CTE (Common Table Expression)
+        $baseQuery = null;
+
+        // Create individual queries with their respective score calculations
+
+        // Name exact match (highest priority)
+        $nameExact = Plugin::query()
+            ->where('name', $search)
+            ->selectRaw("*, pow(10, 2) * log($sortColumn) as score");
+
+        // Slug prefix match (high priority)
+        $slugPrefix = Plugin::query()
+            ->whereLike('slug', "$slug%")
+            ->selectRaw("*, pow(5, 2) * log($sortColumn) as score");
+
+        // Name prefix match (high priority)
+        $namePrefix = Plugin::query()
+            ->whereLike('name', "$search%")
+            ->selectRaw("*, pow(5, 2) * log($sortColumn) as score");
+
+        // Slug similarity match
+        $slugSimilar = Plugin::query()
+            ->whereRaw("slug %> '$wordchars'")
+            ->selectRaw("*, pow(3 * similarity(slug, '$wordchars'), 2) * log($sortColumn) as score");
+
+        // Name similarity match
+        $nameSimilar = Plugin::query()
+            ->whereRaw("name %> '$wordchars'")
+            ->selectRaw("*, pow(3 * similarity(name, '$wordchars'), 2) * log($sortColumn) as score");
+
+        // Short description similarity match
+        $shortDescSimilar = Plugin::query()
+            ->whereRaw("short_description %> '$wordchars'")
+            ->selectRaw("*, pow(2 * similarity(short_description, '$wordchars'), 2) * log($sortColumn) as score");
+
+        // Description full-text match
+        $descFulltext = Plugin::query()
+            ->whereFullText('description', $search)
+            ->selectRaw("*, pow(1.5, 2) * log($sortColumn) as score");
+
+        // Combine all queries with unionAll
+        $baseQuery = $nameExact;
+        $baseQuery->unionAll($slugPrefix);
+        $baseQuery->unionAll($namePrefix);
+        $baseQuery->unionAll($slugSimilar);
+        $baseQuery->unionAll($nameSimilar);
+        $baseQuery->unionAll($shortDescSimilar);
+        $baseQuery->unionAll($descFulltext);
+
+        // Create a new query that wraps the unionAll query and orders by score
+        $wrappedQuery = Plugin::query()
+            ->fromSub($baseQuery, 'weighted_plugins')
+            ->orderBy('score', 'desc');
+
+        return $wrappedQuery;
     }
 
     /** @param Builder<Plugin> $query */
-    private static function applyAuthor(Builder $query, string $author): void
+    public static function applyAuthor(Builder $query, string $author): void
     {
         $query->whereRaw("author %> '$author'");
     }
 
     /** @param Builder<Plugin> $query */
-    private static function applyTag(Builder $query, string $tag): void
+    public static function applyTag(Builder $query, string $tag): void
     {
         $query->whereHas('tags', fn(Builder $q) => $q->whereIn('slug', [$tag]));
     }
@@ -101,18 +185,22 @@ class QueryPluginsService
      *
      * @param Builder<Plugin> $query
      */
-    private static function applyBrowse(Builder $query, string $browse): void
+    public static function applyBrowse(Builder $query, string $browse): void
     {
-        // TODO: replicate 'featured' browse (currently it's identical to 'top-rated')
-        match ($browse) {
-            'new' => $query->reorder('added', 'desc'),
-            'updated' => $query->reorder('last_updated', 'desc'),
-            'top-rated', 'featured' => $query->reorder('rating', 'desc'),
-            default => $query->reorder('active_installs', 'desc'),  // 'popular' is also the default
+        $query->reorder(self::browseToSortColumn($browse), 'desc');
+    }
+
+    public static function browseToSortColumn(?string $browse): string
+    {
+        return match ($browse) {
+            'new' => 'added',
+            'updated' => 'last_updated',
+            'top-rated', 'featured' => 'rating',
+            default => 'active_installs',
         };
     }
 
-    private static function normalizeSearchString(?string $search): ?string
+    public static function normalizeSearchString(?string $search): ?string
     {
         if ($search === null) {
             return null;
