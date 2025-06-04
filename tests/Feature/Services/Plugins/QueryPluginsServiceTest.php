@@ -297,3 +297,37 @@ test('applySearchWeighted with name similarity vs description match', function (
         ->and($response->plugins->first()->name)->toBe('Similar Plugin')
         ->and($response->plugins->last()->name)->toBe('Generic Plugin');
 });
+
+test('applySearchWeighted real world example #1', function () {
+    Plugin::factory()->create([
+        'name' => 'WooCommerce',
+        'slug' => 'woocommerce',
+        'short_description' => "Everything you need to launch an online store in days and keep it growing for years. From your first sale to millions in revenue, Woo is with you.",
+        'description' => '<p><a href="https://woocommerce.com/woocommerce/" rel="nofollow ugc">WooCommerce</a> is the open-source ecommerce platform f…d how it is used, please refer to our <a href="https://automattic.com/privacy/" rel="nofollow ugc">Privacy Policy</a>.</p>\n',
+        'active_installs' => 10000000, // the max .org reports
+    ]);
+
+    Plugin::factory()->create([
+        'name' => 'LiteSpeed Cache',
+        'slug' => 'litespeed-cache',
+        'short_description' => "All-in-one unbeatable acceleration &amp; PageSpeed improvement: caching, image/CSS/JS optimization...",
+        'active_installs' => 7000000,
+    ]);
+
+    // Create the service
+    $service = new QueryPluginsService();
+
+    // Create a request with search for "similar"
+    $request = new QueryPluginsRequest(
+        search: 'cache',
+        page: 1,
+        per_page: 10,
+    );
+
+    // Query plugins
+    $response = $service->queryPlugins($request);
+
+    expect($response->plugins)
+        ->and($response->plugins->first()->name)->toBe('LiteSpeed Cache');
+});
+

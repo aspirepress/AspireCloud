@@ -94,7 +94,7 @@ class QueryPluginsService
 
         $descFulltext = Plugin::query()
             ->whereFullText('description', $search)
-            ->selectRaw("*, 1000 * log($sortColumn) as score");
+            ->selectRaw("*, 3 * log($sortColumn) as score");
 
         $baseQuery = $nameExact;
         $baseQuery->unionAll($slugPrefix);
