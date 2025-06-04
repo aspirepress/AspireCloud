@@ -66,7 +66,11 @@ class QueryPluginsService
         $wordchars = Regex::replace('/\W+/', '', $lcsearch);
         $sortColumn = self::browseToSortColumn($request->browse);
 
-        $weightSimilar = fn($column) => "pow(3 * similarity($column, '$wordchars'), 2) * log(greatest($sortColumn, 1))";
+        $weightSimilar = fn($column) => "pow(5 * similarity($column, '$wordchars'), 2) * log(greatest($sortColumn, 1))";
+
+        $slugExact = Plugin::query()
+            ->where('slug', $search)
+            ->selectRaw("*, 999999999999 as score");
 
         $nameExact = Plugin::query()
             ->where('name', $search)
@@ -74,11 +78,11 @@ class QueryPluginsService
 
         $slugPrefix = Plugin::query()
             ->whereLike('slug', "$slug%")
-            ->selectRaw("*, 999999999 * log(greatest($sortColumn, 1)) as score");
+            ->selectRaw("*, 2 * log(greatest($sortColumn, 1)) as score");
 
         $namePrefix = Plugin::query()
             ->whereLike('name', "$search%")
-            ->selectRaw("*, 999999999 * log(greatest($sortColumn, 1)) as score");
+            ->selectRaw("*, 2 * log(greatest($sortColumn, 1)) as score");
 
         $slugSimilar = Plugin::query()
             ->whereRaw("slug %> '$wordchars'")
@@ -96,7 +100,8 @@ class QueryPluginsService
             ->whereFullText('description', $search)
             ->selectRaw("*, 3 * log(greatest($sortColumn, 1)) as score");
 
-        $baseQuery = $nameExact;
+        $baseQuery = $slugExact;
+        $baseQuery->unionAll($nameExact);
         $baseQuery->unionAll($slugPrefix);
         $baseQuery->unionAll($namePrefix);
         $baseQuery->unionAll($slugSimilar);
