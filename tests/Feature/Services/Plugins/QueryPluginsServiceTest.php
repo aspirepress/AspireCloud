@@ -144,20 +144,6 @@ test('queryPlugins with browse parameter sorts plugins correctly', function () {
     expect($popularResponse->plugins->first()->name)->toBe('Old Plugin');
 });
 
-test('applySearch adds search conditions to the query', function () {
-    // Create a base query
-    $query = Plugin::query();
-
-    // Apply search
-    QueryPluginsService::applySearch($query, 'test', new QueryPluginsRequest());
-
-    // Get the SQL for inspection
-    $sql = $query->toSql();
-
-    // Assert that the query contains search conditions
-    expect($sql)->toContain('union');
-});
-
 test('applySearchWeighted returns a query with weighted search conditions', function () {
     // Create a base query
     $query = Plugin::query();
@@ -281,7 +267,7 @@ test('applySearchWeighted with name similarity vs description match', function (
         'name' => 'Generic Plugin',
         'slug' => 'generic-plugin',
         'description' => 'This plugin is very similar to what you need',
-        'active_installs' => 2000, // larger install count but less relevant
+        'active_installs' => 5000, // larger install count but less relevant
     ]);
 
     Plugin::factory()->create([
