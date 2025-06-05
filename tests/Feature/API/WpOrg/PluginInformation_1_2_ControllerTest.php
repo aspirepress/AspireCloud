@@ -16,7 +16,7 @@ function plugin_information_uri(string $slug, array $params = []): string
 
 function query_plugin_uri(array $params = []): string
 {
-    return "/plugins/info/1.2?" . http_build_query(['action' => 'query_plugibs', ...$params]);
+    return "/plugins/info/1.2?" . http_build_query(['action' => 'query_plugins', ...$params]);
 }
 
 it('returns 422 when slug is missing', function () {
@@ -42,74 +42,74 @@ it('returns plugin information in wp.org format', function () {
         ->assertJson(
             fn(AssertableJson $json)
                 => $json
-            ->hasAll([
-                'active_installs',
-                'added',
-                'author',
-                'author_profile',
-                'banners',
-                'business_model',
-                'commercial_support_url',
-                'contributors',
-                'donate_link',
-                'download_link',
-                'homepage',
-                'last_updated',
-                'name',
-                'num_ratings',
-                'preview_link',
-                'rating',
-                'ratings',
-                'repository_url',
-                'requires',
-                'requires_php',
-                'requires_plugins',
-                'screenshots',
-                'sections',
-                'slug',
-                'support_threads',
-                'support_threads_resolved',
-                'support_url',
-                'tags',
-                'tested',
-                'upgrade_notice',
-                'version',
-                'versions',
-            ])
-            ->whereAllType([
-                'active_installs' => 'integer',
-                'added' => 'string',
-                'author' => 'string',
-                'author_profile' => 'string',
-                'banners' => 'array',
-                'business_model' => 'string',
-                'commercial_support_url' => 'string|null',
-                'contributors' => 'array',
-                'donate_link' => 'string|null',
-                'download_link' => 'string',
-                'homepage' => 'string|null',
-                'last_updated' => 'string',
-                'name' => 'string',
-                'num_ratings' => 'integer',
-                'preview_link' => 'string|null',
-                'rating' => 'integer',
-                'ratings' => 'array',
-                'repository_url' => 'string|null',
-                'requires' => 'string|null',
-                'requires_php' => 'string|null',
-                'requires_plugins' => 'array',
-                'screenshots' => 'array',
-                'sections' => 'array',
-                'slug' => 'string',
-                'support_threads' => 'integer',
-                'support_threads_resolved' => 'integer',
-                'support_url' => 'string|null',
-                'tags' => 'array',
-                'tested' => 'string|null',
-                'upgrade_notice' => 'array',
-                'version' => 'string',
-                'versions' => 'array',
-            ]),
+                ->hasAll([
+                    'active_installs',
+                    'added',
+                    'author',
+                    'author_profile',
+                    'banners',
+                    'business_model',
+                    'commercial_support_url',
+                    'contributors',
+                    'donate_link',
+                    'download_link',
+                    'homepage',
+                    'last_updated',
+                    'name',
+                    'num_ratings',
+                    'preview_link',
+                    'rating',
+                    'ratings',
+                    'repository_url',
+                    'requires',
+                    'requires_php',
+                    'requires_plugins',
+                    'screenshots',
+                    'sections',
+                    'slug',
+                    'support_threads',
+                    'support_threads_resolved',
+                    'support_url',
+                    'tags',
+                    'tested',
+                    'upgrade_notice',
+                    'version',
+                    'versions',
+                ])
+                ->whereAllType([
+                    'active_installs' => 'integer',
+                    'added' => 'string',
+                    'author' => 'string',
+                    'author_profile' => 'string',
+                    'banners' => 'array',
+                    'business_model' => 'string',
+                    'commercial_support_url' => 'string|null',
+                    'contributors' => 'array',
+                    'donate_link' => 'string|null',
+                    'download_link' => 'string',
+                    'homepage' => 'string|null',
+                    'last_updated' => 'string',
+                    'name' => 'string',
+                    'num_ratings' => 'integer',
+                    'preview_link' => 'string|null',
+                    'rating' => 'integer',
+                    'ratings' => 'array',
+                    'repository_url' => 'string|null',
+                    'requires' => 'string|null',
+                    'requires_php' => 'string|null',
+                    'requires_plugins' => 'array',
+                    'screenshots' => 'array',
+                    'sections' => 'array',
+                    'slug' => 'string',
+                    'support_threads' => 'integer',
+                    'support_threads_resolved' => 'integer',
+                    'support_url' => 'string|null',
+                    'tags' => 'array',
+                    'tested' => 'string|null',
+                    'upgrade_notice' => 'array',
+                    'version' => 'string',
+                    'versions' => 'array',
+                ]),
         );
 });
 
@@ -199,6 +199,28 @@ it('returns search results by query string in wp.org format', function () {
         // FIXME: is currently 2 because of the union queries.
         // ->and($responseData['info']['results'])->toBe(1)
     ;
+});
+
+it('prioritizes normalized search string', function () {
+    $scf = [
+        'name' => 'Secure Custom Fields',
+        'slug' => 'secure-custom-fields',
+    ];
+
+    $icf = [
+        'name' => "Insecure Customized Fields",
+        'slug' => "insecure-customized-fields",
+    ];
+
+    Plugin::factory()->create($scf);
+    Plugin::factory()->create($icf);
+
+    $query = 'INseCurE CUSToM';
+
+    $this
+        ->get("/plugins/info/1.2?action=query_plugins&search=$query")
+        ->assertOk()
+        ->assertJsonPath('plugins.0.name', $icf['name']);
 });
 
 it('returns search results by tag and author in wp.org format', function () {
