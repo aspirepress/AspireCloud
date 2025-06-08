@@ -18,3 +18,6 @@ parameters:
 
         # BelongsToMany is totally broken with larastan now, but things are even more broken without it.
         - "#should return.*BelongsToMany<#"
+
+        # Builder's phpstan types are completely broken and there's nothing I can do about it.
+        - "#Builder does not specify its types: TModel#"
