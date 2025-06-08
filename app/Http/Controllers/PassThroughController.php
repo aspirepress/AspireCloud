@@ -40,6 +40,7 @@ class PassThroughController extends Controller
         return response($content, $response->status(), $response->headers());
     }
 
+    /** @return array<string, string> */
     private function filterRequestHeaders(Request $request): array
     {
         $headers = $request->headers->all();
