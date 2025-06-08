@@ -32,7 +32,7 @@ class QueryPluginsService
         $search and $callbacks->push(fn($query) => self::applySearchWeighted($query, $search, $req));
         $tag and $callbacks->push(fn($query) => self::applyTag($query, $tag));
         $author and $callbacks->push(fn($query) => self::applyAuthor($query, $author));
-        ($browse && !$search) and $callbacks->push(fn($query) => self::applyBrowse($query, $browse));
+        !$search and $callbacks->push(fn($query) => self::applyBrowse($query, $browse)); // search applies its own sort
 
         $query = $callbacks->reduce(fn($query, $callback) => $callback($query), Plugin::query());
         assert($query instanceof Builder);

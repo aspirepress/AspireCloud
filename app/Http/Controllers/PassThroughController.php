@@ -22,22 +22,40 @@ class PassThroughController extends Controller
             throw new \RuntimeException('Unexpected request to pass-through controller in testing environment');
         }
 
-        $requestData = $request->all();
-        $ua = $request->header('User-Agent');
         $path = $request->path();
         $queryParams = $request->query();
 
-        $response = Http::withHeaders(['User-Agent' => $ua, 'Accept' => '*/*'])
-            ->asForm()
+        $headers = $this->filterRequestHeaders($request);
+
+        $response = Http::withHeaders($headers)
+            ->withBody($request->getContent())
             ->send(
                 $request->getMethod(),
-                "https://api.wordpress.org/$path",
-                ['query' => $queryParams, 'form_params' => $requestData],
+                "https://api.wordpress.org/$path/", // always add the trailing /
+                ['query' => $queryParams],
             );
 
         $content = $response->body();
         $this->logRequestAndResponse($request, $response, $content);
-        return response($content, $response->status(), ['Content-Type', $response->header('Content-Type')]);
+        return response($content, $response->status(), $response->headers());
+    }
+
+    /** @return array<string, string> */
+    private function filterRequestHeaders(Request $request): array
+    {
+        $headers = $request->headers->all();
+
+        $filter = fn($value, $key) => match (true) {
+            $key === 'host', $key === 'content-length' => false,
+            str_starts_with($key, 'x-') => false,
+            default => true,
+        };
+
+        $mapWpHeader = fn($key) => str_starts_with($key, 'wp-') ? str_replace('-', '_', $key) : $key;
+
+        $mapHeaders = fn($value, $key) => [$mapWpHeader($key) => $value[0]];
+
+        return collect($headers)->filter($filter)->mapWithKeys($mapHeaders)->toArray();
     }
 
     private function logRequestAndResponse(Request $request, ClientResponse $response, string $content): void
