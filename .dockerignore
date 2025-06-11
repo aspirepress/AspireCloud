@@ -9,9 +9,8 @@ tests/
 tmp/
 vendor/
 
-# prod uses real environment variables only
-.env
-.env.*
+# all dotfiles and dot-dirs in the root like .env* are ignorable by Docker
+/.*
 
 *.bak
 *.log
