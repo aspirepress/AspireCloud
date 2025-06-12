@@ -62,6 +62,10 @@ readonly class ThemeResponse extends Bag
         public Optional|array $photon_screenshots,
         public Optional|array $trac_tickets,
         public Optional|string $upload_date,
+
+        // AspireCloud metadata
+        public Optional|string $ac_origin,
+        public Optional|string $ac_created,
     ) {}
 
     /**
@@ -115,6 +119,10 @@ readonly class ThemeResponse extends Bag
             'photon_screenshots' => $none,
             'trac_tickets' => $none,
             'upload_date' => $none,
+
+            // ac meta
+            'ac_origin' => $theme->ac_origin,
+            'ac_created' => $theme->ac_created,
         ];
     }
 
