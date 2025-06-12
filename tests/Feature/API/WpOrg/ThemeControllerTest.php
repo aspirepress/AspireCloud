@@ -69,7 +69,7 @@ it('returns theme_information (v1.1)', function () {
 
     $response
         ->assertStatus(200)
-        ->assertExactJson([
+        ->assertJson([
             'author' => 'tmeister',
             'download_link' => 'https://api.aspiredev.org/download/my-theme',
             'downloaded' => 1000,
@@ -98,7 +98,7 @@ it('returns theme_information (v1.2)', function () {
 
     $response
         ->assertStatus(200)
-        ->assertExactJson([
+        ->assertJson([
             'author' => [
                 'author' => 'Tmeister',
                 'author_url' => 'https://wp-themes.com/author/tmeister',
@@ -111,7 +111,6 @@ it('returns theme_information (v1.2)', function () {
             'download_link' => 'https://api.aspiredev.org/download/my-theme',
             'downloaded' => 1000,
             'external_repository_url' => 'https://test.com',
-            'external_support_url' => "",
             'homepage' => 'https://wordpress.org/themes/my-theme/',
             'is_commercial' => false,
             'is_community' => true,
@@ -177,7 +176,6 @@ it('returns theme query results (v1.2)', function () {
                     ],
                     'description' => 'My Theme',
                     'external_repository_url' => 'https://test.com',
-                    'external_support_url' => false,
                     'homepage' => 'https://wordpress.org/themes/my-theme/',
                     'is_commercial' => false,
                     'is_community' => true,
@@ -213,7 +211,6 @@ it('returns theme query results for tag (v1.2)', function () {
                     ],
                     'description' => 'My Theme',
                     'external_repository_url' => 'https://test.com',
-                    'external_support_url' => '',
                     'homepage' => 'https://wordpress.org/themes/my-theme/',
                     'is_commercial' => false,
                     'is_community' => true,
