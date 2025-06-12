@@ -48,14 +48,23 @@ trait ThemeFields
     {
         if (version_compare($request->route('version'), '1.2', '>=')) {
             $defaultFields['extended_author'] = true;
+            $defaultFields['external_repository_url'] = true;
+            $defaultFields['external_support_url'] = true;
+            $defaultFields['is_commercial'] = true;
+            $defaultFields['is_community'] = true;
             $defaultFields['num_ratings'] = true;
             $defaultFields['parent'] = true;
             $defaultFields['requires'] = true;
             $defaultFields['requires_php'] = true;
-            $defaultFields['is_commercial'] = true;
-            $defaultFields['is_community'] = true;
-            $defaultFields['external_repository_url'] = true;
-            $defaultFields['external_support_url'] = true;
+
+            // These aren't actually served in .org protocol version 1.2, but it's harmless to add them
+            // Eventually we'll just serve everything but sections and description by default.
+            $defaultFields['creation_time'] = true;
+            $defaultFields['download_link'] = true;
+            $defaultFields['last_updated_time'] = true;
+            $defaultFields['rating'] = true;
+            $defaultFields['ratings'] = true;
+            $defaultFields['upload_date'] = true;
         }
         $specifiedFields = $request->query('fields');
         if ($specifiedFields == null) {

@@ -48,14 +48,14 @@ readonly class PluginResponse extends Bag
         public array $tags,
         public string|null $donate_link,
         public array $requires_plugins,
-        //
-        // // query_plugins only
+
+        // query_plugins only
         public Optional|string|null $downloaded,
         public Optional|string|null $short_description,
         public Optional|string|null $description,
         public Optional|array $icons,
-        //
-        // // plugin_information only
+
+        // plugin_information only
         public Optional|array $sections,
         public Optional|array $versions,
         public Optional|array $contributors,
@@ -67,6 +67,10 @@ readonly class PluginResponse extends Bag
         public Optional|string|null $commercial_support_url,
         public Optional|array $banners,
         public Optional|string|null $preview_link,
+
+        // aspirecloud metadata
+        public Optional|string $ac_origin,
+        public Optional|DateTimeInterface $ac_created,
     ) {}
 
     /** @return array<string, mixed> */
@@ -118,6 +122,9 @@ readonly class PluginResponse extends Bag
             'banners' => $plugin->banners,
             'preview_link' => $plugin->preview_link,
 
+            // aspirecloud metadata
+            'ac_origin' => $plugin->ac_origin,
+            'ac_created' => $plugin->ac_created,
         ];
     }
 

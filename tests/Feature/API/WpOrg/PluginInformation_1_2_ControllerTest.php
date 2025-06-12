@@ -43,6 +43,8 @@ it('returns plugin information in wp.org format', function () {
             fn(AssertableJson $json)
                 => $json
                 ->hasAll([
+                    'ac_origin',
+                    'ac_created',
                     'active_installs',
                     'added',
                     'author',
@@ -77,6 +79,8 @@ it('returns plugin information in wp.org format', function () {
                     'versions',
                 ])
                 ->whereAllType([
+                    'ac_origin' => 'string',
+                    'ac_created' => 'string',
                     'active_installs' => 'integer',
                     'added' => 'string',
                     'author' => 'string',
