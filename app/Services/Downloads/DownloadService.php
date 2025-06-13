@@ -14,15 +14,20 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DownloadService implements Downloader
 {
+
     public function download(AssetType $type, string $slug, string $file, ?string $revision = null): Response
     {
-        Log::debug("DOWNLOAD", compact("type", "slug", "file", "revision"));
+        $public = Storage::disk('public');
+        $s3 = Storage::disk('s3');
+
+        $context = ['type' => $type->value, 'slug' => $slug, 'file' => $file, 'revision' => $revision];
+        Log::debug("DOWNLOAD", $context);
 
         if ($revision === 'head') {
             // head is there to have something in the url, but it behaves the same as not passing it
             $revision = null;
         }
-        // Check if we have it locally
+
         $asset = Asset::query()
             ->where('asset_type', $type->value)
             ->where('slug', $slug)
@@ -31,23 +36,51 @@ class DownloadService implements Downloader
             ->orderBy('revision', 'desc')
             ->first();
 
-        if ($asset && Storage::exists($asset->local_path)) {
-            // TODO: handle case where asset exists but local path does not (DownloadAssetJob always creates a new Asset)
+        $path = $asset?->local_path;
+        $context['asset'] = $asset;
+
+        if ($asset && !$public->exists($path) && $s3->exists($path)) {
+            Log::debug("Copying $file from s3 to local filesystem", $context);
+            $s3->copy($path, $public->path($path));
+            // fall through to next case now that the file is on local
+        }
+
+        if ($asset && $public->exists($path)) {
             event(new AssetCacheHit($asset));
-            Log::debug("Serving existing asset", ["asset" => $asset]);
-            $stream = Storage::disk('s3')->getDriver()->readStream($asset->local_path);
-            return response()->stream(
-                fn() => fpassthru($stream),
-                headers: ['Content-Type' => $asset->getContentType()],
-            );
+            Log::debug("Serving $file from local filesystem", $context);
+            return redirect($public->url($path)); // must be 301 temp redirect, local files are not guaranteed.
+        }
+
+        if ($asset) {
+            Log::info("Deleting stale asset for $file (neither local nor s3 paths exist)", $context);
+            $asset->delete();
         }
 
         $upstreamUrl = $type->buildUpstreamUrl($slug, $file, $revision);
+        $path = $type->buildLocalPath($slug, $file, $revision);
+        $context['path'] = $path;
 
-        event(new AssetCacheMissed(type: $type, slug: $slug, file: $file, upstreamUrl: $upstreamUrl, revision: $revision));
+        Log::debug("Downloading $file from $upstreamUrl", $context);
 
-        // TODO: use a real client.  Plugins are small enough we can get away with this for now.
+        event(
+            new AssetCacheMissed(type: $type, slug: $slug, file: $file, upstreamUrl: $upstreamUrl, revision: $revision),
+        );
+
         $response = Http::withHeaders(['User-Agent' => 'AspireCloud'])->get($upstreamUrl);
-        return new Response($response->body(), $response->status(), $response->headers());
+
+        if (!$response->successful()) {
+            $status = $response->status();
+            $message = "Download failed: [status: $status, url: $upstreamUrl]";
+            Log::error($message, [...$context, 'response' => $response]);
+            throw new \RuntimeException($message);
+        }
+
+        Log::debug("Saving $file downloaded from $upstreamUrl", $context);
+
+        $stream = $response->resource();
+        $public->put($path, $stream);
+        return redirect($public->url($path)); // must be 301 temp redirect, local files are not guaranteed.
+
+        // return new Response($response->body(), $response->status(), $response->headers());
     }
 }
