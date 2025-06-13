@@ -40,4 +40,21 @@ enum AssetType: string
 
         return $url;
     }
+
+    public function buildLocalPath(string $slug, string $file, ?string $revision): string
+    {
+        $revision ??= 'head';
+
+        $base = match ($this) {
+            self::CORE => 'core',
+            self::PLUGIN => "plugins/$slug",
+            self::THEME => "themes/$slug",
+            self::PLUGIN_SCREENSHOT,
+            self::PLUGIN_BANNER => "assets/plugin/$slug",
+            self::PLUGIN_GP_ICON => "gp-icon/plugin/$slug",
+            self::THEME_SCREENSHOT => "assets/theme/$slug/$revision",
+        };
+
+        return "{$base}/$file";
+    }
 }

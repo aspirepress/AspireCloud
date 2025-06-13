@@ -4,6 +4,7 @@ use App\Enums\AssetType;
 use App\Events\AssetCacheHit;
 use App\Jobs\DownloadAssetJob;
 use App\Models\WpOrg\Asset;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
@@ -24,7 +25,7 @@ describe('Download Routes', function () {
     it('handles WordPress core download requests', function () use ($getJob) {
         $response = $this->get('/download/wordpress-6.4.2.zip');
 
-        expect($response->getStatusCode())->toBe(200); // mock response
+        expect($response->getStatusCode())->toBe(302);
 
         $job = $getJob();
         expect($job->type)
@@ -54,7 +55,7 @@ describe('Download Routes', function () {
     it('handles plugin download requests', function () use ($getJob) {
         $response = $this->get('/download/plugin/test-plugin.1.0.0.zip');
 
-        expect($response->getStatusCode())->toBe(200); // mock response
+        expect($response->getStatusCode())->toBe(302);
 
         $job = $getJob();
         expect($job->type)
@@ -84,7 +85,7 @@ describe('Download Routes', function () {
     it('handles theme download requests', function () use ($getJob) {
         $response = $this->get('/download/theme/test-theme.1.0.0.zip');
 
-        expect($response->getStatusCode())->toBe(200); // mock response
+        expect($response->getStatusCode())->toBe(302);
 
         $job = $getJob();
         expect($job->type)
@@ -114,7 +115,7 @@ describe('Download Routes', function () {
 
     it('handles plugin asset download requests', function () use ($getJob) {
         $response = $this->get('/download/assets/plugin/test-plugin/head/screenshot-1.png');
-        expect($response->getStatusCode())->toBe(200); // mock response
+        expect($response->getStatusCode())->toBe(302);
 
         $job = $getJob();
         expect($job->type)
@@ -128,7 +129,7 @@ describe('Download Routes', function () {
     it('handles asset download requests with revision', function () use ($getJob) {
         $response = $this->get('/download/assets/plugin/test-plugin/3164133/banner-1544x500.png');
 
-        expect($response->getStatusCode())->toBe(200); // mock response
+        expect($response->getStatusCode())->toBe(302);
 
         $job = $getJob();
         expect($job->type)
@@ -142,7 +143,7 @@ describe('Download Routes', function () {
     it('handles gp-icon download requests', function () use ($getJob) {
         $this
             ->get('/download/gp-icon/plugin/test-plugin/123/test-plugin.svg')
-            ->assertStatus(200); // mock response
+            ->assertStatus(302);
 
         $job = $getJob();
         expect($job->type)
@@ -156,7 +157,7 @@ describe('Download Routes', function () {
     it('handles theme screenshot download requests', function () use ($getJob) {
         $this
             ->get('download/assets/theme/test-theme/123/screenshot-1.png')
-            ->assertStatus(200); // mock response
+            ->assertStatus(302);
 
         $job = $getJob();
         expect($job->type)
@@ -181,7 +182,7 @@ describe('Download Routes', function () {
         ]);
 
         Storage::disk('s3')->put($asset->local_path, 'bob');
-        $this->get('/download/plugin/test-plugin.1.0.0.zip')->assertOk();
+        $this->get('/download/plugin/test-plugin.1.0.0.zip')->assertStatus(302);
         Event::assertDispatched(AssetCacheHit::class);
     });
 });
