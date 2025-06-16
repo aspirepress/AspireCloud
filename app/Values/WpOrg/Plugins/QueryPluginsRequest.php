@@ -23,7 +23,7 @@ readonly class QueryPluginsRequest extends Bag
         public ?string $plugin = null,  // slug of a specific plugin
         public ?string $author = null,  // wp.org username of author
         public ?string $browse = null,  // one of popular|top-rated|updated|new
-        public mixed $fields = null,
+        public mixed $fields = null,    // ignored-- all fields are always returned
         public int $page = 1,
         public int $per_page = 24,
     ) {}

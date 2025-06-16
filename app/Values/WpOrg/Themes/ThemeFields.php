@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 
 trait ThemeFields
 {
-    public const allFields = [
+    // does not include fields that are always enabled, e.g. slug, name
+    public const additionalFields = [
         'description' => false,
         'downloaded' => false,
         'download_link' => false,
@@ -47,28 +48,24 @@ trait ThemeFields
     public static function getFields(Request $request, array $defaultFields = []): array
     {
         if (version_compare($request->route('version'), '1.2', '>=')) {
-            $defaultFields['extended_author'] = true;
-            $defaultFields['external_repository_url'] = true;
-            $defaultFields['external_support_url'] = true;
-            $defaultFields['is_commercial'] = true;
-            $defaultFields['is_community'] = true;
-            $defaultFields['num_ratings'] = true;
-            $defaultFields['parent'] = true;
-            $defaultFields['requires'] = true;
-            $defaultFields['requires_php'] = true;
+            // GH-278: we send back all fields by default now.
+            // This makes much of the code below redundant, but we still want to support explicitly disabling fields
+            $defaultFields = array_fill_keys(array_keys(self::additionalFields), true);
 
-            // These aren't actually served in .org protocol version 1.2, but it's harmless to add them
-            // Eventually we'll just serve everything but sections and description by default.
-            $defaultFields['creation_time'] = true;
-            $defaultFields['download_link'] = true;
-            $defaultFields['last_updated_time'] = true;
-            $defaultFields['rating'] = true;
-            $defaultFields['ratings'] = true;
-            $defaultFields['upload_date'] = true;
+            // Default fields enabled by api.wordpress.org below
+            // $defaultFields['extended_author'] = true;
+            // $defaultFields['external_repository_url'] = true;
+            // $defaultFields['external_support_url'] = true;
+            // $defaultFields['is_commercial'] = true;
+            // $defaultFields['is_community'] = true;
+            // $defaultFields['num_ratings'] = true;
+            // $defaultFields['parent'] = true;
+            // $defaultFields['requires'] = true;
+            // $defaultFields['requires_php'] = true;
         }
         $specifiedFields = $request->query('fields');
-        if ($specifiedFields == null) {
-            return array_merge(self::allFields, $defaultFields);
+        if (!$specifiedFields) {
+            return array_merge(self::additionalFields, $defaultFields);
         }
 
         if (!is_array($specifiedFields)) {
@@ -94,6 +91,6 @@ trait ThemeFields
             }, $specifiedFields);
         }
 
-        return array_merge(self::allFields, $specifiedFields, $defaultFields);
+        return array_merge(self::additionalFields, $specifiedFields, $defaultFields);
     }
 }

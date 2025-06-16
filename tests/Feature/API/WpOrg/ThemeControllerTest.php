@@ -93,7 +93,7 @@ it('returns theme_information (v1.1)', function () {
         ]);
 });
 
-it('returns theme_information (v1.2)', function () {
+it('returns all fields in theme_information (v1.2)', function () {
     $response = $this->get('/themes/info/1.2?action=theme_information&slug=my-theme');
 
     $response
@@ -189,8 +189,12 @@ it('returns theme query results (v1.2)', function () {
                     'version' => '1.2.1',
                 ],
             ],
-        ]);
-
+        ])
+        // GH-278: return all fields.  these are not normally returned by default by .org
+        ->assertJsonPath('themes.0.download_link', 'https://api.aspiredev.org/download/my-theme')
+        ->assertJsonPath('themes.0.downloaded', 1000)
+        ->assertJsonPath('themes.0.active_installs', 100)
+        ->assertJsonPath('themes.0.tags.black', 'black');
 });
 
 it('returns theme query results for tag (v1.2)', function () {
