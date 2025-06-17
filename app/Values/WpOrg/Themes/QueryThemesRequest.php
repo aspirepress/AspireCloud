@@ -16,7 +16,8 @@ readonly class QueryThemesRequest extends Bag
     public const ACTION = 'query_themes';
 
     /**
-     * @param ?string[] $tags
+     * @param list<string>|null $tags
+     * @param list<string>|null $ac_tags
      * @param string|array<string,bool> $fields
      */
     public function __construct(
