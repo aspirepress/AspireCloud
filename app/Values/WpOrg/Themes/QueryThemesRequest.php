@@ -28,6 +28,9 @@ readonly class QueryThemesRequest extends Bag
         public mixed $fields = null,
         public int $page = 1,
         public int $per_page = 24,
+
+        // AspireCloud-specific extensions
+        public ?array $ac_tags = null, // tag or set of tags, AND'ed together
     ) {}
 
     /** @return array<string, mixed> */
@@ -37,6 +40,7 @@ readonly class QueryThemesRequest extends Bag
         $query = $request->query();
 
         $query['tags'] = (array)Arr::pull($query, 'tag', []);
+        $query['ac_tags'] = (array)Arr::pull($query, 'ac_tag', []);
 
         $defaultFields = [
             'description' => true,
