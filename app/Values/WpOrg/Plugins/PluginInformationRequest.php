@@ -2,14 +2,14 @@
 
 namespace App\Values\WpOrg\Plugins;
 
+use App\Values\DTO;
 use Bag\Attributes\StripExtraParameters;
 use Bag\Attributes\Transforms;
-use Bag\Bag;
 use Illuminate\Http\Request;
 
 // Far simpler than ThemeInformationRequest, it takes a slug and that's it
 #[StripExtraParameters]
-readonly class PluginInformationRequest extends Bag
+readonly class PluginInformationRequest extends DTO
 {
     public const ACTION = 'plugin_information';
 

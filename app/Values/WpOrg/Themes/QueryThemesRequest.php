@@ -2,14 +2,14 @@
 
 namespace App\Values\WpOrg\Themes;
 
+use App\Values\DTO;
 use Bag\Attributes\StripExtraParameters;
 use Bag\Attributes\Transforms;
-use Bag\Bag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 #[StripExtraParameters]
-readonly class QueryThemesRequest extends Bag
+readonly class QueryThemesRequest extends DTO
 {
     use ThemeFields;
 

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Values\WpOrg\Themes;
 
+use App\Values\DTO;
 use App\Values\WpOrg\PageInfo;
-use Bag\Bag;
 use Bag\Collection;
 
-readonly class QueryThemesResponse extends Bag
+readonly class QueryThemesResponse extends DTO
 {
     public function __construct(
         public Collection $themes,

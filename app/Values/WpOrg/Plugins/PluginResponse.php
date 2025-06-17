@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Values\WpOrg\Plugins;
 
 use App\Models\WpOrg\Plugin;
+use App\Values\DTO;
 use Bag\Attributes\Transforms;
-use Bag\Bag;
 use Bag\Values\Optional;
 use DateTimeInterface;
 
-readonly class PluginResponse extends Bag
+readonly class PluginResponse extends DTO
 {
     public const LAST_UPDATED_DATE_FORMAT = 'Y-m-d h:ia T'; // .org's goofy format: "2024-09-27 9:53pm GMT"
 

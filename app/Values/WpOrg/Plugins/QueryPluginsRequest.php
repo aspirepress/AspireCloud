@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Values\WpOrg\Plugins;
 
+use App\Values\DTO;
 use Bag\Attributes\StripExtraParameters;
 use Bag\Attributes\Transforms;
-use Bag\Bag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -14,7 +14,7 @@ use Illuminate\Support\Arr;
 // I'd look into refactoring it, but it's not like .org is going to add a new resource type anytime soon.
 // We can clean things up in the 2.0 API.
 #[StripExtraParameters]
-readonly class QueryPluginsRequest extends Bag
+readonly class QueryPluginsRequest extends DTO
 {
     /** @param list<string>|null $tags */
     public function __construct(

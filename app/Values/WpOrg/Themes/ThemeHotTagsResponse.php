@@ -3,10 +3,10 @@
 namespace App\Values\WpOrg\Themes;
 
 use App\Models\WpOrg\ThemeTag;
+use App\Values\DTO;
 use Bag\Attributes\Transforms;
-use Bag\Bag;
 
-readonly class ThemeHotTagsResponse extends Bag
+readonly class ThemeHotTagsResponse extends DTO
 {
     public function __construct(
         public string $slug,
