@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Values;
+
+use Override;
 
 /**
  * In addition to adding the JSON_PRETTY_PRINT and JSON_UNESCAPED_* flags, this also sets JSON_THROW_ON_ERROR,
@@ -15,6 +17,7 @@ trait ToJsonPretty
     | JSON_UNESCAPED_SLASHES
     | JSON_UNESCAPED_UNICODE;
 
+    #[Override]
     public function toJson($options = 0): string|false
     {
         return parent::toJson($options | self::DEFAULT_FLAGS);
