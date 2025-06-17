@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\API\WpOrg\Core;
 
 use App\Http\Controllers\Controller;
+use App\Models\WpOrg\Asset;
+use Illuminate\Cache\CacheManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class VersionCheckController extends Controller
 {
+    public const int CACHE_TTL = 60 * 60 * 6;
+
     /**
      * The currently installed version of WordPress.
      *
@@ -21,6 +25,8 @@ class VersionCheckController extends Controller
      * @var string
      */
     private string $locale;
+
+    public function __construct(private readonly CacheManager $cache) {}
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -40,7 +46,7 @@ class VersionCheckController extends Controller
     private function buildOffers(): array
     {
         $offers = [];
-        $latestVersion = $this->getLatestVersion();
+        $latestVersion = $this->getLatestCoreVersion();
 
         if ($this->locale) {
             $offers[] = $this->buildTranslatedUpgradeOffer($latestVersion);
@@ -163,16 +169,24 @@ class VersionCheckController extends Controller
         return [$translation];
     }
 
-    private function getLatestVersion(): string
+    private function getLatestCoreVersion(): string
     {
-        // Probably pull from the database instead of hardcoding it.
-        return '6.8.1';
+        // technically semver comparison should be used, but core versions are always sortable lexicographically
+        $getLatest = fn()
+            => Asset::query()
+            ->where('type', 'core')
+            ->orderBy('version', 'desc')
+            ->first()
+            ->version;
+
+        return $this->cache->remember('wporg.core.latest', self::CACHE_TTL, $getLatest);
     }
 
-    private function getLatestMajorVersion(): string
+    private function getLatestCoreMajorVersion(): string
     {
-        // Probably pull from the database instead of hardcoding it.
-        return '6.8';
+        // Wordpress considers x.y to be a major version (it predates the semver standard)
+        [$x, $y] = explode('.', $this->getLatestCoreVersion());
+        return "$x.$y";
     }
 
     /**
@@ -294,7 +308,7 @@ class VersionCheckController extends Controller
     private function getNewBundled(): string
     {
         // Appears to be the second latest major version.
-        $parts = explode('.', $this->getLatestMajorVersion());
+        $parts = explode('.', $this->getLatestCoreMajorVersion());
         if ($parts[1] > 0) {
             --$parts[1];
         } else {
