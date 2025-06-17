@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Values\WpOrg\Plugins;
 
 use App\Models\WpOrg\ClosedPlugin;
+use App\Values\DTO;
 use Bag\Attributes\Transforms;
-use Bag\Bag;
 
-readonly class ClosedPluginResponse extends Bag
+readonly class ClosedPluginResponse extends DTO
 {
     public function __construct(
         public string $name,

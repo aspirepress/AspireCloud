@@ -2,8 +2,8 @@
 
 namespace App\Values\WpOrg\Themes;
 
+use App\Values\DTO;
 use Bag\Attributes\Transforms;
-use Bag\Bag;
 use Illuminate\Http\Request;
 
 use function Safe\json_decode;
@@ -16,7 +16,7 @@ use function Safe\json_decode;
  *     X-Generator: string
  * }
  */
-readonly class ThemeUpdateCheckRequest extends Bag
+readonly class ThemeUpdateCheckRequest extends DTO
 {
     /**
      * @param string $active slug of currently active theme

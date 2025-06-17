@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Values\WpOrg\Themes;
 
 use App\Models\WpOrg\Theme;
+use App\Values\DTO;
 use App\Values\WpOrg\Author;
 use Bag\Attributes\Hidden;
 use Bag\Attributes\Transforms;
-use Bag\Bag;
 use Bag\Values\Optional;
 use Illuminate\Support\Arr;
 
-readonly class ThemeResponse extends Bag
+readonly class ThemeResponse extends DTO
 {
     /**
      * @param Optional|array{'1': int, '2': int, '3': int, '4': int, '5': int, } $ratings

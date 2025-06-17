@@ -2,8 +2,8 @@
 
 namespace App\Values\WpOrg\Plugins;
 
+use App\Values\DTO;
 use Bag\Attributes\Transforms;
-use Bag\Bag;
 use Illuminate\Http\Request;
 
 use function Safe\json_decode;
@@ -16,7 +16,7 @@ use function Safe\json_decode;
  *     X-Generator: string
  * }
  */
-readonly class PluginUpdateCheckRequest extends Bag
+readonly class PluginUpdateCheckRequest extends DTO
 {
     /**
      * @param array<string, array{"Version": string}> $plugins

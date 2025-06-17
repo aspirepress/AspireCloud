@@ -3,10 +3,10 @@
 namespace App\Values\WpOrg;
 
 use App\Models\WpOrg\Author as AuthorModel;
+use App\Values\DTO;
 use Bag\Attributes\Transforms;
-use Bag\Bag;
 
-readonly class Author extends Bag
+readonly class Author extends DTO
 {
     public function __construct(
         public string $user_nicename,
