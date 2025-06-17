@@ -3,10 +3,10 @@
 namespace App\Values\WpOrg\Themes;
 
 use App\Models\WpOrg\Theme;
+use App\Values\DTO;
 use Bag\Attributes\Transforms;
-use Bag\Bag;
 
-readonly class ThemeUpdateData extends Bag
+readonly class ThemeUpdateData extends DTO
 {
     public function __construct(
         public string $name,

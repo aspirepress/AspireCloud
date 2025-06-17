@@ -2,9 +2,9 @@
 
 namespace App\Values\WpOrg;
 
-use Bag\Bag;
+use App\Values\DTO;
 
-readonly class PageInfo extends Bag
+readonly class PageInfo extends DTO
 {
     public function __construct(
         public int $page,

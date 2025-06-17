@@ -3,11 +3,11 @@
 namespace App\Values\WpOrg\Plugins;
 
 use App\Models\WpOrg\Plugin;
+use App\Values\DTO;
 use Bag\Attributes\Transforms;
-use Bag\Bag;
 use Bag\Values\Optional;
 
-readonly class PluginUpdateData extends Bag
+readonly class PluginUpdateData extends DTO
 {
     /**
      * @param Optional|list<string> $requires_plugins

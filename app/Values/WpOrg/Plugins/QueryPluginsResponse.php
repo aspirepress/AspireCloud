@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Values\WpOrg\Plugins;
 
+use App\Values\DTO;
 use App\Values\WpOrg\PageInfo;
-use Bag\Bag;
 use Bag\Collection;
 
-readonly class QueryPluginsResponse extends Bag
+readonly class QueryPluginsResponse extends DTO
 {
     public function __construct(
         public Collection $plugins,
