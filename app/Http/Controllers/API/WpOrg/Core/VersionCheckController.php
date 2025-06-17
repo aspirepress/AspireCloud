@@ -12,18 +12,8 @@ class VersionCheckController extends Controller
 {
     public const int CACHE_TTL = 60 * 60 * 6;
 
-    /**
-     * The currently installed version of WordPress.
-     *
-     * @var string
-     */
+    // TODO remove these, pass request around instead
     private string $currentVersion;
-
-    /**
-     * The locale for the request.
-     *
-     * @var string
-     */
     private string $locale;
 
     public function __construct(private readonly CacheManager $cache) {}
@@ -76,20 +66,11 @@ class VersionCheckController extends Controller
     private function buildTranslatedUpgradeOffer(string $version): \stdClass
     {
         $offer = $this->buildUpgradeOffer($version);
-        $offer->download = config('app.aspirecloud.download.base')
-            . 'release/'
-            . $this->locale
-            . '/wordpress-'
-            . $version
-            . '.zip';
+        $base = config('app.aspirecloud.download.base');
+        $offer->download = "{$base}release/$this->locale/wordpress-$version.zip";
         $offer->locale = $this->locale;
 
-        $offer->packages->full = config('app.aspirecloud.download.base')
-            . 'release/'
-            . $this->locale
-            . '/wordpress-'
-            . $version
-            . '.zip';
+        $offer->packages->full = "{$base}release/$this->locale/wordpress-$version.zip";
         $offer->packages->no_content = false;
         $offer->packages->new_bundled = false;
         $offer->packages->partial = false;
@@ -113,19 +94,14 @@ class VersionCheckController extends Controller
         $offer = new \stdClass();
 
         $offer->response = $this->currentVersion === $version ? 'latest' : 'upgrade';
-        $offer->download = config('app.aspirecloud.download.base') . 'release/wordpress-' . $version . '.zip';
+        $base = config('app.aspirecloud.download.base');
+        $offer->download = $base . 'release/wordpress-' . $version . '.zip';
         $offer->locale = $offer->response === 'latest' && !$this->locale ? false : 'en_US';
 
         $offer->packages = new \stdClass();
-        $offer->packages->full = config('app.aspirecloud.download.base') . 'release/wordpress-' . $version . '.zip';
-        $offer->packages->no_content = config('app.aspirecloud.download.base')
-            . 'release/wordpress-'
-            . $version
-            . '-no-content.zip';
-        $offer->packages->new_bundled = config('app.aspirecloud.download.base')
-            . 'release/wordpress-'
-            . $version
-            . '-new-bundled.zip';
+        $offer->packages->full = "{$base}release/wordpress-$version.zip";
+        $offer->packages->no_content = "{$base}release/wordpress-$version-no-content.zip";
+        $offer->packages->new_bundled = "{$base}release/wordpress-$version-new-bundled.zip";
 
         // Disabling these for now, pending more research from the team.
         $offer->packages->partial = false;
@@ -152,18 +128,15 @@ class VersionCheckController extends Controller
 
         // There are other potential translations, possibly based on the slug.
         // For now, this just generates a single translation package.
+        $base = config('app.aspirecloud.download.base');
+
         $translation = new \stdClass();
         $translation->type = 'core';
         $translation->slug = 'default';
         $translation->language = $this->locale;
         $translation->version = $this->currentVersion;
         $translation->updated = '2023-10-01T00:00:00Z'; // Store in DB from the translations file. Pull from DB for here.
-        $translation->package = config('app.aspirecloud.download.base')
-            . 'translation/core/'
-            . $this->currentVersion
-            . '/'
-            . $this->locale
-            . '.zip';
+        $translation->package = "{$base}translation/core/$this->currentVersion/$this->locale.zip";
         $translation->autoupdate = true;
 
         return [$translation];
