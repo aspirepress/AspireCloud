@@ -20,6 +20,30 @@ class VersionCheckController extends Controller
 
     public function __invoke(Request $request): JsonResponse
     {
+        // query args
+        // * version: string
+        // * php: string
+        // * locale: string
+        // * mysql: string
+        // * local_package: string
+        // * blogs: int
+        // * users: int
+        // * multisite_enabled: bool
+        // * initial_db_version: string
+        // * extensions: array (???)
+        // * platform_flags: {os: string, bits: 32|64}
+        // * image_support: {gd?: list<webp|avif|heic|jxl>, imagick?: list<webp|avif|heic|jxl>}
+        // * channel (optional): beta|rc|development|branch-development
+
+        // body args (all optional).  Only translations is set from normal requests, others are sent during rollback.
+        // * translations: json of translations, format tbd
+        // * success: false (only ever set when false as result of an update failure)
+        // * error_code: string|int
+        // * error_data: mixed
+        // * rollback: bool
+        // * rollback_code: string|int
+        // * rollback_data: mixed
+
         $this->currentVersion = $request->query('version') ?? (string)PHP_INT_MAX;
         $this->locale = $request->query('locale') ?? '';
 
