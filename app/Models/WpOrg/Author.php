@@ -4,6 +4,8 @@ namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\WpOrg\Plugin;
 
 /**
  * @property-read string $id
@@ -31,5 +33,11 @@ class Author extends BaseModel
             'author' => 'string',
             'author_url' => 'string',
         ];
+    }
+
+    /** @return BelongsToMany<Plugin, covariant self> */
+    public function plugins(): BelongsToMany
+    {
+        return $this->belongsToMany(Plugin::class, 'plugin_authors', 'author_id', 'plugin_id', 'id', 'id');
     }
 }
