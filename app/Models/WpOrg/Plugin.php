@@ -8,55 +8,58 @@ use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\PluginFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use InvalidArgumentException;
 
 /**
- * @property-read string $id
- * @property-read string $slug
- * @property-read string $name
- * @property-read string $short_description
- * @property-read string $description
- * @property-read string $version
- * @property-read string $author
- * @property-read string|null $requires
- * @property-read string|null $requires_php
- * @property-read string|null $tested
- * @property-read string $download_link
- * @property-read CarbonImmutable|null $added
- * @property-read CarbonImmutable|null $last_updated
- * @property-read string|null $author_profile
- * @property-read int $rating
- * @property-read int $num_ratings
- * @property-read int $support_threads
- * @property-read int $support_threads_resolved
- * @property-read int $active_installs
- * @property-read int $downloaded
- * @property-read string|null $homepage
- * @property-read string|null $donate_link
- * @property-read string|null $business_model
- * @property-read string|null $commercial_support_url
- * @property-read string|null $support_url
- * @property-read string|null $preview_link
- * @property-read string|null $repository_url
+ * @property-read string                                             $id
+ * @property-read string                                             $slug
+ * @property-read string                                             $name
+ * @property-read string                                             $short_description
+ * @property-read string                                             $description
+ * @property-read string                                             $version
+ * @property-read string                                             $author
+ * @property-read string|null                                        $requires
+ * @property-read string|null                                        $requires_php
+ * @property-read string|null                                        $tested
+ * @property-read string                                             $download_link
+ * @property-read CarbonImmutable|null                               $added
+ * @property-read CarbonImmutable|null                               $last_updated
+ * @property-read string|null                                        $author_profile
+ * @property-read int                                                $rating
+ * @property-read int                                                $num_ratings
+ * @property-read int                                                $support_threads
+ * @property-read int                                                $support_threads_resolved
+ * @property-read int                                                $active_installs
+ * @property-read int                                                $downloaded
+ * @property-read string|null                                        $homepage
+ * @property-read string|null                                        $donate_link
+ * @property-read string|null                                        $business_model
+ * @property-read string|null                                        $commercial_support_url
+ * @property-read string|null                                        $support_url
+ * @property-read string|null                                        $preview_link
+ * @property-read string|null                                        $repository_url
  *
- * @property-read string $ac_origin
- * @property-read CarbonImmutable $ac_created
- * @property-read array<string, mixed> $ac_raw_metadata
+ * @property-read string                                             $ac_origin
+ * @property-read CarbonImmutable                                    $ac_created
+ * @property-read array<string, mixed>                               $ac_raw_metadata
+ *
+ * // Relationships
+ * @property-read Collection<int,Author>                             $contributors
  *
  * // Synthesized attributes
- * @property-read array<array-key, mixed> $banners // TODO
+ * @property-read array<array-key, mixed>                            $banners       // TODO
  * @property-read array<array-key, array{src: string, caption: string}> $screenshots
- * @property-read array<string, mixed> $contributors // TODO
- * @property-read array<string, string> $versions
- * @property-read array<string, string> $sections
+ * @property-read array<string, string>                              $versions
+ * @property-read array<string, string>                              $sections
  * @property-read array{"1":int, "2":int, "3":int, "4":int, "5":int} $ratings
- * @property-read string[] $requires_plugins
- * @property-read array<string, string> $icons
- * @property-read array<array-key, mixed> $compatibility // TODO (it only ever seems to be empty)
- * @property-read array<string, string> $upgrade_notice
+ * @property-read string[]                                           $requires_plugins
+ * @property-read array<string, string>                              $icons
+ * @property-read array<array-key, mixed>                            $compatibility // TODO (it only ever seems to be empty)
+ * @property-read array<string, string>                              $upgrade_notice
  */
 final class Plugin extends BaseModel
 {
@@ -158,6 +161,10 @@ final class Plugin extends BaseModel
             $instance->addTags($metadata['tags']);
         }
 
+        if (isset($metadata['contributors']) && is_array($metadata['contributors'])) {
+            $instance->addContributors($metadata['contributors']);
+        }
+
         return $instance;
     }
 
@@ -197,6 +204,16 @@ final class Plugin extends BaseModel
 
     //endregion
 
+    //region Relationships
+
+    /** @return BelongsToMany<Author, covariant self> */
+    public function contributors(): BelongsToMany
+    {
+        return $this->belongsToMany(Author::class, 'plugin_authors', 'plugin_id', 'author_id', 'id', 'id');
+    }
+
+    //endregion
+
     //region Getters
 
     /** @return array<string,mixed> */
@@ -210,12 +227,6 @@ final class Plugin extends BaseModel
     public function getCompatibility(): array
     {
         return $this->getMetadataArray('compatibility');
-    }
-
-    /** @return array<string,mixed> */
-    public function getContributors(): array
-    {
-        return $this->getMetadataArray('contributors');
     }
 
     public function getDownloadLink(): string
@@ -322,12 +333,6 @@ final class Plugin extends BaseModel
         return Attribute::make(get: $this->getCompatibility(...), set: self::_readonly(...));
     }
 
-    /** @return Attribute<array<array-key, mixed>, never> */
-    public function contributors(): Attribute
-    {
-        return Attribute::make(get: $this->getContributors(...), set: self::_readonly(...));
-    }
-
     /** @return Attribute<string, never> (actually Attribute<string,string> but we want it to _look_ read-only) */
     public function downloadLink(): Attribute
     {
@@ -415,6 +420,24 @@ final class Plugin extends BaseModel
     public function tagsArray(): array
     {
         return $this->tags()->select('name', 'slug')->pluck('name', 'slug')->toArray();
+    }
+
+    /** @param array<string, array<string, string>> $contributors */
+    public function addContributors(array $contributors): self
+    {
+        $authors = [];
+        foreach ($contributors as $username => $data) {
+            $authors[] = Author::firstOrCreate(
+                ['user_nicename' => $username],
+                [
+                    'display_name' => $data['display_name'] ?? $username,
+                    'profile' => $data['profile'] ?? null,
+                    'avatar' => $data['avatar'] ?? null,
+                ],
+            );
+        }
+        $this->contributors()->saveMany($authors);
+        return $this;
     }
 
     //endregion

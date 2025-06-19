@@ -41,6 +41,7 @@ class QueryPluginsService
         $totalPages = (int)ceil($total / $perPage);
 
         $plugins = $query
+            ->with('contributors')
             ->offset(($page - 1) * $perPage)
             ->limit($perPage)
             ->get()

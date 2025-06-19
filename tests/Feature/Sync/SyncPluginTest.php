@@ -104,12 +104,11 @@ describe('Sync Plugins', function () {
             )
             ->and($plugin->author)->toBe('<a href="http://zanto.org/">Ayebare Mucunguzi</a>')
             ->and($plugin->author_profile)->toBe('https://profiles.wordpress.org/brooksx/')
-            ->and($plugin->contributors)->toBe([
-                'brooksx' => [
-                    'profile' => 'https://profiles.wordpress.org/brooksx/',
-                    'avatar' => 'https://secure.gravatar.com/avatar/4fa021b564189f92bf90322a1215401d?s=96&d=monsterid&r=g',
-                    'display_name' => 'Ayebare Mucunguzi Brooks',
-                ],
+            ->and($plugin->contributors->toArray()[0])->toMatchArray([
+                'user_nicename' => 'brooksx',
+                'profile' => 'https://profiles.wordpress.org/brooksx/',
+                'avatar' => 'https://secure.gravatar.com/avatar/4fa021b564189f92bf90322a1215401d?s=96&d=monsterid&r=g',
+                'display_name' => 'Ayebare Mucunguzi Brooks',
             ])
             ->and($plugin->requires)->toBe('3.1')
             ->and($plugin->tested)->toBe('4.1.41')
@@ -124,7 +123,10 @@ describe('Sync Plugins', function () {
             ->and($plugin->support_threads_resolved)->toBe(0)
             ->and($plugin->active_installs)->toBe(10)
             ->and($plugin->downloaded)->toBe(2616)
-            ->and($plugin->last_updated)->toBeBetween(new DateTime('2015-01-28 9:41pm GMT'), new DateTime('2015-01-28 10:41pm GMT'))
+            ->and($plugin->last_updated)->toBeBetween(
+                new DateTime('2015-01-28 9:41pm GMT'),
+                new DateTime('2015-01-28 10:41pm GMT'),
+            )
             ->and($plugin->added)->toBeBetween(new DateTime('2015-01-20'), new DateTime('2015-01-21'))
             ->and($plugin->homepage)->toBe('http://example.org/')
             ->and($plugin->sections)->toHaveKeys(['description', 'installation', 'faq', 'changelog', 'reviews'])

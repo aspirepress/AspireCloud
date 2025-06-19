@@ -6,6 +6,7 @@ namespace App\Values\WpOrg\Plugins;
 
 use App\Models\WpOrg\Plugin;
 use App\Values\DTO;
+use App\Values\WpOrg\Author;
 use Bag\Attributes\Transforms;
 use Bag\Values\Optional;
 use DateTimeInterface;
@@ -17,7 +18,7 @@ readonly class PluginResponse extends DTO
     /**
      * @param array<array-key, mixed> $banners
      * @param array<array-key, array{src: string, caption: string}> $screenshots
-     * @param array<string, mixed> $contributors
+     * @param array<string, Author> $contributors
      * @param array<string, string> $versions
      * @param array<string, string> $sections
      * @param array{"1":int, "2":int, "3":int, "4":int, "5":int} $ratings
@@ -112,7 +113,9 @@ readonly class PluginResponse extends DTO
             // plugin_information only
             'sections' => $plugin->sections,
             'versions' => $plugin->versions,
-            'contributors' => $plugin->contributors,
+            'contributors' => $plugin->contributors->mapWithKeys(
+                fn($authorModel) => [$authorModel->user_nicename => Author::from($authorModel)],
+            )->toArray(),
             'screenshots' => $plugin->screenshots,
             'support_url' => $plugin->support_url,
             'upgrade_notice' => $plugin->upgrade_notice ?: $none,
