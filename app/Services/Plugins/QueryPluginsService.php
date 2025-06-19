@@ -11,9 +11,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class QueryPluginsService
 {
-    /**
-     * Query plugins with filters and pagination
-     */
     public function queryPlugins(QueryPluginsRequest $req): QueryPluginsResponse
     {
         $page = $req->page;
@@ -46,7 +43,7 @@ class QueryPluginsService
             ->limit($perPage)
             ->get()
             ->unique('slug')
-            ->map(fn($plugin) => PluginResponse::from($plugin)->asQueryPluginsResponse());
+            ->map(fn($plugin) => PluginResponse::from($plugin));
 
         return QueryPluginsResponse::from([
             'plugins' => $plugins,
@@ -118,7 +115,16 @@ class QueryPluginsService
     /** @param Builder<Plugin> $query */
     public static function applyAuthor(Builder $query, string $author): Builder
     {
-        return $query->whereRaw("author %> '$author'");
+        return $query->where(fn(Builder $q)
+            => $q
+            ->whereRaw("author %> '$author'")
+            ->orWhereHas(
+                'contributors',
+                fn(Builder $q)
+                    => $q
+                    ->whereRaw("user_nicename %> '$author'")
+                    ->orWhereRaw("display_name %> '$author'"),
+            ));
     }
 
     /** @param Builder<Plugin> $query */
