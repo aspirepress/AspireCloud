@@ -104,13 +104,13 @@ readonly class PluginResponse extends DTO
             'donate_link' => $plugin->donate_link,
             'requires_plugins' => $plugin->requires_plugins,
 
-            // query_plugins only
+            // (formerly) query_plugins only
             'downloaded' => $plugin->downloaded,
             'short_description' => $plugin->short_description,
             'description' => $plugin->description,
             'icons' => $plugin->icons,
 
-            // plugin_information only
+            // (formerly) plugin_information only
             'sections' => $plugin->sections,
             'versions' => $plugin->versions,
             'contributors' => $plugin->contributors->mapWithKeys(
@@ -129,35 +129,6 @@ readonly class PluginResponse extends DTO
             'ac_origin' => $plugin->ac_origin,
             'ac_created' => $plugin->ac_created,
         ];
-    }
-
-    public function asQueryPluginsResponse(): static
-    {
-        $none = new Optional();
-        return $this->with([
-            'sections' => $none,
-            'versions' => $none,
-            'contributors' => $none,
-            'screenshots' => $none,
-            'support_url' => $none,
-            'upgrade_notice' => $none,
-            'business_model' => $none,
-            'repository_url' => $none,
-            'commercial_support_url' => $none,
-            'banners' => $none,
-            'preview_link' => $none,
-        ]);
-    }
-
-    public function asPluginInformationResponse(): static
-    {
-        $none = new Optional();
-        return $this->with([
-            'downloaded' => $none,
-            'short_description' => $none,
-            'description' => $none,
-            'icons' => $none,
-        ]);
     }
 
     private static function formatLastUpdated(?DateTimeInterface $lastUpdated): ?string

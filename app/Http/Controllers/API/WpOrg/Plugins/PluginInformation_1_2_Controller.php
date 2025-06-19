@@ -44,7 +44,7 @@ class PluginInformation_1_2_Controller extends Controller
             $resource = ClosedPluginResponse::from($plugin);
             $status = 404;
         } else {
-            $resource = PluginResponse::from($plugin)->asPluginInformationResponse();
+            $resource = PluginResponse::from($plugin);
             $status = 200;
         }
         return response()->json($resource, $status);
