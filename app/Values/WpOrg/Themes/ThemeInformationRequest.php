@@ -2,12 +2,12 @@
 
 namespace App\Values\WpOrg\Themes;
 
+use App\Values\DTO;
 use Bag\Attributes\StripExtraParameters;
-use Bag\Bag;
 use Illuminate\Http\Request;
 
 #[StripExtraParameters]
-readonly class ThemeInformationRequest extends Bag
+readonly class ThemeInformationRequest extends DTO
 {
     use ThemeFields;
 

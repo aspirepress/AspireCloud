@@ -2,11 +2,11 @@
 
 namespace App\Values\WpOrg\Plugins;
 
-use Bag\Bag;
+use App\Values\DTO;
 use Bag\Values\Optional;
 use Illuminate\Support\Collection;
 
-readonly class PluginUpdateCheckResponse extends Bag
+readonly class PluginUpdateCheckResponse extends DTO
 {
     /**
      * @param Collection<string, PluginUpdateData> $plugins

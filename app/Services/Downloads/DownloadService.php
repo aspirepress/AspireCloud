@@ -70,9 +70,9 @@ class DownloadService implements Downloader
 
         if (!$response->successful()) {
             $status = $response->status();
-            $message = "Download failed: [status: $status, url: $upstreamUrl]";
-            Log::error($message, [...$context, 'response' => $response]);
-            throw new \RuntimeException($message);
+            $reason = $response->getReasonPhrase();
+            Log::info("Asset download failed: $reason [url: $upstreamUrl]", [...$context, 'response' => $response]);
+            abort($status, $reason);
         }
 
         Log::debug("Saving $file downloaded from $upstreamUrl", $context);

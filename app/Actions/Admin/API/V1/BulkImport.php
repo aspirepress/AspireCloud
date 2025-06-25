@@ -82,7 +82,13 @@ class BulkImport
 
         assert(is_a($class, Model::class, true));
 
-        $class::query()->where('slug', $slug)->delete();
+        if ($type === 'plugin') {
+            Plugin::where('slug', $slug)->delete();
+            ClosedPlugin::where('slug', $slug)->delete();
+        } elseif ($type === 'theme') {
+            Theme::where('slug', $slug)->delete();
+        }
+
         return $class::fromSyncMetadata($metadata);
     }
 }

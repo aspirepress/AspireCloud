@@ -3,10 +3,10 @@
 namespace App\Values\WpOrg\Themes;
 
 use App\Models\WpOrg\Theme;
-use Bag\Bag;
+use App\Values\DTO;
 use Illuminate\Support\Collection;
 
-readonly class ThemeUpdateCheckResponse extends Bag
+readonly class ThemeUpdateCheckResponse extends DTO
 {
     /**
      * @param Collection<string, ThemeUpdateData> $themes
