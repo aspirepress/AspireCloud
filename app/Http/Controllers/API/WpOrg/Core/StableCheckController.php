@@ -24,7 +24,12 @@ class StableCheckController extends Controller
     /** @return array<string, string> */
     private function makeResponse(): array
     {
-        return $this->getUpstreamResponse() ?? $this->hardwired_response();
+        try {
+            return $this->getUpstreamResponse() ?? $this->hardwired_response();
+        } catch (\Exception $e) {
+            report($e);
+            return $this->hardwired_response();
+        }
     }
 
     /** @return array<string, string>|null */
