@@ -15,21 +15,25 @@ class StableCheckController extends Controller
 
     public function __construct(private readonly CacheManager $cache) {}
 
+    /** @return array<string, string> */
     public function __invoke(Request $request): array
     {
         return $this->cache->remember('wporg.core.stable', self::TTL_SECS, $this->makeResponse(...));
     }
 
+    /** @return array<string, string> */
     private function makeResponse(): array
     {
         return $this->getUpstreamResponse() ?? $this->hardwired_response();
     }
 
+    /** @return array<string, string>|null */
     private function getUpstreamResponse(): ?array
     {
         return Http::get('https://api.wordpress.org/core/stable-check/1.0/')->json();
     }
 
+    /** @return array<string, string> */
     private function hardwired_response(): array
     {
         return [
