@@ -64,13 +64,13 @@ class DownloadService implements Downloader
         $s3->put($path, $response->resource());
     }
 
-    private function redirectToS3($path): RedirectResponse
+    private function redirectToS3(string $path): RedirectResponse
     {
         $s3 = Storage::disk('s3');
         return redirect($s3->temporaryUrl($path, now()->addSeconds(60)));
     }
 
-    private function passThroughToS3($path): Response
+    private function passThroughToS3(string $path): Response
     {
         $s3 = Storage::disk('s3');
         $url = $s3->temporaryUrl($path, now()->addSeconds(60));
