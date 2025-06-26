@@ -6,6 +6,7 @@ use App\Http\Controllers\API\WpOrg\Core\BrowseHappyController;
 use App\Http\Controllers\API\WpOrg\Core\ImportersController;
 use App\Http\Controllers\API\WpOrg\Core\ServeHappyController;
 use App\Http\Controllers\API\WpOrg\Core\StableCheckController;
+use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_0_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
 use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
@@ -32,6 +33,7 @@ Route::prefix('/')
         $router->match(['get', 'post'], '/core/stable-check/{version}', StableCheckController::class)->where(['version' => '1.0']);
         $router->get('/core/importers/{version}', ImportersController::class)->where(['version' => '1.[01]']);
 
+        $router->get('/plugins/info/1.0/{slug}.json', PluginInformation_1_0_Controller::class);
         $router->get('/plugins/info/1.2', PluginInformation_1_2_Controller::class);
         $router->post('/plugins/update-check/1.1', PluginUpdateCheck_1_1_Controller::class);
 
