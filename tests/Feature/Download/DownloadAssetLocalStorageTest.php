@@ -5,6 +5,7 @@ use App\Jobs\DownloadAssetJob;
 use App\Models\WpOrg\Asset;
 use App\Services\Downloads\DownloadService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
@@ -30,6 +31,7 @@ describe('DownloadService on local storage', function () {
 
         // Act
         $response = $service->download(
+            new Request(),
             AssetType::PLUGIN,
             'test-plugin',
             'test-plugin.1.0.0.zip',
