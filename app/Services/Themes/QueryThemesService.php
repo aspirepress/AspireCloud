@@ -26,7 +26,9 @@ class QueryThemesService
             ->when($search, self::applySearch(...))
             ->when($req->theme, self::applyTheme(...))
             ->when($author, self::applyAuthor(...))
-            ->when($req->tags, self::applyTags(...));
+            ->when($req->tags, self::applyTags(...))
+            ->when($req->ac_tags, self::applyAcTags(...));
+
 
         $total = $themesBaseQuery->count();
 
@@ -96,6 +98,17 @@ class QueryThemesService
     private static function applyTags(Builder $query, array $tags): void
     {
         $query->whereHas('tags', fn(Builder $q) => $q->whereIn('slug', $tags));
+    }
+
+    /**
+     * @param Builder<Theme> $query
+     * @param string[]       $ac_tags
+     */
+    private static function applyAcTags(Builder $query, array $ac_tags): void
+    {
+        foreach ($ac_tags as $tag) {
+            $query->whereHas('tags', fn(Builder $q) => $q->where('slug', $tag));
+        }
     }
 
     private static function normalizeSearchString(?string $search): ?string
