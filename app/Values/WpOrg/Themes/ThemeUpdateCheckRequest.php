@@ -2,6 +2,7 @@
 
 namespace App\Values\WpOrg\Themes;
 
+use App\Utils\JSON;
 use App\Values\DTO;
 use Bag\Attributes\Transforms;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ readonly class ThemeUpdateCheckRequest extends DTO
     #[Transforms(Request::class)]
     public static function fromRequest(Request $request): array
     {
-        $decode = fn($key) => json_decode($request->post($key), true);
+        $decode = fn($key) => JSON::tryToAssoc($request->post($key) ?? '[]') ?? [];
         $themes = $decode('themes');
         return [
             'active' => $themes['active'],
