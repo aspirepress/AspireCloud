@@ -29,6 +29,16 @@ class JSON
         return static::decode($json, true, $depth, $flags);
     }
 
+    /** @return array<string, mixed>|null */
+    public static function tryToAssoc(string $json, int $depth = 512, int $flags = self::DEFAULT_JSON_OPTIONS): ?array
+    {
+        try {
+            return static::toAssoc($json, $depth, $flags);
+        } catch (JsonException) {
+            return null;
+        }
+    }
+
     /** @throws JsonException */
     public static function toObject(string $json, int $depth = 512, int $flags = self::DEFAULT_JSON_OPTIONS): stdClass
     {

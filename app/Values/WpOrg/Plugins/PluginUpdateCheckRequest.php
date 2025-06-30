@@ -2,6 +2,7 @@
 
 namespace App\Values\WpOrg\Plugins;
 
+use App\Utils\JSON;
 use App\Values\DTO;
 use Bag\Attributes\Transforms;
 use Illuminate\Http\Request;
@@ -34,7 +35,7 @@ readonly class PluginUpdateCheckRequest extends DTO
     #[Transforms(Request::class)]
     public static function fromRequest(Request $request): array
     {
-        $decode = fn($key) => json_decode($request->post($key), true);
+        $decode = fn($key) => JSON::tryToAssoc($request->post($key) ?? '[]') ?? [];
         return [
             'plugins' => $decode('plugins')['plugins'],
             'locale' => $decode('locale'),
