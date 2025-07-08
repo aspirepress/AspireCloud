@@ -34,21 +34,9 @@ Views/API Responses
 
 The application is organized into a few core systems:
 
-1.
-*
-*Plugin
-System
-** - Manages WordPress plugins
-2.
-*
-*Theme
-System
-** - Manages WordPress themes
-3.
-*
-*Download
-System
-** - Handles downloading of plugins and themes
+1. <b>Plugin System</b> - Manages WordPress plugins
+2. <b>Theme System</b> - Manages WordPress themes
+3. <b>Download System</b> - Handles downloading of plugins and themes
 
 ## Detailed Component Breakdown
 
@@ -74,48 +62,21 @@ Services
 
 #### Plugin Services
 
--
-*
-*PluginInformationService
-**: Retrieves detailed information about plugins
--
-*
-*PluginUpdateService
-**: Handles plugin update operations
--
-*
-*PluginHotTagsService
-**: Manages popular plugin tags
--
-*
-*QueryPluginsService
-**: Provides search and filtering capabilities for plugins
+- <b>PluginInformationService</b>: Retrieves detailed information about plugins
+- <b>PluginUpdateService</b>: Handles plugin update operations
+- <b>PluginHotTagsService</b>: Manages popular plugin tags
+- <b>QueryPluginsService</b>: Provides search and filtering capabilities for plugins
 
 #### Theme Services
 
--
-*
-*ThemeInformationService
-**: Retrieves detailed information about themes
--
-*
-*FeatureListService
-**: Manages theme features
--
-*
-*ThemeHotTagsService
-**: Manages popular theme tags
--
-*
-*QueryThemesService
-**: Provides search and filtering capabilities for themes
+- <b>ThemeInformationService</b>: Retrieves detailed information about themes
+- <b>FeatureListService</b>: Manages theme features
+- <b>ThemeHotTagsService</b>: Manages popular theme tags
+- <b>QueryThemesService</b>: Provides search and filtering capabilities for themes
 
 #### Download Service
 
--
-*
-*DownloadService
-**: Handles the downloading of plugins and themes
+- <b>DownloadService</b>: Handles the downloading of plugins and themes
 
 ### Data Layer
 
@@ -147,79 +108,27 @@ Data Layer
 
 The application uses Eloquent models to interact with the database:
 
--
-*
-*BaseModel
-**: Base class for all models
--
-*
-*User
-**: Represents application users
--
-*
-*WpOrg
-Models
-**: Models related to WordPress.org entities
-    -
-    *
-    *Asset
-    **: Represents plugin/theme assets
-    -
-    *
-    *Author
-    **: Represents plugin/theme authors
-    -
-    *
-    *Plugin
-    **: Represents WordPress plugins
-    -
-    *
-    *PluginTag
-    **: Represents plugin tags
-    -
-    *
-    *Theme
-    **: Represents WordPress themes
-    -
-    *
-    *ThemeTag
-    **: Represents theme tags
-    -
-    *
-    *ClosedPlugin
-    **: Represents plugins that have been closed
+- <b>BaseModel</b>: Base class for all models
+- <b>User</b>: Represents application users
+- <b>WpOrg Models</b>: Models related to WordPress.org entities
+    - <b>Asset</b>: Represents plugin/theme assets
+    - <b>Author</b>: Represents plugin/theme authors
+    - <b>Plugin</b>: Represents WordPress plugins
+    - <b>PluginTag</b>: Represents plugin tags
+    - <b>Theme</b>: Represents WordPress themes
+    - <b>ThemeTag</b>: Represents theme tags
+    - <b>ClosedPlugin</b>: Represents plugins that have been closed
 
 #### DTOs (Data Transfer Objects)
 
 The application uses DTOs to transfer data between layers:
 
--
-*
-*DTO
-**: Base class for all DTOs
--
-*
-*WpOrg
-DTOs
-**: DTOs related to WordPress.org entities
-    -
-    *
-    *Author
-    **: Represents plugin/theme authors
-    -
-    *
-    *PageInfo
-    **: Contains pagination information
-    -
-    *
-    *Plugin
-    DTOs
-    **: DTOs related to plugins
-    -
-    *
-    *Theme
-    DTOs
-    **: DTOs related to themes
+- <b>DTO</b>: Base class for all DTOs
+- <b>WpOrg DTOs</b>: DTOs related to WordPress.org entities
+    - <b>Author</b>: Represents plugin/theme authors
+    - <b>PageInfo</b>: Contains pagination information
+    - <b>Plugin DTOs</b>: DTOs related to plugins
+    - <b>Theme DTOs</b>: DTOs related to themes
 
 ### Controller Layer
 
@@ -353,20 +262,13 @@ The database schema consists of several tables that store information about plug
 
 The model layer uses Eloquent models to interact with the database. Key characteristics of the models include:
 
-1.
-*
-*Immutability
-**: Models are considered immutable and are replaced every time they are updated. This is implemented through:
+1. <b>Immutability</b>: Models are considered immutable and are replaced every time they are updated. This is implemented through:
     - Read-only attributes that throw exceptions when modified
-    - The use of
-      `immutable_datetime` cast for date fields
+   - The use of
+     `immutable_datetime` cast for date fields
     - Methods that create new instances rather than modifying existing ones
 
-2.
-*
-*Computed
-Attributes
-**: Many properties are computed attributes that retrieve data from the
+2. <b>Computed Attributes</b>: Many properties are computed attributes that retrieve data from the
 `ac_raw_metadata` JSON field. Examples include:
     -
     `banners`,
@@ -377,11 +279,7 @@ Attributes
     - These are implemented as getters that call methods to retrieve and process data from
       `ac_raw_metadata`
 
-3.
-*
-*Rewrite
-System
-**: The models include a URL rewriting system that transforms WordPress.org URLs to local URLs. This is currently implemented in the model layer but needs to be moved to a transformation layer on response DTOs.
+3. <b>Rewrite System</b>: The models include a URL rewriting system that transforms WordPress.org URLs to local URLs. This is currently implemented in the model layer but needs to be moved to a transformation layer on response DTOs.
 
 ### DTOs
 
