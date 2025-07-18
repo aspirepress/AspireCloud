@@ -2,11 +2,11 @@
 
 // Note: api routes are not prefixed, i.e. all routes in here are from the root like web routes
 
-use App\Http\Controllers\API\ExportController;
 use App\Http\Controllers\API\WpOrg\Core\BrowseHappyController;
 use App\Http\Controllers\API\WpOrg\Core\ImportersController;
 use App\Http\Controllers\API\WpOrg\Core\ServeHappyController;
 use App\Http\Controllers\API\WpOrg\Core\StableCheckController;
+use App\Http\Controllers\API\WpOrg\Export\ExportController;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_0_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
@@ -34,7 +34,8 @@ Route::prefix('/')
         $router->match(['get', 'post'], '/core/stable-check/{version}', StableCheckController::class)->where(['version' => '1.0']);
         $router->get('/core/importers/{version}', ImportersController::class)->where(['version' => '1.[01]']);
 
-        $router->get('/export/{type}', ExportController::class);
+        $router->get('/export/{type}', ExportController::class)
+            ->whereIn('type', ['plugins', 'themes', 'closed_plugins']);
 
         $router->get('/plugins/info/1.0/{slug}.json', PluginInformation_1_0_Controller::class);
         $router->get('/plugins/info/1.2', PluginInformation_1_2_Controller::class);

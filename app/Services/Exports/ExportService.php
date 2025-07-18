@@ -23,16 +23,6 @@ class ExportService
      */
     public function export(array $req): StreamedResponse
     {
-        [
-            'type' => $type,
-        ] = $req + [
-            'type' => null,
-        ];
-
-        if (!in_array($type, ['plugins', 'themes', 'closed_plugins'], true)) {
-            throw new \InvalidArgumentException("Invalid export type: $type");
-        }
-
         $path = $this->getS3Path($req);
         if (! Storage::disk('s3')->exists($path)) {
             $this->exportToS3($req, $path);
@@ -49,12 +39,8 @@ class ExportService
      */
     private function getS3Path(array $req): string
     {
-        [
-            'after' => $after,
-            'type' => $type,
-        ] = $req + [
-            'after' => null,
-        ];
+        $type = $req['type'];
+        $after = $req['after'];
 
         $basePath = 'exports/' . $type;
         $filename = $type . '-' . ($after ? $after : 'full') . '.ndjson';
@@ -69,12 +55,8 @@ class ExportService
      */
     private function getQueryBuilder(array $req): Builder
     {
-        [
-            'after' => $after,
-            'type' => $type,
-        ] = $req + [
-            'after' => null,
-        ];
+        $type = $req['type'];
+        $after = $req['after'];
 
         $query = match ($type) {
             'plugins' => Plugin::query(),
@@ -157,7 +139,6 @@ class ExportService
         });
 
         $response->headers->set('Content-Type', 'application/x-ndjson');
-        $response->headers->set('Cache-Control', 'public, max-age=3600');
         $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($path) . '"');
 
         return $response;

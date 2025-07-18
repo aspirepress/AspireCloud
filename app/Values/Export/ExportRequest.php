@@ -5,34 +5,19 @@ declare(strict_types=1);
 namespace App\Values\Export;
 
 use App\Values\DTO;
-use Bag\Attributes\Transforms;
+use Bag\Attributes\Validation\In;
+use Bag\Attributes\Validation\Regex;
 use Bag\Attributes\StripExtraParameters;
-use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
+use Bag\Attributes\Laravel\FromRouteParameter;
 
-// Inspired from QueryPluginsRequest.
 #[StripExtraParameters]
 readonly class ExportRequest extends DTO
 {
-    /** @param string|null $after */
     public function __construct(
-        public ?string $after = null,  // date to query after
+        #[FromRouteParameter('type')]
+        #[In('plugins', 'themes', 'closed_plugins')]
+        public string $type,
+        #[Regex('/^\d{4}-\d{2}-\d{2}$/')]
+        public ?string $after = null,
     ) {}
-
-    /** @return array<string, mixed> */
-    #[Transforms(Request::class)]
-    public static function fromRequest(Request $request, string $type): array
-    {
-        if (!in_array($type, ['plugins', 'themes', 'closed_plugins'], true)) {
-            throw ValidationException::withMessages([
-                'type' => "Invalid export type: $type",
-            ]);
-        }
-
-        $query = $request->validate(['after' => 'nullable|date|date_format:Y-m-d']);
-
-        $query['type'] = $type;
-
-        return $query;
-    }
 }

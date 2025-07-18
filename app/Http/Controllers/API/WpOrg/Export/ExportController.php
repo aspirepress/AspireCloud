@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\WpOrg\Export;
 
 use App\Http\Controllers\Controller;
 use App\Services\Exports\ExportService;
@@ -16,12 +16,11 @@ class ExportController extends Controller
 
     public function __invoke(Request $request, string $type): Response
     {
-        try {
-            $req = ExportRequest::fromRequest($request, $type);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Invalid request'], 400);
-        }
+        $req = ExportRequest::from([
+            ...$request->all(),
+            'type' => $type,
+        ]);
 
-        return $this->exportService->export($req);
+        return $this->exportService->export($req->toArray());
     }
 }

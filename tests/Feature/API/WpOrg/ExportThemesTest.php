@@ -69,8 +69,14 @@ it('returns an error if invalid arg format is used in the export themes request'
         ->create(['ac_created' => '2025-01-01 00:00:00']);
 
     $response = $this
-        ->get(export_themes_uri(['after' => '2025-01-01 00:00:00']));
+        ->getJson(export_themes_uri(['after' => '2025-01-01 00:00:00']));
 
-    $response->assertStatus(400);
-    $response->assertJson(['error' => 'Invalid request']);
+    $response->assertStatus(422);
+    $response->assertJson(['message' => 'The after field format is invalid.']);
+
+    $response = $this
+        ->getJson(export_themes_uri(['after' => '20250101']));
+
+    $response->assertStatus(422);
+    $response->assertJson(['message' => 'The after field format is invalid.']);
 });

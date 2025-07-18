@@ -63,8 +63,19 @@ it('returns an error if invalid arg format is used in the export plugins request
     Plugin::factory()->create(['ac_created' => '2025-01-01 00:00:00']);
 
     $response = $this
-        ->get(export_plugins_uri(['after' => '2025-01-01 00:00:00']));
+        ->getJson(export_plugins_uri(['after' => '2025-01-01 00:00:00']));
 
-    $response->assertStatus(400);
-    $response->assertJson(['error' => 'Invalid request']);
+    $response->assertStatus(422);
+    $response->assertJson(['message' => 'The after field format is invalid.']);
+
+    $response = $this
+        ->getJson(export_plugins_uri(['after' => '20250101']));
+
+    $response->assertStatus(422);
+    $response->assertJson(['message' => 'The after field format is invalid.']);
+});
+
+it('returns an error if invalid type is used in the export request', function () {
+    $response = $this->getJson('/export/some_type');
+    $response->assertStatus(404);
 });
