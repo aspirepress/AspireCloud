@@ -6,8 +6,9 @@ use Closure;
 use App\Models\WpOrg\Theme;
 use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\ClosedPlugin;
-use Illuminate\Database\Eloquent\Builder;
+use App\Values\WpOrg\Export\ExportRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportService
@@ -18,10 +19,10 @@ class ExportService
      * Export specific packages (plugins, themes, closed plugins) to S3
      * and return a streamed response.
      *
-     * @param array<string,string> $req
+     * @param ExportRequest $req
      * @return StreamedResponse
      */
-    public function export(array $req): StreamedResponse
+    public function export(ExportRequest $req): StreamedResponse
     {
         $path = $this->getS3Path($req);
         if (! Storage::disk('s3')->exists($path)) {
@@ -34,13 +35,13 @@ class ExportService
     /**
      * Get the S3 path for the export based on the request parameters.
      *
-     * @param array<string,string> $req
+     * @param ExportRequest $req
      * @return string
      */
-    private function getS3Path(array $req): string
+    private function getS3Path(ExportRequest $req): string
     {
-        $type = $req['type'];
-        $after = $req['after'];
+        $type = $req->type;
+        $after = $req->after;
 
         $basePath = 'exports/' . $type;
         $filename = $type . '-' . ($after ? $after : 'full') . '.ndjson';
@@ -50,13 +51,13 @@ class ExportService
     /**
      * Get the query builder for the specified export type.
      *
-     * @param array<string,string> $req
+     * @param ExportRequest $req
      * @return Builder
      */
-    private function getQueryBuilder(array $req): Builder
+    private function getQueryBuilder(ExportRequest $req): Builder
     {
-        $type = $req['type'];
-        $after = $req['after'];
+        $type = $req->type;
+        $after = $req->after;
 
         $query = match ($type) {
             'plugins' => Plugin::query(),
@@ -94,11 +95,11 @@ class ExportService
     /**
      * Export the data to S3.
      *
-     * @param array<string,string> $req
+     * @param ExportRequest $req
      * @param string $path
      * @return void
      */
-    public function exportToS3(array $req, string $path): void
+    public function exportToS3(ExportRequest $req, string $path): void
     {
         $queryBuilder = $this->getQueryBuilder($req);
         $transformer = $this->getTransformer();

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Values\Export;
+namespace App\Values\WpOrg\Export;
 
 use App\Values\DTO;
 use Bag\Attributes\Validation\In;

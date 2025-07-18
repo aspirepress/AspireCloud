@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\WpOrg\Export;
 
 use App\Http\Controllers\Controller;
 use App\Services\Exports\ExportService;
-use App\Values\Export\ExportRequest;
+use App\Values\WpOrg\Export\ExportRequest;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -21,6 +21,6 @@ class ExportController extends Controller
             'type' => $type,
         ]);
 
-        return $this->exportService->export($req->toArray());
+        return $this->exportService->export($req);
     }
 }
