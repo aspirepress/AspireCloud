@@ -9,7 +9,6 @@ use App\Models\WpOrg\ClosedPlugin;
 use App\Values\WpOrg\Export\ExportRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportService
 {
@@ -20,16 +19,16 @@ class ExportService
      * and return a streamed response.
      *
      * @param ExportRequest $req
-     * @return StreamedResponse
+     * @return string
      */
-    public function export(ExportRequest $req): StreamedResponse
+    public function getExportedFilePath(ExportRequest $req): string
     {
         $path = $this->getS3Path($req);
         if (! Storage::disk('s3')->exists($path)) {
             $this->exportToS3($req, $path);
         }
 
-        return $this->streamFromS3($path);
+        return $path;
     }
 
     /**
@@ -116,32 +115,5 @@ class ExportService
         Storage::disk('s3')->writeStream($path, $stream);
 
         \Safe\fclose($stream);
-    }
-
-    /**
-     * Stream the exported data from S3.
-     *
-     * @param string $path
-     * @return StreamedResponse
-     */
-    private function streamFromS3(string $path): StreamedResponse
-    {
-        $response = new StreamedResponse(function () use ($path) {
-            $stream = Storage::disk('s3')->readStream($path);
-            if (!$stream) {
-                throw new \RuntimeException("Failed to read stream from S3 for key: $path");
-            }
-
-            while (!feof($stream)) {
-                echo fgets($stream, 16384);
-            }
-
-            \Safe\fclose($stream);
-        });
-
-        $response->headers->set('Content-Type', 'application/x-ndjson');
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($path) . '"');
-
-        return $response;
     }
 }
