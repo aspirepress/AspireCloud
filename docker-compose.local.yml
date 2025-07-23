@@ -1,0 +1,90 @@
+services:
+    webapp:
+        build:
+            context: .
+            dockerfile: docker/webapp/Dockerfile
+            target: dev
+        volumes:
+            - .:/app
+            - ./docker/webapp/Caddyfile:/etc/caddy/Caddyfile
+            - ./docker/webapp/php.ini:/usr/local/etc/php/php.ini
+        networks:
+            traefik: ~
+            app-net: ~
+            aspire-net:
+                aliases:
+                    - 'api.aspiredev.org'
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.webapp.rule=Host(`api.aspiredev.org`)"
+            - "traefik.http.routers.webapp.entrypoints=web,web-secure"
+            - "traefik.http.routers.webapp.tls=true"
+            - "traefik.http.services.webapp.loadbalancer.server.port=80"
+
+    redis:
+        image: redis:latest
+        networks:
+            - app-net
+
+    postgres:
+        image: postgres:latest
+        environment:
+            - POSTGRES_PASSWORD=password
+            - PGDATA=/opt/pgdata
+            - POSTGRES_DB=aspirecloud
+        volumes:
+            - postgresdata:/opt/pgdata
+        ports:
+            - "${POSTGRES_PORT:-5432}:5432"
+        networks:
+            app-net: ~
+            aspire-net:
+                aliases:
+                    - 'db.aspiredev.org'
+
+    queue-worker:
+        build:
+            context: .
+            dockerfile: docker/laravel-worker/Dockerfile
+            target: dev
+        entrypoint: [ 'bin/queue-worker' ]
+        restart: unless-stopped
+        volumes:
+            - .:/app
+        networks:
+            - app-net
+            - aspire-net
+
+    cli:
+        build:
+            context: .
+            dockerfile: docker/cli/Dockerfile
+            target: dev
+        volumes:
+            - .:/app
+        networks:
+            - app-net
+            - aspire-net
+
+    mailpit:
+        image: axllent/mailpit:v1.21.4
+        restart: unless-stopped
+        networks:
+            app-net: ~
+            aspire-net:
+                aliases:
+                    - 'mail.aspiredev.org'
+        environment:
+            MP_MAX_MESSAGES: 500
+            MP_SMTP_AUTH_ACCEPT_ANY: 1
+            MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
+networks:
+    app-net: ~
+    aspire-net:
+        external: true
+    traefik:
+        external: true
+
+volumes:
+    postgresdata: ~
