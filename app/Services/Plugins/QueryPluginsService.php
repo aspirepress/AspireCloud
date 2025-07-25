@@ -18,11 +18,11 @@ class QueryPluginsService
         $perPage = $req->per_page;
         $browse = $req->browse ?: 'popular';
         $search = $req->search;
-        $tags = $req->tags ?? null;
+        $tags = $req->tags ?? [];
         $author = $req->author;
 
         $search = self::normalizeSearchString($search);
-        $tags and $tags = array_map(fn($tag) => self::normalizeSearchString($tag), (array) $tags);
+        $tags = array_map(fn($tag) => self::normalizeSearchString($tag), (array) $tags);
         $author = self::normalizeSearchString($author);
 
         // Ad hoc pipeline because Laravel's Pipeline class is awful
