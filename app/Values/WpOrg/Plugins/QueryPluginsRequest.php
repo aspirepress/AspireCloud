@@ -34,7 +34,7 @@ readonly class QueryPluginsRequest extends DTO
     {
         $query = $request->query();
 
-        $query['tags'] = (array)Arr::pull($query, 'tag', []);
+        $query['tags'] = (array) Arr::pull($query, 'tags', []);
 
         // $defaultFields = [
         //     'description' => true,
