@@ -50,6 +50,13 @@
         }
     },
     "scripts": {
+        "check": [
+            "@format:check",
+            "@lint"
+        ],
+        "format": "@pint",
+        "format:check": "@pint --test",
+        "lint": "@phpstan",
         "phpstan": "phpstan --memory-limit=2G --verbose",
         "pint": "pint",
         "post-autoload-dump": [
