@@ -59,16 +59,18 @@ jobs:
       - name: Install dependencies
         run: composer install
 
-      - name: Prepare environment
+      - name: Prepare tests
         run: |
           cp .env.example .env
           php artisan key:generate
           php artisan migrate
-          env:
-            DB_HOST: localhost
-            DB_PORT: ${{ job.services.postgres.ports[5432] }}
+        env:
+          DB_HOST: localhost
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
 
       - name: Run PHPUnit
-        run: |
-          php artisan test
+        run: php artisan test
+        env:
+          DB_HOST: localhost
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
 
