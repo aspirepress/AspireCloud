@@ -65,6 +65,7 @@ jobs:
           php artisan key:generate
           php artisan migrate
         env:
+          CACHE_STORE: array
           DB_HOST: localhost
           DB_PORT: ${{ job.services.postgres.ports[5432] }}
           DB_USERNAME: postgres
@@ -74,6 +75,7 @@ jobs:
       - name: Run PHPUnit
         run: php artisan test
         env:
+          CACHE_STORE: array
           DB_HOST: localhost
           DB_PORT: ${{ job.services.postgres.ports[5432] }}
           DB_USERNAME: postgres
