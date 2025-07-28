@@ -10,8 +10,23 @@ permissions: # added using https://github.com/step-security/secure-repo
   contents: read
 
 jobs:
-  build:
+  phpunit:
     runs-on: ubuntu-24.04
+
+    strategy:
+      matrix:
+        php-versions: [ '8.4' ]
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432/tcp
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
 
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -19,32 +34,41 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup PHP
         uses: shivammathur/setup-php@0f7f1d08e3e32076e51cae65eb0b0c871405b16e # v2
         with:
-          php-version: '8.4'
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, pgsql
+          # not doing coverage in CI yet
+          # coverage: xdebug
 
-      - name: Install Composer dependencies
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache composer dependencies
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
         run: composer install
 
-      - name: Create .env file
-        run: cp .env.example .env
-
-      - name: Create App Key
-        run: php artisan key:generate
-
-      - name: Run tests
+      - name: Prepare environment
         run: |
-          vendor/bin/phpstan --memory-limit=1G analyse
-          php artisan test tests/Unit
+          cp .env.example .env
+          php artisan key:generate
+          php artisan migrate
+          env:
+            DB_HOST: postgres
+            DB_PORT: ${{ job.services.postgres.ports[5432] }}
 
-      # [chuck 2025-02-06] Removed pint.  Its not only grotesquely slow, it doesn't even fix things in one pass.
-      # If we're going to have style wars, I'd rather it were between humans and not within one insane formatter.
+      - name: Run PHPUnit
+        run: |
+          php artisan test
 
-      # - name: Run tests
-      #   run: |
-      #     vendor/bin/pint --test
-      #     vendor/bin/phpstan --memory-limit=1G analyse
-      #     php artisan test tests/Unit
