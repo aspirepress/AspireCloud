@@ -65,7 +65,7 @@ jobs:
           php artisan key:generate
           php artisan migrate
           env:
-            DB_HOST: postgres
+            DB_HOST: localhost
             DB_PORT: ${{ job.services.postgres.ports[5432] }}
 
       - name: Run PHPUnit
