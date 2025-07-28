@@ -23,7 +23,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
+          POSTGRES_DB: aspirecloud_test
         ports:
           - 5432/tcp
         options: --health-cmd pg_isready --health-interval 2s --health-timeout 2s --health-retries 10
@@ -59,18 +59,24 @@ jobs:
       - name: Install dependencies
         run: composer install
 
-#      - name: Prepare tests
-#        run: |
-#          cp .env.example .env
-#          php artisan key:generate
-#          php artisan migrate
-#        env:
-#          DB_HOST: localhost
-#          DB_PORT: ${{ job.services.postgres.ports[5432] }}
-#
-#      - name: Run PHPUnit
-#        run: php artisan test
-#        env:
-#          DB_HOST: localhost
-#          DB_PORT: ${{ job.services.postgres.ports[5432] }}
+      - name: Prepare tests
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php artisan migrate
+        env:
+          DB_HOST: localhost
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_DATABASE: aspirecloud_test
+
+      - name: Run PHPUnit
+        run: php artisan test
+        env:
+          DB_HOST: localhost
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_DATABASE: aspirecloud_test
 
