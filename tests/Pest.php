@@ -9,7 +9,7 @@ pest()
     ->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->beforeEach(function () {
-        Storage::fake();
+        Storage::fake('s3');
         Http::preventStrayRequests();
         $this->withoutVite();
     })
