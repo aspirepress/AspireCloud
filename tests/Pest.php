@@ -9,5 +9,6 @@ pest()
     ->use(RefreshDatabase::class)
     ->beforeEach(function () {
         Http::preventStrayRequests();
+        $this->withoutVite();
     })
     ->in('Feature');
