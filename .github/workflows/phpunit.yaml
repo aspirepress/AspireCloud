@@ -72,8 +72,8 @@ jobs:
           DB_PASSWORD: postgres
           DB_DATABASE: aspirecloud_testing
 
-      - name: Run PHPUnit
-        run: php artisan test
+      - name: Run Pest
+        run: vendor/bin/pest --ci
         env:
           CACHE_STORE: array
           DB_HOST: localhost
