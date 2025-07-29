@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Values\WpOrg\Plugins;
 
+use App\Utils\Regex;
 use App\Values\DTO;
 use Bag\Attributes\StripExtraParameters;
 use Bag\Attributes\Transforms;
@@ -34,8 +35,13 @@ readonly class QueryPluginsRequest extends DTO
     {
         $query = $request->query();
 
-        $query['tags'] = (array) Arr::pull($query, 'tags', []);
+        $search = Arr::pull($query, 'search', null);
+        $tags = Arr::pull($query, 'tags', []);
+        $author = Arr::pull($query, 'author', null);
 
+        $query['search'] = is_string($search) ? self::normalizeSearchString($search) : null;
+        $query['tags'] = array_map(fn($tag) => self::normalizeSearchString($tag), (array) $tags);
+        $query['author'] = self::normalizeSearchString($author);
         // $defaultFields = [
         //     'description' => true,
         //     'rating' => true,
@@ -44,5 +50,15 @@ readonly class QueryPluginsRequest extends DTO
         // ];
         // $query['fields'] = self::getFields($request, $defaultFields);
         return $query;
+    }
+
+    private static function normalizeSearchString(?string $search): ?string
+    {
+        if ($search === null) {
+            return null;
+        }
+        $search = trim($search);
+        $search = Regex::replace('/\s+/i', ' ', $search);
+        return Regex::replace('/[^\w.,!?@#$_-]/i', ' ', $search); // strip most punctuation, allow a small subset
     }
 }

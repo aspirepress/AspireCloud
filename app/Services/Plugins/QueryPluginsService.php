@@ -4,26 +4,19 @@ namespace App\Services\Plugins;
 
 use App\Models\WpOrg\Plugin;
 use App\Utils\Regex;
-use App\Values\WpOrg\Plugins\PluginResponse;
-use App\Values\WpOrg\Plugins\QueryPluginsRequest;
-use App\Values\WpOrg\Plugins\QueryPluginsResponse;
+use App\Values\WpOrg\Plugins as PluginDTOs;
 use Illuminate\Database\Eloquent\Builder;
-use function Laravel\Prompts\error;
 
 class QueryPluginsService
 {
-    public function queryPlugins(QueryPluginsRequest $req): QueryPluginsResponse
+    public function queryPlugins(PluginDTOs\QueryPluginsRequest $req): PluginDTOs\QueryPluginsResponse
     {
         $page = $req->page;
         $perPage = $req->per_page;
         $browse = $req->browse ?: 'popular';
-        $search = $req->search;
+        $search = $req->search ?? null;
         $tags = $req->tags ?? [];
-        $author = $req->author;
-
-        $search = self::normalizeSearchString($search);
-        $tags = array_map(fn($tag) => self::normalizeSearchString($tag), (array) $tags);
-        $author = self::normalizeSearchString($author);
+        $author = $req->author ?? null;
 
         // Ad hoc pipeline because Laravel's Pipeline class is awful
         $callbacks = collect();
@@ -44,9 +37,9 @@ class QueryPluginsService
             ->limit($perPage)
             ->get()
             ->unique('slug')
-            ->map(fn($plugin) => PluginResponse::from($plugin));
+            ->map(fn($plugin) => PluginDTOs\PluginResponse::from($plugin));
 
-        return QueryPluginsResponse::from([
+        return PluginDTOs\QueryPluginsResponse::from([
             'plugins' => $plugins,
             'info' => ['page' => $page, 'pages' => $totalPages, 'results' => $total],
         ]);
@@ -58,7 +51,7 @@ class QueryPluginsService
      * @param Builder<Plugin> $query
      * @return Builder<Plugin> Returns a new query with weighted search applied
      */
-    public static function applySearchWeighted(Builder $query, string $search, QueryPluginsRequest $request): Builder
+    public static function applySearchWeighted(Builder $query, string $search, PluginDTOs\QueryPluginsRequest $request): Builder
     {
         $lcsearch = mb_strtolower($search);
         $slug = Regex::replace('/[^-\w]+/', '-', $lcsearch);
@@ -137,15 +130,5 @@ class QueryPluginsService
             'top-rated', 'featured' => 'rating',
             default => 'active_installs',
         };
-    }
-
-    public static function normalizeSearchString(?string $search): ?string
-    {
-        if ($search === null) {
-            return null;
-        }
-        $search = trim($search);
-        $search = Regex::replace('/\s+/i', ' ', $search);
-        return Regex::replace('/[^\w.,!?@#$_-]/i', ' ', $search); // strip most punctuation, allow a small subset
     }
 }
