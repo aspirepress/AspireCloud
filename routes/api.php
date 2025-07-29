@@ -27,15 +27,26 @@ Route::prefix('/')
     ])
     ->group(function (Router $router) {
         // @formatter:off
-
         $router->any('/core/browse-happy/{version}', BrowseHappyController::class)->where(['version' => '1.1']);
         $router->any('/core/serve-happy/{version}', ServeHappyController::class)->where(['version' => '1.0']);
         $router->match(['get', 'post'], '/core/stable-check/{version}', StableCheckController::class)->where(['version' => '1.0']);
         $router->get('/core/importers/{version}', ImportersController::class)->where(['version' => '1.[01]']);
+        // plugins routes
+        $router->group([
+            'prefix' => 'plugins',
+            'as' => 'plugins.',
+        ], function (Router $router) {
+            // Plugin information routes
+            $router->get('/info/1.0/{slug}.json', PluginInformation_1_0_Controller::class);
+            $router->get('/info/1.2', PluginInformation_1_2_Controller::class);
+            // Plugins endpoints are implemented for version 1.2, older versions are still pass-through
+            $router->any('/info/{version}', PassThroughController::class)->where(['version' => '1.[01]']);
 
-        $router->get('/plugins/info/1.0/{slug}.json', PluginInformation_1_0_Controller::class);
-        $router->get('/plugins/info/1.2', PluginInformation_1_2_Controller::class);
-        $router->post('/plugins/update-check/1.1', PluginUpdateCheck_1_1_Controller::class);
+           // Plugin update check routes
+            $router->post('/update-check/1.1', PluginUpdateCheck_1_1_Controller::class);
+            // Plugins endpoints are implemented for version 1.2, older versions are still pass-through
+            $router->any('/update-check/{version}', PassThroughController::class)->where(['version' => '1.0']);
+        });
 
         $router->get('/secret-key/{version}', [SecretKeyController::class, 'index'])->where(['version' => '1.[01]']);
         $router->get('/secret-key/{version}/salt', [SecretKeyController::class, 'salt'])->where(['version' => '1.1']);
@@ -44,7 +55,6 @@ Route::prefix('/')
         $router->match(['get', 'post'], '/themes/update-check/{version}', ThemeUpdatesController::class)->where(['version' => '1.[01]']);
 
         /// Pass-through routes still going to .org
-
         $router->any('/core/checksums/{version}', PassThroughController::class)->where(['version' => '1.0']);
         $router->any('/core/credits/{version}', PassThroughController::class)->where(['version' => '1.[01]']);
         $router->any('/core/handbook/{version}', PassThroughController::class)->where(['version' => '1.0']);
@@ -53,10 +63,6 @@ Route::prefix('/')
         $router->any('/events/{version}', PassThroughController::class)->where(['version' => '1.0']);
 
         $router->any('/patterns/{version}', PassThroughController::class)->where(['version' => '1.0']);
-
-        // /plugins endpoints are implemented for version 1.2, older versions are still pass-through
-        $router->any('/plugins/info/{version}', PassThroughController::class)->where(['version' => '1.[01]']);
-        $router->any('/plugins/update-check/{version}', PassThroughController::class)->where(['version' => '1.0']);
 
         $router->any('/stats/locale/{version}', PassThroughController::class)->where(['version' => '1.0']);
         $router->any('/stats/mysql/{version}', PassThroughController::class)->where(['version' => '1.0']);
