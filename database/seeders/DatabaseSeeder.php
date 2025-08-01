@@ -11,5 +11,6 @@ class DatabaseSeeder extends Seeder
         $this->call(AuthorizationSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(PluginSeeder::class);
+        $this->call(OriginSeeder::class);
     }
 }

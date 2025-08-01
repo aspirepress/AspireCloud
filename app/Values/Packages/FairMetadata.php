@@ -1,0 +1,182 @@
+<?php
+
+namespace App\Values\Packages;
+
+use App\Values\DTO;
+use Bag\Values\Optional;
+use Bag\Attributes\Transforms;
+use Bag\Attributes\Validation\In;
+
+/**
+ * Represents metadata for a package in the FAIR protocol
+ * with the addition of raw_metadata for storing the original metadata.
+ *
+ * @see https://github.com/fairpm/fair-protocol/blob/add-file-spec/specification.md#metadata-document
+ */
+readonly class FairMetadata extends DTO
+{
+    public const string CONTEXT = 'https://fair.pm/ns/metadata/v1';
+
+    /**
+     * @param string|array<string> $context
+     * @param array<array<string, mixed>> $authors
+     * @param array<array<string, mixed>> $security
+     * @param array<array<string, mixed>> $releases
+     * @param array<string> $keywords
+     * @param array<string, mixed> $sections
+     * @param array<string> $_links
+     * @param array<string, mixed> $raw_metadata
+     */
+    public function __construct(
+        public string|array $context, // can be a string or an array of contexts
+        public string $id,
+        #[In('wp-core', 'wp-plugin', 'wp-theme')]
+        public string $type,
+        public string $license,
+        public array $authors,
+        public array $security,
+        public array $releases,
+        public Optional|array $keywords,
+        public Optional|array $sections,
+        public Optional|array $_links,
+        public string $slug, // Optional in FAIR requirements.
+        public string $name, // Optional in FAIR requirements.
+        public Optional|string $filename,
+        public Optional|string $description,
+        public array $raw_metadata = [],
+    ) {}
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+    */
+    #[Transforms('array')]
+    public static function fromMetadata(array $data): array
+    {
+        return [
+            'context' => $data['@context'],
+            'id' => $data['id'],
+            'type' => $data['type'],
+            'license' => $data['license'],
+            'authors' => $data['authors'],
+            'security' => $data['security'],
+            'releases' => $data['releases'],
+            'keywords' => $data['keywords'] ?? [],
+            'sections' => $data['sections'] ?? [],
+            '_links' => $data['_links'] ?? [],
+            'slug' => $data['slug'] ?? null,
+            'name' => $data['name'] ?? null,
+            'description' => $data['description'] ?? null,
+            'raw_metadata' => $data,
+        ];
+    }
+
+    /**
+     * Validation rules for the FAIR metadata.
+     *
+     * @return array<string, mixed>
+     */
+    public static function rules(): array
+    {
+        return [
+            '@context' => function ($value) {
+                return is_array($value)
+                    ? $value[0] === self::CONTEXT
+                    : $value === self::CONTEXT;
+            },
+            'id' => ['required', 'string'],
+            'type' => ['required', 'string'],
+            'license' => ['required', 'string'], // @todo - validate against SPDX licenses?
+            'slug' => ['nullable', 'string'],
+            'name' => ['nullable', 'string'],
+            'description' => ['nullable', 'string'],
+            'keywords' => ['nullable', 'array'],
+            'keywords.*' => ['string'],
+            'sections' => ['nullable', 'array'],
+            'sections.changelog' => ['nullable', 'string'],
+            'sections.description' => ['nullable', 'string'],
+            'sections.security' => ['nullable', 'string'],
+            '_links'  => ['nullable', 'array'],
+            ...self::authorsRules(),
+            ...self::securityRules(),
+            ...self::releasesRules(),
+        ];
+    }
+
+    /**
+     * Validation rules for the authors section.
+     *
+     * @return array<string, mixed>
+     */
+    private static function authorsRules(): array
+    {
+        return [
+            'authors' => ['required', 'array', 'min:1'],
+            'authors.*' => [
+                'required',
+                'array',
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    if (empty($value['url']) && empty($value['email'])) {
+                        $fail("Each author must have at least one of 'url' or 'email'.");
+                    }
+                },
+            ],
+            'authors.*.name' => ['required', 'string'],
+            'authors.*.url' => ['nullable', 'string', 'url'],
+            'authors.*.email' => ['nullable', 'string', 'email'],
+        ];
+    }
+
+    /**
+     * Validation rules for the security section.
+     *
+     * @return array<string, mixed>
+     */
+    private static function securityRules(): array
+    {
+        return [
+            'security' => ['required', 'array', 'min:1'],
+            'security.*' => [
+                'required',
+                'array',
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    if (
+                        empty($value['url']) &&
+                        empty($value['email'])
+                    ) {
+                        $fail("Each security contact must have at least one of 'url' or 'email'.");
+                    }
+                },
+            ],
+        ];
+    }
+
+    /**
+     * Validation rules for the releases section.
+     *
+     * @return array<string, mixed>
+     */
+    private static function releasesRules(): array
+    {
+        return [
+            'releases' => ['required', 'array'],
+            'releases.*.version' => [
+                'required',
+                'string',
+                'regex:/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/',
+            ],
+            'releases.*.artifacts' => ['required', 'array', 'min:1'],
+            'releases.*.artifacts.*' => ['required', 'array'],
+            'releases.*.artifacts.package' => ['required', 'array'],
+            'releases.*.artifacts.package.*' => [
+                'required',
+                'array',
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    if (empty($value['url'])) {
+                        $fail("Each package artifact must include a 'url'.");
+                    }
+                },
+            ],
+        ];
+    }
+}
