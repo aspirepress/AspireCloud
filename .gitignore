@@ -30,3 +30,4 @@ _ide_helper.php
 docker-compose.override.yml
 
 /docker/traefik/.env.example
+/docker/pgadmin
