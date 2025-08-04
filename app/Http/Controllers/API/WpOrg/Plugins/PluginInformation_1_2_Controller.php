@@ -4,8 +4,8 @@ namespace App\Http\Controllers\API\WpOrg\Plugins;
 
 use App\Http\Controllers\Controller;
 use App\Models\WpOrg\ClosedPlugin;
-use App\Services\Plugins as PluginServices;
-use App\Values\WpOrg\Plugins as PluginDTOs;
+use App\Services\PluginServices;
+use App\Values\WpOrg\PluginDTOs;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -24,8 +24,8 @@ class PluginInformation_1_2_Controller extends Controller
         $action = $request->query('action', '');
 
         $handlers = [
-            'query_plugins' => fn() => $this->queryPlugins(PluginDTOs\QueryPluginsRequest::from($request)),
-            'plugin_information' => fn() => $this->pluginInformation(PluginDTOs\PluginInformationRequest::from($request)),
+            'query_plugins' => fn() => $this->queryPlugins(PluginDTOs\QueryPluginsDTO::from($request)),
+            'plugin_information' => fn() => $this->pluginInformation(PluginDTOs\PluginInformationDTO::from($request)),
             'hot_tags' => fn() => $this->hotTags($request),
             'popular_tags' => fn() => $this->hotTags($request),
         ];
@@ -38,10 +38,10 @@ class PluginInformation_1_2_Controller extends Controller
     }
 
     /**
-     * @param PluginDTOs\PluginInformationRequest $req
+     * @param PluginDTOs\PluginInformationDTO $req
      * @return JsonResponse
      */
-    private function pluginInformation(PluginDTOs\PluginInformationRequest $req): JsonResponse
+    private function pluginInformation(PluginDTOs\PluginInformationDTO $req): JsonResponse
     {
         $plugin = $this->pluginInformationService->findBySlug($req->slug);
 
@@ -61,10 +61,10 @@ class PluginInformation_1_2_Controller extends Controller
     }
 
     /**
-     * @param PluginDTOs\QueryPluginsRequest $request
+     * @param PluginDTOs\QueryPluginsDTO $request
      * @return JsonResponse
      */
-    private function queryPlugins(PluginDTOs\QueryPluginsRequest $request): JsonResponse
+    private function queryPlugins(PluginDTOs\QueryPluginsDTO $request): JsonResponse
     {
         $result = $this->queryPluginsService->queryPlugins($request);
         return response()->json($result);

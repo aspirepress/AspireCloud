@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Services\Plugins;
+namespace App\Services\PluginServices;
 
 use App\Models\WpOrg\Plugin;
 use App\Utils\Regex;
-use App\Values\WpOrg\Plugins as PluginDTOs;
+use App\Values\WpOrg\PluginDTOs as PluginDTOs;
 use Illuminate\Database\Eloquent\Builder;
 
 class QueryPluginsService
 {
-    public function queryPlugins(PluginDTOs\QueryPluginsRequest $req): PluginDTOs\QueryPluginsResponse
+    public function queryPlugins(PluginDTOs\QueryPluginsDTO $req): PluginDTOs\QueryPluginsResponse
     {
         $page = $req->page;
         $perPage = $req->per_page;
@@ -51,7 +51,7 @@ class QueryPluginsService
      * @param Builder<Plugin> $query
      * @return Builder<Plugin> Returns a new query with weighted search applied
      */
-    public static function applySearchWeighted(Builder $query, string $search, PluginDTOs\QueryPluginsRequest $request): Builder
+    public static function applySearchWeighted(Builder $query, string $search, PluginDTOs\QueryPluginsDTO $request): Builder
     {
         $lcsearch = mb_strtolower($search);
         $slug = Regex::replace('/[^-\w]+/', '-', $lcsearch);

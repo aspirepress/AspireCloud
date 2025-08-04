@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Values\WpOrg\Plugins;
+namespace App\Values\WpOrg\PluginDTOs;
 
 use App\Values\DTO;
 use Bag\Values\Optional;

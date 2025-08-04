@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Models\WpOrg\Plugin;
-use App\Services\Plugins\QueryPluginsService;
-use App\Values\WpOrg\Plugins\QueryPluginsRequest;
+use App\Services\PluginServices\QueryPluginsService;
+use App\Values\WpOrg\PluginDTOs\QueryPluginsDTO;
 use Illuminate\Database\Eloquent\Builder;
 
 beforeEach(function () {
@@ -21,7 +21,7 @@ test('queryPlugins with search returns matching plugins', function () {
     $service = new QueryPluginsService();
 
     // Create a request with search
-    $request = new QueryPluginsRequest(
+    $request = new QueryPluginsDTO(
         search: 'Test',
         page: 1,
         per_page: 10,
@@ -46,7 +46,7 @@ test('queryPlugins with tag returns plugins with that tag', function () {
     $service = new QueryPluginsService();
 
     // Create a request with tag
-    $request = new QueryPluginsRequest(
+    $request = new QueryPluginsDTO(
         tags: ['security'],
         page: 1,
         per_page: 10,
@@ -72,7 +72,7 @@ test('queryPlugins with author returns plugins by that author', function () {
     $service = new QueryPluginsService();
 
     // Create a request with author
-    $request = new QueryPluginsRequest(
+    $request = new QueryPluginsDTO(
         author: 'JohnDoe',
         page: 1,
         per_page: 10,
@@ -108,7 +108,7 @@ test('queryPlugins with browse parameter sorts plugins correctly', function () {
     $service = new QueryPluginsService();
 
     // Test 'new' browse parameter
-    $newRequest = new QueryPluginsRequest(
+    $newRequest = new QueryPluginsDTO(
         browse: 'new',
         page: 1,
         per_page: 10,
@@ -117,7 +117,7 @@ test('queryPlugins with browse parameter sorts plugins correctly', function () {
     expect($newResponse->plugins->first()->name)->toBe('New Plugin');
 
     // Test 'updated' browse parameter
-    $updatedRequest = new QueryPluginsRequest(
+    $updatedRequest = new QueryPluginsDTO(
         browse: 'updated',
         page: 1,
         per_page: 10,
@@ -126,7 +126,7 @@ test('queryPlugins with browse parameter sorts plugins correctly', function () {
     expect($updatedResponse->plugins->first()->name)->toBe('Old Plugin');
 
     // Test 'top-rated' browse parameter
-    $ratedRequest = new QueryPluginsRequest(
+    $ratedRequest = new QueryPluginsDTO(
         browse: 'top-rated',
         page: 1,
         per_page: 10,
@@ -135,7 +135,7 @@ test('queryPlugins with browse parameter sorts plugins correctly', function () {
     expect($ratedResponse->plugins->first()->name)->toBe('Old Plugin');
 
     // Test 'popular' browse parameter (default)
-    $popularRequest = new QueryPluginsRequest(
+    $popularRequest = new QueryPluginsDTO(
         browse: 'popular',
         page: 1,
         per_page: 10,
@@ -149,7 +149,7 @@ test('applySearchWeighted returns a query with weighted search conditions', func
     $query = Plugin::query();
 
     // Apply weighted search
-    $weightedQuery = QueryPluginsService::applySearchWeighted($query, 'test', new QueryPluginsRequest());
+    $weightedQuery = QueryPluginsService::applySearchWeighted($query, 'test', new QueryPluginsDTO());
 
     // Get the SQL for inspection
     $sql = $weightedQuery->toSql();
@@ -244,7 +244,7 @@ test('applySearchWeighted prioritizes relevance over install count', function ()
     $service = new QueryPluginsService();
 
     // Create a request with search for "exact match"
-    $request = new QueryPluginsRequest(
+    $request = new QueryPluginsDTO(
         search: 'exact match',
         page: 1,
         per_page: 10,
@@ -281,7 +281,7 @@ test('applySearchWeighted with name similarity vs description match', function (
     $service = new QueryPluginsService();
 
     // Create a request with search for "similar"
-    $request = new QueryPluginsRequest(
+    $request = new QueryPluginsDTO(
         search: 'similar',
         page: 1,
         per_page: 10,
@@ -318,7 +318,7 @@ test('applySearchWeighted real world example #1', function () {
     $service = new QueryPluginsService();
 
     // Create a request with search for "similar"
-    $request = new QueryPluginsRequest(
+    $request = new QueryPluginsDTO(
         search: 'cache',
         page: 1,
         per_page: 10,

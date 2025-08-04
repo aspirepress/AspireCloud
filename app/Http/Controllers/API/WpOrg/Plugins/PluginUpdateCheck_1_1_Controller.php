@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\API\WpOrg\Plugins;
 
 use App\Http\Controllers\Controller;
-use App\Services\Plugins\PluginUpdateService;
-use App\Values\WpOrg\Plugins\PluginUpdateCheckRequest;
+use App\Services\PluginServices\PluginUpdateService;
+use App\Values\WpOrg\PluginDTOs\PluginUpdateCheckRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

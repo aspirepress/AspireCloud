@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Values\WpOrg\Plugins;
+namespace App\Values\WpOrg\PluginDTOs;
 
 use App\Models\WpOrg\Plugin;
 use App\Values\DTO;

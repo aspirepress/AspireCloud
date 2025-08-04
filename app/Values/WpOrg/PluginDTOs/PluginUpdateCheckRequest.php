@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Values\WpOrg\Plugins;
+namespace App\Values\WpOrg\PluginDTOs;
 
 use App\Utils\JSON;
 use App\Values\DTO;

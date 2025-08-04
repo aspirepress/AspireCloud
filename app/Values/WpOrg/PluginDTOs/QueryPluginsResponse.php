@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Values\WpOrg\Plugins;
+namespace App\Values\WpOrg\PluginDTOs;
 
 use App\Values\DTO;
 use App\Values\WpOrg\PageInfo;

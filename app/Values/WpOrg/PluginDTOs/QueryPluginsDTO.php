@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Values\WpOrg\Plugins;
+namespace App\Values\WpOrg\PluginDTOs;
 
 use App\Utils\Regex;
 use App\Values\DTO;
@@ -15,12 +15,13 @@ use Illuminate\Support\Arr;
 // I'd look into refactoring it, but it's not like .org is going to add a new resource type anytime soon.
 // We can clean things up in the 2.0 API.
 #[StripExtraParameters]
-readonly class QueryPluginsRequest extends DTO
+readonly class QueryPluginsDTO extends DTO
 {
     /** @param list<string>|null $tags */
     public function __construct(
         public ?string $search = null,  // text to search
         public ?array $tags = null,     // tag or set of tags
+        public ?string $tag = null,     // tag or set of tags
         public ?string $plugin = null,  // slug of a specific plugin
         public ?string $author = null,  // wp.org username of author
         public ?string $browse = null,  // one of popular|top-rated|updated|new
@@ -37,8 +38,13 @@ readonly class QueryPluginsRequest extends DTO
 
         $search = Arr::pull($query, 'search', null);
         $tags = Arr::pull($query, 'tags', []);
+        $tag = Arr::pull($query, 'tag', '');
         $author = Arr::pull($query, 'author', null);
 
+        if (!empty($tag)) {
+            $tags = array_merge((array) $tags, [$tag]);
+        }
+        // string normalization
         $query['search'] = is_string($search) ? self::normalizeSearchString($search) : null;
         $query['tags'] = array_map(fn($tag) => self::normalizeSearchString($tag), (array) $tags);
         $query['author'] = self::normalizeSearchString($author);

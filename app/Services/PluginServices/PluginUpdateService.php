@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services\Plugins;
+namespace App\Services\PluginServices;
 
 use App\Models\WpOrg\Plugin;
-use App\Values\WpOrg\Plugins\PluginUpdateCheckRequest;
-use App\Values\WpOrg\Plugins\PluginUpdateCheckResponse;
-use App\Values\WpOrg\Plugins\PluginUpdateData;
+use App\Values\WpOrg\PluginDTOs\PluginUpdateCheckRequest;
+use App\Values\WpOrg\PluginDTOs\PluginUpdateCheckResponse;
+use App\Values\WpOrg\PluginDTOs\PluginUpdateData;
 
 class PluginUpdateService
 {
