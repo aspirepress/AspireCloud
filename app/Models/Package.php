@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\WpOrg\Author;
 use App\Values\Packages\PackageData;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Package extends BaseModel
 {
@@ -25,6 +27,12 @@ class Package extends BaseModel
             'package_type_id' => 'string',
             'raw_metadata' => 'array',
         ];
+    }
+
+    /** @return BelongsToMany<Author, covariant self> */
+    public function authors(): BelongsToMany
+    {
+        return $this->belongsToMany(Author::class, 'package_authors', 'package_id', 'author_id', 'id', 'id');
     }
 
     public static function fromPackageData(PackageData $packageData): self
@@ -51,7 +59,25 @@ class Package extends BaseModel
             'raw_metadata' => $packageData->raw_metadata,
         ]);
 
-        // @todo - authors
+        // Authors
+        foreach ($packageData->authors as $authorData) {
+            $author = Author::where([
+                'user_nicename' => $authorData['name'],
+                'author_url' => $authorData['url'] ?? null,
+            ])->first();
+
+            if (!$author) {
+                $author = Author::create([
+                    'user_nicename' => $authorData['name'],
+                    'profile' => $authorData['url'] ?? null,
+                    //'avatar' => $authorData['email'] ?? null,
+                    'display_name' => $authorData['name'],
+                    'author' => $authorData['name'],
+                    'author_url' => $authorData['url'] ?? null,
+                ]);
+            }
+            $package->authors()->attach($author->id);
+        }
 
         return $package;
     }

@@ -11,6 +11,7 @@ readonly class PackageData extends DTO
 {
     /**
      * @param array<string, mixed> $raw_metadata
+     * @param array<array<string, string>> $authors
      */
     public function __construct(
         public string $did,
@@ -22,6 +23,7 @@ readonly class PackageData extends DTO
         public string $type,
         public string $origin,
         public array $raw_metadata = [],
+        public array $authors = [],
     ) {}
 
     /**
@@ -44,6 +46,11 @@ readonly class PackageData extends DTO
             default => throw new \InvalidArgumentException('Unsupported type: ' . $fairMetadata->type),
         };
 
+        $authors = array_map(
+            fn($author) => ['name' => $author['name'], 'url' => $author['url'] ?? null],
+            $fairMetadata->authors,
+        );
+
         return [
             'did' => $fairMetadata->id,
             'type' => $type,
@@ -54,6 +61,7 @@ readonly class PackageData extends DTO
             'download_url' => $downloadUrl,
             'version' => $version,
             'raw_metadata' => $fairMetadata->raw_metadata,
+            'authors' => $authors,
         ];
     }
 
@@ -64,6 +72,14 @@ readonly class PackageData extends DTO
     #[Transforms(Plugin::class)]
     public static function fromPlugin(Plugin $plugin): array
     {
+        if (\Safe\preg_match('/^<a href="([^"]+)">([^<]+)<\/a>$/', $plugin->author, $matches)) {
+            $authorUrl = $matches[1];
+            $authorName = $matches[2];
+        } else {
+            $authorUrl = null;
+            $authorName = $plugin->author;
+        }
+
         return [
             'did' => 'fake:' . $plugin->slug, // @todo - generate a real DID
             'type' => 'plugin',
@@ -74,6 +90,12 @@ readonly class PackageData extends DTO
             'download_url' => $plugin->download_link,
             'version' => $plugin->version,
             'raw_metadata' => $plugin->ac_raw_metadata,
+            'authors' => [
+                [
+                    'name' => $authorName,
+                    'url' => $authorUrl,
+                ],
+            ],
         ];
     }
 
@@ -94,6 +116,12 @@ readonly class PackageData extends DTO
             'download_url' => $theme->download_link,
             'version' => $theme->version,
             'raw_metadata' => $theme->ac_raw_metadata,
+            'authors' => [
+                [
+                    'name' => $theme->author->user_nicename,
+                    'url' => $theme->author->author_url,
+                ],
+            ],
         ];
     }
 
