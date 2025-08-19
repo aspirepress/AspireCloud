@@ -10,9 +10,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('package_authors', function (Blueprint $table) {
-            $table->foreignUuid('package_id')->references('id')->on('packages')->onDelete('cascade');
+        Schema::create('author_package', function (Blueprint $table) {
             $table->foreignUuid('author_id')->references('id')->on('authors')->onDelete('cascade');
+            $table->foreignUuid('package_id')->references('id')->on('packages')->onDelete('cascade');
             $table->primary(['package_id', 'author_id']);
         });
     }
@@ -22,6 +22,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('package_authors');
+        Schema::dropIfExists('author_package');
     }
 };

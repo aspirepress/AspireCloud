@@ -32,7 +32,7 @@ class Package extends BaseModel
     /** @return BelongsToMany<Author, covariant self> */
     public function authors(): BelongsToMany
     {
-        return $this->belongsToMany(Author::class, 'package_authors', 'package_id', 'author_id', 'id', 'id');
+        return $this->belongsToMany(Author::class, 'author_package', 'package_id', 'author_id', 'id', 'id');
     }
 
     public static function fromPackageData(PackageData $packageData): self
