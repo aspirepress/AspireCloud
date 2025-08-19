@@ -7,10 +7,10 @@ use App\Models\WpOrg\ClosedPlugin;
 use App\Services\PluginServices\PluginHotTagsService;
 use App\Services\PluginServices\PluginInformationService;
 use App\Services\PluginServices\QueryPluginsService;
-use App\Values\WpOrg\PluginDTOs\ClosedPluginResponse;
-use App\Values\WpOrg\PluginDTOs\PluginInformationDTO;
-use App\Values\WpOrg\PluginDTOs\PluginResponse;
-use App\Values\WpOrg\PluginDTOs\QueryPluginsDTO;
+use App\Values\WpOrg\Plugins\ClosedPluginResponse;
+use App\Values\WpOrg\Plugins\PluginInformationRequest;
+use App\Values\WpOrg\Plugins\PluginResponse;
+use App\Values\WpOrg\Plugins\QueryPluginsRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,10 +20,10 @@ class PluginInformation_1_0_Controller extends Controller
 
     public function __invoke(string $slug): JsonResponse
     {
-        return $this->pluginInformation(new PluginInformationDTO($slug));
+        return $this->pluginInformation(new PluginInformationRequest($slug));
     }
 
-    private function pluginInformation(PluginInformationDTO $req): JsonResponse
+    private function pluginInformation(PluginInformationRequest $req): JsonResponse
     {
         $plugin = $this->pluginInfo->findBySlug($req->slug);
 

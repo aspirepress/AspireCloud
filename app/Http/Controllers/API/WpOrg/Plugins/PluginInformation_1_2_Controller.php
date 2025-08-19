@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\WpOrg\Plugins;
 use App\Http\Controllers\Controller;
 use App\Models\WpOrg\ClosedPlugin;
 use App\Services\PluginServices;
-use App\Values\WpOrg\PluginDTOs;
+use App\Values\WpOrg\Plugins;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -24,8 +24,8 @@ class PluginInformation_1_2_Controller extends Controller
         $action = $request->query('action', '');
 
         $handlers = [
-            'query_plugins' => fn() => $this->queryPlugins(PluginDTOs\QueryPluginsDTO::from($request)),
-            'plugin_information' => fn() => $this->pluginInformation(PluginDTOs\PluginInformationDTO::from($request)),
+            'query_plugins' => fn() => $this->queryPlugins(Plugins\QueryPluginsRequest::from($request)),
+            'plugin_information' => fn() => $this->pluginInformation(Plugins\PluginInformationRequest::from($request)),
             'hot_tags' => fn() => $this->hotTags($request),
             'popular_tags' => fn() => $this->hotTags($request),
         ];
@@ -38,10 +38,10 @@ class PluginInformation_1_2_Controller extends Controller
     }
 
     /**
-     * @param PluginDTOs\PluginInformationDTO $req
+     * @param Plugins\PluginInformationRequest $req
      * @return JsonResponse
      */
-    private function pluginInformation(PluginDTOs\PluginInformationDTO $req): JsonResponse
+    private function pluginInformation(Plugins\PluginInformationRequest $req): JsonResponse
     {
         $plugin = $this->pluginInformationService->findBySlug($req->slug);
 
@@ -49,11 +49,11 @@ class PluginInformation_1_2_Controller extends Controller
             return response()->json(['error' => 'Plugin not found'], 404);
         }
 
-        $resource = PluginDTOs\PluginResponse::from($plugin);
+        $resource = Plugins\PluginResponse::from($plugin);
         $status = 200;
 
         if ($plugin instanceof ClosedPlugin) {
-            $resource = PluginDTOs\ClosedPluginResponse::from($plugin);
+            $resource = Plugins\ClosedPluginResponse::from($plugin);
             $status = 404;
         }
 
@@ -61,10 +61,10 @@ class PluginInformation_1_2_Controller extends Controller
     }
 
     /**
-     * @param PluginDTOs\QueryPluginsDTO $request
+     * @param Plugins\QueryPluginsRequest $request
      * @return JsonResponse
      */
-    private function queryPlugins(PluginDTOs\QueryPluginsDTO $request): JsonResponse
+    private function queryPlugins(Plugins\QueryPluginsRequest $request): JsonResponse
     {
         $result = $this->queryPluginsService->queryPlugins($request);
         return response()->json($result);

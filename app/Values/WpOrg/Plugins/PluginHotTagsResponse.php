@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Values\WpOrg\PluginDTOs;
+namespace App\Values\WpOrg\Plugins;
 
 use App\Models\WpOrg\PluginTag;
 use App\Values\DTO;

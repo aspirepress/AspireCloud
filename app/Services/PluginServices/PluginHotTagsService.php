@@ -3,7 +3,7 @@
 namespace App\Services\PluginServices;
 
 use App\Models\WpOrg\PluginTag;
-use App\Values\WpOrg\PluginDTOs\PluginHotTagsResponse;
+use App\Values\WpOrg\Plugins\PluginHotTagsResponse;
 
 class PluginHotTagsService
 {

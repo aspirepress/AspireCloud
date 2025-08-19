@@ -2,7 +2,7 @@
 
 use App\Models\WpOrg\ClosedPlugin;
 use App\Models\WpOrg\Plugin;
-use App\Values\WpOrg\PluginDTOs\PluginResponse;
+use App\Values\WpOrg\Plugins\PluginResponse;
 use Carbon\Carbon;
 
 beforeEach(function () {

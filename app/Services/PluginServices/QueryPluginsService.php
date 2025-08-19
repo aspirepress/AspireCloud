@@ -4,12 +4,12 @@ namespace App\Services\PluginServices;
 
 use App\Models\WpOrg\Plugin;
 use App\Utils\Regex;
-use App\Values\WpOrg\PluginDTOs as PluginDTOs;
+use App\Values\WpOrg\Plugins as PluginDTOs;
 use Illuminate\Database\Eloquent\Builder;
 
 class QueryPluginsService
 {
-    public function queryPlugins(PluginDTOs\QueryPluginsDTO $req): PluginDTOs\QueryPluginsResponse
+    public function queryPlugins(Plugins\QueryPluginsDTO $req): Plugins\QueryPluginsResponse
     {
         $page = $req->page;
         $perPage = $req->per_page;
@@ -37,9 +37,9 @@ class QueryPluginsService
             ->limit($perPage)
             ->get()
             ->unique('slug')
-            ->map(fn($plugin) => PluginDTOs\PluginResponse::from($plugin));
+            ->map(fn($plugin) => Plugins\PluginResponse::from($plugin));
 
-        return PluginDTOs\QueryPluginsResponse::from([
+        return Plugins\QueryPluginsResponse::from([
             'plugins' => $plugins,
             'info' => ['page' => $page, 'pages' => $totalPages, 'results' => $total],
         ]);
@@ -51,7 +51,7 @@ class QueryPluginsService
      * @param Builder<Plugin> $query
      * @return Builder<Plugin> Returns a new query with weighted search applied
      */
-    public static function applySearchWeighted(Builder $query, string $search, PluginDTOs\QueryPluginsDTO $request): Builder
+    public static function applySearchWeighted(Builder $query, string $search, Plugins\QueryPluginsDTO $request): Builder
     {
         $lcsearch = mb_strtolower($search);
         $slug = Regex::replace('/[^-\w]+/', '-', $lcsearch);

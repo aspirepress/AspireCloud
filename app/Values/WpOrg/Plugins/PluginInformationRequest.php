@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Values\WpOrg\PluginDTOs;
+namespace App\Values\WpOrg\Plugins;
 
 use App\Values\DTO;
 use Bag\Attributes\StripExtraParameters;
@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 // Far simpler than ThemeInformationRequest, it takes a slug and that's it
 #[StripExtraParameters]
-readonly class PluginInformationDTO extends DTO
+readonly class PluginInformationRequest extends DTO
 {
     public const ACTION = 'plugin_information';
 
