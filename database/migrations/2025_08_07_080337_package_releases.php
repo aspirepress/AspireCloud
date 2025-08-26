@@ -9,8 +9,10 @@ return new class extends Migration {
     {
         Schema::create('package_releases', function (Blueprint $table) {
             $table->id();
-
-
+            $table->foreignUuid('package_id')->constrained()->cascadeOnDelete();
+            $table->text('version');
+            $table->text('download_url');
+            $table->json('raw_metadata')->nullable();
 
             $table->timestamps();
         });

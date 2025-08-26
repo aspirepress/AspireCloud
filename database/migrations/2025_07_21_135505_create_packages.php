@@ -16,9 +16,6 @@ return new class extends Migration {
             $table->text('name');
             $table->text('slug');
             $table->text('description')->nullable();
-            $table->text('download_url');
-            $table->text('version');
-            $table->json('raw_metadata')->nullable();
             $table->foreignUuid('origin_id')->constrained()->cascadeOnDelete();
             $table->foreignUuid('package_type_id')->constrained()->cascadeOnDelete();
             $table->timestampTz('created_at')->useCurrent()->index();
