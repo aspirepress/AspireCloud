@@ -6,6 +6,7 @@ use App\Models\WpOrg\Author;
 use App\Values\Packages\PackageData;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Package extends BaseModel
 {
@@ -22,10 +23,8 @@ class Package extends BaseModel
             'name' => 'string',
             'description' => 'string',
             'download_url' => 'string',
-            'version' => 'string',
             'origin_id' => 'string',
             'package_type_id' => 'string',
-            'raw_metadata' => 'array',
         ];
     }
 
@@ -33,6 +32,11 @@ class Package extends BaseModel
     public function authors(): BelongsToMany
     {
         return $this->belongsToMany(Author::class, 'author_package', 'package_id', 'author_id', 'id', 'id');
+    }
+
+    public function versions(): HasMany
+    {
+        return $this->hasMany(PackageRelease::class, 'package_id', 'id');
     }
 
     public static function fromPackageData(PackageData $packageData): self
@@ -52,12 +56,17 @@ class Package extends BaseModel
             'name' => $packageData->name,
             'slug' => $packageData->slug,
             'description' => $packageData->description,
-            'download_url' => $packageData->download_url,
-            'version' => $packageData->version,
             'origin_id' => $origin->id,
             'package_type_id' => $type->id,
-            'raw_metadata' => $packageData->raw_metadata,
         ]);
+
+        $package
+            ->versions()
+            ->create([
+                'version' => $packageData->version,
+                'download_url' => $packageData->download_url,
+                'raw_metadata' => $packageData->raw_metadata,
+            ]);
 
         // Authors
         foreach ($packageData->authors as $authorData) {
