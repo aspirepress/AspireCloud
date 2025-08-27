@@ -12,14 +12,19 @@ return new class extends Migration {
     {
         Schema::create('packages', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('did')->unique();
-            $table->text('name');
+            // Identity
+            $table->string('did')->nullable();
             $table->text('slug');
+            $table->text('name');
             $table->text('description')->nullable();
+            // Origin & type
             $table->foreignUuid('origin_id')->constrained()->cascadeOnDelete();
             $table->foreignUuid('package_type_id')->constrained()->cascadeOnDelete();
+            // Timestamps
             $table->timestampTz('created_at')->useCurrent()->index();
             $table->timestampTz('updated_at')->nullable()->index();
+            // Constraints
+            $table->unique(['did'], 'unique_package_did');
         });
     }
 

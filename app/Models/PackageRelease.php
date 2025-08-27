@@ -14,13 +14,20 @@ class PackageRelease extends BaseModel
     protected function casts(): array
     {
         return [
-            'id' => 'string',
-            'package_id' => 'string',
-            'version' => 'string',
+            'id'           => 'string',
+            'package_id'   => 'string',
+            'version'      => 'string',
             'download_url' => 'string',
-            'raw_metadata' => 'array',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
+            'signature'    => 'string',
+            'checksum'     => 'string',
+
+            'requires'     => 'array',
+            'suggests'     => 'array',
+            'provides'     => 'array',
+            'artifacts'    => 'array',
+
+            'created_at'   => 'datetime',
+            'updated_at'   => 'datetime',
         ];
     }
 
