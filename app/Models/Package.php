@@ -5,9 +5,10 @@ namespace App\Models;
 use App\Models\WpOrg\Author;
 use App\Values\Packages\PackageData;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\DB;
 
 class Package extends BaseModel
@@ -55,6 +56,12 @@ class Package extends BaseModel
         return $this->hasMany(PackageRelease::class, 'package_id', 'id');
     }
 
+    /** @return MorphMany<Tag> */
+    public function tags(): MorphMany
+    {
+        return $this->morphMany(Tag::class, 'taggable');
+    }
+
     /**
      * @param PackageData $packageData
      * @return self
@@ -87,6 +94,23 @@ class Package extends BaseModel
                     'raw_metadata' => $packageData->raw_metadata ?? null,
                 ]
             );
+            // tags
+            $keywords = $packageData->raw_metadata['keywords'] ?? [];
+
+            foreach ($keywords as $keyword) {
+                if (!is_string($keyword) || $keyword === '') {
+                    continue;
+                }
+
+                $slug = Str::slug($keyword);
+
+                $package
+                    ->tags()
+                    ->firstOrCreate(
+                        ['slug' => $slug],
+                        ['name' => $keyword]
+                    );
+            }
             // Iterate releases
             $releases = $packageData->raw_metadata['releases'] ?? null;
 
