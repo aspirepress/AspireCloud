@@ -45,5 +45,5 @@ jobs:
         run: vendor/bin/phpstan --memory-limit=1G analyse -v
 
       - name: Run Psalm
-        run: vendor/bin/psalm --memory-limit=1G
+        run: vendor/bin/psalm --memory-limit=2G
 
