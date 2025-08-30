@@ -1,0 +1,84 @@
+name: Commit Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions: # added using https://github.com/step-security/secure-repo
+  contents: read
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-24.04
+
+    strategy:
+      matrix:
+        php-versions: [ '8.4' ]
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: aspirecloud_testing
+        ports:
+          - 5432/tcp
+        options: --health-cmd pg_isready --health-interval 2s --health-timeout 2s --health-retries 10
+
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8    # v5.0.0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@0f7f1d08e3e32076e51cae65eb0b0c871405b16e # v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, pgsql
+          # not doing coverage in CI yet
+          # coverage: xdebug
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache composer dependencies
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Prepare tests
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php artisan migrate
+        env:
+          CACHE_STORE: array
+          DB_HOST: localhost
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_DATABASE: aspirecloud_testing
+
+      - name: Run Pest
+        run: vendor/bin/pest --ci
+        env:
+          CACHE_STORE: array
+          DB_HOST: localhost
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_DATABASE: aspirecloud_testing
+

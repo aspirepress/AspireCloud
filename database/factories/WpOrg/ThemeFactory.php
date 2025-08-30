@@ -8,6 +8,7 @@ use DateTime;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
+/** @extends Factory<Theme> */
 class ThemeFactory extends Factory
 {
     protected $model = Theme::class;
