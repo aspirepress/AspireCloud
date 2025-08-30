@@ -18,7 +18,7 @@ readonly class QueryThemesRequest extends DTO
     /**
      * @param list<string>|null $tags
      * @param list<string>|null $ac_tags
-     * @param string|array<string,bool> $fields
+     * @param string|array<string,bool>|null $fields
      */
     public function __construct(
         public ?string $search = null, // text to search
