@@ -6,8 +6,10 @@ use App\Models\BaseModel;
 use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
+use Database\Factories\WpOrg\ThemeFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use InvalidArgumentException;
@@ -52,6 +54,9 @@ final class Theme extends BaseModel
     //region Definition
 
     use HasUuids;
+
+    /** @use HasFactory<ThemeFactory> */
+    use HasFactory;
 
     protected $table = 'themes';
 
