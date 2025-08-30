@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API\WpOrg\Plugins;
 
 use App\Http\Controllers\Controller;
 use App\Models\WpOrg\ClosedPlugin;
-use App\Services\Plugins\PluginHotTagsService;
-use App\Services\Plugins\PluginInformationService;
-use App\Services\Plugins\QueryPluginsService;
+use App\Services\PluginServices\PluginHotTagsService;
+use App\Services\PluginServices\PluginInformationService;
+use App\Services\PluginServices\QueryPluginsService;
 use App\Values\WpOrg\Plugins\ClosedPluginResponse;
 use App\Values\WpOrg\Plugins\PluginInformationRequest;
 use App\Values\WpOrg\Plugins\PluginResponse;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Values\WpOrg\Plugins;
 
+use App\Utils\Regex;
 use App\Values\DTO;
 use Bag\Attributes\StripExtraParameters;
 use Bag\Attributes\Transforms;
@@ -20,6 +21,7 @@ readonly class QueryPluginsRequest extends DTO
     public function __construct(
         public ?string $search = null,  // text to search
         public ?array $tags = null,     // tag or set of tags
+        public ?string $tag = null,     // tag or set of tags
         public ?string $plugin = null,  // slug of a specific plugin
         public ?string $author = null,  // wp.org username of author
         public ?string $browse = null,  // one of popular|top-rated|updated|new
@@ -34,8 +36,18 @@ readonly class QueryPluginsRequest extends DTO
     {
         $query = $request->query();
 
-        $query['tags'] = (array)Arr::pull($query, 'tag', []);
+        $search = Arr::pull($query, 'search', null);
+        $tags = Arr::pull($query, 'tags', []);
+        $tag = Arr::pull($query, 'tag', '');
+        $author = Arr::pull($query, 'author', null);
 
+        if (!empty($tag)) {
+            $tags = array_merge((array) $tags, [$tag]);
+        }
+        // string normalization
+        $query['search'] = is_string($search) ? self::normalizeSearchString($search) : null;
+        $query['tags'] = array_map(fn($tag) => self::normalizeSearchString($tag), (array) $tags);
+        $query['author'] = self::normalizeSearchString($author);
         // $defaultFields = [
         //     'description' => true,
         //     'rating' => true,
@@ -44,5 +56,15 @@ readonly class QueryPluginsRequest extends DTO
         // ];
         // $query['fields'] = self::getFields($request, $defaultFields);
         return $query;
+    }
+
+    private static function normalizeSearchString(?string $search): ?string
+    {
+        if ($search === null) {
+            return null;
+        }
+        $search = trim($search);
+        $search = Regex::replace('/\s+/i', ' ', $search);
+        return Regex::replace('/[^\w.,!?@#$_-]/i', ' ', $search); // strip most punctuation, allow a small subset
     }
 }
