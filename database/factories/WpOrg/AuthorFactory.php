@@ -6,6 +6,7 @@ use App\Models\WpOrg\Author;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
+/** @extends Factory<Author> */
 class AuthorFactory extends Factory
 {
     protected $model = Author::class;
