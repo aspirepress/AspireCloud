@@ -17,35 +17,29 @@ beforeEach(function () {
         'author_url' => 'https://wp-themes.com/author/tmeister',
     ]);
 
-    Theme::create([
-        'slug' => 'my-theme',
-        'name' => 'My Theme',
-        'description' => 'My Theme',
-        'version' => '1.2.1',
-        'download_link' => 'https://downloads.wp/my-theme',
-        'requires_php' => '5.6',
-        // 'last_updated' => CarbonImmutable::parse('2022-02-22 22:22:22'),
-        'last_updated' => '2025-01-18T20:50:36+00:00',
-        'creation_time' => CarbonImmutable::parse('2011-11-11 11:11:11'),
-        'preview_url' => 'https://wp-themes.com/my-theme',
-        'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
-        'rating' => 5,
-        'num_ratings' => 6,
-        'reviews_url' => 'https://wp-themes.com/my-theme/reviews',
-        'downloaded' => 1000,
-        'active_installs' => 100,
-        'homepage' => 'https://wp-themes.com/my-theme',
-        'is_commercial' => false,
-        'external_support_url' => null,
-        'is_community' => true,
-        'external_repository_url' => 'https://test.com',
-        'author_id' => $author->id,
+    Theme::factory()->create([
         'ac_origin' => 'wp_org',
-        'ac_raw_metadata' => [],
+        'active_installs' => 100,
+        'author_id' => $author->id,
+        'creation_time' => CarbonImmutable::parse('2011-11-11 11:11:11'),
+        'description' => 'My Theme',
+        'download_link' => 'https://downloads.wp/my-theme',
+        'downloaded' => 1000,
+        'external_repository_url' => 'https://test.com',
+        'homepage' => 'https://wordpress.org/themes/my-theme/',
+        'is_commercial' => false,
+        'is_community' => true,
+        'last_updated' => '2025-01-18T20:50:36+00:00',
+        'name' => 'My Theme',
+        'num_ratings' => 6,
+        'preview_url' => 'https://wp-themes.com/my-theme',
+        'rating' => 5,
+        'reviews_url' => 'https://wp-themes.com/my-theme/reviews',
+        'requires_php' => '5.6',
+        'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
+        'slug' => 'my-theme',
+        'version' => '1.2.1',
     ])->addTagsBySlugs(['black', 'white', 'red', 'blue']);
-    // 'ratings' => [5, 4, 3, 2, 1, 2],
-    // 'requires' => ['php' => '5.6', 'wp' => '5.0'],
-    // 'versions' => ['1.2.1', '1.2.0', '1.1.0'],
 });
 
 it('returns 400 when slug is missing', function () {
@@ -197,9 +191,9 @@ it('returns theme query results (v1.2)', function () {
         ->assertJsonPath('themes.0.tags.black', 'black');
 });
 
-it('returns theme query results for tag (v1.2)', function () {
+it('returns theme query results for tags (v1.2)', function () {
     $this
-        ->get('/themes/info/1.2?action=query_themes&tag=black')
+        ->get('/themes/info/1.2?action=query_themes&tag[]=black&tag[]=orange')
         ->assertStatus(200)
         ->assertJson([
             'info' => ['page' => 1, 'pages' => 1, 'results' => 1],
@@ -228,6 +222,66 @@ it('returns theme query results for tag (v1.2)', function () {
                     'version' => '1.2.1',
                 ],
             ],
+        ]);
+
+    $this
+        ->get('/themes/info/1.2?action=query_themes&tag=orange')
+        ->assertStatus(200)
+        ->assertExactJson([
+            'info' => ['page' => 1, 'pages' => 0, 'results' => 0],  // page 1 of 0 is a bit odd but it is correct
+            'themes' => [],
+        ]);
+});
+
+it('returns theme query results for ac_tags (v1.2)', function () {
+    $this
+        ->get('/themes/info/1.2?action=query_themes&ac_tag[]=black&ac_tag[]=blue')
+        ->assertStatus(200)
+        ->assertJson([
+            'info' => ['page' => 1, 'pages' => 1, 'results' => 1],
+            'themes' => [
+                [
+                    'author' => [
+                        'author' => 'Tmeister',
+                        'author_url' => 'https://wp-themes.com/author/tmeister',
+                        'avatar' => 'https://avatars.wp.org/tmeister',
+                        'display_name' => 'Tmeister',
+                        'profile' => 'https://profiles.wp.org/tmeister',
+                        'user_nicename' => 'tmeister',
+                    ],
+                    'description' => 'My Theme',
+                    'external_repository_url' => 'https://test.com',
+                    'homepage' => 'https://wordpress.org/themes/my-theme/',
+                    'is_commercial' => false,
+                    'is_community' => true,
+                    'name' => 'My Theme',
+                    'num_ratings' => 6,
+                    'preview_url' => 'https://wp-themes.com/my-theme',
+                    'rating' => 5,
+                    'requires_php' => '5.6',
+                    'screenshot_url' => 'https://wp-themes.com/my-theme/screenshot.png',
+                    'slug' => 'my-theme',
+                    'version' => '1.2.1',
+                ],
+            ],
+        ]);
+
+    $this
+        ->get('/themes/info/1.2?action=query_themes&tag=orange')
+        ->assertStatus(200)
+        ->assertExactJson([
+            'info' => ['page' => 1, 'pages' => 0, 'results' => 0],  // page 1 of 0 is a bit odd but it is correct
+            'themes' => [],
+        ]);
+});
+
+it('ANDs together ac_tags (v1.2)', function () {
+    $this
+        ->get('/themes/info/1.2?action=query_themes&ac_tag[]=black&ac_tag[]=orange')
+        ->assertStatus(200)
+        ->assertJson([
+            'info' => ['page' => 1, 'pages' => 0, 'results' => 0],
+            'themes' => [],
         ]);
 
     $this

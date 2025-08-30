@@ -16,8 +16,9 @@ readonly class QueryThemesRequest extends DTO
     public const ACTION = 'query_themes';
 
     /**
-     * @param ?string[] $tags
-     * @param string|array<string,bool> $fields
+     * @param list<string>|null $tags
+     * @param list<string>|null $ac_tags
+     * @param string|array<string,bool>|null $fields
      */
     public function __construct(
         public ?string $search = null, // text to search
@@ -28,6 +29,9 @@ readonly class QueryThemesRequest extends DTO
         public mixed $fields = null,
         public int $page = 1,
         public int $per_page = 24,
+
+        // AspireCloud-specific extensions
+        public ?array $ac_tags = null, // tag or set of tags, AND'ed together
     ) {}
 
     /** @return array<string, mixed> */
@@ -37,6 +41,7 @@ readonly class QueryThemesRequest extends DTO
         $query = $request->query();
 
         $query['tags'] = (array)Arr::pull($query, 'tag', []);
+        $query['ac_tags'] = (array)Arr::pull($query, 'ac_tag', []);
 
         $defaultFields = [
             'description' => true,

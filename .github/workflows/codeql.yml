@@ -43,9 +43,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8    # v5.0.0
 
       # Initializes the CodeQL tools for scanning.
+      # These all use the @v3 tag instead of a commit hash because I can't make hashes work with the three-level path.
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
