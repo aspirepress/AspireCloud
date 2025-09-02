@@ -20,6 +20,8 @@ return new class extends Migration {
             // Origin & type
             $table->foreignUuid('origin_id')->constrained()->cascadeOnDelete();
             $table->foreignUuid('package_type_id')->constrained()->cascadeOnDelete();
+            // raw data
+            $table->json('raw_metadata')->nullable();
             // Timestamps
             $table->timestampTz('created_at')->useCurrent()->index();
             $table->timestampTz('updated_at')->nullable()->index();

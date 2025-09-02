@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -29,6 +30,7 @@ class Package extends BaseModel
             'description' => 'string',
             'origin_id' => 'string',
             'package_type_id' => 'string',
+            'raw_metadata' => 'array',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
@@ -62,6 +64,12 @@ class Package extends BaseModel
     public function tags(): MorphMany
     {
         return $this->morphMany(Tag::class, 'taggable');
+    }
+
+    /** @return HasOne<PackageMetas> */
+    public function metas(): HasOne
+    {
+        return $this->hasOne(PackageMetas::class, 'package_id', 'id');
     }
 
     /**
