@@ -7,6 +7,7 @@ use App\Models\WpOrg\PluginTag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
+/** @extends Factory<Plugin> */
 class PluginFactory extends Factory
 {
     protected $model = Plugin::class;

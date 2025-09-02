@@ -33,9 +33,11 @@
         "pestphp/pest": "^3.8.0",
         "pestphp/pest-plugin-laravel": "^3.1",
         "phpstan/phpstan": "^2.1.11",
+        "psalm/plugin-laravel": "^3.0",
         "roave/security-advisories": "dev-latest",
         "spatie/laravel-web-tinker": "^1.10.1",
-        "thecodingmachine/phpstan-safe-rule": "^1.4"
+        "thecodingmachine/phpstan-safe-rule": "^1.4",
+        "vimeo/psalm": "^6.13"
     },
     "autoload": {
         "psr-4": {
