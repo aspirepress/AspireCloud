@@ -34,7 +34,32 @@ readonly class QueryPluginsRequest extends DTO
     {
         $query = $request->query();
 
-        $query['tags'] = (array)Arr::pull($query, 'tag', []);
+        $tags = [];
+
+        if (isset($query['tags'])) {
+            $tags = (array) Arr::pull($query, 'tags', []);
+        } elseif (isset($query['tag'])) {
+            $tags = (array) Arr::pull($query, 'tag', []);
+        }
+
+        // Normalize additional tag operators
+        $tagAnd = array_filter((array) Arr::pull($query, 'tag-and', []));
+        $tagOr  = array_filter((array) Arr::pull($query, 'tag-or', []));
+        $tagNot = array_filter((array) Arr::pull($query, 'tag-not', []));
+
+        // Merge base tags, ANDs, and ORs
+        $merged = array_values(array_unique([
+            ...$tags,
+            ...$tagAnd,
+            ...$tagOr,
+        ]));
+
+        // Exclude NOT tags if present
+        if (!empty($tagNot)) {
+            $merged = array_values(array_diff($merged, $tagNot));
+        }
+
+        $query['tags'] = $merged;
 
         // $defaultFields = [
         //     'description' => true,
