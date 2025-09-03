@@ -22,6 +22,7 @@ readonly class PackageData extends DTO
         public string $description,
         public string $download_url,
         public string $version,
+        public string $license,
         public string $type,
         public string $origin,
         public array $raw_metadata = [],
@@ -56,6 +57,7 @@ readonly class PackageData extends DTO
             'description' => $fairMetadata->description,
             'download_url' => $downloadUrl,
             'version' => $version,
+            'license' => $fairMetadata->license,
             'raw_metadata' => $fairMetadata->raw_metadata,
             'authors' => $authors,
         ];
@@ -85,6 +87,7 @@ readonly class PackageData extends DTO
             'description' => $plugin->description,
             'download_url' => $plugin->download_link,
             'version' => $plugin->version,
+            'license' => $plugin->business_model === 'commercial' ? 'proprietary' : 'GPL', // @todo - proper license
             'raw_metadata' => $plugin->ac_raw_metadata,
             'authors' => [
                 [
@@ -111,6 +114,7 @@ readonly class PackageData extends DTO
             'description' => $theme->description,
             'download_url' => $theme->download_link,
             'version' => $theme->version,
+            'license' => $theme->is_commercial ? 'proprietary' : 'GPL', // @todo - proper license
             'raw_metadata' => $theme->ac_raw_metadata,
             'authors' => [
                 [

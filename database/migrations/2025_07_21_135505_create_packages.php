@@ -19,7 +19,8 @@ return new class extends Migration {
             $table->text('description')->nullable();
             // Origin & type
             $table->text('origin');
-            $table->text('package_type');
+            $table->text('type');
+            $table->text('license');
             // raw data
             $table->json('raw_metadata')->nullable();
             // Timestamps

@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
-use App\Models\WpOrg\Author;
-use App\Values\Packages\PackageData;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use App\Enums\Origin;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use App\Models\WpOrg\Author;
+use Illuminate\Support\Facades\DB;
+use App\Values\Packages\PackageData;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Package extends BaseModel
 {
@@ -27,8 +28,9 @@ class Package extends BaseModel
             'slug' => 'string',
             'name' => 'string',
             'description' => 'string',
+            'type' => 'string',
             'origin' => 'string',
-            'package_type' => 'string',
+            'license' => 'string',
             'raw_metadata' => 'array',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
@@ -135,7 +137,8 @@ class Package extends BaseModel
                 'name' => $packageData->name,
                 'description' => $packageData->description,
                 'origin' => $packageData->origin,
-                'package_type' => $packageData->type,
+                'type' => $packageData->type,
+                'license' => $packageData->license,
                 'raw_metadata' => $packageData->raw_metadata ?: null,
             ],
         );
