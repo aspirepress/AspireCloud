@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\WpOrg\Author;
 use App\Values\Packages\PackageData;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -28,24 +27,12 @@ class Package extends BaseModel
             'slug' => 'string',
             'name' => 'string',
             'description' => 'string',
-            'origin_id' => 'string',
-            'package_type_id' => 'string',
+            'origin' => 'string',
+            'package_type' => 'string',
             'raw_metadata' => 'array',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
-    }
-
-    /** @return BelongsTo<Origin, $this> */
-    public function origin(): BelongsTo
-    {
-        return $this->belongsTo(Origin::class);
-    }
-
-    /** @return BelongsTo<PackageType, $this> */
-    public function packageType(): BelongsTo
-    {
-        return $this->belongsTo(PackageType::class);
     }
 
     /** @return BelongsToMany<Author, $this> */
@@ -79,10 +66,8 @@ class Package extends BaseModel
     public static function fromPackageData(PackageData $packageData): self
     {
         return DB::transaction(function () use ($packageData) {
-            // Origin & Type
-            [$origin, $type] = self::resolveOriginAndType($packageData->origin, $packageData->type);
             // Upsert package
-            $package = self::upsertPackage($packageData, $origin->id, $type->id);
+            $package = self::upsertPackage($packageData);
             // tags
             self::syncTags($package, $packageData->raw_metadata['keywords'] ?? []);
             // Iterate releases
@@ -133,48 +118,22 @@ class Package extends BaseModel
     }
 
     /**
-     * Resolves the origin and package type by their slugs.
-     *
-     * @param string $originSlug
-     * @param string $typeSlug
-     * @return array{Origin, PackageType}
-     *
-     * @throws \InvalidArgumentException if the origin or type is not found.
-     */
-    protected static function resolveOriginAndType(string $originSlug, string $typeSlug): array
-    {
-        $origin = Origin::where('slug', $originSlug)->first();
-        if (!$origin) {
-            throw new \InvalidArgumentException("Origin not found: {$originSlug}");
-        }
-
-        $type = $origin->packageTypes()->where('slug', $typeSlug)->first();
-        if (!$type) {
-            throw new \InvalidArgumentException("Package type not found: {$typeSlug}");
-        }
-
-        return [$origin, $type];
-    }
-
-    /**
      * @param PackageData $packageData
-     * @param string $originId
-     * @param string $typeId
      * @return self
      */
-    protected static function upsertPackage(PackageData $packageData, string $originId, string $typeId): self
+    protected static function upsertPackage(PackageData $packageData): self
     {
         return self::_updateOrCreate(
             $packageData->did
                 ? ['did' => $packageData->did]
-                : ['origin_id' => $originId, 'slug' => $packageData->slug],
+                : ['origin' => $packageData->origin, 'slug' => $packageData->slug],
             [
-                'did' => $packageData->did ?? '',
+                'did' => $packageData->did,
                 'slug' => $packageData->slug,
                 'name' => $packageData->name,
                 'description' => $packageData->description,
-                'origin_id' => $originId,
-                'package_type_id' => $typeId,
+                'origin' => $packageData->origin,
+                'package_type' => $packageData->type,
                 'raw_metadata' => $packageData->raw_metadata ?: null,
             ]
         );

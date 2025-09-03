@@ -4,8 +4,8 @@ namespace App\Values\Packages;
 
 use App\Values\DTO;
 use Bag\Values\Optional;
+use App\Enums\PackageType;
 use Bag\Attributes\Transforms;
-use Bag\Attributes\Validation\In;
 
 /**
  * Represents metadata for a package in the FAIR protocol
@@ -30,7 +30,6 @@ readonly class FairMetadata extends DTO
     public function __construct(
         public string|array $context, // can be a string or an array of contexts
         public string $id,
-        #[In('wp-core', 'wp-plugin', 'wp-theme')]
         public string $type,
         public string $license,
         public array $authors,
@@ -85,7 +84,7 @@ readonly class FairMetadata extends DTO
                     : $value === self::CONTEXT;
             },
             'id' => ['required', 'string'],
-            'type' => ['required', 'string'],
+            'type' => ['required', 'string', 'in:' . implode(',', PackageType::values())],
             'license' => ['required', 'string'], // @todo - validate against SPDX licenses?
             'slug' => ['nullable', 'string'],
             'name' => ['nullable', 'string'],

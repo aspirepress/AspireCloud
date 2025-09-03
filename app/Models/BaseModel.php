@@ -20,8 +20,8 @@ abstract class BaseModel extends Model
         return static::query()->create($attributes);
     }
 
-    protected static function _updateOrCreate(array $attributes = []): static
+    protected static function _updateOrCreate(array $attributes, array $values): static
     {
-        return static::query()->updateOrCreate($attributes);
+        return static::query()->updateOrCreate($attributes, $values);
     }
 }
