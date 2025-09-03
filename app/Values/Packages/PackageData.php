@@ -14,6 +14,8 @@ readonly class PackageData extends DTO
     /**
      * @param array<string, mixed> $raw_metadata
      * @param array<array<string, string>> $authors
+     * @param array<array<string, string>> $security
+     * @param array<array<string, mixed>> $releases
      */
     public function __construct(
         public string $did,
@@ -27,6 +29,8 @@ readonly class PackageData extends DTO
         public string $origin,
         public array $raw_metadata = [],
         public array $authors = [],
+        public array $security = [],
+        public array $releases = [],
     ) {}
 
     /**
@@ -48,6 +52,11 @@ readonly class PackageData extends DTO
             $fairMetadata->authors,
         );
 
+        $security = array_map(
+            fn($item) => array_filter($item, fn($value) => $value !== null),
+            $fairMetadata->security
+        );
+
         return [
             'did' => $fairMetadata->id,
             'type' => $fairMetadata->type,
@@ -60,6 +69,8 @@ readonly class PackageData extends DTO
             'license' => $fairMetadata->license,
             'raw_metadata' => $fairMetadata->raw_metadata,
             'authors' => $authors,
+            'security' => $security,
+            'releases' => $releases,
         ];
     }
 
@@ -78,6 +89,25 @@ readonly class PackageData extends DTO
             $authorName = $plugin->author;
         }
 
+        $security = [
+            [
+                'url' => ($authorUrl ?? $plugin->author_profile) ?? $plugin->support_url,
+            ]
+        ];
+
+        $releases = [
+            [
+                'version' => $plugin->version,
+                'artifacts' => [
+                    'package' => [
+                        [
+                            'url' => $plugin->download_link,
+                        ],
+                    ],
+                ],
+            ]
+        ];
+
         return [
             'did' => 'fake:' . $plugin->slug, // @todo - generate a real DID
             'type' => PackageType::PLUGIN->value,
@@ -95,6 +125,8 @@ readonly class PackageData extends DTO
                     'url' => $authorUrl,
                 ],
             ],
+            'security' => $security,
+            'releases' => $releases,
         ];
     }
 
@@ -105,6 +137,25 @@ readonly class PackageData extends DTO
     #[Transforms(Theme::class)]
     public static function fromTheme(Theme $theme): array
     {
+        $security = [
+            [
+                'url' => $theme->author['author_url'],
+            ]
+        ];
+
+        $releases = [
+            [
+                'version' => $theme->version,
+                'artifacts' => [
+                    'package' => [
+                        [
+                            'url' => $theme->download_link,
+                        ],
+                    ],
+                ],
+            ]
+        ];
+
         return [
             'did' => 'fake:' . $theme->slug, // @todo - generate a real DID
             'type' => PackageType::THEME->value,
@@ -122,6 +173,8 @@ readonly class PackageData extends DTO
                     'url' => $theme->author->author_url,
                 ],
             ],
+            'security' => $security,
+            'releases' => $releases,
         ];
     }
 
@@ -138,6 +191,8 @@ readonly class PackageData extends DTO
             'version' => ['required', 'string'],
             'origin' => ['required', 'string', 'in:' . implode(',', Origin::values())],
             'raw_metadata' => ['required', 'array'],
+            'security' => ['required', 'array'],
+            'releases' => ['required', 'array'],
         ];
     }
 }

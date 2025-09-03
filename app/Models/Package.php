@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\Origin;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use App\Models\WpOrg\Author;
@@ -73,49 +72,40 @@ class Package extends BaseModel
             // tags
             self::syncTags($package, $packageData->raw_metadata['keywords'] ?? []);
             // Iterate releases
-            $releases = $packageData->raw_metadata['releases'] ?? null;
+            foreach ($packageData->releases as $release) {
+                // pick primary downloadable artifact
+                $artifactsPackage = Arr::get($release, 'artifacts.package', []);
+                /** @var array<string, string> $artifactsPackage */
+                $artifacts = Arr::first($artifactsPackage) ?? [];
 
-            if (is_array($releases) && !empty($releases)) {
-                foreach ($releases as $release) {
-                    // pick primary downloadable artifact
-                    $artifactsPackage = Arr::get($release, 'artifacts.package', []);
-                    /** @var array<string, string> $artifactsPackage */
-                    $artifacts = Arr::first($artifactsPackage) ?? [];
-
-                    $package
-                        ->releases()
-                        ->updateOrCreate(
-                            ['version' => $release['version']],
-                            [
-                                'download_url' => $artifacts['url'] ?? null,
-                                'signature' => $artifacts['signature'] ?? null,
-                                'checksum' => $artifacts['checksum'] ?? null,
-
-                                'requires' => $release['requires'] ?? null,
-                                'suggests' => $release['suggests'] ?? null,
-                                'provides' => $release['provides'] ?? null,
-                                'artifacts' => $release['artifacts'] ?? null,
-                            ],
-                        );
-                }
-            } else {
-                // If no releases, create a default one from PackageData
                 $package
                     ->releases()
                     ->updateOrCreate(
-                        ['version' => $packageData->version],
+                        ['version' => $release['version']],
                         [
-                            'download_url' => $packageData->download_url,
-                            'requires' => null,
-                            'suggests' => null,
-                            'provides' => null,
-                            'artifacts' => null,
+                            'download_url' => $artifacts['url'] ?? null,
+                            'signature' => $artifacts['signature'] ?? null,
+                            'checksum' => $artifacts['checksum'] ?? null,
+
+                            'requires' => $release['requires'] ?? null,
+                            'suggests' => $release['suggests'] ?? null,
+                            'provides' => $release['provides'] ?? null,
+                            'artifacts' => $release['artifacts'] ?? null,
                         ],
                     );
             }
 
             // Authors
             self::syncAuthors($package, $packageData->authors ?? []);
+
+            // Update security
+            $metas = $package->metas['raw_metadata'] ?? [];
+
+            $metas['security'] = $packageData->security;
+            $package->metas()->updateOrCreate(
+                ['package_id' => $package->id],
+                ['raw_metadata' => $metas]
+            );
 
             return $package;
         });

@@ -3,6 +3,7 @@
 namespace App\Values\Packages;
 
 use App\Values\DTO;
+use App\Models\Package;
 use Bag\Values\Optional;
 use App\Enums\PackageType;
 use Bag\Attributes\Transforms;
@@ -67,6 +68,43 @@ readonly class FairMetadata extends DTO
             'name' => $data['name'] ?? null,
             'description' => $data['description'] ?? null,
             'raw_metadata' => $data,
+        ];
+    }
+
+    /**
+     * @param Package $package
+     * @return array<string, mixed>
+    */
+    #[Transforms(Package::class)]
+    public static function fromPackage(Package $package): array
+    {
+        $releases = $package->releases->map(fn($release) => [
+            'version' => $release->version,
+            'artifacts' => $release->artifacts,
+            'provides' => $release->provides,
+            'requires' => $release->requires,
+            'suggests' => $release->suggests,
+        ])->toArray();
+
+        return [
+            'context' => self::CONTEXT,
+            'id' => $package->did,
+            'type' => $package->type,
+            'license' => $package->license,
+            'authors' => $package->authors->map(fn($author) => array_filter([
+                'name' => $author->display_name,
+                'url' => $author->author_url,
+                // @todo - maybe store email in Author model, if it exists on the FAIR package
+            ]))->toArray(),
+            'security' => $package->metas['raw_metadata']['security'],
+            'releases' => $releases,
+            'keywords' => [],
+            'sections' => [],
+            '_links' => [],
+            'slug' => $package->slug,
+            'name' => $package->name,
+            'description' => $package->description,
+            'raw_metadata' => $package->raw_metadata,
         ];
     }
 
@@ -162,7 +200,7 @@ readonly class FairMetadata extends DTO
             'releases.*.version' => [
                 'required',
                 'string',
-                'regex:/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/',
+                'regex:/^(0|[1-9]\d*)\.(0|[1-9]\d*)(\.(0|[1-9]\d*))?(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$/',
             ],
             'releases.*.artifacts' => ['required', 'array', 'min:1'],
             'releases.*.artifacts.*' => ['required', 'array'],
