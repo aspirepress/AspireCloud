@@ -9,7 +9,6 @@ use App\Models\WpOrg\Theme;
 use App\Values\DTO;
 use Bag\Attributes\Transforms;
 
-
 readonly class PackageData extends DTO
 {
     /**

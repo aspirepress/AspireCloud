@@ -41,19 +41,19 @@ class Package extends BaseModel
         return $this->belongsToMany(Author::class, 'author_package', 'package_id', 'author_id', 'id', 'id');
     }
 
-    /** @return HasMany<PackageRelease> */
+    /** @return HasMany<PackageRelease, $this> */
     public function releases(): HasMany
     {
         return $this->hasMany(PackageRelease::class, 'package_id', 'id');
     }
 
-    /** @return MorphMany<Tag> */
+    /** @return MorphMany<Tag, $this> */
     public function tags(): MorphMany
     {
         return $this->morphMany(Tag::class, 'taggable');
     }
 
-    /** @return HasOne<PackageMetas> */
+    /** @return HasOne<PackageMetas, $this> */
     public function metas(): HasOne
     {
         return $this->hasOne(PackageMetas::class, 'package_id', 'id');
@@ -76,7 +76,9 @@ class Package extends BaseModel
             if (is_array($releases) && !empty($releases)) {
                 foreach ($releases as $release) {
                     // pick primary downloadable artifact
-                    $artifacts = Arr::first(Arr::get($release, 'artifacts.package', [])) ?? [];
+                    $artifactsPackage = Arr::get($release, 'artifacts.package', []);
+                    /** @var array<string, string> $artifactsPackage */
+                    $artifacts = Arr::first($artifactsPackage) ?? [];
 
                     $package
                         ->releases()
@@ -91,7 +93,7 @@ class Package extends BaseModel
                                 'suggests' => $release['suggests'] ?? null,
                                 'provides' => $release['provides'] ?? null,
                                 'artifacts' => $release['artifacts'] ?? null,
-                            ]
+                            ],
                         );
                 }
             } else {
@@ -106,7 +108,7 @@ class Package extends BaseModel
                             'suggests' => null,
                             'provides' => null,
                             'artifacts' => null,
-                        ]
+                        ],
                     );
             }
 
@@ -135,13 +137,13 @@ class Package extends BaseModel
                 'origin' => $packageData->origin,
                 'package_type' => $packageData->type,
                 'raw_metadata' => $packageData->raw_metadata ?: null,
-            ]
+            ],
         );
     }
 
     /**
      * @param Package $package
-     * @param array $keywords
+     * @param array<string> $keywords
      * @return void
      */
     protected static function syncTags(self $package, array $keywords): void
@@ -154,14 +156,14 @@ class Package extends BaseModel
                 ->tags()
                 ->firstOrCreate(
                     ['slug' => Str::slug($keyword)],
-                    ['name' => $keyword]
+                    ['name' => $keyword],
                 );
         }
     }
 
     /**
      * @param Package $package
-     * @param array $authors
+     * @param array<array<string, string>> $authors
      * @return void
      */
     protected static function syncAuthors(self $package, array $authors): void
@@ -170,13 +172,13 @@ class Package extends BaseModel
             $author = Author::firstOrCreate(
                 [
                     'user_nicename' => $author['name'] ?? '',
-                    'author_url' => $author['url'] ?? null
+                    'author_url' => $author['url'] ?? null,
                 ],
                 [
                     'profile' => $author['url'] ?? null,
                     'display_name' => $author['name'] ?? '',
-                    'author' => $author['name'] ?? ''
-                ]
+                    'author' => $author['name'] ?? '',
+                ],
             );
 
             $package->authors()->syncWithoutDetaching([$author->id]);

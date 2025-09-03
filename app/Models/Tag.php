@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Package;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -30,8 +31,17 @@ class Tag extends Model
         ];
     }
 
+    /**
+     * Get the parent taggable model.
+     *
+     * @return MorphTo
+     * @phpstan-return MorphTo<Package, Tag>
+     */
     public function taggable(): MorphTo
     {
-        return $this->morphTo();
+        /** @var MorphTo<Package, Tag> $relation */
+        $relation = $this->morphTo();
+
+        return $relation;
     }
 }
