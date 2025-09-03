@@ -20,8 +20,15 @@ abstract class BaseModel extends Model
         return static::query()->create($attributes);
     }
 
-    protected static function _updateOrCreate(array $attributes = []): static
+    /**
+     * Upsert a model instance.
+     *
+     * @param array<string, mixed> $attributes
+     * @param array<string, mixed> $values
+     * @return static
+     */
+    protected static function _updateOrCreate(array $attributes, array $values): static
     {
-        return static::query()->updateOrCreate($attributes);
+        return static::query()->updateOrCreate($attributes, $values);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Values\Packages;
 
+use App\Enums\PackageType;
+use App\Enums\Origin;
 use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\Theme;
 use App\Values\DTO;
@@ -40,12 +42,6 @@ readonly class PackageData extends DTO
         $version = $release['version'];
         $downloadUrl = $release['artifacts']['package'][0]['url'];
 
-        $type = match ($fairMetadata->type) {
-            'wp-plugin' => 'plugin',
-            'wp-theme' => 'theme',
-            default => throw new \InvalidArgumentException('Unsupported type: ' . $fairMetadata->type),
-        };
-
         $authors = array_map(
             fn($author) => ['name' => $author['name'], 'url' => $author['url'] ?? null],
             $fairMetadata->authors,
@@ -53,8 +49,8 @@ readonly class PackageData extends DTO
 
         return [
             'did' => $fairMetadata->id,
-            'type' => $type,
-            'origin' => 'fair',
+            'type' => $fairMetadata->type,
+            'origin' => Origin::FAIR->value,
             'slug' => $fairMetadata->slug,
             'name' => $fairMetadata->name,
             'description' => $fairMetadata->description,
@@ -82,8 +78,8 @@ readonly class PackageData extends DTO
 
         return [
             'did' => 'fake:' . $plugin->slug, // @todo - generate a real DID
-            'type' => 'plugin',
-            'origin' => 'wp_org',
+            'type' => PackageType::PLUGIN->value,
+            'origin' => Origin::WP->value,
             'slug' => $plugin->slug,
             'name' => $plugin->name,
             'description' => $plugin->description,
@@ -108,8 +104,8 @@ readonly class PackageData extends DTO
     {
         return [
             'did' => 'fake:' . $theme->slug, // @todo - generate a real DID
-            'type' => 'theme',
-            'origin' => 'wp_org',
+            'type' => PackageType::THEME->value,
+            'origin' => Origin::WP->value,
             'slug' => $theme->slug,
             'name' => $theme->name,
             'description' => $theme->description,
@@ -136,7 +132,7 @@ readonly class PackageData extends DTO
             'description' => ['nullable', 'string'],
             'download_url' => ['required', 'string'],
             'version' => ['required', 'string'],
-            'origin' => ['required', 'string'],
+            'origin' => ['required', 'string', 'in:' . implode(',', Origin::values())],
             'raw_metadata' => ['required', 'array'],
         ];
     }

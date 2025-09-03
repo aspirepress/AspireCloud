@@ -18,8 +18,8 @@ return new class extends Migration {
             $table->text('name');
             $table->text('description')->nullable();
             // Origin & type
-            $table->foreignUuid('origin_id')->constrained()->cascadeOnDelete();
-            $table->foreignUuid('package_type_id')->constrained()->cascadeOnDelete();
+            $table->text('origin');
+            $table->text('package_type');
             // raw data
             $table->json('raw_metadata')->nullable();
             // Timestamps

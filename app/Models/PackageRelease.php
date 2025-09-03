@@ -31,6 +31,11 @@ class PackageRelease extends BaseModel
         ];
     }
 
+    /**
+     * Get the package that owns the release.
+     *
+     * @return BelongsTo<Package, $this>
+     */
     public function package(): BelongsTo
     {
         return $this->belongsTo(Package::class);
