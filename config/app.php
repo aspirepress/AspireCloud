@@ -32,5 +32,8 @@ return [
             'base' => env('DOWNLOAD_BASE', env('APP_URL') . '/download/'), # must have a trailing slash!
             'cache_seconds' => env('DOWNLOAD_CACHE_SECONDS', 60 * 60 * 24 * 10),
         ],
+        'fair' => [
+            'repos' => json_decode(env('FAIR_REPOS', '[]'), true), # JSON array of FAIR repo base URLs
+        ],
     ],
 ];

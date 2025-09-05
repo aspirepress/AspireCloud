@@ -6,7 +6,6 @@ use App\Enums\PackageType;
 use Exception;
 use App\Models\WpOrg\Theme;
 use Illuminate\Console\Command;
-use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
 use App\Values\Packages\PackageData;
 use App\Models\Package;
@@ -27,7 +26,7 @@ class PackageThemesImportCommand extends Command
 
     private int $chunkSize = 100;
 
-    public function handle(Pipeline $pipeline): void
+    public function handle(): void
     {
         ini_set('memory_limit', '-1');
 
