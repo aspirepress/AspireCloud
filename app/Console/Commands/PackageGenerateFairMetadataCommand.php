@@ -35,7 +35,6 @@ class PackageGenerateFairMetadataCommand extends Command
         try {
             $metadata = FairMetadata::from($package);
             $fairData = $metadata->toArray();
-            unset($fairData['raw_metadata']);
 
             // Here you would typically save the FAIR metadata to a file or database
             // For demonstration, we will just output it

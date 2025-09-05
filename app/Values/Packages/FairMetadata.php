@@ -2,11 +2,12 @@
 
 namespace App\Values\Packages;
 
-use App\Values\DTO;
-use App\Models\Package;
-use Bag\Values\Optional;
 use App\Enums\PackageType;
+use App\Models\Package;
+use App\Values\DTO;
+use Bag\Attributes\Hidden;
 use Bag\Attributes\Transforms;
+use Bag\Values\Optional;
 
 /**
  * Represents metadata for a package in the FAIR protocol
@@ -43,6 +44,7 @@ readonly class FairMetadata extends DTO
         public string $name, // Optional in FAIR requirements.
         public Optional|string $filename,
         public Optional|string $description,
+        #[Hidden]
         public array $raw_metadata = [],
     ) {}
 

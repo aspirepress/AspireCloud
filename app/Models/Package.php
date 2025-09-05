@@ -104,7 +104,7 @@ class Package extends BaseModel
             $metas['security'] = $packageData->security;
             $package->metas()->updateOrCreate(
                 ['package_id' => $package->id],
-                ['raw_metadata' => $metas]
+                ['raw_metadata' => $metas],
             );
 
             return $package;
