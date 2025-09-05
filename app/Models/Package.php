@@ -99,12 +99,12 @@ class Package extends BaseModel
             self::syncAuthors($package, $packageData->authors ?? []);
 
             // Update security
-            $metas = $package->metas['raw_metadata'] ?? [];
+            $metas = $package->metas['metadata'] ?? [];
 
             $metas['security'] = $packageData->security;
             $package->metas()->updateOrCreate(
                 ['package_id' => $package->id],
-                ['raw_metadata' => $metas],
+                ['metadata' => $metas],
             );
 
             return $package;

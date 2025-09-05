@@ -5,12 +5,13 @@ namespace App\Console\Commands;
 use Exception;
 use App\Models\Package;
 use App\Enums\PackageType;
-use function Safe\ini_set;
 use App\Models\WpOrg\Plugin;
 use Illuminate\Console\Command;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
 use App\Values\Packages\PackageData;
+
+use function Safe\ini_set;
 
 class PackagePluginsImportCommand extends Command
 {
@@ -39,7 +40,7 @@ class PackagePluginsImportCommand extends Command
                 $package = Package::query()
                     ->where([
                         ['slug', '=', $plugin->slug],
-                        ['type', '=', PackageType::PLUGIN->value]
+                        ['type', '=', PackageType::PLUGIN->value],
                     ])
                     ->first();
                 if ($package && $this->option('new-only')) {

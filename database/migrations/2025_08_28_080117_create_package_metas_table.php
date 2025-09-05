@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->foreignUuid('package_id')->constrained()->cascadeOnDelete();
             // raw data
-            $table->json('raw_metadata')->nullable();
+            $table->json('metadata')->nullable();
             $table->timestamps();
         });
     }

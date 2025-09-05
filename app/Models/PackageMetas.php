@@ -16,7 +16,7 @@ class PackageMetas extends BaseModel
         return [
             'id' => 'string',
             'package_id' => 'string',
-            'raw_metadata' => 'array',
+            'metadata' => 'array',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
