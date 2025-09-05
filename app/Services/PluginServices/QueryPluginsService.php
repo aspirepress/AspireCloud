@@ -4,29 +4,40 @@ namespace App\Services\PluginServices;
 
 use App\Models\WpOrg\Plugin;
 use App\Utils\Regex;
-use App\Values\WpOrg\Plugins as PluginDTOs;
+use App\Values\WpOrg\Plugins;
 use Illuminate\Database\Eloquent\Builder;
 
 class QueryPluginsService
 {
-    public function queryPlugins(Plugins\QueryPluginsDTO $req): Plugins\QueryPluginsResponse
+    public function queryPlugins(Plugins\QueryPluginsRequest $req): Plugins\QueryPluginsResponse
     {
-        $page = $req->page;
+        $page    = $req->page;
         $perPage = $req->per_page;
-        $browse = $req->browse ?: 'popular';
-        $search = $req->search ?? null;
-        $tags = $req->tags ?? [];
-        $author = $req->author ?? null;
+        $browse  = $req->browse ?: 'popular';
+        $search  = $req->search ?? null;
+        $author  = $req->author ?? null;
+
+        // Operators coming from the DTO
+        $tags   = $req->tags   ?? [];
+        $tagAnd = $req->tagAnd ?? [];
+        $tagOr  = $req->tagOr  ?? [];
+        $tagNot = $req->tagNot ?? [];
+
+        // merge base tags with tagOr
+        $anyTags = array_values(array_unique([...$tags, ...$tagOr]));
 
         // Ad hoc pipeline because Laravel's Pipeline class is awful
         $callbacks = collect();
-        $search and $callbacks->push(fn($query) => self::applySearchWeighted($query, $search, $req));
-        $tags and $callbacks->push(fn($query) => self::applyTag($query, $tags));
-        $author and $callbacks->push(fn($query) => self::applyAuthor($query, $author));
-        !$search and $callbacks->push(fn($query) => self::applyBrowse($query, $browse)); // search applies its own sort
 
+        !empty($anyTags) && $callbacks->push(fn($q) => self::applyTagAny($q, $anyTags));
+        !empty($tagAnd)  && $callbacks->push(fn($q) => self::applyTagAll($q, $tagAnd));
+        !empty($tagNot)  && $callbacks->push(fn($q) => self::applyTagNot($q, $tagNot));
+
+        $search && $callbacks->push(fn($q) => self::applySearchWeighted($q, $search, $req));
+        $author && $callbacks->push(fn($q) => self::applyAuthor($q, $author));
+        !$search && $callbacks->push(fn($q) => self::applyBrowse($q, $browse));
+        /** @var Builder<Plugin> $query */
         $query = $callbacks->reduce(fn($query, $callback) => $callback($query), Plugin::query());
-        assert($query instanceof Builder);
 
         $total = $query->count();
         $totalPages = (int)ceil($total / $perPage);
@@ -51,7 +62,11 @@ class QueryPluginsService
      * @param Builder<Plugin> $query
      * @return Builder<Plugin> Returns a new query with weighted search applied
      */
-    public static function applySearchWeighted(Builder $query, string $search, Plugins\QueryPluginsDTO $request): Builder
+    public static function applySearchWeighted(
+        Builder $query,
+        string $search,
+        Plugins\QueryPluginsRequest $request
+    ): Builder
     {
         $lcsearch = mb_strtolower($search);
         $slug = Regex::replace('/[^-\w]+/', '-', $lcsearch);
@@ -107,9 +122,26 @@ class QueryPluginsService
     }
 
     /** @param Builder<Plugin> $query */
-    public static function applyTag(Builder $query, array $tags): Builder
+    public static function applyTagAny(Builder $query, array $tags): Builder
     {
         return $query->whereHas('tags', fn(Builder $q) => $q->whereIn('slug', $tags));
+    }
+
+    /** @param Builder<Plugin> $query */
+    public static function applyTagAll(Builder $query, array $tags): Builder
+    {
+        return $query->whereHas(
+            'tags',
+            fn(Builder $q) => $q->whereIn('slug', $tags),
+            '>=',
+            count($tags)
+        );
+    }
+
+    /** @param Builder<Plugin> $query */
+    public static function applyTagNot(Builder $query, array $slugs): Builder
+    {
+        return $query->whereDoesntHave('tags', fn(Builder $q) => $q->whereIn('slug', $slugs));
     }
 
     /**
