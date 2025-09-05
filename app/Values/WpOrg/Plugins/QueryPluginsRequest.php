@@ -11,21 +11,26 @@ use Bag\Attributes\Transforms;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-// Completely isomorphic to QueryThemesRequest, except $theme is replaced with $plugin.  Hmm.
-// I'd look into refactoring it, but it's not like .org is going to add a new resource type anytime soon.
-// We can clean things up in the 2.0 API.
 #[StripExtraParameters]
 readonly class QueryPluginsRequest extends DTO
 {
-    /** @param list<string>|null $tags */
+    /** @param list<string>|null $tags
+     * @param list<string>|null $tagAnd
+     * @param list<string>|null $tagOr
+     * @param list<string>|null $tagNot
+     * @param string|list<string>|null $fields
+     */
     public function __construct(
-        public ?string $search = null,  // text to search
-        public ?array $tags = null,     // tag or set of tags
-        public ?string $tag = null,     // tag or set of tags
-        public ?string $plugin = null,  // slug of a specific plugin
-        public ?string $author = null,  // wp.org username of author
-        public ?string $browse = null,  // one of popular|top-rated|updated|new
-        public mixed $fields = null,    // ignored-- all fields are always returned
+        public ?string $search = null,
+        public ?array $tags = null,
+        public ?string $tag = null,
+        public ?array $tagAnd = null,
+        public ?array $tagOr = null,
+        public ?array $tagNot = null,
+        public ?string $plugin = null,
+        public ?string $author = null,
+        public ?string $browse = null,
+        public mixed $fields = null,
         public int $page = 1,
         public int $per_page = 24,
     ) {}
@@ -36,35 +41,62 @@ readonly class QueryPluginsRequest extends DTO
     {
         $query = $request->query();
 
+        // Pull base params
         $search = Arr::pull($query, 'search', null);
-        $tags = Arr::pull($query, 'tags', []);
-        $tag = Arr::pull($query, 'tag', '');
         $author = Arr::pull($query, 'author', null);
 
-        if (!empty($tag)) {
-            $tags = array_merge((array) $tags, [$tag]);
+        // Normalize tags:
+        $tags = (array) Arr::pull($query, 'tags', []);
+        $singleTag = Arr::pull($query, 'tag', null);
+        if (is_string($singleTag) && $singleTag !== '') {
+            $tags[] = $singleTag;
         }
-        // string normalization
-        $query['search'] = is_string($search) ? self::normalizeSearchString($search) : null;
-        $query['tags'] = array_map(fn($tag) => self::normalizeSearchString($tag), (array) $tags);
+        $tags = self::normalizeStringList($tags);
+
+        // Normalize operators
+        $tagAnd = self::normalizeStringList((array) Arr::pull($query, 'tag-and', []));
+        $tagOr  = self::normalizeStringList((array) Arr::pull($query, 'tag-or', []));
+        $tagNot = self::normalizeStringList((array) Arr::pull($query, 'tag-not', []));
+
+        $query['search'] = self::normalizeSearchString($search);
         $query['author'] = self::normalizeSearchString($author);
-        // $defaultFields = [
-        //     'description' => true,
-        //     'rating' => true,
-        //     'homepage' => true,
-        //     'template' => true,
-        // ];
-        // $query['fields'] = self::getFields($request, $defaultFields);
+        $query['tags']   = $tags;
+        $query['tagAnd'] = $tagAnd;
+        $query['tagOr']  = $tagOr;
+        $query['tagNot'] = $tagNot;
+
         return $query;
     }
 
-    private static function normalizeSearchString(?string $search): ?string
+    /** Normalize a search-like string (trim + compact whitespace + limited punctuation). */
+    private static function normalizeSearchString(?string $value): ?string
     {
-        if ($search === null) {
+        if ($value === null) {
             return null;
         }
-        $search = trim($search);
-        $search = Regex::replace('/\s+/i', ' ', $search);
-        return Regex::replace('/[^\w.,!?@#$_-]/i', ' ', $search); // strip most punctuation, allow a small subset
+        $value = trim($value);
+        $value = Regex::replace('/\s+/i', ' ', $value);
+        return Regex::replace('/[^\w.,!?@#$_-]/i', ' ', $value);
+    }
+
+    /** @param array<int,mixed> $items  @return list<string> */
+    private static function normalizeStringList(array $items): array
+    {
+        $out = [];
+        foreach ($items as $v) {
+            if (!is_string($v)) {
+                if (is_scalar($v)) {
+                    $v = (string) $v;
+                } else {
+                    continue;
+                }
+            }
+            $v = self::normalizeSearchString($v) ?? '';
+            if ($v !== '') {
+                $out[] = $v;
+            }
+        }
+        // unique and reindex
+        return array_values(array_unique($out));
     }
 }
