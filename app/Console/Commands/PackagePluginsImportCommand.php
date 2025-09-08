@@ -32,6 +32,7 @@ class PackagePluginsImportCommand extends Command
 
         Plugin::query()->lazy($this->chunkSize)->each(function ($plugin) {
             $this->currentItem++;
+            $this->info("#$this->currentItem: $plugin->slug");
             try {
                 DB::beginTransaction();
                 // Plugins don't have a DID, so we use the slug to find existing packages.
