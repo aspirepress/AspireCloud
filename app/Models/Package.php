@@ -19,6 +19,14 @@ class Package extends BaseModel
 
     protected $table = 'packages';
 
+    protected static function booted(): void
+    {
+        static::deleting(function ($package) {
+            // Cascade delete tags.
+            $package->tags()->delete();
+        });
+    }
+
     protected function casts(): array
     {
         return [
@@ -67,8 +75,23 @@ class Package extends BaseModel
     public static function fromPackageData(PackageData $packageData): self
     {
         return DB::transaction(function () use ($packageData) {
-            // Upsert package
-            $package = self::upsertPackage($packageData);
+            $where = $packageData->did
+                ? ['did' => $packageData->did]
+                : ['origin' => $packageData->origin, 'slug' => $packageData->slug];
+            $package = Package::query()->where($where)->first();
+            $package?->delete();
+
+            $package = self::_create([
+                'did' => $packageData->did,
+                'slug' => $packageData->slug,
+                'name' => $packageData->name,
+                'description' => $packageData->description,
+                'origin' => $packageData->origin,
+                'type' => $packageData->type,
+                'license' => $packageData->license,
+                'raw_metadata' => $packageData->raw_metadata ?: null,
+            ]);
+
             // tags
             self::syncTags($package, $packageData->raw_metadata['keywords'] ?? []);
             // Iterate releases
@@ -80,19 +103,17 @@ class Package extends BaseModel
 
                 $package
                     ->releases()
-                    ->updateOrCreate(
-                        ['version' => $release['version']],
-                        [
-                            'download_url' => $artifacts['url'] ?? null,
-                            'signature' => $artifacts['signature'] ?? null,
-                            'checksum' => $artifacts['checksum'] ?? null,
+                    ->create([
+                        'version' => $release['version'],
+                        'download_url' => $artifacts['url'] ?? null,
+                        'signature' => $artifacts['signature'] ?? null,
+                        'checksum' => $artifacts['checksum'] ?? null,
 
-                            'requires' => $release['requires'] ?? null,
-                            'suggests' => $release['suggests'] ?? null,
-                            'provides' => $release['provides'] ?? null,
-                            'artifacts' => $release['artifacts'] ?? null,
-                        ],
-                    );
+                        'requires' => $release['requires'] ?? null,
+                        'suggests' => $release['suggests'] ?? null,
+                        'provides' => $release['provides'] ?? null,
+                        'artifacts' => $release['artifacts'] ?? null,
+                    ]);
             }
 
             // Authors
@@ -102,36 +123,12 @@ class Package extends BaseModel
             $metas = $package->metas['metadata'] ?? [];
 
             $metas['security'] = $packageData->security;
-            $package->metas()->updateOrCreate(
-                ['package_id' => $package->id],
-                ['metadata' => $metas],
+            $package->metas()->create(
+                ['metadata' => $metas]
             );
 
             return $package;
         });
-    }
-
-    /**
-     * @param PackageData $packageData
-     * @return self
-     */
-    protected static function upsertPackage(PackageData $packageData): self
-    {
-        return self::_updateOrCreate(
-            $packageData->did
-                ? ['did' => $packageData->did]
-                : ['origin' => $packageData->origin, 'slug' => $packageData->slug],
-            [
-                'did' => $packageData->did,
-                'slug' => $packageData->slug,
-                'name' => $packageData->name,
-                'description' => $packageData->description,
-                'origin' => $packageData->origin,
-                'type' => $packageData->type,
-                'license' => $packageData->license,
-                'raw_metadata' => $packageData->raw_metadata ?: null,
-            ],
-        );
     }
 
     /**
