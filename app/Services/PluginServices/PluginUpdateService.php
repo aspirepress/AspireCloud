@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Plugins;
+namespace App\Services\PluginServices;
 
 use App\Models\WpOrg\Plugin;
 use App\Values\WpOrg\Plugins\PluginUpdateCheckRequest;
