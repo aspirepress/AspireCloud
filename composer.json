@@ -24,6 +24,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5.5",
+        "carthage-software/mago": "1.0.0-beta.12",
         "fakerphp/faker": "^1.24.1",
         "larastan/larastan": "^3.2",
         "laravel/pail": "^1.2.2",
@@ -92,6 +93,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
+            "carthage-software/mago": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
         }
