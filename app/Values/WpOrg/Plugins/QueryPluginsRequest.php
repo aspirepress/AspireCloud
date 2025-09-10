@@ -41,29 +41,32 @@ readonly class QueryPluginsRequest extends DTO
     {
         $query = $request->query();
 
-        // Pull base params
-        $search = Arr::pull($query, 'search', null);
-        $author = Arr::pull($query, 'author', null);
+        $tags = [];
 
-        // Normalize tags:
-        $tags = (array) Arr::pull($query, 'tags', []);
-        $singleTag = Arr::pull($query, 'tag', null);
-        if (is_string($singleTag) && $singleTag !== '') {
-            $tags[] = $singleTag;
+        if (isset($query['tags'])) {
+            $tags = (array) Arr::pull($query, 'tags', []);
+        } elseif (isset($query['tag'])) {
+            $tags = (array) Arr::pull($query, 'tag', []);
         }
-        $tags = self::normalizeStringList($tags);
 
-        // Normalize operators
-        $tagAnd = self::normalizeStringList((array) Arr::pull($query, 'tag-and', []));
-        $tagOr  = self::normalizeStringList((array) Arr::pull($query, 'tag-or', []));
-        $tagNot = self::normalizeStringList((array) Arr::pull($query, 'tag-not', []));
+        // Normalize additional tag operators
+        $tagAnd = array_filter((array) Arr::pull($query, 'tag-and', []));
+        $tagOr  = array_filter((array) Arr::pull($query, 'tag-or', []));
+        $tagNot = array_filter((array) Arr::pull($query, 'tag-not', []));
 
-        $query['search'] = self::normalizeSearchString($search);
-        $query['author'] = self::normalizeSearchString($author);
-        $query['tags']   = $tags;
-        $query['tagAnd'] = $tagAnd;
-        $query['tagOr']  = $tagOr;
-        $query['tagNot'] = $tagNot;
+        // Merge base tags, ANDs, and ORs
+        $merged = array_values(array_unique([
+            ...$tags,
+            ...$tagAnd,
+            ...$tagOr,
+        ]));
+
+        // Exclude NOT tags if present
+        if (!empty($tagNot)) {
+            $merged = array_values(array_diff($merged, $tagNot));
+        }
+
+        $query['tags'] = $merged;
 
         return $query;
     }
