@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Package;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read string                     $id
  * @property-read string                     $package_id
  * @property-read array<string, mixed>       $metadata
- * @property-read CarbonImmutable|null $created_at
+ * @property-read CarbonImmutable|null       $created_at
  * @property-read Package|null               $package
  */
 class PackageMetas extends BaseModel
