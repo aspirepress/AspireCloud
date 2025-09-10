@@ -2,9 +2,24 @@
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property-read string                        $id
+ * @property-read string                        $package_id
+ * @property-read string                        $version
+ * @property-read string|null                   $download_url
+ * @property-read array<string, mixed>|null     $requires
+ * @property-read array<string, mixed>|null     $suggests
+ * @property-read array<string, mixed>|null     $provides
+ * @property-read array<string, mixed>|null     $artifacts
+ * @property-read string|null                   $signature
+ * @property-read string|null                   $checksum
+ * @property-read CarbonImmutable|null          $created_at
+ * @property-read Package|null                  $package
+ */
 class PackageRelease extends BaseModel
 {
     use HasUuids;
@@ -27,7 +42,6 @@ class PackageRelease extends BaseModel
             'artifacts'    => 'array',
 
             'created_at'   => 'datetime',
-            'updated_at'   => 'datetime',
         ];
     }
 

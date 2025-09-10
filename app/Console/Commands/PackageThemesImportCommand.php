@@ -32,6 +32,7 @@ class PackageThemesImportCommand extends Command
 
         Theme::with('author')->lazy($this->chunkSize)->each(function ($theme) {
             $this->currentItem++;
+            $this->info("#$this->currentItem: $theme->slug");
             try {
                 DB::beginTransaction();
                 // Themes don't have a DID, so we use the slug to find existing packages.

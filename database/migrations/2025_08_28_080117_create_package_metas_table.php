@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->foreignUuid('package_id')->constrained()->cascadeOnDelete();
             // raw data
             $table->json('metadata')->nullable();
-            $table->timestamps();
+            $table->timestampTz('created_at')->useCurrent()->index();
         });
     }
 

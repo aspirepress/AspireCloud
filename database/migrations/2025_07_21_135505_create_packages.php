@@ -22,10 +22,9 @@ return new class extends Migration {
             $table->text('type');
             $table->text('license');
             // raw data
-            $table->json('raw_metadata')->nullable();
+            $table->jsonb('raw_metadata')->nullable();
             // Timestamps
             $table->timestampTz('created_at')->useCurrent()->index();
-            $table->timestampTz('updated_at')->nullable()->index();
             // Constraints
             $table->unique(['did'], 'unique_package_did');
         });

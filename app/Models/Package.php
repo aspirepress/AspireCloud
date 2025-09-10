@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use App\Models\WpOrg\Author;
@@ -13,6 +14,22 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @property-read string                                                        $id
+ * @property-read string                                                        $did
+ * @property-read string                                                        $slug
+ * @property-read string                                                        $name
+ * @property-read string                                                        $description
+ * @property-read string                                                        $type
+ * @property-read string                                                        $origin
+ * @property-read string                                                        $license
+ * @property-read array<string, mixed>|null                                     $raw_metadata
+ * @property-read CarbonImmutable|null                                          $created_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Author>         $authors
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, PackageRelease> $releases
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Tag>            $tags
+ * @property-read PackageMetas|null                                             $metas
+ */
 class Package extends BaseModel
 {
     use HasUuids;
@@ -40,7 +57,6 @@ class Package extends BaseModel
             'license' => 'string',
             'raw_metadata' => 'array',
             'created_at' => 'datetime',
-            'updated_at' => 'datetime',
         ];
     }
 
@@ -81,7 +97,7 @@ class Package extends BaseModel
             $package = Package::query()->where($where)->first();
             $package?->delete();
 
-            $package = self::_create([
+            $package = self::create([
                 'did' => $packageData->did,
                 'slug' => $packageData->slug,
                 'name' => $packageData->name,
@@ -124,7 +140,7 @@ class Package extends BaseModel
 
             $metas['security'] = $packageData->security;
             $package->metas()->create(
-                ['metadata' => $metas]
+                ['metadata' => $metas],
             );
 
             return $package;
