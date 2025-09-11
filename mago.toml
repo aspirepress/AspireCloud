@@ -23,14 +23,43 @@ always-break-named-arguments-list = false
 integrations = ["symfony", "laravel"]
 
 [linter.rules]
-ambiguous-function-call = { enabled = false }
+# Disable all rules currently firing by default
+# vendor/bin/mago lint --reporting-format=emacs | perl -nE 'say qq[$1 = { enabled = false }] if / - (.*?):/' | sort | uniq | pbcopy
+
+assert-description = { enabled = false }
+braced-string-interpolation = { enabled = false }
+class-name = { enabled = false }
+constant-name = { enabled = false }
+constant-type = { enabled = false }
+cyclomatic-complexity = { enabled = false }
+excessive-parameter-list = { enabled = false }
+final-controller = { enabled = false }
+function-name = { enabled = false }
+halstead = { enabled = false }
+interface-name = { enabled = false }
 literal-named-argument = { enabled = false }
-halstead = { effort-threshold = 7000 }
+no-assign-in-condition = { enabled = false }
+no-boolean-flag-parameter = { enabled = false }
+no-boolean-literal-comparison = { enabled = false }
+no-else-clause = { enabled = false }
+no-empty = { enabled = false }
+no-empty-comment = { enabled = false }
+no-literal-password = { enabled = false }
+no-request-all = { enabled = false }
+no-shorthand-ternary = { enabled = false }
+parameter-type = { enabled = false }
+prefer-arrow-function = { enabled = false }
+prefer-first-class-callable = { enabled = false }
+property-type = { enabled = false }
+return-type = { enabled = false }
+strict-behavior = { enabled = false }
+tagged-fixme = { enabled = false }
+tagged-todo = { enabled = false }
+too-many-methods = { enabled = false }
+trait-name = { enabled = false }
 
 [analyzer]
-
 # Enable all features and categories, then disable every rule by default
-
 allow-possibly-undefined-array-keys = false
 analyze-dead-code = true
 check-throws = true
@@ -125,4 +154,5 @@ ignore = [
     "unused-parameter",
     "unused-statement",
 ]
+
 

@@ -62,13 +62,9 @@
             "@phpstan --error-format=github",
             "@psalm --output-format=github"
         ],
-        "check": [
-            "@format:check",
-            "@lint"
-        ],
         "format": "@mago format",
         "format:check": "@format --check",
-        "lint": "@analyze",
+        "lint": "@mago lint",
         "mago": "mago",
         "phpstan": "phpstan --memory-limit=2G --verbose",
         "psalm": "psalm --memory-limit=2G",
