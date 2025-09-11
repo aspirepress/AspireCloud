@@ -52,15 +52,26 @@
         }
     },
     "scripts": {
+        "analyze": [
+            "@mago analyze",
+            "@phpstan",
+            "@psalm"
+        ],
+        "analyze:ci": [
+            "@mago analyze --reporting-format=github",
+            "@phpstan --error-format=github",
+            "@psalm --output-format=github"
+        ],
         "check": [
             "@format:check",
             "@lint"
         ],
         "format": "@mago format",
         "format:check": "@format --check",
-        "lint": "@phpstan",
+        "lint": "@analyze",
         "mago": "mago",
         "phpstan": "phpstan --memory-limit=2G --verbose",
+        "psalm": "psalm --memory-limit=2G",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",

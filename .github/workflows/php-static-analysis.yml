@@ -41,9 +41,5 @@ jobs:
       - name: Install dependencies
         run: composer install
 
-      - name: Run PHPStan
-        run: vendor/bin/phpstan --memory-limit=1G analyse -v
-
-      - name: Run Psalm
-        run: vendor/bin/psalm --memory-limit=2G
-
+      - name: Run Static Analysis
+        run: composer run analyze:ci
