@@ -28,9 +28,101 @@ literal-named-argument = { enabled = false }
 halstead = { effort-threshold = 7000 }
 
 [analyzer]
-find-unused-definitions = true
-find-unused-expressions = false
-analyze-dead-code = false
+
+# Enable all features and categories, then disable every rule by default
+
+allow-possibly-undefined-array-keys = false
+analyze-dead-code = true
 check-throws = true
-allow-possibly-undefined-array-keys = true
+find-unused-definitions = true
+find-unused-expressions = true
+memoize-properties = true
 perform-heuristic-checks = true
+
+# Issue categories
+ambiguity-issues = true
+argument-issues = true
+array-issues = true
+deprecation-issues = true
+existence-issues = true
+falsable-issues = true
+generator-issues = true
+impossibility-issues = true
+iterator-issues = true
+method-issues = true
+mixed-issues = true
+nullable-issues = true
+operand-issues = true
+property-issues = true
+redundancy-issues = true
+reference-issues = true
+return-issues = true
+template-issues = true
+unreachable-issues = true
+
+# There's no easy way to get a list of all rules mago knows about, so we'll just disable all errors we come across.
+# vendor/bin/mago analyze --reporting-format=emacs | perl -nE 'say qq{"$1",} if / - (.*?):/' | sort | uniq
+ignore = [
+    "ambiguous-object-property-access",
+    "array-to-string-conversion",
+    "impossible-assignment",
+    "impossible-condition",
+    "incompatible-property-type",
+    "invalid-argument",
+    "invalid-array-element-key",
+    "invalid-array-index",
+    "invalid-callable",
+    "invalid-destructuring-source",
+    "invalid-iterator",
+    "invalid-method-access",
+    "invalid-named-argument",
+    "invalid-operand",
+    "invalid-override-attribute",
+    "invalid-parent-type",
+    "invalid-property-access",
+    "invalid-return-statement",
+    "invalid-type-cast",
+    "less-specific-argument",
+    "less-specific-nested-argument-type",
+    "less-specific-nested-return-statement",
+    "less-specific-return-statement",
+    "match-not-exhaustive",
+    "method-access-on-null",
+    "mismatched-array-index",
+    "missing-override-attribute",
+    "mixed-argument",
+    "mixed-array-access",
+    "mixed-array-assignment",
+    "mixed-array-index",
+    "mixed-assignment",
+    "mixed-method-access",
+    "mixed-operand",
+    "mixed-property-access",
+    "mixed-return-statement",
+    "no-value",
+    "non-existent-method",
+    "non-existent-property",
+    "null-array-index",
+    "nullable-return-statement",
+    "possibly-invalid-argument",
+    "possibly-null-argument",
+    "possibly-null-array-access",
+    "possibly-null-array-index",
+    "possibly-null-operand",
+    "possibly-undefined-array-index",
+    "possibly-undefined-string-array-index",
+    "redundant-comparison",
+    "redundant-condition",
+    "redundant-logical-operation",
+    "redundant-null-coalesce",
+    "reference-to-undefined-variable",
+    "template-constraint-violation",
+    "too-many-arguments",
+    "undefined-string-array-index",
+    "undefined-variable",
+    "unhandled-thrown-type",
+    "unknown-match-subject-type",
+    "unused-parameter",
+    "unused-statement",
+]
+
