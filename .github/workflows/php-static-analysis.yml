@@ -1,4 +1,4 @@
-name: Commit Pipeline
+name: PHP Static Analysis
 
 on:
   push:

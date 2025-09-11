@@ -1,4 +1,4 @@
-name: Commit Pipeline
+name: PHP Style Check
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions: # added using https://github.com/step-security/secure-repo
   contents: read
 
 jobs:
-  php-static-analysis:
+  php-lint:
     runs-on: ubuntu-24.04
 
     steps:
