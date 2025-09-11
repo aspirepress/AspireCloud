@@ -10,6 +10,13 @@ repos:
         language: system
         types: [ php ]
 
+      - id: composer-lint-mago
+        name: Lint PHP
+        description: Checks PHP style with `composer run mago lint`
+        entry: composer run mago lint
+        language: system
+        types: [ php ]
+
       - id: composer-analyze-mago
         name: Analyze PHP
         description: Analyzes PHP files with `composer run mago analyze`
