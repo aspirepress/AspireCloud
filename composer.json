@@ -65,6 +65,7 @@
         "format": "@mago format",
         "format:check": "@format --check",
         "lint": "@mago lint",
+        "lint:ci": "@mago lint --reporting-format=github",
         "mago": "mago",
         "phpstan": "phpstan --memory-limit=2G --verbose",
         "psalm": "psalm --memory-limit=2G",
