@@ -28,7 +28,6 @@
         "fakerphp/faker": "^1.24.1",
         "larastan/larastan": "^3.2",
         "laravel/pail": "^1.2.2",
-        "laravel/pint": "^1.21.2",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^8.7",
         "pestphp/pest": "^3.8.0",
@@ -57,11 +56,11 @@
             "@format:check",
             "@lint"
         ],
-        "format": "@pint",
-        "format:check": "@pint --test",
+        "format": "@mago format",
+        "format:check": "@format --check",
         "lint": "@phpstan",
+        "mago": "mago",
         "phpstan": "phpstan --memory-limit=2G --verbose",
-        "pint": "pint",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
