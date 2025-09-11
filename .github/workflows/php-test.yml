@@ -1,4 +1,4 @@
-name: Commit Pipeline
+name: PHP Test Suite
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions: # added using https://github.com/step-security/secure-repo
   contents: read
 
 jobs:
-  phpunit:
+  php-test:
     runs-on: ubuntu-24.04
 
     strategy:

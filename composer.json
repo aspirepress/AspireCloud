@@ -24,10 +24,10 @@
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5.5",
+        "carthage-software/mago": "1.0.0-beta.12",
         "fakerphp/faker": "^1.24.1",
         "larastan/larastan": "^3.2",
         "laravel/pail": "^1.2.2",
-        "laravel/pint": "^1.21.2",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^8.7",
         "pestphp/pest": "^3.8.0",
@@ -52,15 +52,23 @@
         }
     },
     "scripts": {
-        "check": [
-            "@format:check",
-            "@lint"
+        "analyze": [
+            "@mago analyze",
+            "@phpstan",
+            "@psalm"
         ],
-        "format": "@pint",
-        "format:check": "@pint --test",
-        "lint": "@phpstan",
+        "analyze:ci": [
+            "@mago analyze --reporting-format=github",
+            "@phpstan --error-format=github",
+            "@psalm --output-format=github"
+        ],
+        "format": "@mago format",
+        "format:check": "@format --check",
+        "lint": "@mago lint",
+        "lint:ci": "@mago lint --reporting-format=github",
+        "mago": "mago",
         "phpstan": "phpstan --memory-limit=2G --verbose",
-        "pint": "pint",
+        "psalm": "psalm --memory-limit=2G",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
@@ -92,6 +100,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
+            "carthage-software/mago": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
         }

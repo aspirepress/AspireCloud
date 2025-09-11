@@ -42,7 +42,7 @@ final class PluginTag extends BaseModel
     /**
      * Define the relationship to plugins.
      *
-     * @return BelongsToMany<Plugin, covariant self>
+     * @return BelongsToMany<Plugin, $this>
      */
     public function plugins(): BelongsToMany
     {

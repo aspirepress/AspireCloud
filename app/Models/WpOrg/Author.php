@@ -39,7 +39,7 @@ class Author extends BaseModel
         ];
     }
 
-    /** @return BelongsToMany<Plugin, covariant self> */
+    /** @return BelongsToMany<Plugin, $this> */
     public function plugins(): BelongsToMany
     {
         return $this->belongsToMany(Plugin::class, 'plugin_authors', 'author_id', 'plugin_id', 'id', 'id');

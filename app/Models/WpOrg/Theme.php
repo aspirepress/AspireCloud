@@ -89,13 +89,13 @@ final class Theme extends BaseModel
         ];
     }
 
-    /** @return BelongsToMany<ThemeTag, covariant self> */
+    /** @return BelongsToMany<ThemeTag, $this> */
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(ThemeTag::class, 'theme_theme_tags', 'theme_id', 'theme_tag_id', 'id', 'id');
     }
 
-    /** @return BelongsTo<Author, covariant self> */
+    /** @return BelongsTo<Author, $this> */
     public function author(): BelongsTo
     {
         return $this->belongsTo(Author::class);
