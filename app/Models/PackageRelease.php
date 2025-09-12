@@ -24,6 +24,8 @@ class PackageRelease extends BaseModel
 {
     use HasUuids;
 
+    public const UPDATED_AT = null;
+
     protected $table = 'package_releases';
 
     protected function casts(): array
@@ -41,7 +43,7 @@ class PackageRelease extends BaseModel
             'provides'     => 'array',
             'artifacts'    => 'array',
 
-            'created_at'   => 'datetime',
+            'created_at'   => 'immutable_datetime',
         ];
     }
 

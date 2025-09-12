@@ -99,8 +99,8 @@ readonly class FairMetadata extends DTO
                 'url' => $author->author_url,
                 // @todo - maybe store email in Author model, if it exists on the FAIR package
             ]))->toArray(),
-            'security' => $package->metas['metadata']['security'],
-            'releases' => $releases,
+            'security' => $package->metas['metadata']['security'] ?? [],
+            'releases' => $releases ?? [],
             'keywords' => [],
             'sections' => [],
             '_links' => [],

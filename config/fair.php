@@ -1,7 +1,9 @@
 <?php
 
+use App\Utils\Config;
+
 return [
-    'repos' => json_decode(env('FAIR_REPOS', '[]'), true), # JSON array of FAIR repo base URLs
+    'repos' => Config::stringList(env('FAIR_REPOS', '[]')),
     'paths' => [
         'packages' => '/wp-json/minifair/v1/packages/',
     ],

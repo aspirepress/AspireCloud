@@ -16,6 +16,7 @@ readonly class PackageData extends DTO
      * @param array<array<string, string>> $authors
      * @param array<array<string, string>> $security
      * @param array<array<string, mixed>> $releases
+     * @param array<string> $tags
      */
     public function __construct(
         public string $did,
@@ -31,6 +32,7 @@ readonly class PackageData extends DTO
         public array $authors = [],
         public array $security = [],
         public array $releases = [],
+        public array $tags = [],
     ) {}
 
     /**
@@ -57,6 +59,8 @@ readonly class PackageData extends DTO
             $fairMetadata->security,
         );
 
+        $tags = $fairMetadata->raw_metadata['keywords'] ?? [];
+
         return [
             'did' => $fairMetadata->id,
             'type' => $fairMetadata->type,
@@ -71,6 +75,7 @@ readonly class PackageData extends DTO
             'authors' => $authors,
             'security' => $security,
             'releases' => $releases,
+            'tags' => $tags,
         ];
     }
 
@@ -108,6 +113,8 @@ readonly class PackageData extends DTO
             ],
         ];
 
+        $tags = $plugin->tags()->pluck('name')->toArray();
+
         return [
             'did' => 'fake:' . $plugin->slug, // @todo - generate a real DID
             'type' => PackageType::PLUGIN->value,
@@ -127,6 +134,7 @@ readonly class PackageData extends DTO
             ],
             'security' => $security,
             'releases' => $releases,
+            'tags' => $tags,
         ];
     }
 
@@ -156,6 +164,8 @@ readonly class PackageData extends DTO
             ],
         ];
 
+        $tags = $theme->tags()->pluck('name')->toArray();
+
         return [
             'did' => 'fake:' . $theme->slug, // @todo - generate a real DID
             'type' => PackageType::THEME->value,
@@ -175,6 +185,7 @@ readonly class PackageData extends DTO
             ],
             'security' => $security,
             'releases' => $releases,
+            'tags' => $tags,
         ];
     }
 
@@ -193,6 +204,7 @@ readonly class PackageData extends DTO
             'raw_metadata' => ['required', 'array'],
             'security' => ['required', 'array'],
             'releases' => ['required', 'array'],
+            'tags' => ['sometimes', 'array'],
         ];
     }
 }

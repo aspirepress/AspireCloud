@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\WpOrg\Author;
+use App\Values\Packages\PackageData;
 use Carbon\CarbonImmutable;
+use Database\Factories\PackageFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use App\Models\WpOrg\Author;
 use Illuminate\Support\Facades\DB;
-use App\Values\Packages\PackageData;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property-read string                                                        $id
@@ -27,12 +28,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read CarbonImmutable|null                                          $created_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Author>         $authors
  * @property-read \Illuminate\Database\Eloquent\Collection<int, PackageRelease> $releases
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Tag>            $tags
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, PackageTag>     $tags
  * @property-read PackageMetas|null                                             $metas
  */
 class Package extends BaseModel
 {
     use HasUuids;
+
+    /** @use HasFactory<PackageFactory> */
+    use HasFactory;
+
+    public const UPDATED_AT = null;
 
     protected $table = 'packages';
 
@@ -47,16 +53,16 @@ class Package extends BaseModel
     protected function casts(): array
     {
         return [
-            'id' => 'string',
-            'did' => 'string',
-            'slug' => 'string',
-            'name' => 'string',
-            'description' => 'string',
-            'type' => 'string',
-            'origin' => 'string',
-            'license' => 'string',
+            'id'           => 'string',
+            'did'          => 'string',
+            'slug'         => 'string',
+            'name'         => 'string',
+            'description'  => 'string',
+            'type'         => 'string',
+            'origin'       => 'string',
+            'license'      => 'string',
             'raw_metadata' => 'array',
-            'created_at' => 'datetime',
+            'created_at'   => 'immutable_datetime',
         ];
     }
 
@@ -72,16 +78,16 @@ class Package extends BaseModel
         return $this->hasMany(PackageRelease::class, 'package_id', 'id');
     }
 
-    /** @return MorphMany<Tag, $this> */
-    public function tags(): MorphMany
-    {
-        return $this->morphMany(Tag::class, 'taggable');
-    }
-
     /** @return HasOne<PackageMetas, $this> */
     public function metas(): HasOne
     {
         return $this->hasOne(PackageMetas::class, 'package_id', 'id');
+    }
+
+    /** @return BelongsToMany<PackageTag, $this> */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(PackageTag::class, 'package_package_tag', 'package_id', 'package_tag_id');
     }
 
     /**
@@ -109,7 +115,8 @@ class Package extends BaseModel
             ]);
 
             // tags
-            self::syncTags($package, $packageData->raw_metadata['keywords'] ?? []);
+            self::syncTags($package, $packageData->tags ?? []);
+
             // Iterate releases
             foreach ($packageData->releases as $release) {
                 // pick primary downloadable artifact

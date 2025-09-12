@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Package;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,6 +17,8 @@ class PackageMetas extends BaseModel
 {
     use HasUuids;
 
+    public const UPDATED_AT = null;
+
     protected $table = 'package_metas';
 
     protected function casts(): array
@@ -26,7 +27,7 @@ class PackageMetas extends BaseModel
             'id' => 'string',
             'package_id' => 'string',
             'metadata' => 'array',
-            'created_at' => 'datetime',
+            'created_at' => 'immutable_datetime',
         ];
     }
 
