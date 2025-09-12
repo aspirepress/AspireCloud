@@ -2,21 +2,23 @@
 
 // Note: api routes are not prefixed, i.e. all routes in here are from the root like web routes
 
-use App\Http\Controllers\API\WpOrg\Core\BrowseHappyController;
+use App\Http\Middleware\Hacks\InlineFairMetadata;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\NormalizeWpOrgRequest;
+use App\Http\Controllers\PassThroughController;
+use App\Http\Controllers\API\WpOrg\Themes\ThemeController;
+use App\Http\Controllers\API\WpOrg\Export\ExportController;
 use App\Http\Controllers\API\WpOrg\Core\ImportersController;
 use App\Http\Controllers\API\WpOrg\Core\ServeHappyController;
+use App\Http\Controllers\API\WpOrg\Core\BrowseHappyController;
 use App\Http\Controllers\API\WpOrg\Core\StableCheckController;
-use App\Http\Controllers\API\WpOrg\Export\ExportController;
+use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
+use App\Http\Controllers\API\WpOrg\Themes\ThemeUpdatesController;
+use App\Http\Controllers\API\FAIR\Packages\PackageInformationController;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_0_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
-use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
-use App\Http\Controllers\API\WpOrg\Themes\ThemeController;
-use App\Http\Controllers\API\WpOrg\Themes\ThemeUpdatesController;
-use App\Http\Controllers\PassThroughController;
-use App\Http\Middleware\NormalizeWpOrgRequest;
-use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Route;
 
 // https://codex.wordpress.org/WordPress.org_API
 
@@ -38,13 +40,13 @@ Route::prefix('/')
             ->whereIn('type', ['plugins', 'themes', 'closed_plugins']);
 
         $router->get('/plugins/info/1.0/{slug}.json', PluginInformation_1_0_Controller::class);
-        $router->get('/plugins/info/1.2', PluginInformation_1_2_Controller::class);
+        $router->get('/plugins/info/1.2', PluginInformation_1_2_Controller::class)->middleware(InlineFairMetadata::class);
         $router->post('/plugins/update-check/1.1', PluginUpdateCheck_1_1_Controller::class);
 
         $router->get('/secret-key/{version}', [SecretKeyController::class, 'index'])->where(['version' => '1.[01]']);
         $router->get('/secret-key/{version}/salt', [SecretKeyController::class, 'salt'])->where(['version' => '1.1']);
 
-        $router->get('/themes/info/{version}', [ThemeController::class, 'info'])->where(['version' => '1.[012]']);
+        $router->get('/themes/info/{version}', [ThemeController::class, 'info'])->where(['version' => '1.[012]'])->middleware(InlineFairMetadata::class);
         $router->match(['get', 'post'], '/themes/update-check/{version}', ThemeUpdatesController::class)->where(['version' => '1.[01]']);
 
         /// Pass-through routes still going to .org
@@ -72,6 +74,8 @@ Route::prefix('/')
         $router->any('/translations/core/{version}', PassThroughController::class)->where(['version' => '1.0']);
         $router->any('/translations/plugins/{version}', PassThroughController::class)->where(['version' => '1.0']);
         $router->any('/translations/themes/{version}', PassThroughController::class)->where(['version' => '1.0']);
+
+        $router->get('/packages/{did}', PackageInformationController::class);
 
         // @formatter:on
     });
