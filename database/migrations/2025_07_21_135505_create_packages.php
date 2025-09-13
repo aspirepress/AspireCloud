@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('packages', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            // Identity
+            $table->string('did')->nullable();
+            $table->text('slug');
+            $table->text('name');
+            $table->text('description')->nullable();
+            // Origin & type
+            $table->text('origin');
+            $table->text('type');
+            $table->text('license');
+            // raw data
+            $table->jsonb('raw_metadata')->nullable();
+            // Timestamps
+            $table->timestampTz('created_at')->useCurrent()->index();
+            // Constraints
+            $table->unique(['did'], 'unique_package_did');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('packages');
+    }
+};
