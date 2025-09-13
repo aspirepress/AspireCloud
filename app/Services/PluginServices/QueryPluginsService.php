@@ -121,13 +121,19 @@ class QueryPluginsService
             ));
     }
 
-    /** @param Builder<Plugin> $query */
+    /**
+     * @param Builder<Plugin> $query
+     * @param list<string> $tags
+     */
     public static function applyTagAny(Builder $query, array $tags): Builder
     {
         return $query->whereHas('tags', fn(Builder $q) => $q->whereIn('slug', $tags));
     }
 
-    /** @param Builder<Plugin> $query */
+    /**
+     * @param Builder<Plugin> $query
+     * @param list<string> $tags
+     */
     public static function applyTagAll(Builder $query, array $tags): Builder
     {
         return $query->whereHas(
@@ -138,10 +144,13 @@ class QueryPluginsService
         );
     }
 
-    /** @param Builder<Plugin> $query */
-    public static function applyTagNot(Builder $query, array $slugs): Builder
+    /**
+     * @param Builder<Plugin> $query
+     * @param list<string> $tags
+     */
+    public static function applyTagNot(Builder $query, array $tags): Builder
     {
-        return $query->whereDoesntHave('tags', fn(Builder $q) => $q->whereIn('slug', $slugs));
+        return $query->whereDoesntHave('tags', fn(Builder $q) => $q->whereIn('slug', $tags));
     }
 
     /**
