@@ -20,12 +20,6 @@
         <pluginClass class="Psalm\LaravelPlugin\Plugin"/>
     </plugins>
     <issueHandlers>
-        <UndefinedDocblockClass>
-            <!-- psalm can't deal with 'covariant self' type parameters -->
-            <errorLevel type="suppress">
-                <directory name="app/Models"/>
-            </errorLevel>
-        </UndefinedDocblockClass>
         <MissingOverrideAttribute>
             <!-- #[Override] is good to use, but psalm is overzealous about making it an error  -->
             <errorLevel type="info">
