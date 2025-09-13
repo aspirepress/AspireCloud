@@ -34,7 +34,7 @@ final class ThemeTag extends BaseModel
 
     //region Relationships
 
-    /** @return BelongsToMany<Theme, covariant self> */
+    /** @return BelongsToMany<Theme, $this> */
     public function themes(): BelongsToMany
     {
         return $this->belongsToMany(Theme::class, 'theme_theme_tags', 'theme_tag_id', 'theme_id');

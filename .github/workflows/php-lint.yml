@@ -1,4 +1,4 @@
-name: PHP Static Analysis
+name: PHP Style Check
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions: # added using https://github.com/step-security/secure-repo
   contents: read
 
 jobs:
-  php-static-analysis:
+  php-lint:
     runs-on: ubuntu-24.04
 
     steps:
@@ -41,5 +41,5 @@ jobs:
       - name: Install dependencies
         run: composer install
 
-      - name: Run Static Analysis
-        run: composer run analyze:ci
+      - name: Run Style Checker
+        run: composer run lint:ci

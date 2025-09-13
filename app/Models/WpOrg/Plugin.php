@@ -108,7 +108,7 @@ final class Plugin extends BaseModel
         ];
     }
 
-    /** @return BelongsToMany<PluginTag, covariant self> */
+    /** @return BelongsToMany<PluginTag, $this> */
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(PluginTag::class, 'plugin_plugin_tags', 'plugin_id', 'plugin_tag_id', 'id', 'id');
@@ -206,7 +206,7 @@ final class Plugin extends BaseModel
 
     //region Relationships
 
-    /** @return BelongsToMany<Author, covariant self> */
+    /** @return BelongsToMany<Author, $this> */
     public function contributors(): BelongsToMany
     {
         return $this->belongsToMany(Author::class, 'plugin_authors', 'plugin_id', 'author_id', 'id', 'id');
