@@ -5,14 +5,13 @@ namespace App\Console\Commands;
 use Closure;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
 use App\Values\Packages\PackageData;
 use App\Values\Packages\FairMetadata;
 
-use function Safe\file_get_contents;
 use function Safe\ini_set;
-use function Safe\json_decode;
 
 class PackageRepoIndexCommand extends Command
 {
@@ -30,7 +29,7 @@ class PackageRepoIndexCommand extends Command
     {
         ini_set('memory_limit', '-1');
 
-        $repos = config('app.aspirecloud.fair.repos', '[]');
+        $repos = config('fair.repos', []);
         if (empty($repos)) {
             $this->fail("No FAIR repositories configured. Update the FAIR_REPOS environment variable.");
         }
@@ -73,14 +72,19 @@ class PackageRepoIndexCommand extends Command
     /** @return array<string, string> */
     private function getRepoPackages(string $repoUrl): array
     {
-        $url = rtrim($repoUrl, '/') . '/wp-json/minifair/v1/packages';
-        $this->info("Fetching packages from $url");
+        $this->info("Fetching packages from $repoUrl");
 
-        $content = file_get_contents($url);
-        if ($content == false) {
+        $response = HTTP::withUrlParameters([
+            'repoUrl' => rtrim($repoUrl, '/'),
+            'path' => trim(config('fair.paths.packages', '/wp-json/minifair/v1/packages'), '/'),
+        ])->withHeaders(['Accept' => 'application/json'])
+            ->get('{+repoUrl}/{+path}');
+
+        if ($response->failed()) {
             throw new Exception("Failed to fetch $repoUrl");
         }
-        $data = json_decode($content, true);
+
+        $data = $response->json();
         if (!is_array($data)) {
             throw new Exception("Invalid JSON from $repoUrl");
         }
@@ -89,15 +93,21 @@ class PackageRepoIndexCommand extends Command
 
     private function readPackageMetadata(string $did, Closure $next): void
     {
-        $url = rtrim($this->currentRepo, '/') . '/wp-json/minifair/v1/packages/' . $did;
-        $this->info("Fetching package metadata from $url");
-        $content = file_get_contents($url);
-        if ($content == false) {
-            throw new Exception("Failed to fetch package metadata from $url");
+        $this->info("Fetching package $did metadata from $this->currentRepo");
+
+        $response = HTTP::withUrlParameters([
+            'repoUrl' => rtrim($this->currentRepo, '/'),
+            'path' => trim(config('fair.paths.packages', '/wp-json/minifair/v1/packages'), '/'),
+            'did' => $did,
+        ])->withHeaders(['Accept' => 'application/json'])
+            ->get('{+repoUrl}/{+path}/{+did}');
+
+        if ($response->failed()) {
+            throw new Exception("Failed to fetch package metadata from $this->currentRepo");
         }
-        $metadata = json_decode($content, true);
+        $metadata = $response->json();
         if (!is_array($metadata)) {
-            throw new Exception("Invalid JSON from $url");
+            throw new Exception("Invalid JSON from $this->currentRepo");
         }
         $next($metadata);
     }
@@ -105,13 +115,9 @@ class PackageRepoIndexCommand extends Command
     /** @param array<string, mixed> $metadata */
     private function createPackage(array $metadata, Closure $next): void
     {
-        try {
-            $fairMetadata = FairMetadata::from($metadata);
-            $package = PackageData::from($fairMetadata);
-            $this->loaded++;
-            $next($package);
-        } catch (Exception $e) {
-            throw new Exception("Failed to create package: {$e->getMessage()}");
-        }
+        $fairMetadata = FairMetadata::from($metadata);
+        $package = PackageData::from($fairMetadata);
+        $this->loaded++;
+        $next($package);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\FAIR\Packages;
 
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Values\Packages\PackageInformationRequest;
 use App\Services\Packages\PackageInformationService;
@@ -14,21 +13,19 @@ class PackageInformationController extends Controller
         private PackageInformationService $packageInfo,
     ) {}
 
-    public function __invoke(string $did): JsonResponse
+    public function __invoke(string $did): FairMetadata
     {
         return $this->packageInformation(new PackageInformationRequest($did));
     }
 
-    private function packageInformation(PackageInformationRequest $req): JsonResponse
+    private function packageInformation(PackageInformationRequest $req): FairMetadata
     {
         $package = $this->packageInfo->findByDID($req->did);
 
         if (!$package) {
-            return response()->json(['error' => 'Package not found'], 404);
+            abort(404, 'Package not found');
         }
 
-        $resource = FairMetadata::from($package);
-
-        return response()->json($resource, 200);
+        return FairMetadata::from($package);
     }
 }

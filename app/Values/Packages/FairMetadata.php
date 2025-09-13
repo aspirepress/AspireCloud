@@ -2,12 +2,13 @@
 
 namespace App\Values\Packages;
 
-use App\Enums\PackageType;
-use App\Models\Package;
 use App\Values\DTO;
+use App\Models\Package;
+use App\Utils\Patterns;
+use Bag\Values\Optional;
+use App\Enums\PackageType;
 use Bag\Attributes\Hidden;
 use Bag\Attributes\Transforms;
-use Bag\Values\Optional;
 
 /**
  * Represents metadata for a package in the FAIR protocol
@@ -98,8 +99,8 @@ readonly class FairMetadata extends DTO
                 'url' => $author->author_url,
                 // @todo - maybe store email in Author model, if it exists on the FAIR package
             ]))->toArray(),
-            'security' => $package->metas['metadata']['security'],
-            'releases' => $releases,
+            'security' => $package->metas['metadata']['security'] ?? [],
+            'releases' => $releases ?? [],
             'keywords' => [],
             'sections' => [],
             '_links' => [],
@@ -202,7 +203,7 @@ readonly class FairMetadata extends DTO
             'releases.*.version' => [
                 'required',
                 'string',
-                'regex:/^(0|[1-9]\d*)\.(0|[1-9]\d*)(\.(0|[1-9]\d*))?(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$/',
+                'regex:' . Patterns::SEMANTIC_VERSION,
             ],
             'releases.*.artifacts' => ['required', 'array', 'min:1'],
             'releases.*.artifacts.*' => ['required', 'array'],

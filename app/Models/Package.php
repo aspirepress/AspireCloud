@@ -2,37 +2,67 @@
 
 namespace App\Models;
 
+use App\Models\WpOrg\Author;
+use App\Values\Packages\PackageData;
+use Carbon\CarbonImmutable;
+use Database\Factories\PackageFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use App\Models\WpOrg\Author;
 use Illuminate\Support\Facades\DB;
-use App\Values\Packages\PackageData;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @property-read string                                                        $id
+ * @property-read string                                                        $did
+ * @property-read string                                                        $slug
+ * @property-read string                                                        $name
+ * @property-read string                                                        $description
+ * @property-read string                                                        $type
+ * @property-read string                                                        $origin
+ * @property-read string                                                        $license
+ * @property-read array<string, mixed>|null                                     $raw_metadata
+ * @property-read CarbonImmutable|null                                          $created_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Author>         $authors
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, PackageRelease> $releases
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, PackageTag>     $tags
+ * @property-read PackageMetas|null                                             $metas
+ */
 class Package extends BaseModel
 {
     use HasUuids;
 
+    /** @use HasFactory<PackageFactory> */
+    use HasFactory;
+
+    public const UPDATED_AT = null;
+
     protected $table = 'packages';
+
+    protected static function booted(): void
+    {
+        static::deleting(function ($package) {
+            // Cascade delete tags.
+            $package->tags()->delete();
+        });
+    }
 
     protected function casts(): array
     {
         return [
-            'id' => 'string',
-            'did' => 'string',
-            'slug' => 'string',
-            'name' => 'string',
-            'description' => 'string',
-            'type' => 'string',
-            'origin' => 'string',
-            'license' => 'string',
+            'id'           => 'string',
+            'did'          => 'string',
+            'slug'         => 'string',
+            'name'         => 'string',
+            'description'  => 'string',
+            'type'         => 'string',
+            'origin'       => 'string',
+            'license'      => 'string',
             'raw_metadata' => 'array',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
+            'created_at'   => 'immutable_datetime',
         ];
     }
 
@@ -48,16 +78,16 @@ class Package extends BaseModel
         return $this->hasMany(PackageRelease::class, 'package_id', 'id');
     }
 
-    /** @return MorphMany<Tag, $this> */
-    public function tags(): MorphMany
-    {
-        return $this->morphMany(Tag::class, 'taggable');
-    }
-
     /** @return HasOne<PackageMetas, $this> */
     public function metas(): HasOne
     {
         return $this->hasOne(PackageMetas::class, 'package_id', 'id');
+    }
+
+    /** @return BelongsToMany<PackageTag, $this> */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(PackageTag::class, 'package_package_tag', 'package_id', 'package_tag_id');
     }
 
     /**
@@ -67,10 +97,26 @@ class Package extends BaseModel
     public static function fromPackageData(PackageData $packageData): self
     {
         return DB::transaction(function () use ($packageData) {
-            // Upsert package
-            $package = self::upsertPackage($packageData);
+            $where = $packageData->did
+                ? ['did' => $packageData->did]
+                : ['origin' => $packageData->origin, 'slug' => $packageData->slug];
+            $package = Package::query()->where($where)->first();
+            $package?->delete();
+
+            $package = self::create([
+                'did' => $packageData->did,
+                'slug' => $packageData->slug,
+                'name' => $packageData->name,
+                'description' => $packageData->description,
+                'origin' => $packageData->origin,
+                'type' => $packageData->type,
+                'license' => $packageData->license,
+                'raw_metadata' => $packageData->raw_metadata ?: null,
+            ]);
+
             // tags
-            self::syncTags($package, $packageData->raw_metadata['keywords'] ?? []);
+            self::syncTags($package, $packageData->tags ?? []);
+
             // Iterate releases
             foreach ($packageData->releases as $release) {
                 // pick primary downloadable artifact
@@ -80,19 +126,17 @@ class Package extends BaseModel
 
                 $package
                     ->releases()
-                    ->updateOrCreate(
-                        ['version' => $release['version']],
-                        [
-                            'download_url' => $artifacts['url'] ?? null,
-                            'signature' => $artifacts['signature'] ?? null,
-                            'checksum' => $artifacts['checksum'] ?? null,
+                    ->create([
+                        'version' => $release['version'],
+                        'download_url' => $artifacts['url'] ?? null,
+                        'signature' => $artifacts['signature'] ?? null,
+                        'checksum' => $artifacts['checksum'] ?? null,
 
-                            'requires' => $release['requires'] ?? null,
-                            'suggests' => $release['suggests'] ?? null,
-                            'provides' => $release['provides'] ?? null,
-                            'artifacts' => $release['artifacts'] ?? null,
-                        ],
-                    );
+                        'requires' => $release['requires'] ?? null,
+                        'suggests' => $release['suggests'] ?? null,
+                        'provides' => $release['provides'] ?? null,
+                        'artifacts' => $release['artifacts'] ?? null,
+                    ]);
             }
 
             // Authors
@@ -102,36 +146,12 @@ class Package extends BaseModel
             $metas = $package->metas['metadata'] ?? [];
 
             $metas['security'] = $packageData->security;
-            $package->metas()->updateOrCreate(
-                ['package_id' => $package->id],
+            $package->metas()->create(
                 ['metadata' => $metas],
             );
 
             return $package;
         });
-    }
-
-    /**
-     * @param PackageData $packageData
-     * @return self
-     */
-    protected static function upsertPackage(PackageData $packageData): self
-    {
-        return self::_updateOrCreate(
-            $packageData->did
-                ? ['did' => $packageData->did]
-                : ['origin' => $packageData->origin, 'slug' => $packageData->slug],
-            [
-                'did' => $packageData->did,
-                'slug' => $packageData->slug,
-                'name' => $packageData->name,
-                'description' => $packageData->description,
-                'origin' => $packageData->origin,
-                'type' => $packageData->type,
-                'license' => $packageData->license,
-                'raw_metadata' => $packageData->raw_metadata ?: null,
-            ],
-        );
     }
 
     /**

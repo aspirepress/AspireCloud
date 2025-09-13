@@ -7,17 +7,18 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('package_metas', function (Blueprint $table) {
+        Schema::create('package_tags', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('package_id')->constrained()->cascadeOnDelete();
-            // raw data
-            $table->json('metadata')->nullable();
+            $table->string('name');
+            $table->string('slug');
             $table->timestampTz('created_at')->useCurrent()->index();
+
+            $table->unique(['slug'], 'slug_unique');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('package_metas');
+        Schema::dropIfExists('package_tags');
     }
 };
