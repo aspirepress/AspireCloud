@@ -2,21 +2,22 @@
 
 // Note: api routes are not prefixed, i.e. all routes in here are from the root like web routes
 
-use App\Http\Controllers\API\WpOrg\Core\BrowseHappyController;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\NormalizeWpOrgRequest;
+use App\Http\Controllers\PassThroughController;
+use App\Http\Controllers\API\WpOrg\Themes\ThemeController;
+use App\Http\Controllers\API\WpOrg\Export\ExportController;
 use App\Http\Controllers\API\WpOrg\Core\ImportersController;
 use App\Http\Controllers\API\WpOrg\Core\ServeHappyController;
+use App\Http\Controllers\API\WpOrg\Core\BrowseHappyController;
 use App\Http\Controllers\API\WpOrg\Core\StableCheckController;
-use App\Http\Controllers\API\WpOrg\Export\ExportController;
+use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
+use App\Http\Controllers\API\WpOrg\Themes\ThemeUpdatesController;
+use App\Http\Controllers\API\FAIR\Packages\PackageInformationController;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_0_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
-use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
-use App\Http\Controllers\API\WpOrg\Themes\ThemeController;
-use App\Http\Controllers\API\WpOrg\Themes\ThemeUpdatesController;
-use App\Http\Controllers\PassThroughController;
-use App\Http\Middleware\NormalizeWpOrgRequest;
-use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Route;
 
 // https://codex.wordpress.org/WordPress.org_API
 
@@ -72,6 +73,8 @@ Route::prefix('/')
         $router->any('/translations/core/{version}', PassThroughController::class)->where(['version' => '1.0']);
         $router->any('/translations/plugins/{version}', PassThroughController::class)->where(['version' => '1.0']);
         $router->any('/translations/themes/{version}', PassThroughController::class)->where(['version' => '1.0']);
+
+        $router->get('/packages/{did}', PackageInformationController::class);
 
         // @formatter:on
     });
