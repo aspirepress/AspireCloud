@@ -10,14 +10,14 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use function Safe\json_decode;
 
-class InlineFairMetadata
+readonly class InlineFairMetadata
 {
 
     public function __construct(
         private PackageInformationService $packageInfo,
     ) {}
 
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next): mixed
     {
         $response = $next($request);
 
@@ -30,7 +30,15 @@ class InlineFairMetadata
         }
 
         $content = $response->getContent();
+        if (!is_string($content)) {
+            return $response;
+        }
+
         $body = json_decode($content, true);
+        if (!is_array($body)) {
+            return $response;
+        }
+
         $slug = $body['slug'] ?? null;
         if (!$slug) {
             return $response;
@@ -39,7 +47,7 @@ class InlineFairMetadata
         $package = $this->packageInfo->findByDID("fake:$slug");
         $body['_fair'] = $package ? FairMetadata::from($package)->toArray() : null;
 
-        $response->setContent(json_encode($body));
+        $response->setContent(\Safe\json_encode($body));
         return $response;
     }
 }
