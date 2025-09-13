@@ -49,12 +49,12 @@ class PluginInformation_1_2_Controller extends Controller
             return response()->json(['error' => 'Plugin not found'], 404);
         }
 
-        $resource = Plugins\PluginResponse::from($plugin);
-        $status = 200;
-
         if ($plugin instanceof ClosedPlugin) {
             $resource = Plugins\ClosedPluginResponse::from($plugin);
             $status = 404;
+        } else {
+            $resource = Plugins\PluginResponse::from($plugin);
+            $status = 200;
         }
 
         return response()->json($resource, $status);
