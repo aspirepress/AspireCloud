@@ -5,6 +5,8 @@ namespace App\Values\Packages;
 use App\Values\DTO;
 use App\Models\Package;
 use App\Utils\Patterns;
+use Bag\Attributes\MapOutputName;
+use Bag\Mappers\Alias;
 use Bag\Values\Optional;
 use App\Enums\PackageType;
 use Bag\Attributes\Hidden;
@@ -31,6 +33,9 @@ readonly class FairMetadata extends DTO
      * @param array<string, mixed> $raw_metadata
      */
     public function __construct(
+        // #[MapInputName(Alias::class, '@context')] // currently mapped by hand in fromMetadata()
+        #[MapOutputName(Alias::class, '@context')]
+
         public string|array $context, // can be a string or an array of contexts
         public string $id,
         public string $type,
