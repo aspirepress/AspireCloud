@@ -157,8 +157,7 @@ test('applySearchWeighted returns a query with weighted search conditions', func
     // Assert that the query contains weighted search conditions
     expect($sql)
         ->toContain('score')
-        ->and($sql)->toContain('weighted_plugins')
-        ->and($sql)->toContain('order by');
+        ->and($sql)->toContain('slug %>');
 });
 
 test('applyAuthor adds author condition to the query', function () {
@@ -175,12 +174,12 @@ test('applyAuthor adds author condition to the query', function () {
     expect($sql)->toContain('author');
 });
 
-test('applyTag adds tag condition to the query', function () {
+test('applyTagAny adds tag condition to the query', function () {
     // Create a base query
     $query = Plugin::query();
 
     // Apply tag
-    QueryPluginsService::applyTag($query, 'security');
+    QueryPluginsService::applyTagAny($query, ['security']);
 
     // Get the SQL for inspection
     $sql = $query->toSql();
