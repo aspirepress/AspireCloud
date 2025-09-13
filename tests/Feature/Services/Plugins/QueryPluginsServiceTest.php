@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\WpOrg\Plugin;
-use App\Services\Plugins\QueryPluginsService;
+use App\Services\PluginServices\QueryPluginsService;
 use App\Values\WpOrg\Plugins\QueryPluginsRequest;
 use Illuminate\Database\Eloquent\Builder;
 
