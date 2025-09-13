@@ -71,35 +71,38 @@ readonly class QueryPluginsRequest extends DTO
         return $query;
     }
 
-    /** Normalize a search-like string (trim + compact whitespace + limited punctuation). */
-    private static function normalizeSearchString(?string $value): ?string
-    {
-        if ($value === null) {
-            return null;
-        }
-        $value = trim($value);
-        $value = Regex::replace('/\s+/i', ' ', $value);
-        return Regex::replace('/[^\w.,!?@#$_-]/i', ' ', $value);
-    }
-
-    /** @param array<int,mixed> $items  @return list<string> */
-    private static function normalizeStringList(array $items): array
-    {
-        $out = [];
-        foreach ($items as $v) {
-            if (!is_string($v)) {
-                if (is_scalar($v)) {
-                    $v = (string) $v;
-                } else {
-                    continue;
-                }
-            }
-            $v = self::normalizeSearchString($v) ?? '';
-            if ($v !== '') {
-                $out[] = $v;
-            }
-        }
-        // unique and reindex
-        return array_values(array_unique($out));
-    }
+    // [chuck 2025-09-13] These are no longer used, but keeping them commented for future reference.
+    //                    If they're still not used after 6 months, just delete them.
+    //
+    // /** Normalize a search-like string (trim + compact whitespace + limited punctuation). */
+    // private static function normalizeSearchString(?string $value): ?string
+    // {
+    //     if ($value === null) {
+    //         return null;
+    //     }
+    //     $value = trim($value);
+    //     $value = Regex::replace('/\s+/i', ' ', $value);
+    //     return Regex::replace('/[^\w.,!?@#$_-]/i', ' ', $value);
+    // }
+    //
+    // /** @param array<int,mixed> $items  @return list<string> */
+    // private static function normalizeStringList(array $items): array
+    // {
+    //     $out = [];
+    //     foreach ($items as $v) {
+    //         if (!is_string($v)) {
+    //             if (is_scalar($v)) {
+    //                 $v = (string) $v;
+    //             } else {
+    //                 continue;
+    //             }
+    //         }
+    //         $v = self::normalizeSearchString($v) ?? '';
+    //         if ($v !== '') {
+    //             $out[] = $v;
+    //         }
+    //     }
+    //     // unique and reindex
+    //     return array_values(array_unique($out));
+    // }
 }
