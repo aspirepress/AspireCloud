@@ -11,6 +11,7 @@ use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 $apiPaths = [
@@ -78,5 +79,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json(['message' => 'Unauthenticated.'], 401);
             }
         });
+
+        /**
+         * We do not use HTML forms, so all validation errors are json with status 422, regardless of Accept:
+         * If you need Laravel's default behavior back, use a middleware to send back the redirect.
+         */
+        $exceptions->shouldRenderJsonWhen(fn(Request $request, ValidationException $e) => true);
     })
     ->create();
