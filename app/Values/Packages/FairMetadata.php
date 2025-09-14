@@ -209,7 +209,7 @@ readonly class FairMetadata extends DTO
             'releases.*.version' => [
                 'required',
                 'string',
-                'regex:' . Patterns::SEMANTIC_VERSION,
+                // 'regex:' . Patterns::SEMANTIC_VERSION,   // [chuck 2025-09-14] - disabled because many packages have wacky versions
             ],
             'releases.*.artifacts' => ['required', 'array', 'min:1'],
             'releases.*.artifacts.*' => ['required', 'array'],
