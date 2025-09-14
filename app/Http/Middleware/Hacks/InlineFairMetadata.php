@@ -39,15 +39,44 @@ readonly class InlineFairMetadata
             return $response;
         }
 
-        $slug = $body['slug'] ?? null;
-        if (!$slug) {
+        // Let's hear it for N+1 selects!  Not going to optimize or cache these though, this is purely a dev experiment.
+
+        if (isset($body['slug'])) {
+            $body = $this->insertPackage($body);
+        } elseif (is_array($body['plugins'] ?? null)) {
+            $body['plugins'] = array_map($this->insertPackage(...), $body['plugins'] ?? []);
+        } elseif (is_array($body['themes'] ?? null)) {
+            $body['themes'] = array_map($this->insertPackage(...), $body['themes'] ?? []);
+        } else {
             return $response;
         }
 
-        $package = $this->packageInfo->findByDID("fake:$slug");
-        $body['_fair'] = $package ? FairMetadata::from($package)->toArray() : null;
-
         $response->setContent(\Safe\json_encode($body));
         return $response;
+    }
+
+    /**
+     * @param array<string,mixed> $item
+     * @return array<string,mixed>
+     */
+    private function insertPackage(array $item): array
+    {
+        try {
+            $slug = $item['slug'] ?? null;
+            if ($slug === null) {
+                return $item;
+            }
+
+            $package = $this->packageInfo->findByDID("fake:$slug");
+            if (!$package) {
+                return $item;
+            }
+
+            $metadata = FairMetadata::from($package)->toArray();
+            return [...$item, '_fair' => $metadata];
+        } catch (\Throwable $e) {
+            report($e);
+            return $item;
+        }
     }
 }
