@@ -2,13 +2,14 @@
 
 namespace App\Values\Packages;
 
-use App\Values\DTO;
+use App\Enums\PackageType;
 use App\Models\Package;
 use App\Utils\Patterns;
-use Bag\Values\Optional;
-use App\Enums\PackageType;
+use App\Values\DTO;
 use Bag\Attributes\Hidden;
 use Bag\Attributes\Transforms;
+use Bag\Validation\Rules\OptionalOr;
+use Bag\Values\Optional;
 
 /**
  * Represents metadata for a package in the FAIR protocol
@@ -52,11 +53,11 @@ readonly class FairMetadata extends DTO
     /**
      * @param array<string, mixed> $data
      * @return array<string, mixed>
-    */
+     */
     #[Transforms('array')]
     public static function fromMetadata(array $data): array
     {
-        return [
+        $ret = [
             'context' => $data['@context'],
             'id' => $data['id'],
             'type' => $data['type'],
@@ -64,51 +65,73 @@ readonly class FairMetadata extends DTO
             'authors' => $data['authors'],
             'security' => $data['security'],
             'releases' => $data['releases'],
-            'keywords' => $data['keywords'] ?? [],
-            'sections' => $data['sections'] ?? [],
-            '_links' => $data['_links'] ?? [],
             'slug' => $data['slug'] ?? null,
             'name' => $data['name'] ?? null,
             'description' => $data['description'] ?? null,
             'raw_metadata' => $data,
         ];
+
+        if (array_key_exists('sections', $data)) {
+            $ret['sections'] = $data['sections'];
+        }
+        if (array_key_exists('keywords', $data)) {
+            $ret['keywords'] = $data['keywords'];
+        }
+        if (array_key_exists('_links', $data)) {
+            $ret['_links'] = $data['_links'];
+        }
+
+        return $ret;
     }
 
     /**
      * @param Package $package
      * @return array<string, mixed>
-    */
+     */
     #[Transforms(Package::class)]
     public static function fromPackage(Package $package): array
     {
-        $releases = $package->releases->map(fn($release) => [
-            'version' => $release->version,
-            'artifacts' => $release->artifacts,
-            'provides' => $release->provides,
-            'requires' => $release->requires,
-            'suggests' => $release->suggests,
-        ])->toArray();
+        $releases = $package
+            ->releases
+            ->map(fn($release) => [
+                'version' => $release->version,
+                'artifacts' => $release->artifacts,
+                'provides' => $release->provides,
+                'requires' => $release->requires,
+                'suggests' => $release->suggests,
+            ])
+            ->toArray();
 
-        return [
+        $ret = [
             'context' => self::CONTEXT,
             'id' => $package->did,
             'type' => $package->type,
             'license' => $package->license,
-            'authors' => $package->authors->map(fn($author) => array_filter([
-                'name' => $author->display_name,
-                'url' => $author->author_url,
-                // @todo - maybe store email in Author model, if it exists on the FAIR package
-            ]))->toArray(),
+            'authors' => $package
+                ->authors
+                ->map(fn($author) => array_filter([
+                    'name' => $author->display_name,
+                    'url' => $author->author_url,
+                    // @todo - maybe store email in Author model, if it exists on the FAIR package
+                ]))
+                ->toArray(),
             'security' => $package->metas['metadata']['security'] ?? [],
             'releases' => $releases ?? [],
-            'keywords' => [],
-            'sections' => [],
-            '_links' => [],
             'slug' => $package->slug,
             'name' => $package->name,
             'description' => $package->description,
             'raw_metadata' => $package->raw_metadata,
         ];
+
+        if ($package->metas['metadata']['sections'] ?? false) {
+            $ret['sections'] = $package->metas['metadata']['sections'];
+        }
+
+        if ($package->tags->isNotEmpty()) {
+            $ret['keywords'] = $package->tags->pluck('name')->toArray();
+        }
+
+        return $ret;
     }
 
     /**
@@ -130,13 +153,13 @@ readonly class FairMetadata extends DTO
             'slug' => ['nullable', 'string'],
             'name' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
-            'keywords' => ['nullable', 'array'],
+            'keywords' => [new OptionalOr(['nullable', 'array'])],
             'keywords.*' => ['string'],
-            'sections' => ['nullable', 'array'],
+            'sections' => [new OptionalOr(['nullable', 'array'])],
             'sections.changelog' => ['nullable', 'string'],
             'sections.description' => ['nullable', 'string'],
             'sections.security' => ['nullable', 'string'],
-            '_links'  => ['nullable', 'array'],
+            '_links' => [new OptionalOr(['nullable', 'array'])],
             ...self::authorsRules(),
             ...self::securityRules(),
             ...self::releasesRules(),
@@ -180,10 +203,7 @@ readonly class FairMetadata extends DTO
                 'required',
                 'array',
                 function (string $attribute, mixed $value, \Closure $fail) {
-                    if (
-                        empty($value['url']) &&
-                        empty($value['email'])
-                    ) {
+                    if (empty($value['url']) && empty($value['email'])) {
                         $fail("Each security contact must have at least one of 'url' or 'email'.");
                     }
                 },

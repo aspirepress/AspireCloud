@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\API\FAIR\Packages;
 
 use App\Http\Controllers\Controller;
-use App\Values\Packages\PackageInformationRequest;
 use App\Services\Packages\PackageInformationService;
 use App\Values\Packages\FairMetadata;
+use App\Values\Packages\PackageInformationRequest;
 
 class PackageInformationController extends Controller
 {

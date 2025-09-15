@@ -2,8 +2,8 @@
 
 namespace App\Values\Packages;
 
-use App\Enums\PackageType;
 use App\Enums\Origin;
+use App\Enums\PackageType;
 use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\Theme;
 use App\Values\DTO;
@@ -17,6 +17,7 @@ readonly class PackageData extends DTO
      * @param array<array<string, string>> $security
      * @param array<array<string, mixed>> $releases
      * @param array<string> $tags
+     * @param array<string, mixed> $sections
      */
     public function __construct(
         public string $did,
@@ -33,6 +34,7 @@ readonly class PackageData extends DTO
         public array $security = [],
         public array $releases = [],
         public array $tags = [],
+        public array $sections = [],
     ) {}
 
     /**
@@ -61,7 +63,7 @@ readonly class PackageData extends DTO
 
         $tags = $fairMetadata->raw_metadata['keywords'] ?? [];
 
-        return [
+        $ret = [
             'did' => $fairMetadata->id,
             'type' => $fairMetadata->type,
             'origin' => Origin::FAIR->value,
@@ -77,6 +79,12 @@ readonly class PackageData extends DTO
             'releases' => $releases,
             'tags' => $tags,
         ];
+
+        if ($fairMetadata->sections) {
+            $ret['sections'] = $fairMetadata->sections;
+        }
+
+        return $ret;
     }
 
     /**
@@ -96,9 +104,11 @@ readonly class PackageData extends DTO
 
         $security = [
             [
-                'url' => ($authorUrl ?? $plugin->author_profile) ?? $plugin->support_url,
+                'url' => $authorUrl ?? $plugin->author_profile ?? $plugin->support_url,
             ],
         ];
+
+        $sections = $plugin->ac_raw_metadata['sections'] ?? null;
 
         $releases = [
             [
@@ -115,7 +125,7 @@ readonly class PackageData extends DTO
 
         $tags = $plugin->tags()->pluck('name')->toArray();
 
-        return [
+        $ret = [
             'did' => 'fake:' . $plugin->slug, // @todo - generate a real DID
             'type' => PackageType::PLUGIN->value,
             'origin' => Origin::WP->value,
@@ -136,6 +146,12 @@ readonly class PackageData extends DTO
             'releases' => $releases,
             'tags' => $tags,
         ];
+
+        if ($sections) {
+            $ret['sections'] = $sections;
+        }
+
+        return $ret;
     }
 
     /**
@@ -164,9 +180,11 @@ readonly class PackageData extends DTO
             ],
         ];
 
+        $sections = $theme->ac_raw_metadata['sections'] ?? null;
+
         $tags = $theme->tags()->pluck('name')->toArray();
 
-        return [
+        $ret = [
             'did' => 'fake:' . $theme->slug, // @todo - generate a real DID
             'type' => PackageType::THEME->value,
             'origin' => Origin::WP->value,
@@ -187,6 +205,12 @@ readonly class PackageData extends DTO
             'releases' => $releases,
             'tags' => $tags,
         ];
+
+        if ($sections) {
+            $ret['sections'] = $sections;
+        }
+
+        return $ret;
     }
 
     /** @return array<string, mixed> */
@@ -205,6 +229,7 @@ readonly class PackageData extends DTO
             'security' => ['required', 'array'],
             'releases' => ['required', 'array'],
             'tags' => ['sometimes', 'array'],
+            'sections' => ['sometimes', 'array'],
         ];
     }
 }

@@ -6,7 +6,7 @@ use App\Models\Package;
 use App\Models\PackageRelease;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @extends Factory<Package> */
+/** @extends Factory<PackageRelease> */
 class PackageReleaseFactory extends Factory
 {
     protected $model = PackageRelease::class;

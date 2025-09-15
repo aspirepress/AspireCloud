@@ -2,14 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Values\Packages\FairMetadata;
+use App\Values\Packages\PackageData;
 use Closure;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
-use App\Values\Packages\PackageData;
-use App\Values\Packages\FairMetadata;
+use Illuminate\Support\Facades\Http;
 
 use function Safe\ini_set;
 
@@ -31,7 +31,7 @@ class PackageRepoIndexCommand extends Command
 
         $repos = config('fair.repos', []);
         if (empty($repos)) {
-            $this->fail("No FAIR repositories configured. Update the FAIR_REPOS environment variable.");
+            $this->fail('No FAIR repositories configured. Update the FAIR_REPOS environment variable.');
         }
 
         $stages = [
@@ -45,20 +45,22 @@ class PackageRepoIndexCommand extends Command
                 $packages = $this->getRepoPackages($repo);
                 foreach ($packages as $did) {
                     try {
-                        DB::transaction(fn() => $pipeline
-                            ->send($did)
-                            ->through($stages)
-                            ->thenReturn());
+                        DB::transaction(
+                            fn() => $pipeline
+                                ->send($did)
+                                ->through($stages)
+                                ->thenReturn(),
+                        );
                     } catch (Exception $e) {
                         $this->errors++;
                         $this->error("Package $did: {$e->getMessage()}");
-                        $this->option('stop-on-first-error') and $this->fail("Errors encountered -- aborting.");
+                        $this->option('stop-on-first-error') and $this->fail('Errors encountered -- aborting.');
                     }
                 }
             } catch (Exception $e) {
                 $this->errors++;
                 $this->error("Repo $this->currentRepo: {$e->getMessage()}");
-                $this->option('stop-on-first-error') and $this->fail("Errors encountered -- aborting.");
+                $this->option('stop-on-first-error') and $this->fail('Errors encountered -- aborting.');
             }
         }
 
@@ -78,7 +80,7 @@ class PackageRepoIndexCommand extends Command
             'repoUrl' => rtrim($repoUrl, '/'),
             'path' => trim(config('fair.paths.packages', '/wp-json/minifair/v1/packages'), '/'),
         ])->withHeaders(['Accept' => 'application/json'])
-            ->get('{+repoUrl}/{+path}');
+        ->get('{+repoUrl}/{+path}');
 
         if ($response->failed()) {
             throw new Exception("Failed to fetch $repoUrl");
@@ -100,7 +102,7 @@ class PackageRepoIndexCommand extends Command
             'path' => trim(config('fair.paths.packages', '/wp-json/minifair/v1/packages'), '/'),
             'did' => $did,
         ])->withHeaders(['Accept' => 'application/json'])
-            ->get('{+repoUrl}/{+path}/{+did}');
+        ->get('{+repoUrl}/{+path}/{+did}');
 
         if ($response->failed()) {
             throw new Exception("Failed to fetch package metadata from $this->currentRepo");
