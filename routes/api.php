@@ -18,6 +18,7 @@ use App\Http\Controllers\API\FAIR\Packages\PackageInformationController;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_0_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
+use App\Http\Controllers\API\WpOrg\WebController;
 
 // https://codex.wordpress.org/WordPress.org_API
 
@@ -75,6 +76,7 @@ Route::prefix('/')
         $router->any('/translations/themes/{version}', PassThroughController::class)->where(['version' => '1.0']);
 
         $router->get('/packages/{did}', PackageInformationController::class);
+        $router->get('/packages/{slug}/did.json', [WebController::class, 'showWebDid']);
 
         // @formatter:on
     });
