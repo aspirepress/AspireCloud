@@ -104,7 +104,7 @@ readonly class PackageData extends DTO
 
         $security = [
             [
-                'url' => $authorUrl ?? $plugin->author_profile ?? $plugin->support_url,
+                'url' => 'https://wordpress.org/about/security/',
             ],
         ];
 
@@ -163,7 +163,7 @@ readonly class PackageData extends DTO
     {
         $security = [
             [
-                'url' => $theme->author['author_url'],
+                'url' => 'https://wordpress.org/about/security/',
             ],
         ];
 
