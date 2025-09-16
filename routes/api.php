@@ -74,8 +74,9 @@ Route::prefix('/')
         $router->any('/translations/plugins/{version}', PassThroughController::class)->where(['version' => '1.0']);
         $router->any('/translations/themes/{version}', PassThroughController::class)->where(['version' => '1.0']);
 
-        $router->get('/packages/{did}', PackageInformationController::class);
-
+        $router->get('/packages/{did}', [PackageInformationController::class, 'fairMetadata'])->name('package.fairMetadata');
+        $router->get('/{type}/{slug}/did.json', [PackageInformationController::class, 'didDocument'])
+            ->where('type', 'wp-plugin|wp-theme');
         // @formatter:on
     });
 
