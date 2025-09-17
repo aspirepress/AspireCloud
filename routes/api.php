@@ -26,7 +26,7 @@ $didRoutes = function (Router $router) {
         ->name('package.fairMetadata');
 
     $router->get('/packages/{type}/{slug}/did.json', [PackageInformationController::class, 'didDocument'])
-        ->name('did.document');
+        ->where('type', 'wp-plugin|wp-theme|wp-core');
 };
 
 Route::prefix('/')
