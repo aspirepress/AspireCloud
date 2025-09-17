@@ -22,7 +22,10 @@ class PackageInformationService
      */
     public function find(string $type, string $slug): Package|null
     {
-        return Package::query()->where('type', $type)->where('slug', $slug)->first();
+        return Package::query()
+            ->where('type', $type)
+            ->where('slug', $slug)
+            ->first();
     }
 
     /**

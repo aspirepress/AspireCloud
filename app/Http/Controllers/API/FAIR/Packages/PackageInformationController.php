@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\FAIR\Packages;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Values\Packages\FairMetadata;
 use App\Values\Packages\PackageInformationRequest;
@@ -16,9 +17,9 @@ class PackageInformationController extends Controller
 
     /**
      * @param Request $request
-     * @return array<string, mixed>
+     * @return Response
      */
-    public function didDocument(Request $request): array
+    public function didDocument(Request $request): Response
     {
         $type = $request->route('type');
         $slug = $request->route('slug');
@@ -29,14 +30,31 @@ class PackageInformationController extends Controller
             abort(404, 'Package not found');
         }
 
-        return $this->generateDidDocument($package->did);
+        $didDocument = $this->generateDidDocument($package->did);
+
+        return response(
+            \Safe\json_encode($didDocument, JSON_UNESCAPED_SLASHES) . "\n",
+            200,
+            [
+                'Content-Type' => 'application/x-ndjson',
+                'Cache-Control' => 'no-cache',
+            ]
+        );
     }
 
+    /**
+     * @param string $did
+     * @return FairMetadata
+     */
     public function fairMetadata(string $did): FairMetadata
     {
         return $this->packageInformation(new PackageInformationRequest($did));
     }
 
+    /**
+     * @param PackageInformationRequest $req
+     * @return FairMetadata
+     */
     private function packageInformation(PackageInformationRequest $req): FairMetadata
     {
         $package = $this->packageInfo->findByDID($req->did);

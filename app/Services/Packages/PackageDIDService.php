@@ -13,10 +13,9 @@ class PackageDIDService
      */
     public function generateWebDid(string $type, string $slug): string
     {
-        $parsedUrl = \Safe\parse_url(config('app.url'));
-        $domain = $parsedUrl['host'];
+        $domain = config('fair.domains.webdid');
         if (!$domain) {
-            throw new \RuntimeException('Invalid APP_URL configuration');
+            throw new \RuntimeException('Invalid FAIR WEB DID domain configuration');
         }
 
         return sprintf('did:web:%s:%s:%s', $domain, $type, $slug);
