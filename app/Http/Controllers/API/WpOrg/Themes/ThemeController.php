@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\WpOrg\Themes;
 
 use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\Hacks\InlineFairMetadata;
 use App\Services\Themes\FeatureListService;
 use App\Services\Themes\QueryThemesService;
 use App\Services\Themes\ThemeHotTagsService;
@@ -26,7 +27,10 @@ class ThemeController extends Controller
         private readonly ThemeInformationService $themeInfo,
         private readonly ThemeHotTagsService $hotTags,
         private readonly FeatureListService $featureList,
-    ) {}
+    )
+    {
+        config('feature.underscore_fair_hack') and $this->middleware(InlineFairMetadata::class);
+    }
 
     public function info(Request $request): JsonResponse|Response
     {
