@@ -2,6 +2,7 @@
 
 // Note: api routes are not prefixed, i.e. all routes in here are from the root like web routes
 
+use App\Http\Middleware\Hacks\InlineFairMetadata;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\NormalizeWpOrgRequest;
