@@ -7,7 +7,9 @@ use App\Models\Package;
 use App\Utils\Patterns;
 use App\Values\DTO;
 use Bag\Attributes\Hidden;
+use Bag\Attributes\MapOutputName;
 use Bag\Attributes\Transforms;
+use Bag\Mappers\Alias;
 use Bag\Validation\Rules\OptionalOr;
 use Bag\Values\Optional;
 
@@ -32,7 +34,10 @@ readonly class FairMetadata extends DTO
      * @param array<string, mixed> $raw_metadata
      */
     public function __construct(
+        // #[MapInputName(Alias::class, '@context')] // currently mapped by hand in fromMetadata()
+        #[MapOutputName(Alias::class, '@context')]
         public string|array $context, // can be a string or an array of contexts
+
         public string $id,
         public string $type,
         public string $license,
