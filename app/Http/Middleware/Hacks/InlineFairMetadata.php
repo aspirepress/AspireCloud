@@ -67,7 +67,7 @@ readonly class InlineFairMetadata
                 return $item;
             }
 
-            $package = $this->packageInfo->findByDID("fake:$slug");
+            $package = $this->packageInfo->findBySlug($slug);
             if (!$package) {
                 return $item;
             }
