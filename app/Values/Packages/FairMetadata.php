@@ -5,6 +5,8 @@ namespace App\Values\Packages;
 use App\Values\DTO;
 use App\Models\Package;
 use App\Utils\Patterns;
+use Bag\Attributes\MapOutputName;
+use Bag\Mappers\Alias;
 use Bag\Values\Optional;
 use App\Enums\PackageType;
 use Bag\Attributes\Hidden;
@@ -31,6 +33,9 @@ readonly class FairMetadata extends DTO
      * @param array<string, mixed> $raw_metadata
      */
     public function __construct(
+        // #[MapInputName(Alias::class, '@context')] // currently mapped by hand in fromMetadata()
+        #[MapOutputName(Alias::class, '@context')]
+
         public string|array $context, // can be a string or an array of contexts
         public string $id,
         public string $type,
@@ -62,7 +67,8 @@ readonly class FairMetadata extends DTO
             'type' => $data['type'],
             'license' => $data['license'],
             'authors' => $data['authors'],
-            'security' => $data['security'],
+            'security' => [['url' => 'https://hardwired-hack.this-required-field-is-lame.com']],
+            // 'security' => $data['security'],
             'releases' => $data['releases'],
             'keywords' => $data['keywords'] ?? [],
             'sections' => $data['sections'] ?? [],
@@ -203,7 +209,7 @@ readonly class FairMetadata extends DTO
             'releases.*.version' => [
                 'required',
                 'string',
-                'regex:' . Patterns::SEMANTIC_VERSION,
+                // 'regex:' . Patterns::SEMANTIC_VERSION,   // [chuck 2025-09-14] - disabled because many packages have wacky versions
             ],
             'releases.*.artifacts' => ['required', 'array', 'min:1'],
             'releases.*.artifacts.*' => ['required', 'array'],

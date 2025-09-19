@@ -49,7 +49,7 @@ it('returns package information in FAIR format', function () {
         ->assertStatus(200)
         ->assertJsonStructure(
             [
-                'context',
+                '@context',
                 'id',
                 'type',
                 'license',
