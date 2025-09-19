@@ -2,16 +2,16 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Package;
+use App\Utils\File;
+use App\Values\Packages\FairMetadata;
+use App\Values\Packages\PackageData;
 use Closure;
 use Exception;
-use App\Utils\File;
-use App\Models\Package;
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
-use App\Values\Packages\PackageData;
-use App\Values\Packages\FairMetadata;
+use Illuminate\Support\Str;
 
 use function Safe\ini_set;
 use function Safe\json_decode;
@@ -51,8 +51,8 @@ class PackageFairImportCommand extends Command
             } catch (Exception $e) {
                 $this->errors++;
                 $this->error("Line $this->currentLine: {$e->getMessage()}");
-                echo "Partial line: " . Str::substr($line, 0, 100) . "\n";
-                $this->option('stop-on-first-error') and $this->fail("Errors encountered -- aborting.");
+                echo 'Partial line: ' . Str::substr($line, 0, 100) . "\n";
+                $this->option('stop-on-first-error') and $this->fail('Errors encountered -- aborting.');
             }
         }
 

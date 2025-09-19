@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Exception;
 use App\Models\Package;
-use Illuminate\Console\Command;
 use App\Values\Packages\FairMetadata;
+use Exception;
+use Illuminate\Console\Command;
 
 use function Safe\json_encode;
 
@@ -40,7 +40,6 @@ class PackageGenerateFairMetadataCommand extends Command
             // For demonstration, we will just output it
             $this->info('Generated FAIR metadata:');
             $this->line(json_encode($fairData, JSON_PRETTY_PRINT));
-
         } catch (Exception $e) {
             $this->error("Error generating FAIR metadata: {$e->getMessage()}");
         }
