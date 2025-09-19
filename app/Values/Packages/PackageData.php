@@ -2,12 +2,13 @@
 
 namespace App\Values\Packages;
 
-use App\Enums\PackageType;
-use App\Enums\Origin;
-use App\Models\WpOrg\Plugin;
-use App\Models\WpOrg\Theme;
 use App\Values\DTO;
+use App\Enums\Origin;
+use App\Enums\PackageType;
+use App\Models\WpOrg\Theme;
+use App\Models\WpOrg\Plugin;
 use Bag\Attributes\Transforms;
+use App\Services\Packages\PackageDIDService;
 
 readonly class PackageData extends DTO
 {
@@ -115,8 +116,11 @@ readonly class PackageData extends DTO
 
         $tags = $plugin->tags()->pluck('name')->toArray();
 
+        $packageInfo = app()->make(PackageDIDService::class);
+        $did = $packageInfo->generateWebDid(PackageType::PLUGIN->value, $plugin->slug);
+
         return [
-            'did' => 'fake:' . $plugin->slug, // @todo - generate a real DID
+            'did' => $did,
             'type' => PackageType::PLUGIN->value,
             'origin' => Origin::WP->value,
             'slug' => $plugin->slug,
@@ -166,8 +170,11 @@ readonly class PackageData extends DTO
 
         $tags = $theme->tags()->pluck('name')->toArray();
 
+        $packageInfo = app()->make(PackageDIDService::class);
+        $did = $packageInfo->generateWebDid(PackageType::THEME->value, $theme->slug);
+
         return [
-            'did' => 'fake:' . $theme->slug, // @todo - generate a real DID
+            'did' => $did,
             'type' => PackageType::THEME->value,
             'origin' => Origin::WP->value,
             'slug' => $theme->slug,
