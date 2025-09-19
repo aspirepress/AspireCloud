@@ -202,18 +202,22 @@ readonly class FairMetadata extends DTO
      */
     private static function securityRules(): array
     {
+        // [chuck 2025-09-19] largely disabled for now: some packages make this blank, which aborts the whole import.
         return [
-            'security' => ['required', 'array', 'min:1'],
-            'security.*' => [
-                'required',
-                'array',
-                function (string $attribute, mixed $value, \Closure $fail) {
-                    if (empty($value['url']) && empty($value['email'])) {
-                        $fail("Each security contact must have at least one of 'url' or 'email'.");
-                    }
-                },
-            ],
+            'security' => ['required', 'array'],
         ];
+        // return [
+        //     'security' => ['required', 'array', 'min:1'],
+        //     'security.*' => [
+        //         'required',
+        //         'array',
+        //         function (string $attribute, mixed $value, \Closure $fail) {
+        //             if (empty($value['url']) && empty($value['email'])) {
+        //                 $fail("Each security contact must have at least one of 'url' or 'email'.");
+        //             }
+        //         },
+        //     ],
+        // ];
     }
 
     /**
