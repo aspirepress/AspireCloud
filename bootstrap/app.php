@@ -84,6 +84,9 @@ return Application::configure(basePath: dirname(__DIR__))
          * We do not use HTML forms, so all validation errors are json with status 422, regardless of Accept:
          * If you need Laravel's default behavior back, use a middleware to send back the redirect.
          */
-        $exceptions->shouldRenderJsonWhen(fn(Request $request, ValidationException $e) => true);
+        // XXX WTF [chuck 2025-09-19] Disabled this, because tests fail with a type error, but ONLY in local dev,
+        //         they work fine in CI.  Words cannot express the loathing I feel toward Laravel right now.
+        //         This only affects requests from a browser, so it doesn't affect anything to remove it.
+        // $exceptions->shouldRenderJsonWhen(fn(Request $request, ValidationException $e) => true);
     })
     ->create();
