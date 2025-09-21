@@ -236,6 +236,7 @@ readonly class PackageData extends DTO
     private static function getDid(Plugin|Theme $artifact): string
     {
         $acmeta = $artifact->ac_raw_metadata ?? [];
-        return $acmeta['did'] ?? "fake:$artifact->slug";
+        $did = $acmeta['did'] ?? '';
+        return str_starts_with($did, 'did:') ? $did : "fake:$artifact->slug";
     }
 }
