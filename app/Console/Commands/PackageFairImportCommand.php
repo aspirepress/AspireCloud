@@ -90,6 +90,8 @@ class PackageFairImportCommand extends Command
         $this->info("LOAD: $did");
 
         $fairMetadata = FairMetadata::from($metadata);
+        $type = $fairMetadata->type;
+        Package::where(['slug' => $fairMetadata->slug, 'type' => $type])->delete();
         $package = Package::fromPackageData(PackageData::from($fairMetadata));
         $this->loaded++;
         $next($package);
