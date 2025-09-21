@@ -178,21 +178,25 @@ readonly class FairMetadata extends DTO
      */
     private static function authorsRules(): array
     {
+        // [chuck 2025-09-19] disabled for similar reasons as security, this won't handle a blank array
         return [
-            'authors' => ['required', 'array', 'min:1'],
-            'authors.*' => [
-                'required',
-                'array',
-                function (string $attribute, mixed $value, \Closure $fail) {
-                    if (empty($value['url']) && empty($value['email'])) {
-                        $fail("Each author must have at least one of 'url' or 'email'.");
-                    }
-                },
-            ],
-            'authors.*.name' => ['required', 'string'],
-            'authors.*.url' => ['nullable', 'string', 'url'],
-            'authors.*.email' => ['nullable', 'string', 'email'],
+            'authors' => ['required', 'array'],
         ];
+        // return [
+        //     'authors' => ['required', 'array', 'min:1'],
+        //     'authors.*' => [
+        //         'required',
+        //         'array',
+        //         function (string $attribute, mixed $value, \Closure $fail) {
+        //             if (empty($value['url']) && empty($value['email'])) {
+        //                 $fail("Each author must have at least one of 'url' or 'email'.");
+        //             }
+        //         },
+        //     ],
+        //     'authors.*.name' => ['required', 'string'],
+        //     'authors.*.url' => ['nullable', 'string', 'url'],
+        //     'authors.*.email' => ['nullable', 'string', 'email'],
+        // ];
     }
 
     /**

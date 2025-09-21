@@ -13,12 +13,14 @@ class PackageInformationController extends Controller
         private PackageInformationService $packageInfo,
     ) {}
 
-    public function __invoke(string $did): FairMetadata
+    /** @return array<string, mixed> */
+    public function __invoke(string $did): array
     {
         return $this->packageInformation(new PackageInformationRequest($did));
     }
 
-    private function packageInformation(PackageInformationRequest $req): FairMetadata
+    /** @return array<string, mixed> */
+    private function packageInformation(PackageInformationRequest $req): array
     {
         $package = $this->packageInfo->findByDID($req->did);
 
@@ -26,6 +28,7 @@ class PackageInformationController extends Controller
             abort(404, 'Package not found');
         }
 
-        return FairMetadata::from($package);
+        return $package->_getRawMetadata(); // return raw data unmolested so signatures and extensions still work
+        // return FairMetadata::from($package);
     }
 }

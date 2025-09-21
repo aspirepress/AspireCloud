@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\WpOrg\Author;
+use App\Values\Packages\FairMetadata;
 use App\Values\Packages\PackageData;
 use Carbon\CarbonImmutable;
 use Database\Factories\PackageFactory;
@@ -199,5 +200,20 @@ class Package extends BaseModel
 
             $package->authors()->syncWithoutDetaching([$author->id]);
         }
+    }
+
+    /**
+     * "Temporary" hack for unpopulated raw_metadata.  TODO: populate raw_metadata at create time when needed.
+     *
+     * @return array<string, mixed>
+     */
+    public function _getRawMetadata(): array
+    {
+        $metadata = $this->raw_metadata;
+        if (!is_array($metadata) || !($metadata['@context'] ?? null)) {
+            // XXX HACK: metadata not provided, so use the model's representation instead
+            return FairMetadata::from($this)->toArray();
+        }
+        return $metadata;
     }
 }

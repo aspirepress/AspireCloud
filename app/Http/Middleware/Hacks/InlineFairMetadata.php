@@ -67,12 +67,13 @@ readonly class InlineFairMetadata
                 return $item;
             }
 
-            $package = $this->packageInfo->findByDID("fake:$slug");
+            $package = $this->packageInfo->findBySlug($slug);
             if (!$package) {
                 return $item;
             }
 
-            $metadata = FairMetadata::from($package)->toArray();
+            // $metadata = FairMetadata::from($package)->toArray();
+            $metadata = $package->_getRawMetadata(); // return raw data unmolested so signatures and extensions still work
             return [...$item, '_fair' => $metadata];
         } catch (\Throwable $e) {
             report($e);
