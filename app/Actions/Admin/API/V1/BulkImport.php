@@ -6,9 +6,11 @@ namespace App\Actions\Admin\API\V1;
 
 use App\Http\JsonLines;
 use App\Http\JsonResponses;
+use App\Models\Package;
 use App\Models\WpOrg\ClosedPlugin;
 use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\Theme;
+use App\Values\Packages\PackageData;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
@@ -89,6 +91,11 @@ class BulkImport
             Theme::where('slug', $slug)->delete();
         }
 
-        return $class::fromSyncMetadata($metadata);
+        Package::where(['slug' => $slug, 'type' => "wp-$type"])->delete();
+
+        $artifact = $class::fromSyncMetadata($metadata);
+        if (!($artifact instanceof ClosedPlugin)) {
+            Package::fromPackageData(PackageData::from($artifact));
+        }
     }
 }

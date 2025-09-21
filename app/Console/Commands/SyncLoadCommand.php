@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Package;
 use App\Models\WpOrg\ClosedPlugin;
 use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\Theme;
 use App\Utils\File;
+use App\Values\Packages\PackageData;
 use Closure;
 use Exception;
 use Illuminate\Console\Command;
@@ -120,6 +122,13 @@ class SyncLoadCommand extends Command
 
         $this->info("LOAD: $slug [$base]");
         $resource = $class::fromSyncMetadata($metadata); // @phpstan-ignore-line
+
+        if (!($resource instanceof ClosedPlugin)) {
+            $type = $resource->ac_raw_metadata['type'] ?? 'plugin';
+            Package::where(['slug' => $slug, 'type' => "wp-$type"])->delete();
+            Package::fromPackageData(PackageData::from($resource));
+        }
+
         $this->loaded++;
         $next($resource);
     }
