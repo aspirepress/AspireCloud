@@ -97,5 +97,6 @@ class BulkImport
         if (!($artifact instanceof ClosedPlugin)) {
             Package::fromPackageData(PackageData::from($artifact));
         }
+        return $artifact;
     }
 }
