@@ -72,7 +72,8 @@ readonly class InlineFairMetadata
                 return $item;
             }
 
-            $metadata = FairMetadata::from($package)->toArray();
+            // $metadata = FairMetadata::from($package)->toArray();
+            $metadata = $package->raw_metadata; // return raw data unmolested so signatures and extensions still work
             return [...$item, '_fair' => $metadata];
         } catch (\Throwable $e) {
             report($e);
