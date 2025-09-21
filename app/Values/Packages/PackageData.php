@@ -126,7 +126,7 @@ readonly class PackageData extends DTO
         $tags = $plugin->tags()->pluck('name')->toArray();
 
         $ret = [
-            'did' => 'fake:' . $plugin->slug, // @todo - generate a real DID
+            'did' => self::getDid($plugin),
             'type' => PackageType::PLUGIN->value,
             'origin' => Origin::WP->value,
             'slug' => $plugin->slug,
@@ -185,7 +185,7 @@ readonly class PackageData extends DTO
         $tags = $theme->tags()->pluck('name')->toArray();
 
         $ret = [
-            'did' => 'fake:' . $theme->slug, // @todo - generate a real DID
+            'did' => self::getDid($theme),
             'type' => PackageType::THEME->value,
             'origin' => Origin::WP->value,
             'slug' => $theme->slug,
@@ -231,5 +231,11 @@ readonly class PackageData extends DTO
             'tags' => ['sometimes', 'array'],
             'sections' => ['sometimes', 'array'],
         ];
+    }
+
+    private static function getDid(Plugin|Theme $artifact): string
+    {
+        $acmeta = $artifact->ac_raw_metadata ?? [];
+        return $acmeta['did'] ?? "fake:$artifact->slug";
     }
 }
