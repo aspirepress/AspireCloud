@@ -13,11 +13,13 @@ class PackageInformationController extends Controller
         private PackageInformationService $packageInfo,
     ) {}
 
+    /** @return array<string, mixed> */
     public function __invoke(string $did): array
     {
         return $this->packageInformation(new PackageInformationRequest($did));
     }
 
+    /** @return array<string, mixed> */
     private function packageInformation(PackageInformationRequest $req): array
     {
         $package = $this->packageInfo->findByDID($req->did);
