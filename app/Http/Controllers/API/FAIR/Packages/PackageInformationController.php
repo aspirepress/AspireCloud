@@ -28,7 +28,7 @@ class PackageInformationController extends Controller
             abort(404, 'Package not found');
         }
 
-        return $package->raw_metadata;  // return raw data unmolested so signatures and extensions still work
+        return $package->_getRawMetadata(); // return raw data unmolested so signatures and extensions still work
         // return FairMetadata::from($package);
     }
 }
