@@ -68,7 +68,7 @@ readonly class FairMetadata extends DTO
             'type' => $data['type'],
             'license' => $data['license'],
             'authors' => $data['authors'],
-            'security' => $data['security'],
+            'security' => $data['security'] ?? [],
             'releases' => $data['releases'],
             'slug' => $data['slug'] ?? null,
             'name' => $data['name'] ?? null,
@@ -163,7 +163,7 @@ readonly class FairMetadata extends DTO
             'sections' => [new OptionalOr(['nullable', 'array'])],
             'sections.changelog' => ['nullable', 'string'],
             'sections.description' => ['nullable', 'string'],
-            'sections.security' => ['nullable', 'string'],
+            // 'sections.security' => ['nullable', 'string'], // [chuck 2025-09-22] disabled.  string is wrong anyway.
             '_links' => [new OptionalOr(['nullable', 'array'])],
             ...self::authorsRules(),
             ...self::securityRules(),
@@ -206,10 +206,8 @@ readonly class FairMetadata extends DTO
      */
     private static function securityRules(): array
     {
-        // [chuck 2025-09-19] largely disabled for now: some packages make this blank, which aborts the whole import.
-        return [
-            'security' => ['required', 'array'],
-        ];
+        // [chuck 2025-09-22] disabled for now: some packages make this blank, which aborts the whole import.
+        return [];
         // return [
         //     'security' => ['required', 'array', 'min:1'],
         //     'security.*' => [
