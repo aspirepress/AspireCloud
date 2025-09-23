@@ -129,7 +129,7 @@ readonly class PackageData extends DTO
         $packageInfo = app()->make(PackageDIDService::class);
         $did = $packageInfo->generateWebDid(PackageType::PLUGIN->value, $plugin->slug);
 
-        return [
+        $ret = [
             'did' => $did,
             'type' => PackageType::PLUGIN->value,
             'origin' => Origin::WP->value,
@@ -191,7 +191,7 @@ readonly class PackageData extends DTO
         $packageInfo = app()->make(PackageDIDService::class);
         $did = $packageInfo->generateWebDid(PackageType::THEME->value, $theme->slug);
 
-        return [
+        $ret = [
             'did' => $did,
             'type' => PackageType::THEME->value,
             'origin' => Origin::WP->value,

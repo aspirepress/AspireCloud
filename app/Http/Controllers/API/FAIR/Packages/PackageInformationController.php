@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\API\FAIR\Packages;
 
+use App\Values\DID\Document;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Services\Packages\PackageInformationService;
 use App\Values\Packages\PackageInformationRequest;
+use App\Services\Packages\PackageInformationService;
 
 class PackageInformationController extends Controller
 {
@@ -32,11 +34,10 @@ class PackageInformationController extends Controller
         $didDocument = $this->generateDidDocument($package->did);
 
         return response(
-            \Safe\json_encode($didDocument, JSON_UNESCAPED_SLASHES) . "\n",
+            \Safe\json_encode($didDocument->toArray(), JSON_UNESCAPED_SLASHES) . "\n",
             200,
             [
-                'Content-Type' => 'application/x-ndjson',
-                'Cache-Control' => 'no-cache',
+                'Content-Type' => 'application/did+ld+json',
             ]
         );
     }
@@ -65,12 +66,12 @@ class PackageInformationController extends Controller
 
     /**
      * @param string $did
-     * @return array<string, mixed>
+     * @return Document
      */
-    private function generateDidDocument(string $did): array
+    private function generateDidDocument(string $did): Document
     {
-        return [
-            '@context' => 'https://w3id.org/did/v1',
+        return Document::from([
+            'context' => 'https://w3id.org/did/v1',
             'alsoKnownAs' => [],
             'id' => $did,
             'service' => [
@@ -80,8 +81,7 @@ class PackageInformationController extends Controller
                     'serviceEndpoint' => $this->packageInfo->getPackageMetadataUrl($did),
                 ],
             ],
-            'verificationMethod' => [
-            ],
-        ];
+            'verificationMethod' => [],
+        ]);
     }
 }
