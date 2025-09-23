@@ -18,6 +18,7 @@ use App\Http\Controllers\API\FAIR\Packages\PackageInformationController;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_0_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
+use App\Http\Controllers\API\Elastic\ElasticSearchController;
 
 // https://codex.wordpress.org/WordPress.org_API
 
@@ -41,6 +42,8 @@ Route::prefix('/')
         $router->get('/plugins/info/1.0/{slug}.json', PluginInformation_1_0_Controller::class);
         $router->get('/plugins/info/1.2', PluginInformation_1_2_Controller::class);
         $router->post('/plugins/update-check/1.1', PluginUpdateCheck_1_1_Controller::class);
+
+        Route::get('/plugins/search', [ElasticSearchController::class, 'search']);
 
         $router->get('/secret-key/{version}', [SecretKeyController::class, 'index'])->where(['version' => '1.[01]']);
         $router->get('/secret-key/{version}/salt', [SecretKeyController::class, 'salt'])->where(['version' => '1.1']);
