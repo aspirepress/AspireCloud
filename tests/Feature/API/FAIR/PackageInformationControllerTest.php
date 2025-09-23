@@ -9,7 +9,7 @@ beforeEach(function () {
 
 function package_information_uri(string $did): string
 {
-    return "/packages/" . $did;
+    return '/packages/' . $did;
 }
 
 it('returns 404 when did is missing', function () {
@@ -44,12 +44,50 @@ it('returns package information in FAIR format', function () {
             'raw_metadata' => [],
         ]);
 
-    $this
-        ->getJson(package_information_uri('fake:test-package'))
+    $this->getJson(package_information_uri('fake:test-package'))
         ->assertStatus(200)
         ->assertJsonStructure(
             [
-                'context',
+                '@context',
+                'id',
+                'type',
+                'license',
+                'authors',
+                'security',
+                'releases',
+                'slug',
+                'name',
+                'description',
+            ],
+        );
+});
+
+it('returns package information in FAIR format with optional fields', function () {
+    Package::factory()
+        ->withAuthors()
+        ->withReleases(3)
+        ->withTags()
+        ->withMetas([
+            'sections' => [
+                'installation' => 'Installation instructions here.',
+                'changelog' => 'Changelog details here.',
+            ],
+        ])
+        ->create([
+            'did' => 'fake:test-package2',
+            'name' => 'Test Package2',
+            'slug' => 'test-package2',
+            'origin' => 'wp',
+            'type' => 'wp-theme',
+            'license' => 'MIT',
+            'raw_metadata' => [],
+        ]);
+
+    $this->getJson(package_information_uri('fake:test-package2'))
+        ->assertStatus(200)
+        ->assertJsonStructure(
+            [
+                '@context',
                 'id',
                 'type',
                 'license',
@@ -58,7 +96,6 @@ it('returns package information in FAIR format', function () {
                 'releases',
                 'keywords',
                 'sections',
-                '_links',
                 'slug',
                 'name',
                 'description',

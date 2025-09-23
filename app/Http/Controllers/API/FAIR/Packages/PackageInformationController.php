@@ -5,9 +5,8 @@ namespace App\Http\Controllers\API\FAIR\Packages;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\Values\Packages\FairMetadata;
-use App\Values\Packages\PackageInformationRequest;
 use App\Services\Packages\PackageInformationService;
+use App\Values\Packages\PackageInformationRequest;
 
 class PackageInformationController extends Controller
 {
@@ -44,18 +43,15 @@ class PackageInformationController extends Controller
 
     /**
      * @param string $did
-     * @return FairMetadata
+     * @return array<string, mixed>
      */
-    public function fairMetadata(string $did): FairMetadata
+    public function fairMetadata(string $did): array
     {
         return $this->packageInformation(new PackageInformationRequest($did));
     }
 
-    /**
-     * @param PackageInformationRequest $req
-     * @return FairMetadata
-     */
-    private function packageInformation(PackageInformationRequest $req): FairMetadata
+    /** @return array<string, mixed> */
+    private function packageInformation(PackageInformationRequest $req): array
     {
         $package = $this->packageInfo->findByDID($req->did);
 
@@ -63,7 +59,8 @@ class PackageInformationController extends Controller
             abort(404, 'Package not found');
         }
 
-        return FairMetadata::from($package);
+        return $package->_getRawMetadata(); // return raw data unmolested so signatures and extensions still work
+        // return FairMetadata::from($package);
     }
 
     /**

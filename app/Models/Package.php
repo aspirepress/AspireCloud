@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\WpOrg\Author;
+use App\Values\Packages\FairMetadata;
 use App\Values\Packages\PackageData;
 use Carbon\CarbonImmutable;
 use Database\Factories\PackageFactory;
@@ -12,8 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * @property-read string                                                        $id
@@ -53,16 +54,16 @@ class Package extends BaseModel
     protected function casts(): array
     {
         return [
-            'id'           => 'string',
-            'did'          => 'string',
-            'slug'         => 'string',
-            'name'         => 'string',
-            'description'  => 'string',
-            'type'         => 'string',
-            'origin'       => 'string',
-            'license'      => 'string',
+            'id' => 'string',
+            'did' => 'string',
+            'slug' => 'string',
+            'name' => 'string',
+            'description' => 'string',
+            'type' => 'string',
+            'origin' => 'string',
+            'license' => 'string',
             'raw_metadata' => 'array',
-            'created_at'   => 'immutable_datetime',
+            'created_at' => 'immutable_datetime',
         ];
     }
 
@@ -131,7 +132,6 @@ class Package extends BaseModel
                         'download_url' => $artifacts['url'] ?? null,
                         'signature' => $artifacts['signature'] ?? null,
                         'checksum' => $artifacts['checksum'] ?? null,
-
                         'requires' => $release['requires'] ?? null,
                         'suggests' => $release['suggests'] ?? null,
                         'provides' => $release['provides'] ?? null,
@@ -146,9 +146,13 @@ class Package extends BaseModel
             $metas = $package->metas['metadata'] ?? [];
 
             $metas['security'] = $packageData->security;
-            $package->metas()->create(
-                ['metadata' => $metas],
-            );
+            $metas['sections'] = $packageData->sections ?? [];
+
+            $package
+                ->metas()
+                ->create(
+                    ['metadata' => $metas],
+                );
 
             return $package;
         });
@@ -196,5 +200,20 @@ class Package extends BaseModel
 
             $package->authors()->syncWithoutDetaching([$author->id]);
         }
+    }
+
+    /**
+     * "Temporary" hack for unpopulated raw_metadata.  TODO: populate raw_metadata at create time when needed.
+     *
+     * @return array<string, mixed>
+     */
+    public function _getRawMetadata(): array
+    {
+        $metadata = $this->raw_metadata;
+        if (!is_array($metadata) || !($metadata['@context'] ?? null)) {
+            // XXX HACK: metadata not provided, so use the model's representation instead
+            return FairMetadata::from($this)->toArray();
+        }
+        return $metadata;
     }
 }

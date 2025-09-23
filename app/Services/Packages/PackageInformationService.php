@@ -51,4 +51,9 @@ class PackageInformationService
 
         return sprintf('did:web:%s:%s:%s', $domain, $package->type, $package->slug);
     }
+
+    public function findBySlug(string $slug): Package|null
+    {
+        return Package::query()->where('slug', $slug)->first();
+    }
 }
