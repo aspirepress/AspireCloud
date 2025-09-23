@@ -3,6 +3,7 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
+use App\Models\Traits\Indexable;
 use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
@@ -66,6 +67,7 @@ final class Plugin extends BaseModel
     //region Definition
 
     use HasUuids;
+    use Indexable;
 
     /** @use HasFactory<PluginFactory> */
     use HasFactory;
@@ -105,6 +107,20 @@ final class Plugin extends BaseModel
             'ac_origin' => 'string',
             'ac_created' => 'immutable_datetime',
             'ac_raw_metadata' => 'array',
+        ];
+    }
+
+    public function getSearchIndex(): string
+    {
+        return 'plugins';
+    }
+
+    public function toSearchArray(): array
+    {
+        return [
+            'id'   => $this->id,
+            'name' => $this->name,
+            'slug' => $this->slug,
         ];
     }
 
