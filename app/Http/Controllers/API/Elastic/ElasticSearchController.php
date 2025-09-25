@@ -95,11 +95,19 @@ class ElasticSearchController extends Controller
     private function normalizeTags($input): array
     {
         if (is_array($input)) {
-            return array_values(array_filter(array_map('trim', $input)));
+            return array_values(
+                array_filter(
+                    array_map(fn($tag) => strtolower(trim($tag)), $input)
+                )
+            );
         }
 
         if (is_string($input)) {
-            return array_values(array_filter(array_map('trim', explode(',', $input))));
+            return array_values(
+                array_filter(
+                    array_map(fn($tag) => strtolower(trim($tag)), explode(',', $input))
+                )
+            );
         }
 
         return [];
