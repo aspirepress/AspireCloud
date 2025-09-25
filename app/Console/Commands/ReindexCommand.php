@@ -27,17 +27,21 @@ class ReindexCommand extends Command
      */
     public function handle(Client $client): int
     {
-        $chunkSize = (int) $this->option('chunk');
+        $chunkSize = (int)$this->option('chunk');
 
         $this->info("Reindexing plugins in chunks of {$chunkSize}...");
 
-        Plugin::chunk($chunkSize, function ($plugins) use ($client) {
+        Plugin::query()
+            ->with('tags')
+            ->chunk($chunkSize, function ($plugins) use ($client) {
             foreach ($plugins as $plugin) {
-                $client->index([
-                    'index' => 'plugins',
-                    'id'    => $plugin->id,
-                    'body'  => $plugin->toSearchArray(),
-                ]);
+                $client->index(
+                    [
+                        'index' => 'plugins',
+                        'id' => $plugin->id,
+                        'body' => $plugin->toSearchArray(),
+                    ]
+                );
                 $this->line("Indexed plugin #{$plugin->id}");
             }
         });

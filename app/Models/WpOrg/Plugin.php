@@ -121,6 +121,7 @@ final class Plugin extends BaseModel
             'id'   => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
+            'tags' => $this->tags->pluck('name')->toArray(),
         ];
     }
 
