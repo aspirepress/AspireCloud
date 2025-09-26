@@ -43,7 +43,10 @@ readonly class QueryPluginsRequest extends DTO
         return $query;
     }
 
-    /** @param array<string, string|list<string>> $query */
+    /**
+     * @param array<string, string|list<string>> $query
+     * @return list<string>
+     */
     public static function mergeQueryTags(array $query): array
     {
         $pull = fn(string $key) => array_filter(Arr::wrap(Arr::pull($query, $key, [])) ?? []);
