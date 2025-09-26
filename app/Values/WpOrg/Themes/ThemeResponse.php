@@ -139,8 +139,8 @@ readonly class ThemeResponse extends DTO
 
         $self = $this->with($omit);
 
-        if (!$extendedAuthor) {
-            $self = $self->with(['author' => $self->author->user_nicename]);
+        if (!$extendedAuthor && $this->author instanceof Author) {
+            $self = $self->with(['author' => $this->author->user_nicename]);
         }
 
         return $self;
