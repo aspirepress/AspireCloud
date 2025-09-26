@@ -10,4 +10,9 @@ class PackageInformationService
     {
         return Package::query()->where('did', $did)->first();
     }
+
+    public function findBySlug(string $slug): Package|null
+    {
+        return Package::query()->where('slug', $slug)->first();
+    }
 }

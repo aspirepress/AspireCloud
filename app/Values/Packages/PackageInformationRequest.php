@@ -12,7 +12,9 @@ readonly class PackageInformationRequest extends DTO
 {
     public const ACTION = 'package_information';
 
-    public function __construct(public string $did) {}
+    public function __construct(
+        public string $did,
+    ) {}
 
     /** @return array<string, mixed> */
     #[Transforms(Request::class)]

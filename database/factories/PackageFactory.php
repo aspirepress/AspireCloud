@@ -4,9 +4,10 @@ namespace Database\Factories;
 
 use App\Models\Package;
 use App\Models\PackageTag;
-use Illuminate\Support\Str;
 use App\Models\WpOrg\Author;
+use Database\Factories\PackageReleaseFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /** @extends Factory<Package> */
 class PackageFactory extends Factory
@@ -81,18 +82,23 @@ class PackageFactory extends Factory
     public function withReleases(int $count = 1): static
     {
         return $this->afterCreating(function (Package $package) use ($count) {
-            $package->releases()->createMany(
-                PackageReleaseFactory::new()->count($count)->make([
-                    'package_id' => $package->id,
-                ])->toArray(),
-            );
+            $package
+                ->releases()
+                ->createMany(
+                    PackageReleaseFactory::new()
+                        ->count($count)
+                        ->make([
+                            'package_id' => $package->id,
+                        ])
+                        ->toArray(),
+                );
         });
     }
 
     public function withMetas(array $metas = []): static
     {
         return $this->afterCreating(function (Package $package) use ($metas) {
-            $package->metas()->create(array_merge([
+            $data = [
                 'metadata' => [
                     'security' => [
                         [
@@ -100,7 +106,11 @@ class PackageFactory extends Factory
                         ],
                     ],
                 ],
-            ], $metas));
+            ];
+
+            $data['metadata'] = array_merge($data['metadata'], $metas);
+
+            $package->metas()->create($data);
         });
     }
 }

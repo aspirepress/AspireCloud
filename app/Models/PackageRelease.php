@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Carbon\CarbonImmutable;
+use Database\Factories\PackageReleaseFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -24,6 +26,9 @@ class PackageRelease extends BaseModel
 {
     use HasUuids;
 
+    /** @use HasFactory<PackageReleaseFactory> */
+    use HasFactory;
+
     public const UPDATED_AT = null;
 
     protected $table = 'package_releases';
@@ -31,19 +36,17 @@ class PackageRelease extends BaseModel
     protected function casts(): array
     {
         return [
-            'id'           => 'string',
-            'package_id'   => 'string',
-            'version'      => 'string',
+            'id' => 'string',
+            'package_id' => 'string',
+            'version' => 'string',
             'download_url' => 'string',
-            'signature'    => 'string',
-            'checksum'     => 'string',
-
-            'requires'     => 'array',
-            'suggests'     => 'array',
-            'provides'     => 'array',
-            'artifacts'    => 'array',
-
-            'created_at'   => 'immutable_datetime',
+            'signature' => 'string',
+            'checksum' => 'string',
+            'requires' => 'array',
+            'suggests' => 'array',
+            'provides' => 'array',
+            'artifacts' => 'array',
+            'created_at' => 'immutable_datetime',
         ];
     }
 

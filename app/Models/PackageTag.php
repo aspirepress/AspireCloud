@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Carbon\CarbonImmutable;
-use Illuminate\Database\Eloquent\Model;
+use Database\Factories\PackageTagFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
@@ -18,6 +20,9 @@ class PackageTag extends Model
 {
     use HasUuids;
 
+    /** @use HasFactory<PackageTagFactory> */
+    use HasFactory;
+
     public const UPDATED_AT = null;
 
     protected $table = 'package_tags';
@@ -30,9 +35,9 @@ class PackageTag extends Model
     protected function casts(): array
     {
         return [
-            'id'         => 'string',
-            'name'       => 'string',
-            'slug'       => 'string',
+            'id' => 'string',
+            'name' => 'string',
+            'slug' => 'string',
             'created_at' => 'immutable_datetime',
         ];
     }
