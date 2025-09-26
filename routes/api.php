@@ -5,6 +5,7 @@
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\NormalizeWpOrgRequest;
+use App\Http\Middleware\MetricsMiddleware;
 use App\Http\Controllers\PassThroughController;
 use App\Http\Controllers\API\WpOrg\Themes\ThemeController;
 use App\Http\Controllers\API\WpOrg\Export\ExportController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\API\FAIR\Packages\PackageInformationController;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_0_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
+use App\Http\Controllers\API\Metrics\MetricsController;
 
 // https://codex.wordpress.org/WordPress.org_API
 
@@ -25,10 +27,12 @@ Route::prefix('/')
     ->middleware([
         'auth.optional:sanctum',
         NormalizeWpOrgRequest::class,
+        MetricsMiddleware::class,
         'cache.headers:public;s_maxage=300,etag', // for the CDN's benefit: the WP user agent does not cache at all.
     ])
     ->group(function (Router $router) {
         // @formatter:off
+        $router->get('/metrics', MetricsController::class);
 
         $router->any('/core/browse-happy/{version}', BrowseHappyController::class)->where(['version' => '1.1']);
         $router->any('/core/serve-happy/{version}', ServeHappyController::class)->where(['version' => '1.0']);
