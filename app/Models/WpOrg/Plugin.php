@@ -121,7 +121,7 @@ final class Plugin extends BaseModel
             'id'   => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'tags' => $this->tags->pluck('slug')->map(fn($t) => strtolower($t))->all(),
+            'tags' => $this->tags->pluck('name')->map(fn($t) => strtolower($t))->all(),
         ];
     }
 
