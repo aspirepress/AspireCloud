@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Values\WpOrg\Plugins;
 
-use App\Utils\Regex;
 use App\Values\DTO;
 use Bag\Attributes\StripExtraParameters;
 use Bag\Attributes\Transforms;
@@ -39,36 +38,33 @@ readonly class QueryPluginsRequest extends DTO
     #[Transforms(Request::class)]
     public static function fromRequest(Request $request): array
     {
-        $query = $request->query();
+        $query = $request->query->all();
+        $query['tags'] = self::mergeQueryTags($query);
+        return $query;
+    }
 
-        $tags = [];
+    /** @param array<string, string|list<string>> $query */
+    public static function mergeQueryTags(array $query): array
+    {
+        $pull = fn(string $key) => array_filter(Arr::wrap(Arr::pull($query, $key, [])) ?? []);
 
-        if (isset($query['tags'])) {
-            $tags = (array) Arr::pull($query, 'tags', []);
-        } elseif (isset($query['tag'])) {
-            $tags = (array) Arr::pull($query, 'tag', []);
-        }
+        $key = isset($query['tags']) ? 'tags' : 'tag';
+        $tags = $pull($key);
 
         // Normalize additional tag operators
-        $tagAnd = array_filter((array) Arr::pull($query, 'tag-and', []));
-        $tagOr  = array_filter((array) Arr::pull($query, 'tag-or', []));
-        $tagNot = array_filter((array) Arr::pull($query, 'tag-not', []));
+        $tagAnd = $pull('tag-and');
+        $tagOr = $pull('tag-or');
+        $tagNot = $pull('tag-not');
 
         // Merge base tags, ANDs, and ORs
-        $merged = array_values(array_unique([
-            ...$tags,
-            ...$tagAnd,
-            ...$tagOr,
-        ]));
+        $merged = array_values(array_unique([...$tags, ...$tagAnd, ...$tagOr]));
 
         // Exclude NOT tags if present
         if (!empty($tagNot)) {
             $merged = array_values(array_diff($merged, $tagNot));
         }
 
-        $query['tags'] = $merged;
-
-        return $query;
+        return $merged;
     }
 
     // [chuck 2025-09-13] These are no longer used, but keeping them commented for future reference.
