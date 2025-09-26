@@ -34,6 +34,7 @@ readonly class InlineFairMetadata
             return $response;
         }
 
+        /** @var array<string,mixed> $body */
         $body = json_decode($content, true);
         if (!is_array($body)) {
             return $response;

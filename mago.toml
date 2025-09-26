@@ -102,7 +102,6 @@ ignore = [
     "invalid-named-argument", #  Unknown argument name `${argument_name}` (definitely a mago bug)
     "invalid-operand", # prevents useful control-flow shorthand.  would enable if it allowed void context.
     "invalid-return-statement", # broken when `static` return type is involved anywhere
-    "less-specific-argument",
     "less-specific-nested-argument-type",
     "less-specific-nested-return-statement",
     "less-specific-return-statement",
