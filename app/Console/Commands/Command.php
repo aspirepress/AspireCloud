@@ -14,10 +14,6 @@ abstract class Command extends \Illuminate\Console\Command
      */
     public function argument(?string $key = null): array|string|bool|null
     {
-        if (is_null($key)) {
-            return $this->input->getArguments();
-        }
-
-        return $this->input->getArgument($key);
+        return parent::argument($key);
     }
 }
