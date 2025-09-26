@@ -102,10 +102,9 @@ ignore = [
     "invalid-named-argument", #  Unknown argument name `${argument_name}` (definitely a mago bug)
     "invalid-operand", # prevents useful control-flow shorthand.  would enable if it allowed void context.
     "invalid-return-statement", # broken when `static` return type is involved anywhere
-    "less-specific-nested-argument-type",
-    "less-specific-nested-return-statement",
-    "less-specific-return-statement",
-    "match-not-exhaustive",
+    "less-specific-nested-argument-type", # fails on every single test.  need to disable this just for tests/
+    "less-specific-nested-return-statement", # can't deal with collection method chaining
+    "less-specific-return-statement", # deferred
     "method-access-on-null",
     "mismatched-array-index",
     "missing-override-attribute",

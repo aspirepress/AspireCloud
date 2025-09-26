@@ -40,6 +40,7 @@ it(
             ->toBe(200)
             ->and($response->headers->get('Content-Type'))->toContain('text/plain');
 
+        // @mago-expect analysis:match-not-exhaustive
         $expectedKeyNames = match ($version) {
             '1.0' => ['SECRET_KEY'],
             '1.1' => ['AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY'],
