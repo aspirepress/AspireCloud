@@ -8,6 +8,7 @@
         "php": "^8.3",
         "ext-mbstring": "*",
         "dshafik/bag": "^2.5",
+        "elasticsearch/elasticsearch": "^8.0",
         "inertiajs/inertia-laravel": "^2.0.1",
         "laravel/framework": "^12.4.1",
         "laravel/jetstream": "^5.3.5",
