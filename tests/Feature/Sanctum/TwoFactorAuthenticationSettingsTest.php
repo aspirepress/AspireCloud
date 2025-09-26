@@ -10,7 +10,7 @@ test('two factor authentication can be enabled', function () {
 
     $this->post('/user/two-factor-authentication');
 
-    expect($user->fresh()->two_factor_secret)->not->toBeNull();
+    expect($user->fresh()->two_factor_secret)->not?->toBeNull();
     expect($user->fresh()->recoveryCodes())->toHaveCount(8);
 })->skip(function () {
     return !Features::canManageTwoFactorAuthentication();

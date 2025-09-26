@@ -82,6 +82,8 @@ readonly class PluginResponse extends DTO
     {
         $none = new Optional();
 
+        assert($plugin->contributors !== null); // mago won't respect the @property-read declaration
+
         return [
             // common
             'name' => $plugin->name,
@@ -115,8 +117,8 @@ readonly class PluginResponse extends DTO
             // (formerly) plugin_information only
             'sections' => $plugin->sections,
             'versions' => $plugin->versions,
-            'contributors' => $plugin->contributors->mapWithKeys(
             // @mago-expect analysis:invalid-array-element-key (type inference failure)
+            'contributors' => $plugin->contributors->mapWithKeys(
                 fn(AuthorModel $model) => [$model->user_nicename => Author::from($model)],
             )->toArray(),
             'screenshots' => $plugin->screenshots,

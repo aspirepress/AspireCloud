@@ -105,7 +105,6 @@ ignore = [
     "less-specific-nested-argument-type", # fails on every single test.  need to disable this just for tests/
     "less-specific-nested-return-statement", # can't deal with collection method chaining
     "less-specific-return-statement", # deferred
-    "method-access-on-null",
     "mismatched-array-index",
     "missing-override-attribute",
     "mixed-argument",
