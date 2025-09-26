@@ -98,10 +98,9 @@ ignore = [
     "invalid-argument", # bizarre inference failures, also doesn't grok list<>
     "invalid-array-index", # doesn't allow non-negative-int
     "invalid-destructuring-source", # thinks collections are `mixed`
-    "invalid-method-access",
-    "invalid-named-argument",
-    "invalid-operand",
-    "invalid-override-attribute",
+    "invalid-method-access", # completely broken with laravel
+    "invalid-named-argument", #  Unknown argument name `${argument_name}` (definitely a mago bug)
+    "invalid-operand", # prevents useful control-flow shorthand.  would enable if it allowed void context.
     "invalid-parent-type",
     "invalid-property-access",
     "invalid-return-statement",
