@@ -10,6 +10,7 @@ use App\Values\WpOrg\Author;
 use Bag\Attributes\Transforms;
 use Bag\Values\Optional;
 use DateTimeInterface;
+use App\Models\WpOrg\Author as AuthorModel;
 
 readonly class PluginResponse extends DTO
 {
@@ -114,7 +115,8 @@ readonly class PluginResponse extends DTO
             'sections' => $plugin->sections,
             'versions' => $plugin->versions,
             'contributors' => $plugin->contributors->mapWithKeys(
-                fn($authorModel) => [$authorModel->user_nicename => Author::from($authorModel)],
+            // @mago-expect analysis:invalid-array-element-key (type inference failure)
+                fn(AuthorModel $model) => [$model->user_nicename => Author::from($model)],
             )->toArray(),
             'screenshots' => $plugin->screenshots,
             'support_url' => $plugin->support_url,

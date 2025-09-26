@@ -4,7 +4,10 @@ namespace App\Services\Themes;
 
 class FeatureListService
 {
-    /** @return array<string, array<string,string>> */
+    /**
+     * @return array<string, array<string,string>>
+     * @mago-expect analysis:invalid-array-element-key (Laravel's __ function is hopeless)
+     */
     public function getFeatureList(?string $wpVersion = null): array
     {
         $tags = [

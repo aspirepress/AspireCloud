@@ -19,7 +19,7 @@ class PluginUpdateService
         $isUpdated = fn($plugin) => version_compare($plugin->version, $bySlug[$plugin->slug][1]['Version'] ?? '', '>');
 
         $mkUpdate = function ($plugin) use ($bySlug) {
-            $file = $bySlug[$plugin->slug][0];
+            $file = (string)$bySlug[$plugin->slug][0];
             return [$file => PluginUpdateData::from($plugin)->with(plugin: $file)];
         };
 

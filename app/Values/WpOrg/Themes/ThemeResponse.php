@@ -134,7 +134,7 @@ readonly class ThemeResponse extends DTO
 
         $omit = collect($fields)
             ->filter(fn($val, $key) => !$val)
-            ->mapWithKeys(fn($val, $key) => [$key => $none])
+            ->mapWithKeys(fn(bool $val, string $key) => [$key => $none])
             ->toArray();
 
         $self = $this->with($omit);
