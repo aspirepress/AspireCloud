@@ -101,7 +101,7 @@ ignore = [
     "invalid-method-access", # completely broken with laravel
     "invalid-named-argument", #  Unknown argument name `${argument_name}` (definitely a mago bug)
     "invalid-operand", # prevents useful control-flow shorthand.  would enable if it allowed void context.
-    "invalid-return-statement",
+    "invalid-return-statement", # broken when `static` return type is involved anywhere
     "invalid-type-cast",
     "less-specific-argument",
     "less-specific-nested-argument-type",

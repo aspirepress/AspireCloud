@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Values\WpOrg\Plugins;
 
 use App\Models\WpOrg\Plugin;
+use App\Utils\Regex;
 use App\Values\DTO;
 use App\Values\WpOrg\Author;
 use Bag\Attributes\Transforms;
@@ -140,6 +141,6 @@ readonly class PluginResponse extends DTO
         }
         $out = $lastUpdated->format(self::LAST_UPDATED_DATE_FORMAT);
         // Unfortunately this seems to render GMT as "GMT+0000" for some reason, so strip that out
-        return \Safe\preg_replace('/\+\d+$/', '', $out);
+        return Regex::replace('/\+\d+$/', '', $out);
     }
 }
