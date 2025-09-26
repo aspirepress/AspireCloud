@@ -105,8 +105,10 @@ ignore = [
     "less-specific-nested-argument-type", # fails on every single test.  need to disable this just for tests/
     "less-specific-nested-return-statement", # can't deal with collection method chaining
     "less-specific-return-statement", # deferred
-    "mismatched-array-index",
-    "missing-override-attribute",
+    "mismatched-array-index", # deferred until we can put a stake through Laravel's craptastic __() function
+    "missing-override-attribute", # deferred, there's just too many of these
+
+    # Everything below is deferred for a later PR
     "mixed-argument",
     "mixed-array-access",
     "mixed-array-assignment",
