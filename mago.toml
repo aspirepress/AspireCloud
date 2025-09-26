@@ -101,7 +101,6 @@ ignore = [
     "invalid-method-access", # completely broken with laravel
     "invalid-named-argument", #  Unknown argument name `${argument_name}` (definitely a mago bug)
     "invalid-operand", # prevents useful control-flow shorthand.  would enable if it allowed void context.
-    "invalid-parent-type",
     "invalid-property-access",
     "invalid-return-statement",
     "invalid-type-cast",
