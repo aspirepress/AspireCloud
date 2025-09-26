@@ -97,8 +97,7 @@ ignore = [
     "incompatible-property-type", # doesn't allow list<string> as an alias for array<int, string>
     "invalid-argument", # bizarre inference failures, also doesn't grok list<>
     "invalid-array-index", # doesn't allow non-negative-int
-    "invalid-destructuring-source",
-    "invalid-iterator",
+    "invalid-destructuring-source", # thinks collections are `mixed`
     "invalid-method-access",
     "invalid-named-argument",
     "invalid-operand",

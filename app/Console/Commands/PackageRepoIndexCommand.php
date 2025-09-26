@@ -29,6 +29,7 @@ class PackageRepoIndexCommand extends Command
         ini_set('memory_limit', '-1');
 
         $repos = config('fair.repos', []);
+
         if (empty($repos)) {
             $this->fail('No FAIR repositories configured. Update the FAIR_REPOS environment variable.');
         }
@@ -38,7 +39,9 @@ class PackageRepoIndexCommand extends Command
             $this->createPackage(...),
         ];
 
+        assert(is_iterable($repos));
         foreach ($repos as $repo) {
+            assert(is_string($repo));
             $this->currentRepo = $repo;
             try {
                 $packages = $this->getRepoPackages($repo);
