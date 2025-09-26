@@ -92,7 +92,6 @@ unreachable-issues = true
 # There's no easy way to get a list of all rules mago knows about, so we'll just disable all errors we come across.
 # vendor/bin/mago analyze --reporting-format=emacs | perl -nE 'say qq{"$1",} if / - (.*?):/' | sort | uniq
 ignore = [
-    "ambiguous-object-property-access",
     "impossible-assignment",
     "impossible-condition",
     "incompatible-property-type",
