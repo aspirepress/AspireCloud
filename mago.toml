@@ -93,7 +93,6 @@ unreachable-issues = true
 # vendor/bin/mago analyze --reporting-format=emacs | perl -nE 'say qq{"$1",} if / - (.*?):/' | sort | uniq
 ignore = [
     "ambiguous-object-property-access",
-    "array-to-string-conversion",
     "impossible-assignment",
     "impossible-condition",
     "incompatible-property-type",

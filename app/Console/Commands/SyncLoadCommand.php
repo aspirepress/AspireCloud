@@ -6,9 +6,9 @@ use App\Models\WpOrg\ClosedPlugin;
 use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\Theme;
 use App\Utils\File;
+use App\Utils\Regex;
 use Closure;
 use Exception;
-use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
@@ -106,7 +106,7 @@ class SyncLoadCommand extends Command
     private function loadOne(array $decorated, Closure $next): void
     {
         $class = $decorated['class'];
-        $base = preg_replace('/^.*\\\/', '', $class);
+        $base = Regex::replace('/^.*\\\/', '', $class);
         $metadata = $decorated['metadata'];
         $slug = $metadata['slug'];
 

@@ -8,7 +8,6 @@ use App\Values\Packages\FairMetadata;
 use App\Values\Packages\PackageData;
 use Closure;
 use Exception;
-use Illuminate\Console\Command;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
