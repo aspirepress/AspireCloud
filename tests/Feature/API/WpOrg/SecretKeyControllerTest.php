@@ -3,6 +3,7 @@
 namespace Tests\Feature\API\WpOrg;
 
 use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
+use App\Utils\Regex;
 
 $validKeys = SecretKeyController::VALID_KEY_CHARACTERS;
 
@@ -10,7 +11,7 @@ $validKeys = SecretKeyController::VALID_KEY_CHARACTERS;
 function validateKeys(string $content, array $expectedKeyNames, string $validKeys): void
 {
     foreach ($expectedKeyNames as $keyName) {
-        preg_match("/define\\('$keyName',\\s+'([^']+)'\\);/", $content, $matches);
+        $matches = Regex::match("/define\\('$keyName',\\s+'([^']+)'\\);/", $content);
 
         // Ensure we have a match and a captured group
         expect($matches)->toHaveCount(2);

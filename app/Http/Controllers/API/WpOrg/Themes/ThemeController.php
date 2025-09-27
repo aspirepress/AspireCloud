@@ -9,6 +9,7 @@ use App\Services\Themes\FeatureListService;
 use App\Services\Themes\QueryThemesService;
 use App\Services\Themes\ThemeHotTagsService;
 use App\Services\Themes\ThemeInformationService;
+use App\Utils\Regex;
 use App\Values\WpOrg\Themes\QueryThemesRequest;
 use App\Values\WpOrg\Themes\QueryThemesResponse;
 use App\Values\WpOrg\Themes\ThemeInformationRequest;
@@ -108,7 +109,7 @@ class ThemeController extends Controller
         $version = $request->route('version') ?? '1.2';
         if (version_compare($version, '1.2', '>=')) {
             return $request->query('wp_version');
-        } elseif (preg_match('|WordPress/([^;]+)|', $request->server('HTTP_USER_AGENT'), $matches)) {
+        } elseif ($matches = Regex::match('|WordPress/([^;]+)|', $request->server('HTTP_USER_AGENT'))) {
             // Get version from user agent since it's not explicitly sent to feature_list requests in older API branches.
             return $matches[1];
         }

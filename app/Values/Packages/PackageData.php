@@ -6,6 +6,7 @@ use App\Enums\Origin;
 use App\Enums\PackageType;
 use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\Theme;
+use App\Utils\Regex;
 use App\Values\DTO;
 use Bag\Attributes\Transforms;
 
@@ -94,7 +95,7 @@ readonly class PackageData extends DTO
     #[Transforms(Plugin::class)]
     public static function fromPlugin(Plugin $plugin): array
     {
-        if (\Safe\preg_match('/^<a href="([^"]+)">([^<]+)<\/a>$/', $plugin->author, $matches)) {
+        if ($matches = Regex::match('/^<a href="([^"]+)">([^<]+)<\/a>$/', $plugin->author)) {
             $authorUrl = $matches[1];
             $authorName = $matches[2];
         } else {

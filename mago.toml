@@ -132,7 +132,6 @@ ignore = [
     "redundant-condition", # basic type inference failures
     "redundant-logical-operation", # basic type inference failures
     "redundant-null-coalesce", # fails to read type from @property-read
-    "reference-to-undefined-variable",
     "template-constraint-violation",
     "too-many-arguments",
     "undefined-string-array-index",
