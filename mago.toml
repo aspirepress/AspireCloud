@@ -110,19 +110,18 @@ ignore = [
     "mixed-argument", # poor type inference
     "mixed-array-access", # completely broken, fails to infer an array even when it's the only return type
     "mixed-array-assignment", # broken in the same fashion as mixed-array-access
-    "mixed-assignment",
-    "mixed-method-access",
-    "mixed-operand",
-    "mixed-property-access",
-    "mixed-return-statement",
-    "no-value",
-    "non-existent-method",
-    "non-existent-property",
-    "null-argument",
-    "null-array-index",
-    "null-operand",
-    "null-property-access",
-    "nullable-return-statement",
+    "mixed-assignment", # complete non-starter, seems to do no type inference at all
+    "mixed-method-access", # might have some use if i could disable it on tests
+    "mixed-operand", # forbids even truthiness checks without a known type
+    "mixed-property-access", # deferred
+    "mixed-return-statement", # terrible type inference
+    "no-value", # infers 'never' for local variables that were guarded with !empty() on the line immediately above
+    "non-existent-method", # cannot handle magic methods at all, making it a non-starter with laravel
+    "non-existent-property", # also lacks magic support.  ironic for something called mago.
+    "null-argument", # fails to read type from @property-read
+    "null-array-index", # fails to read type from @property-read
+    "null-operand", # fails to read type from @property-read
+    "null-property-access", # fails to read type from @property-read
     "possibly-invalid-argument",
     "possibly-null-argument",
     "possibly-null-array-access",
