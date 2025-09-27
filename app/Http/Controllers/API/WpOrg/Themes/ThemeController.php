@@ -105,7 +105,7 @@ class ThemeController extends Controller
 
     private function getWpVersion(Request $request): ?string
     {
-        $version = $request->route('version');
+        $version = $request->route('version') ?? '1.2';
         if (version_compare($version, '1.2', '>=')) {
             return $request->query('wp_version');
         } elseif (preg_match('|WordPress/([^;]+)|', $request->server('HTTP_USER_AGENT'), $matches)) {

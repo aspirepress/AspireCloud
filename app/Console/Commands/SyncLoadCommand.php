@@ -34,7 +34,7 @@ class SyncLoadCommand extends Command
     {
         ini_set('memory_limit', '-1');
 
-        $filename = $this->argument('file');
+        $filename = (string)$this->argument('file');
         if (in_array($filename, ['-', '/dev/stdin', 'php://stdin'])) {
             $filename = 'php://stdin';
         } elseif (!file_exists($filename)) {

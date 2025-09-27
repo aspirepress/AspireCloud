@@ -122,8 +122,8 @@ ignore = [
     "null-array-index", # fails to read type from @property-read
     "null-operand", # fails to read type from @property-read
     "null-property-access", # fails to read type from @property-read
-    "possibly-invalid-argument",
-    "possibly-null-argument",
+    "possibly-invalid-argument", # deferred
+    "possibly-null-argument", # basic type inference failures
     "possibly-null-array-access",
     "possibly-null-array-index",
     "possibly-null-operand",
