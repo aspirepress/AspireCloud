@@ -30,6 +30,7 @@ class ThemeController extends Controller
         private readonly FeatureListService $featureList,
     )
     {
+        // @mago-expect lint:middleware-in-routes
         config('feature.underscore_fair_hack') and $this->middleware(InlineFairMetadata::class);
     }
 
