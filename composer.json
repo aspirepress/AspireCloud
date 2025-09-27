@@ -7,7 +7,7 @@
     "require": {
         "php": "^8.3",
         "ext-mbstring": "*",
-        "dshafik/bag": "^2.5.1",
+        "dshafik/bag": "^2.6.1",
         "inertiajs/inertia-laravel": "^2.0.1",
         "laravel/framework": "^12.5.0",
         "laravel/jetstream": "^5.3.5",

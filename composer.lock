@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e8fad9e716d793f79834cf95e521959a",
+    "content-hash": "f375acfc3e09882325d881480ff67076",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -757,16 +757,16 @@
         },
         {
             "name": "dshafik/bag",
-            "version": "2.5.1",
+            "version": "2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dshafik/bag.git",
-                "reference": "d83be64fa350600050ea6417a70322ca153e5c75"
+                "reference": "e1268800f87c85e1587d5530383ef0173ed94f2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dshafik/bag/zipball/d83be64fa350600050ea6417a70322ca153e5c75",
-                "reference": "d83be64fa350600050ea6417a70322ca153e5c75",
+                "url": "https://api.github.com/repos/dshafik/bag/zipball/e1268800f87c85e1587d5530383ef0173ed94f2d",
+                "reference": "e1268800f87c85e1587d5530383ef0173ed94f2d",
                 "shasum": ""
             },
             "require": {
@@ -826,9 +826,9 @@
             "description": "A comprehensive immutable value objects implementation",
             "support": {
                 "issues": "https://github.com/dshafik/bag/issues",
-                "source": "https://github.com/dshafik/bag/tree/2.5.1"
+                "source": "https://github.com/dshafik/bag/tree/2.6.1"
             },
-            "time": "2025-04-01T10:43:33+00:00"
+            "time": "2025-09-14T11:31:03+00:00"
         },
         {
             "name": "egulias/email-validator",
