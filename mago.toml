@@ -124,9 +124,8 @@ ignore = [
     "null-property-access", # fails to read type from @property-read
     "possibly-invalid-argument", # deferred
     "possibly-null-argument", # basic type inference failures
-    "possibly-null-array-access",
-    "possibly-null-array-index",
-    "possibly-null-operand",
+    "possibly-null-array-access", # fails to read type from @property-read
+    "possibly-null-array-index", # more trouble with the __() function
     "possibly-null-property-access",
     "possibly-undefined-array-index",
     "possibly-undefined-string-array-index",
