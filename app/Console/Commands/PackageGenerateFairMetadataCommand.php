@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\Package;
 use App\Values\Packages\FairMetadata;
 use Exception;
-use Illuminate\Console\Command;
 
 use function Safe\json_encode;
 

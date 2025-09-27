@@ -166,6 +166,7 @@ class Package extends BaseModel
     protected static function syncTags(self $package, array $keywords): void
     {
         foreach ($keywords as $keyword) {
+            // @mago-expect analysis:redundant-type-comparison
             if (!is_string($keyword) || $keyword === '') {
                 continue;
             }

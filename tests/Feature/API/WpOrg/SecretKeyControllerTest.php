@@ -3,6 +3,7 @@
 namespace Tests\Feature\API\WpOrg;
 
 use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
+use App\Utils\Regex;
 
 $validKeys = SecretKeyController::VALID_KEY_CHARACTERS;
 
@@ -10,7 +11,7 @@ $validKeys = SecretKeyController::VALID_KEY_CHARACTERS;
 function validateKeys(string $content, array $expectedKeyNames, string $validKeys): void
 {
     foreach ($expectedKeyNames as $keyName) {
-        preg_match("/define\\('$keyName',\\s+'([^']+)'\\);/", $content, $matches);
+        $matches = Regex::match("/define\\('$keyName',\\s+'([^']+)'\\);/", $content);
 
         // Ensure we have a match and a captured group
         expect($matches)->toHaveCount(2);
@@ -40,6 +41,7 @@ it(
             ->toBe(200)
             ->and($response->headers->get('Content-Type'))->toContain('text/plain');
 
+        // @mago-expect analysis:match-not-exhaustive
         $expectedKeyNames = match ($version) {
             '1.0' => ['SECRET_KEY'],
             '1.1' => ['AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY'],

@@ -18,6 +18,7 @@ class PluginInformation_1_2_Controller extends Controller
         private readonly PluginServices\PluginHotTagsService     $hotTagsService,
     )
     {
+        // @mago-expect lint:middleware-in-routes
         config('feature.underscore_fair_hack') and $this->middleware(InlineFairMetadata::class);
     }
 
