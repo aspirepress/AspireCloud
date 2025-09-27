@@ -36,7 +36,7 @@
         "psalm/plugin-laravel": "^3.0.4",
         "roave/security-advisories": "dev-latest",
         "spatie/laravel-web-tinker": "^1.10.1",
-        "thecodingmachine/phpstan-safe-rule": "^1.4",
+        "thecodingmachine/phpstan-safe-rule": "^1.4.1",
         "vimeo/psalm": "^6.13.1"
     },
     "autoload": {
