@@ -35,8 +35,9 @@ class ThemeController extends Controller
 
     public function info(Request $request): JsonResponse|Response
     {
+        $action = (string)$request->query('action');
         try {
-            return match ($request->query('action')) {
+            return match ($action) {
                 'query_themes' => $this->doQueryThemes($request),
                 'theme_information' => $this->doThemeInformation($request),
                 'hot_tags' => $this->doHotTags($request),

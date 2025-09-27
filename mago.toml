@@ -132,12 +132,11 @@ ignore = [
     "redundant-condition", # basic type inference failures
     "redundant-logical-operation", # basic type inference failures
     "redundant-null-coalesce", # fails to read type from @property-read
-    "template-constraint-violation",
-    "too-many-arguments",
-    "undefined-string-array-index",
-    "undefined-variable",
-    "unhandled-thrown-type",
-    "unknown-match-subject-type",
+    "template-constraint-violation", # deferred
+    "too-many-arguments", # signature for test() is broken
+    "undefined-string-array-index", # won't even _assign_ to arbitrary arrays
+    "undefined-variable", # can't handle Pest's use of $this
+    "unhandled-thrown-type", # we will not globally enforce checked exceptions
     "unused-parameter",
     "unused-statement",
 ]
