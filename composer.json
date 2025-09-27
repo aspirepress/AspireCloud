@@ -7,12 +7,12 @@
     "require": {
         "php": "^8.3",
         "ext-mbstring": "*",
-        "dshafik/bag": "^2.5",
+        "dshafik/bag": "^2.5.1",
         "inertiajs/inertia-laravel": "^2.0.1",
-        "laravel/framework": "^12.4.1",
+        "laravel/framework": "^12.5.0",
         "laravel/jetstream": "^5.3.5",
         "laravel/sanctum": "^4.0.8",
-        "laravel/telescope": "^5.6.0",
+        "laravel/telescope": "^5.7.0",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.29",
         "predis/predis": "^2.3.0",
@@ -33,11 +33,11 @@
         "pestphp/pest": "^3.8.0",
         "pestphp/pest-plugin-laravel": "^3.1",
         "phpstan/phpstan": "^2.1.11",
-        "psalm/plugin-laravel": "^3.0",
+        "psalm/plugin-laravel": "^3.0.4",
         "roave/security-advisories": "dev-latest",
         "spatie/laravel-web-tinker": "^1.10.1",
         "thecodingmachine/phpstan-safe-rule": "^1.4",
-        "vimeo/psalm": "^6.13"
+        "vimeo/psalm": "^6.13.1"
     },
     "autoload": {
         "psr-4": {
