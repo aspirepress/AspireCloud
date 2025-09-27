@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "773a59c09a199e504d61f7419e095572",
+    "content-hash": "1537e4311899b5a2ab41114ad4331d38",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -2048,16 +2048,16 @@
         },
         {
             "name": "laravel/telescope",
-            "version": "v5.7.0",
+            "version": "v5.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/telescope.git",
-                "reference": "440908cb856cfbef9323244f7978ad4bf8cd2daa"
+                "reference": "b4fb98b57f4aeb48b74f79aa7c684a20e302dacd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/telescope/zipball/440908cb856cfbef9323244f7978ad4bf8cd2daa",
-                "reference": "440908cb856cfbef9323244f7978ad4bf8cd2daa",
+                "url": "https://api.github.com/repos/laravel/telescope/zipball/b4fb98b57f4aeb48b74f79aa7c684a20e302dacd",
+                "reference": "b4fb98b57f4aeb48b74f79aa7c684a20e302dacd",
                 "shasum": ""
             },
             "require": {
@@ -2111,9 +2111,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/telescope/issues",
-                "source": "https://github.com/laravel/telescope/tree/v5.7.0"
+                "source": "https://github.com/laravel/telescope/tree/v5.12.0"
             },
-            "time": "2025-03-27T17:25:52+00:00"
+            "time": "2025-09-18T15:08:51+00:00"
         },
         {
             "name": "laravel/tinker",
