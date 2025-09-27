@@ -85,7 +85,6 @@ class PluginFactory extends Factory
 
         for ($i = 0; $i < $count; $i++) {
             $username = $this->faker->userName();
-            // @mago-expect analysis:mixed-array-index (faker freaks mago out)
             $contributors[$username] = [
                 'profile' => "https://profiles.wordpress.org/{$username}",
                 'avatar' => $this->faker->imageUrl(96, 96),

@@ -117,7 +117,6 @@ readonly class PluginResponse extends DTO
             // (formerly) plugin_information only
             'sections' => $plugin->sections,
             'versions' => $plugin->versions,
-            // @mago-expect analysis:invalid-array-element-key (type inference failure)
             'contributors' => $plugin->contributors->mapWithKeys(
                 fn(AuthorModel $model) => [$model->user_nicename => Author::from($model)],
             )->toArray(),
