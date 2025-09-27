@@ -11,7 +11,7 @@
         "inertiajs/inertia-laravel": "^2.0.9",
         "laravel/framework": "^12.31",
         "laravel/jetstream": "^5.3.8",
-        "laravel/sanctum": "^4.0.8",
+        "laravel/sanctum": "^4.2.0",
         "laravel/telescope": "^5.7.0",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.29",
