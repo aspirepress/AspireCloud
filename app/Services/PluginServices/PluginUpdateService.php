@@ -16,13 +16,14 @@ class PluginUpdateService
                 fn($pluginData, $pluginFile) => [$this->extractSlug($pluginFile) => [$pluginFile, $pluginData]],
             );
 
-        $isUpdated = fn($plugin) => version_compare($plugin->version, $bySlug[$plugin->slug][1]['Version'] ?? '', '>');
+        $isUpdated = fn(Plugin $plugin) => version_compare($plugin->version, $bySlug[$plugin->slug][1]['Version'] ?? '', '>');
 
-        $mkUpdate = function ($plugin) use ($bySlug) {
+        $mkUpdate = function (Plugin $plugin) use ($bySlug) {
             $file = (string)$bySlug[$plugin->slug][0];
             return [$file => PluginUpdateData::from($plugin)->with(plugin: $file)];
         };
 
+        /** @noinspection PhpParamsInspection (broken on Collection::partition) */
         [$updates, $no_updates] = Plugin::query()
             ->whereIn('slug', $bySlug->keys())
             ->get()

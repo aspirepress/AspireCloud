@@ -27,7 +27,7 @@ class ThemeFactory extends Factory
         $tagCount = $this->faker->numberBetween(1, 5);
         for ($i = 0; $i < $tagCount; $i++) {
             $word = $this->faker->word();
-            $this->tags[$word] = ucfirst($word);
+            $this->tags[$word] = ucfirst($word); // @mago-expect analysis:mixed-array-index (faker freaks mago out)
         }
 
         // Generate versions.

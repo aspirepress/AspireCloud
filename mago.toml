@@ -107,12 +107,9 @@ ignore = [
     "less-specific-return-statement", # deferred
     "mismatched-array-index", # deferred until we can put a stake through Laravel's craptastic __() function
     "missing-override-attribute", # deferred, there's just too many of these
-
-    # Everything below is deferred for a later PR
-    "mixed-argument",
-    "mixed-array-access",
-    "mixed-array-assignment",
-    "mixed-array-index",
+    "mixed-argument", # poor type inference
+    "mixed-array-access", # completely broken, fails to infer an array even when it's the only return type
+    "mixed-array-assignment", # broken in the same fashion as mixed-array-access
     "mixed-assignment",
     "mixed-method-access",
     "mixed-operand",
