@@ -18,10 +18,11 @@ class ThemeUpdatesController extends Controller
         try {
             $req = ThemeUpdateCheckRequest::from($request);
 
+            /** @noinspection PhpParamsInspection (fails to parse the full signature for Collection::partition)  */
             $themes = Theme::query()
                 ->whereIn('slug', array_keys($req->themes))
                 ->get()
-                ->partition(fn($theme) => version_compare($theme->version, $req->themes[$theme->slug]['Version'], '>'));
+                ->partition(fn(Theme $theme) => version_compare($theme->version, $req->themes[$theme->slug]['Version'], '>'));
 
             return $this->sendResponse(ThemeUpdateCheckResponse::fromResults($themes[0], $themes[1]));
 

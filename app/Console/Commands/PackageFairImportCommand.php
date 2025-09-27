@@ -8,7 +8,6 @@ use App\Values\Packages\FairMetadata;
 use App\Values\Packages\PackageData;
 use Closure;
 use Exception;
-use Illuminate\Console\Command;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -32,7 +31,7 @@ class PackageFairImportCommand extends Command
     {
         ini_set('memory_limit', '-1');
 
-        $filename = $this->argument('file');
+        $filename = (string)$this->argument('file');
         if (in_array($filename, ['-', '/dev/stdin', 'php://stdin'])) {
             $filename = 'php://stdin';
         } elseif (!file_exists($filename)) {

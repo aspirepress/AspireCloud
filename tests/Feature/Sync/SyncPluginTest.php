@@ -92,6 +92,7 @@ describe('Sync Plugins', function () {
 
     it('loads metadata', function () use ($md_0errors) {
         $plugin = Plugin::fromSyncMetadata($md_0errors);
+        assert($plugin !== null);
         expect($plugin)
             ->toBeInstanceOf(Plugin::class)
             ->and($plugin->slug)->toBe('0-errors')
@@ -104,7 +105,7 @@ describe('Sync Plugins', function () {
             )
             ->and($plugin->author)->toBe('<a href="http://zanto.org/">Ayebare Mucunguzi</a>')
             ->and($plugin->author_profile)->toBe('https://profiles.wordpress.org/brooksx/')
-            ->and($plugin->contributors->toArray()[0])->toMatchArray([
+            ->and($plugin->contributors?->toArray()[0])->toMatchArray([
                 'user_nicename' => 'brooksx',
                 'profile' => 'https://profiles.wordpress.org/brooksx/',
                 'avatar' => 'https://secure.gravatar.com/avatar/4fa021b564189f92bf90322a1215401d?s=96&d=monsterid&r=g',

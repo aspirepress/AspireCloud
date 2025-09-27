@@ -51,9 +51,10 @@ class PassThroughController extends Controller
             default => true,
         };
 
-        $mapWpHeader = fn($key) => str_starts_with($key, 'wp-') ? str_replace('-', '_', $key) : $key;
+        $mapWpHeader = fn(string $key) => str_starts_with($key, 'wp-') ? str_replace('-', '_', $key) : $key;
 
-        $mapHeaders = fn($value, $key) => [$mapWpHeader($key) => $value[0]];
+        /** @param list<string> $value */
+        $mapHeaders = fn(array $value, string $key) => [$mapWpHeader($key) => $value[0]];
 
         return collect($headers)->filter($filter)->mapWithKeys($mapHeaders)->toArray();
     }

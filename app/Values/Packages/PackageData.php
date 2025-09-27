@@ -6,6 +6,7 @@ use App\Enums\Origin;
 use App\Enums\PackageType;
 use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\Theme;
+use App\Utils\Regex;
 use App\Values\DTO;
 use Bag\Attributes\Transforms;
 
@@ -94,7 +95,7 @@ readonly class PackageData extends DTO
     #[Transforms(Plugin::class)]
     public static function fromPlugin(Plugin $plugin): array
     {
-        if (\Safe\preg_match('/^<a href="([^"]+)">([^<]+)<\/a>$/', $plugin->author, $matches)) {
+        if ($matches = Regex::match('/^<a href="([^"]+)">([^<]+)<\/a>$/', $plugin->author)) {
             $authorUrl = $matches[1];
             $authorName = $matches[2];
         } else {
@@ -184,6 +185,9 @@ readonly class PackageData extends DTO
 
         $tags = $theme->tags()->pluck('name')->toArray();
 
+        $author = $theme->author;
+        $authors = $author ? [['name' => $author->user_nicename, 'url' => $author->author_url]] : [];
+
         $ret = [
             'did' => 'fake:' . $theme->slug, // @todo - generate a real DID
             'type' => PackageType::THEME->value,
@@ -195,12 +199,7 @@ readonly class PackageData extends DTO
             'version' => $theme->version,
             'license' => $theme->is_commercial ? 'proprietary' : 'GPL', // @todo - proper license
             'raw_metadata' => $theme->ac_raw_metadata,
-            'authors' => [
-                [
-                    'name' => $theme->author->user_nicename,
-                    'url' => $theme->author->author_url,
-                ],
-            ],
+            'authors' => $authors,
             'security' => $security,
             'releases' => $releases,
             'tags' => $tags,

@@ -22,7 +22,7 @@ test('correct password must be provided before account can be deleted', function
         'password' => 'wrong-password',
     ]);
 
-    expect($user->fresh())->not->toBeNull();
+    expect($user->fresh())->not?->toBeNull();
 })->skip(function () {
     return !Features::hasAccountDeletionFeatures();
 }, 'Account deletion is not enabled.');
