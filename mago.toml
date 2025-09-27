@@ -126,13 +126,12 @@ ignore = [
     "possibly-null-argument", # basic type inference failures
     "possibly-null-array-access", # fails to read type from @property-read
     "possibly-null-array-index", # more trouble with the __() function
-    "possibly-undefined-array-index",
-    "possibly-undefined-string-array-index",
-    "redundant-comparison",
-    "redundant-condition",
-    "redundant-logical-operation",
-    "redundant-null-coalesce",
-    "redundant-type-comparison",
+    "possibly-undefined-array-index", # deferred
+    "possibly-undefined-string-array-index", # fires on unset(), where it's fine for the index to not exist
+    "redundant-comparison", # fails to read type from @property-read
+    "redundant-condition", # basic type inference failures
+    "redundant-logical-operation", # basic type inference failures
+    "redundant-null-coalesce", # fails to read type from @property-read
     "reference-to-undefined-variable",
     "template-constraint-violation",
     "too-many-arguments",
