@@ -80,7 +80,7 @@ class BulkImport
 
         $slug = $metadata['slug'];
 
-        assert(is_a($class, Model::class, true));
+        assert(is_a($class, Model::class, true)); // @phpstan-ignore function.alreadyNarrowedType (that's the POINT!)
 
         if ($type === 'plugin') {
             Plugin::where('slug', $slug)->delete();

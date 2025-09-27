@@ -36,7 +36,7 @@ class ThemeController extends Controller
 
     public function info(Request $request): JsonResponse|Response
     {
-        $action = (string)$request->query('action');
+        $action = (string)$request->query('action'); // @mago-expect analysis:array-to-string-conversion
         try {
             return match ($action) {
                 'query_themes' => $this->doQueryThemes($request),

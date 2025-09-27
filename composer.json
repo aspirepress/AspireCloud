@@ -7,37 +7,37 @@
     "require": {
         "php": "^8.3",
         "ext-mbstring": "*",
-        "dshafik/bag": "^2.5",
-        "inertiajs/inertia-laravel": "^2.0.1",
-        "laravel/framework": "^12.4.1",
-        "laravel/jetstream": "^5.3.5",
-        "laravel/sanctum": "^4.0.8",
-        "laravel/telescope": "^5.6.0",
+        "dshafik/bag": "^2.6.1",
+        "inertiajs/inertia-laravel": "^2.0.9",
+        "laravel/framework": "^12.31.1",
+        "laravel/jetstream": "^5.3.8",
+        "laravel/sanctum": "^4.2.0",
+        "laravel/telescope": "^5.12.0",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.29",
-        "predis/predis": "^2.3.0",
-        "spatie/laravel-permission": "^6.16.0",
-        "symfony/http-client": "^7.2.4",
-        "symfony/mailgun-mailer": "^7.2",
-        "thecodingmachine/safe": "^3.0.2",
-        "tightenco/ziggy": "^2.5.2"
+        "predis/predis": "^2.4.0",
+        "spatie/laravel-permission": "^6.21.0",
+        "symfony/http-client": "^7.3.4",
+        "symfony/mailgun-mailer": "^7.3.1",
+        "thecodingmachine/safe": "^3.3.0",
+        "tightenco/ziggy": "^2.6.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5.5",
         "carthage-software/mago": "1.0.0-beta.24",
         "fakerphp/faker": "^1.24.1",
-        "larastan/larastan": "^3.2",
-        "laravel/pail": "^1.2.2",
+        "larastan/larastan": "^3.7.2",
+        "laravel/pail": "^1.2.3",
         "mockery/mockery": "^1.6.12",
-        "nunomaduro/collision": "^8.7",
-        "pestphp/pest": "^3.8.0",
-        "pestphp/pest-plugin-laravel": "^3.1",
-        "phpstan/phpstan": "^2.1.11",
-        "psalm/plugin-laravel": "^3.0",
+        "nunomaduro/collision": "^8.8.2",
+        "pestphp/pest": "^3.8.4",
+        "pestphp/pest-plugin-laravel": "^3.2",
+        "phpstan/phpstan": "^2.1.29",
+        "psalm/plugin-laravel": "^3.0.4",
         "roave/security-advisories": "dev-latest",
         "spatie/laravel-web-tinker": "^1.10.1",
-        "thecodingmachine/phpstan-safe-rule": "^1.4",
-        "vimeo/psalm": "^6.13"
+        "thecodingmachine/phpstan-safe-rule": "^1.4.1",
+        "vimeo/psalm": "^6.13.1"
     },
     "autoload": {
         "psr-4": {
@@ -96,14 +96,15 @@
         }
     },
     "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true,
         "allow-plugins": {
             "carthage-software/mago": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
-        }
+        },
+        "bump-after-update": true,
+        "notify-on-install": false,
+        "optimize-autoloader": true,
+        "sort-packages": true
     },
     "minimum-stability": "stable",
     "prefer-stable": true

@@ -39,7 +39,7 @@ readonly class QueryPluginsRequest extends DTO
     public static function fromRequest(Request $request): array
     {
         $query = $request->query->all();
-        $query['tags'] = self::mergeQueryTags($query);
+        $query['tags'] = self::mergeQueryTags($query); // @mago-expect analysis:less-specific-argument
         return $query;
     }
 
