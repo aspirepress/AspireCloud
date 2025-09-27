@@ -137,8 +137,8 @@ ignore = [
     "undefined-string-array-index", # won't even _assign_ to arbitrary arrays
     "undefined-variable", # can't handle Pest's use of $this
     "unhandled-thrown-type", # we will not globally enforce checked exceptions
-    "unused-parameter",
-    "unused-statement",
+    "unused-parameter", # too common a case to warn about
+    "unused-statement", # too common a case to warn about
 ]
 
 
