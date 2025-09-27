@@ -30,7 +30,7 @@
         "laravel/pail": "^1.2.3",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^8.8.2",
-        "pestphp/pest": "^3.8.0",
+        "pestphp/pest": "^3.8.4",
         "pestphp/pest-plugin-laravel": "^3.1",
         "phpstan/phpstan": "^2.1.11",
         "psalm/plugin-laravel": "^3.0.4",
