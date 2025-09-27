@@ -20,7 +20,7 @@
         "symfony/http-client": "^7.3.4",
         "symfony/mailgun-mailer": "^7.3.1",
         "thecodingmachine/safe": "^3.0.2",
-        "tightenco/ziggy": "^2.5.2"
+        "tightenco/ziggy": "^2.6.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5.5",
