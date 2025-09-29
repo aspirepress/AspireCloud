@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Values\WpOrg\Plugins;
 
 use App\Models\WpOrg\Plugin;
+use App\Utils\Regex;
 use App\Values\DTO;
 use App\Values\WpOrg\Author;
 use Bag\Attributes\Transforms;
 use Bag\Values\Optional;
 use DateTimeInterface;
+use App\Models\WpOrg\Author as AuthorModel;
 
 readonly class PluginResponse extends DTO
 {
@@ -80,6 +82,8 @@ readonly class PluginResponse extends DTO
     {
         $none = new Optional();
 
+        assert($plugin->contributors !== null); // mago won't respect the @property-read declaration
+
         return [
             // common
             'name' => $plugin->name,
@@ -114,7 +118,7 @@ readonly class PluginResponse extends DTO
             'sections' => $plugin->sections,
             'versions' => $plugin->versions,
             'contributors' => $plugin->contributors->mapWithKeys(
-                fn($authorModel) => [$authorModel->user_nicename => Author::from($authorModel)],
+                fn(AuthorModel $model) => [$model->user_nicename => Author::from($model)],
             )->toArray(),
             'screenshots' => $plugin->screenshots,
             'support_url' => $plugin->support_url,
@@ -138,6 +142,6 @@ readonly class PluginResponse extends DTO
         }
         $out = $lastUpdated->format(self::LAST_UPDATED_DATE_FORMAT);
         // Unfortunately this seems to render GMT as "GMT+0000" for some reason, so strip that out
-        return \Safe\preg_replace('/\+\d+$/', '', $out);
+        return Regex::replace('/\+\d+$/', '', $out);
     }
 }

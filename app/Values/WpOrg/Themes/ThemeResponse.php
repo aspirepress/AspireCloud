@@ -93,9 +93,9 @@ readonly class ThemeResponse extends DTO
             'reviews_url' => $theme->reviews_url ?? $none,
             'downloaded' => $theme->downloaded ?? $none,
             'active_installs' => $theme->active_installs ?? $none,
-            'last_updated' => $theme->last_updated->format('Y-m-d') ?? $none,
-            'last_updated_time' => $theme->last_updated->format('Y-m-d H:i:s') ?? $none,
-            'creation_time' => $theme->creation_time->format('Y-m-d H:i:s') ?? $none,
+            'last_updated' => $theme->last_updated?->format('Y-m-d') ?? $none,
+            'last_updated_time' => $theme->last_updated?->format('Y-m-d H:i:s') ?? $none,
+            'creation_time' => $theme->creation_time?->format('Y-m-d H:i:s') ?? $none,
             'homepage' => "https://wordpress.org/themes/{$theme->slug}/",
             'sections' => $theme->sections ?? $none,
             'download_link' => $theme->download_link ?? $none,
@@ -134,13 +134,13 @@ readonly class ThemeResponse extends DTO
 
         $omit = collect($fields)
             ->filter(fn($val, $key) => !$val)
-            ->mapWithKeys(fn($val, $key) => [$key => $none])
+            ->mapWithKeys(fn(bool $val, string $key) => [$key => $none])
             ->toArray();
 
         $self = $this->with($omit);
 
-        if (!$extendedAuthor) {
-            $self = $self->with(['author' => $self->author->user_nicename]);
+        if (!$extendedAuthor && $this->author instanceof Author) {
+            $self = $self->with(['author' => $this->author->user_nicename]);
         }
 
         return $self;

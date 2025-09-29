@@ -146,6 +146,7 @@ test('queryPlugins with browse parameter sorts plugins correctly', function () {
 
 test('applySearchWeighted returns a query with weighted search conditions', function () {
     // Create a base query
+    /** @var Builder<Plugin> $query */
     $query = Plugin::query();
 
     // Apply weighted search
@@ -162,6 +163,7 @@ test('applySearchWeighted returns a query with weighted search conditions', func
 
 test('applyAuthor adds author condition to the query', function () {
     // Create a base query
+    /** @var Builder<Plugin> $query */
     $query = Plugin::query();
 
     // Apply author
@@ -176,6 +178,7 @@ test('applyAuthor adds author condition to the query', function () {
 
 test('applyTagAny adds tag condition to the query', function () {
     // Create a base query
+    /** @var Builder<Plugin> $query */
     $query = Plugin::query();
 
     // Apply tag
@@ -192,6 +195,7 @@ test('applyTagAny adds tag condition to the query', function () {
 
 test('applyBrowse adds sorting to the query', function () {
     // Create a base query
+    /** @var Builder<Plugin> $query */
     $query = Plugin::query();
 
     // Apply browse

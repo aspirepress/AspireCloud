@@ -6,7 +6,6 @@ use App\Values\Packages\FairMetadata;
 use App\Values\Packages\PackageData;
 use Closure;
 use Exception;
-use Illuminate\Console\Command;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -30,6 +29,7 @@ class PackageRepoIndexCommand extends Command
         ini_set('memory_limit', '-1');
 
         $repos = config('fair.repos', []);
+
         if (empty($repos)) {
             $this->fail('No FAIR repositories configured. Update the FAIR_REPOS environment variable.');
         }
@@ -39,7 +39,9 @@ class PackageRepoIndexCommand extends Command
             $this->createPackage(...),
         ];
 
+        assert(is_iterable($repos));
         foreach ($repos as $repo) {
+            assert(is_string($repo));
             $this->currentRepo = $repo;
             try {
                 $packages = $this->getRepoPackages($repo);

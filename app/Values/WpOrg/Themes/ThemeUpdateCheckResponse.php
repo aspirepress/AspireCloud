@@ -25,9 +25,11 @@ readonly class ThemeUpdateCheckResponse extends DTO
      */
     public static function fromResults(iterable $themes, iterable $no_update): self
     {
+        $mkUpdates = fn(iterable $items) => ThemeUpdateData::collect($items)->keyBy('theme');
+
         return new self(
-            themes: ThemeUpdateData::collect($themes)->keyBy('theme'),
-            no_update: ThemeUpdateData::collect($no_update)->keyBy('theme'),
+            themes: $mkUpdates($themes),
+            no_update: $mkUpdates($no_update),
             translations: collect(), // TODO
         );
     }

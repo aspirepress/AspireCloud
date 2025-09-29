@@ -22,6 +22,7 @@ test('packageInformation with DID returns matching package', function () {
     $service = new PackageInformationService();
 
     $package = $service->findByDID('fake:test-package');
+    assert($package !== null);
 
     // Assert the response contains the matching plugin
     expect($package)

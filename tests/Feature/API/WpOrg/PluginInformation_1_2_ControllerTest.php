@@ -232,6 +232,7 @@ it('returns search results by tag in wp.org format', function () {
         ->and($responseData['info']['pages'])->toBe(1)
         ->and($responseData['info']['results'])->toBe(2);
 
+    assert(is_iterable($responseData['plugins']));
     foreach ($responseData['plugins'] as $plugin) {
         expect($plugin['tags'])->toContain($tagToQuery);
     }
