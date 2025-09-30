@@ -37,21 +37,6 @@ class PackageInformationService
         return route('package.fairMetadata', ['did' => $did], true);
     }
 
-    /**
-     * @param Package $package
-     * @return string
-     */
-    public function generatePackageWebDid(Package $package): string
-    {
-        $parsedUrl = \Safe\parse_url(config('app.url'));
-        $domain = $parsedUrl['host'];
-        if (!$domain) {
-            throw new \RuntimeException('Invalid APP_URL configuration');
-        }
-
-        return sprintf('did:web:%s:%s:%s', $domain, $package->type, $package->slug);
-    }
-
     public function findBySlug(string $slug): Package|null
     {
         return Package::query()->where('slug', $slug)->first();
