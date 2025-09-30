@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Cache;
+use App\Services\Metrics\MetricsService;
 
 class MetricsMiddleware
 {
@@ -18,11 +18,11 @@ class MetricsMiddleware
             return $response;
         }
         // total requests
-        Cache::increment(self::REQUESTS_COUNT);
+        MetricsService::increment(self::REQUESTS_COUNT);
         // per route totals
         $route = optional($request->route())?->getName() ?? $request->path();
         $key = self::REQUEST_COUNT_ROUTE . str_replace(['/', '.', '-', '{', '}', ':'], '_', $route);
-        Cache::increment($key);
+        MetricsService::increment($key);
 
         return $response;
     }

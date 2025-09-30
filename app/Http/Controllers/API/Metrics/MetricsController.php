@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\API\Metrics;
 
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
+use App\Services\Metrics\MetricsService;
 
 class MetricsController extends Controller
 {
@@ -19,7 +19,7 @@ class MetricsController extends Controller
         // total request count
         $lines[] = '# HELP requests_total Total number of requests';
         $lines[] = '# TYPE requests_total counter';
-        $lines[] = 'requests_total ' . Cache::get(self::REQUESTS_COUNT, 0);
+        $lines[] = 'requests_total ' . MetricsService::get(self::REQUESTS_COUNT);
         // requests by route
         $lines[] = '# HELP requests_by_route_total Requests by route';
         $lines[] = '# TYPE requests_by_route_total counter';
@@ -37,7 +37,7 @@ class MetricsController extends Controller
             $alreadySeen[] = $sanitized;
 
             $key = self::REQUEST_COUNT_ROUTE . $sanitized;
-            $count = Cache::get($key, 0);
+            $count = MetricsService::get($key);
             $escaped = addslashes($name);
 
             if ($count > 0) {
