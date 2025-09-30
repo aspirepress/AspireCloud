@@ -22,13 +22,21 @@ use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
 
 // https://codex.wordpress.org/WordPress.org_API
 
+$didRoutes = function (Router $router) {
+    $router->get('/packages/{did}', [PackageInformationController::class, 'fairMetadata'])
+        ->name('package.fairMetadata');
+
+    $router->get('/packages/{type}/{slug}/did.json', [PackageInformationController::class, 'didDocument'])
+        ->where('type', 'wp-plugin|wp-theme|wp-core');
+};
+
 Route::prefix('/')
     ->middleware([
         'auth.optional:sanctum',
         NormalizeWpOrgRequest::class,
         'cache.headers:public;s_maxage=300,etag', // for the CDN's benefit: the WP user agent does not cache at all.
     ])
-    ->group(function (Router $router) {
+    ->group(function (Router $router) use ($didRoutes) {
         // @formatter:off
 
         $router->any('/core/browse-happy/{version}', BrowseHappyController::class)->where(['version' => '1.1']);
@@ -75,8 +83,12 @@ Route::prefix('/')
         $router->any('/translations/plugins/{version}', PassThroughController::class)->where(['version' => '1.0']);
         $router->any('/translations/themes/{version}', PassThroughController::class)->where(['version' => '1.0']);
 
-        $router->get('/packages/{did}', PackageInformationController::class);
+        // DID routes
+        $didRoutes($router);
 
+        Route::domain(config('fair.domains.webdid'))->group(function () use ($router, $didRoutes) {
+            Route::group([], $didRoutes($router));
+        });
         // @formatter:on
     });
 

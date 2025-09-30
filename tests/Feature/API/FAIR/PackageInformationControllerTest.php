@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\Package;
+use App\Models\WpOrg\Plugin;
+use App\Models\WpOrg\Theme;
+use App\Values\Packages\PackageData;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 beforeEach(function () {
@@ -10,6 +13,11 @@ beforeEach(function () {
 function package_information_uri(string $did): string
 {
     return '/packages/' . $did;
+}
+
+function package_did_document_uri(string $packageType, string $slug): string
+{
+    return '/packages/' . $packageType . '/' . $slug . '/did.json';
 }
 
 it('returns 404 when did is missing', function () {
@@ -101,4 +109,50 @@ it('returns package information in FAIR format with optional fields', function (
                 'description',
             ],
         );
+});
+
+it('returns package information in FAIR format for a plugin based package', function () {
+    $plugin = Plugin::factory()->create([
+        'name' => 'Test Plugin',
+        'slug' => 'test-plugin',
+    ]);
+
+    $package = Package::fromPackageData(PackageData::from($plugin));
+    $did = $package->did;
+
+    $this->getJson(package_did_document_uri('wp-plugin', $plugin->slug))
+        ->assertStatus(200)
+        ->assertJsonStructure(
+            [
+                '@context',
+                'id',
+                'alsoKnownAs',
+                'verificationMethod',
+                'service',
+            ],
+        )
+        ->assertJsonPath('id', $did);
+});
+
+it('returns package information in FAIR format for a theme based package', function () {
+    $theme = Theme::factory()->create([
+        'name' => 'Test Theme',
+        'slug' => 'test-theme',
+    ]);
+
+    $package = Package::fromPackageData(PackageData::from($theme));
+    $did = $package->did;
+
+    $this->getJson(package_did_document_uri('wp-theme', $theme->slug))
+        ->assertStatus(200)
+        ->assertJsonStructure(
+            [
+                '@context',
+                'id',
+                'alsoKnownAs',
+                'verificationMethod',
+                'service',
+            ],
+        )
+        ->assertJsonPath('id', $did);
 });

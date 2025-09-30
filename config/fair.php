@@ -7,4 +7,7 @@ return [
     'paths' => [
         'packages' => '/wp-json/minifair/v1/packages/',
     ],
+    'domains' => [
+        'webdid' => env('FAIR_WEBDID_DOMAIN', null),
+    ]
 ];
