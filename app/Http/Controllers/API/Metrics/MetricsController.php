@@ -51,7 +51,7 @@ class MetricsController extends Controller
         $lines[] = 'model_count{model="plugins"} ' . DB::table('plugins')->count();
 
         return response(
-            implode('\n', $lines), 200,
+            implode("\n", $lines), 200,
             [
                 'Content-Type' => 'text/plain; version=0.0.4',
             ]
