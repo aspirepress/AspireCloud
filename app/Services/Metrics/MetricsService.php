@@ -18,12 +18,22 @@ class MetricsService
         // cache
         Cache::increment($key, $by);
 
+        // local counter to reduce DB writes
+        $counterKey = "unsynced_{$key}";
+        $unsynced = Cache::increment($counterKey, $by);
+
         // DB
-        Metric::query()
-            ->updateOrInsert(
+        $threshold = config('metrics.write_to_db_every', 100);
+        if ($unsynced >= $threshold) {
+            // update or insert
+            Metric::query()
+                ->updateOrInsert(
                 ['key' => $key],
-                ['value' => DB::raw("value + {$by}")]
+                ['value' => DB::raw("value + $unsynced")]
             );
+            // reset local counter
+            Cache::forget($counterKey);
+        }
     }
 
     /**
