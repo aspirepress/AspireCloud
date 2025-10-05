@@ -45,6 +45,7 @@ class PackageThemesImportCommand extends Command
                         ])
                         ->first();
                     if ($package && $this->option('new-only')) {
+                        DB::rollBack();
                         return;
                     }
                     $package?->delete();
