@@ -33,7 +33,7 @@ class BulkImport
         $imported = 0;
         $errors = [];
 
-        $request_info = ['userid' => auth()->user()->id, 'ip' => $request->ip()];
+        $request_info = ['userid' => auth()->user()?->id, 'ip' => $request->ip()];
 
         Log::info("Beginning bulk import", $request_info);
 
