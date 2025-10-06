@@ -16,51 +16,51 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use InvalidArgumentException;
 
 /**
- * @property-read string                                             $id
- * @property-read string                                             $slug
- * @property-read string                                             $name
- * @property-read string                                             $short_description
- * @property-read string                                             $description
- * @property-read string                                             $version
- * @property-read string                                             $author
- * @property-read string|null                                        $requires
- * @property-read string|null                                        $requires_php
- * @property-read string|null                                        $tested
- * @property-read string                                             $download_link
- * @property-read CarbonImmutable|null                               $added
- * @property-read CarbonImmutable|null                               $last_updated
- * @property-read string|null                                        $author_profile
- * @property-read int                                                $rating
- * @property-read int                                                $num_ratings
- * @property-read int                                                $support_threads
- * @property-read int                                                $support_threads_resolved
- * @property-read int                                                $active_installs
- * @property-read int                                                $downloaded
- * @property-read string|null                                        $homepage
- * @property-read string|null                                        $donate_link
- * @property-read string|null                                        $business_model
- * @property-read string|null                                        $commercial_support_url
- * @property-read string|null                                        $support_url
- * @property-read string|null                                        $preview_link
- * @property-read string|null                                        $repository_url
+ * @property-read string $id
+ * @property-read string $slug
+ * @property-read string $name
+ * @property-read string $short_description
+ * @property-read string $description
+ * @property-read string $version
+ * @property-read string $author
+ * @property-read string|null $requires
+ * @property-read string|null $requires_php
+ * @property-read string|null $tested
+ * @property-read string $download_link
+ * @property-read CarbonImmutable|null $added
+ * @property-read CarbonImmutable|null $last_updated
+ * @property-read string|null $author_profile
+ * @property-read int $rating
+ * @property-read int $num_ratings
+ * @property-read int $support_threads
+ * @property-read int $support_threads_resolved
+ * @property-read int $active_installs
+ * @property-read int $downloaded
+ * @property-read string|null $homepage
+ * @property-read string|null $donate_link
+ * @property-read string|null $business_model
+ * @property-read string|null $commercial_support_url
+ * @property-read string|null $support_url
+ * @property-read string|null $preview_link
+ * @property-read string|null $repository_url
  *
- * @property-read string                                             $ac_origin
- * @property-read CarbonImmutable                                    $ac_created
- * @property-read array<string, mixed>                               $ac_raw_metadata
+ * @property-read string $ac_origin
+ * @property-read CarbonImmutable $ac_created
+ * @property-read array<string, mixed> $ac_raw_metadata
  *
  * // Relationships
- * @property-read Collection<int,Author>                             $contributors
+ * @property-read Collection<int,Author> $contributors
  *
  * // Synthesized attributes
- * @property-read array<array-key, mixed>                            $banners       // TODO
+ * @property-read array<array-key, mixed> $banners       // TODO
  * @property-read array<array-key, array{src: string, caption: string}> $screenshots
- * @property-read array<string, string>                              $versions
- * @property-read array<string, string>                              $sections
+ * @property-read array<string, string> $versions
+ * @property-read array<string, string> $sections
  * @property-read array{"1":int, "2":int, "3":int, "4":int, "5":int} $ratings
- * @property-read string[]                                           $requires_plugins
- * @property-read array<string, string>                              $icons
- * @property-read array<array-key, mixed>                            $compatibility // TODO (it only ever seems to be empty)
- * @property-read array<string, string>                              $upgrade_notice
+ * @property-read string[] $requires_plugins
+ * @property-read array<string, string> $icons
+ * @property-read array<array-key, mixed> $compatibility // TODO (it only ever seems to be empty)
+ * @property-read array<string, string> $upgrade_notice
  */
 final class Plugin extends BaseModel
 {
@@ -118,10 +118,18 @@ final class Plugin extends BaseModel
     public function toSearchArray(): array
     {
         return [
-            'id'   => $this->id,
+            'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
+            'description' => $this->description,
+            'short_description' => $this->short_description,
+            'author' => $this->author,
+            'contributors' => $this->contributors->pluck('display_name')->map(fn($n) => strtolower($n))->all(),
             'tags' => $this->tags->pluck('name')->map(fn($t) => strtolower($t))->all(),
+            'rating' => $this->rating,
+            'active_installs' => $this->active_installs,
+            'last_updated' => optional($this->last_updated)?->toDateString(),
+            'added' => optional($this->added)?->toDateString(),
         ];
     }
 
