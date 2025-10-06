@@ -32,7 +32,7 @@ class ReindexCommand extends Command
         $this->info("Reindexing plugins in chunks of {$chunkSize}...");
 
         Plugin::query()
-            ->with('tags')
+            ->with('tags', 'contributors')
             ->chunk($chunkSize, function ($plugins) use ($client) {
             foreach ($plugins as $plugin) {
                 $client->index(
