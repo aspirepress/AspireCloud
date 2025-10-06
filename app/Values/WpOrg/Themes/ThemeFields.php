@@ -47,7 +47,7 @@ trait ThemeFields
      */
     public static function getFields(Request $request, array $defaultFields = []): array
     {
-        if (version_compare($request->route('version'), '1.2', '>=')) {
+        if (version_compare($request->route('version') ?? '1.2', '1.2', '>=')) {
             // GH-278: we send back all fields by default now.
             // This makes much of the code below redundant, but we still want to support explicitly disabling fields
             $defaultFields = array_fill_keys(array_keys(self::additionalFields), true);

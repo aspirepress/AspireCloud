@@ -4,10 +4,12 @@ namespace App\Http\Controllers\API\WpOrg\Themes;
 
 use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\Hacks\InlineFairMetadata;
 use App\Services\Themes\FeatureListService;
 use App\Services\Themes\QueryThemesService;
 use App\Services\Themes\ThemeHotTagsService;
 use App\Services\Themes\ThemeInformationService;
+use App\Utils\Regex;
 use App\Values\WpOrg\Themes\QueryThemesRequest;
 use App\Values\WpOrg\Themes\QueryThemesResponse;
 use App\Values\WpOrg\Themes\ThemeInformationRequest;
@@ -26,12 +28,17 @@ class ThemeController extends Controller
         private readonly ThemeInformationService $themeInfo,
         private readonly ThemeHotTagsService $hotTags,
         private readonly FeatureListService $featureList,
-    ) {}
+    )
+    {
+        // @mago-expect lint:middleware-in-routes
+        config('feature.underscore_fair_hack') and $this->middleware(InlineFairMetadata::class);
+    }
 
     public function info(Request $request): JsonResponse|Response
     {
+        $action = (string)$request->query('action'); // @mago-expect analysis:array-to-string-conversion
         try {
-            return match ($request->query('action')) {
+            return match ($action) {
                 'query_themes' => $this->doQueryThemes($request),
                 'theme_information' => $this->doThemeInformation($request),
                 'hot_tags' => $this->doHotTags($request),
@@ -101,10 +108,10 @@ class ThemeController extends Controller
 
     private function getWpVersion(Request $request): ?string
     {
-        $version = $request->route('version');
+        $version = $request->route('version') ?? '1.2';
         if (version_compare($version, '1.2', '>=')) {
             return $request->query('wp_version');
-        } elseif (preg_match('|WordPress/([^;]+)|', $request->server('HTTP_USER_AGENT'), $matches)) {
+        } elseif ($matches = Regex::match('|WordPress/([^;]+)|', $request->server('HTTP_USER_AGENT'))) {
             // Get version from user agent since it's not explicitly sent to feature_list requests in older API branches.
             return $matches[1];
         }

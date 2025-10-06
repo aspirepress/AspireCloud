@@ -36,8 +36,11 @@ class QueryPluginsService
         $search && $callbacks->push(fn($q) => self::applySearchWeighted($q, $search, $req));
         $author && $callbacks->push(fn($q) => self::applyAuthor($q, $author));
         !$search && $callbacks->push(fn($q) => self::applyBrowse($q, $browse));
-        /** @var Builder<Plugin> $query */
-        $query = $callbacks->reduce(fn($query, $callback) => $callback($query), Plugin::query());
+        /**
+         * @var Builder<Plugin> $query
+         * @psalm-suppress ReservedWord (psalm is broken here, and this cannot be suppressed in psalm.xml)
+         */
+        $query = $callbacks->reduce(fn(Builder $q, \Closure $callback) => $callback($q), Plugin::query());
 
         $total = $query->count();
         $totalPages = (int)ceil($total / $perPage);

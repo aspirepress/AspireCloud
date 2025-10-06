@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\WpOrg\Plugins;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\Hacks\InlineFairMetadata;
 use App\Models\WpOrg\ClosedPlugin;
 use App\Services\PluginServices;
 use App\Values\WpOrg\Plugins;
@@ -17,6 +18,8 @@ class PluginInformation_1_2_Controller extends Controller
         private readonly PluginServices\PluginHotTagsService     $hotTagsService,
     )
     {
+        // @mago-expect lint:middleware-in-routes
+        config('feature.underscore_fair_hack') and $this->middleware(InlineFairMetadata::class);
     }
 
     public function __invoke(Request $request): JsonResponse
