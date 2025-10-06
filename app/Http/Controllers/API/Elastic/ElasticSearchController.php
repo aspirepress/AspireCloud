@@ -3,31 +3,29 @@
 namespace App\Http\Controllers\API\Elastic;
 
 use App\Http\Controllers\Controller;
+use App\Values\WpOrg\Plugins\ElasticPluginsRequest;
 use Elastic\Elasticsearch\Client;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ElasticSearchController extends Controller
 {
     /**
      * Search plugins with text and tag filters
      *
-     * @param Request $request
+     * @param ElasticPluginsRequest $request
      * @param Client $client
      * @return JsonResponse
      */
-    public function search(Request $request, Client $client): JsonResponse
+    public function search(ElasticPluginsRequest $request, Client $client): JsonResponse
     {
-        $query = trim($request->input('q', ''));
-        $limit = (int)$request->input('limit', 1000);
-        $offset = (int)$request->input('offset', 0);
-
+        $query  = strtolower(trim($request->search ?? ''));
+        $limit  = $request->limit;
+        $offset = $request->offset;
         // accept tags and tag
-        $tags    = $this->normalizeTags($request->input('tags', $request->input('tag', [])));
-        // tag operators
-        $tagsAnd = $this->normalizeTags($request->input('tags_and', []));
-        $tagsOr  = $this->normalizeTags($request->input('tags_or', []));
-        $tagsNot = $this->normalizeTags($request->input('tags_not', []));
+        $tags    = $request->tags ?? $request->tag ?? [];
+        $tagsAnd = $request->tagsAnd ?? [];
+        $tagsOr  = $request->tagsOr ?? [];
+        $tagsNot = $request->tagsNot ?? [];
 
         // query
         if ($query === '') {
@@ -86,30 +84,5 @@ class ElasticSearchController extends Controller
             'offset' => $offset,
             'results' => $results,
         ]);
-    }
-
-    /**
-     * @param $input
-     * @return array
-     */
-    private function normalizeTags($input): array
-    {
-        if (is_array($input)) {
-            return array_values(
-                array_filter(
-                    array_map(fn($tag) => strtolower(trim($tag)), $input)
-                )
-            );
-        }
-
-        if (is_string($input)) {
-            return array_values(
-                array_filter(
-                    array_map(fn($tag) => strtolower(trim($tag)), explode(',', $input))
-                )
-            );
-        }
-
-        return [];
     }
 }
