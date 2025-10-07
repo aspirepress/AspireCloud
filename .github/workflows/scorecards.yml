@@ -74,6 +74,6 @@ jobs:
 
       # Upload the results to GitHub's code scanning dashboard.
       - name: "Upload to code-scanning"
-        uses: github/codeql-action/upload-sarif@v3 # I can't make commit hashes work with these three-level paths...
+        uses: github/codeql-action/upload-sarif@v4 # I can't make commit hashes work with these three-level paths...
         with:
           sarif_file: results.sarif
