@@ -8,7 +8,7 @@ use Elastic\Elasticsearch\Client;
 readonly class SearchPlugins
 {
     public function __construct(
-        private ElasticPluginsRequest $request,
+        private array $request,
         private Client                $client
     )
     {
@@ -16,19 +16,18 @@ readonly class SearchPlugins
 
     public function __invoke(): array
     {
-        $query = strtolower(trim($this->request->search ?? ''));
-        $limit = $this->request->limit;
-        $offset = $this->request->offset;
+        $query = $this->request['search'];
+        $limit = $this->request['limit'];
+        $offset = $this->request['offset'];
         // accept tags and tag
-        $tags = $this->request->tags ?? $this->request->tag ?? [];
-        $tagsAnd = $this->request->tagsAnd ?? [];
-        $tagsOr = $this->request->tagsOr ?? [];
-        $tagsNot = $this->request->tagsNot ?? [];
+        $tags = $this->request['tags'] ?? [];
+        $tagsAnd = $this->request['tagsAnd'] ?? [];
+        $tagsOr = $this->request['tagsOr'] ?? [];
+        $tagsNot = $this->request['tagsNot'] ?? [];
         // author
-        $author = $this->request->author;
+        $author = $this->request['author'] ?? null;
         // browse
-        $browse = $this->request->browse;
-
+        $browse = $this->request['browse'] ?? null;
         // query
         if ($query === '') {
             $mustQuery = ['match_all' => (object)[]];

@@ -22,7 +22,7 @@ class ElasticSearchController extends Controller
         Client                $client,
     ): JsonResponse
     {
-        return response()->json((new SearchPlugins($request, $client))());
+        return response()->json((new SearchPlugins($request::fromRequest(request()), $client))());
     }
 
     /**
