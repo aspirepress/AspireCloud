@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\WpOrg\Plugin;
 use Elastic\Elasticsearch\Client;
+use Illuminate\Support\Collection;
 
 class ReindexPluginsCommand extends Command
 {
@@ -34,18 +35,20 @@ class ReindexPluginsCommand extends Command
         Plugin::query()
             ->with('tags', 'contributors')
             /** @param iterable<int, Plugin> $plugins */
-            ->chunk($chunkSize, function ($plugins) use ($client) {
-            foreach ($plugins as $plugin) {
-                $client->index(
-                    [
-                        'index' => 'plugins',
-                        'id' => $plugin->id,
-                        'body' => $plugin->toSearchArray(),
-                    ]
-                );
-                $this->line("Indexed plugin #{$plugin->id}");
-            }
-        });
+            ->chunk($chunkSize, function (Collection $plugins) use ($client) {
+                foreach ($plugins as $plugin) {
+                    $client
+                        ->index(
+                            [
+                                'index' => 'plugins',
+                                'id' => $plugin->id,
+                                'body' => $plugin->toSearchArray(),
+                            ]
+                        )
+                        ->wait();
+                    $this->line("Indexed plugin #{$plugin->id}");
+                }
+            });
 
         $this->info('Reindexing complete.');
 
