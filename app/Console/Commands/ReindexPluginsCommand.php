@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\WpOrg\Plugin;
 use Elastic\Elasticsearch\Client;
 
-class ReindexCommand extends Command
+class ReindexPluginsCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -33,6 +33,7 @@ class ReindexCommand extends Command
 
         Plugin::query()
             ->with('tags', 'contributors')
+            /** @param iterable<int, Plugin> $plugins */
             ->chunk($chunkSize, function ($plugins) use ($client) {
             foreach ($plugins as $plugin) {
                 $client->index(
