@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd $(dirname $0)/../..
+
+exec meta/bin/docker-exec vendor/bin/$(basename $0) "$@"

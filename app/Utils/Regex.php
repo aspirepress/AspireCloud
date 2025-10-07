@@ -9,12 +9,14 @@ class Regex
     {
         $matches = [];
         \Safe\preg_match($pattern, $subject, $matches);
-        return $matches;
+        return $matches ?? []; // $matches cannot be null, but mago thinks otherwise ¯\_(ツ)_/¯
     }
 
     public static function replace(string $pattern, string $replacement, string $subject, int $limit = -1): string
     {
-        return \Safe\preg_replace($pattern, $replacement, $subject, $limit);
+        $result = \Safe\preg_replace($pattern, $replacement, $subject, $limit);
+        assert(is_string($result)); // cannot be otherwise when the parameters are strings
+        return $result;
     }
 
     private function __construct()

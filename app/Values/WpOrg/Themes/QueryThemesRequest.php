@@ -38,10 +38,9 @@ readonly class QueryThemesRequest extends DTO
     #[Transforms(Request::class)]
     public static function fromRequest(Request $request): array
     {
-        $query = $request->query();
-
-        $query['tags'] = (array)Arr::pull($query, 'tag', []);
-        $query['ac_tags'] = (array)Arr::pull($query, 'ac_tag', []);
+        $query = $request->query->all();
+        $query['tags'] = Arr::wrap(Arr::pull($query, 'tag', []));
+        $query['ac_tags'] = Arr::wrap(Arr::pull($query, 'ac_tag', []));
 
         $defaultFields = [
             'description' => true,

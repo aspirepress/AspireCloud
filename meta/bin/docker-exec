@@ -1,0 +1,10 @@
+#!/bin/sh
+
+cd $(dirname $0)/../..
+
+if which docker >/dev/null 2>&1; then
+  exec docker compose exec ${APP_CONTAINER:-webapp} "$@"
+else
+  # docker not found means we're probably in the app container already
+  exec "$@"
+fi

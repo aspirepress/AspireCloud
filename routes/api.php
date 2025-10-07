@@ -2,26 +2,34 @@
 
 // Note: api routes are not prefixed, i.e. all routes in here are from the root like web routes
 
-use App\Http\Controllers\API\FAIR\Packages\PackageInformationController;
-use App\Http\Controllers\API\Metrics\MetricsController;
-use App\Http\Controllers\API\WpOrg\Core\BrowseHappyController;
+use App\Http\Middleware\Hacks\InlineFairMetadata;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\NormalizeWpOrgRequest;
+use App\Http\Controllers\PassThroughController;
+use App\Http\Controllers\API\WpOrg\Themes\ThemeController;
+use App\Http\Controllers\API\WpOrg\Export\ExportController;
 use App\Http\Controllers\API\WpOrg\Core\ImportersController;
 use App\Http\Controllers\API\WpOrg\Core\ServeHappyController;
+use App\Http\Controllers\API\WpOrg\Core\BrowseHappyController;
 use App\Http\Controllers\API\WpOrg\Core\StableCheckController;
-use App\Http\Controllers\API\WpOrg\Export\ExportController;
+use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
+use App\Http\Controllers\API\WpOrg\Themes\ThemeUpdatesController;
+use App\Http\Controllers\API\FAIR\Packages\PackageInformationController;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_0_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginInformation_1_2_Controller;
 use App\Http\Controllers\API\WpOrg\Plugins\PluginUpdateCheck_1_1_Controller;
-use App\Http\Controllers\API\WpOrg\SecretKey\SecretKeyController;
-use App\Http\Controllers\API\WpOrg\Themes\ThemeController;
-use App\Http\Controllers\API\WpOrg\Themes\ThemeUpdatesController;
-use App\Http\Controllers\PassThroughController;
 use App\Http\Middleware\MetricsMiddleware;
-use App\Http\Middleware\NormalizeWpOrgRequest;
-use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Route;
 
 // https://codex.wordpress.org/WordPress.org_API
+
+$didRoutes = function (Router $router) {
+    $router->get('/packages/{did}', [PackageInformationController::class, 'fairMetadata'])
+        ->name('package.fairMetadata');
+
+    $router->get('/packages/{type}/{slug}/did.json', [PackageInformationController::class, 'didDocument'])
+        ->where('type', 'wp-plugin|wp-theme|wp-core');
+};
 
 Route::prefix('/')
     ->middleware([
@@ -30,7 +38,7 @@ Route::prefix('/')
         MetricsMiddleware::class,
         'cache.headers:public;s_maxage=300,etag', // for the CDN's benefit: the WP user agent does not cache at all.
     ])
-    ->group(function (Router $router) {
+    ->group(function (Router $router) use ($didRoutes) {
         // @formatter:off
         $router
             ->get('/metrics', MetricsController::class)
@@ -166,7 +174,12 @@ Route::prefix('/')
         $router
             ->get('/packages/{did}', PackageInformationController::class)
             ->name('api.wp.packages.info');
+        // DID routes
+        $didRoutes($router);
 
+        Route::domain(config('fair.domains.webdid'))->group(function () use ($router, $didRoutes) {
+            Route::group([], $didRoutes($router));
+        });
         // @formatter:on
     });
 

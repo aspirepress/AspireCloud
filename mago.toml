@@ -89,75 +89,60 @@ return-issues = true
 template-issues = true
 unreachable-issues = true
 
-# There's no easy way to get a list of all rules mago knows about, so we'll just disable all errors we come across.
+# to get a list of all firing rules suitable for pasting in below:
 # vendor/bin/mago analyze --reporting-format=emacs | perl -nE 'say qq{"$1",} if / - (.*?):/' | sort | uniq
 ignore = [
-    "ambiguous-object-property-access",
-    "array-to-string-conversion",
-    "impossible-assignment",
-    "impossible-condition",
-    "incompatible-property-type",
-    "invalid-argument",
-    "invalid-array-element-key",
-    "invalid-array-index",
-    "invalid-callable",
-    "invalid-destructuring-source",
-    "invalid-iterator",
-    "invalid-method-access",
-    "invalid-named-argument",
-    "invalid-operand",
-    "invalid-override-attribute",
-    "invalid-parent-type",
-    "invalid-property-access",
-    "invalid-return-statement",
-    "invalid-type-cast",
-    "less-specific-argument",
-    "less-specific-nested-argument-type",
-    "less-specific-nested-return-statement",
-    "less-specific-return-statement",
-    "match-not-exhaustive",
-    "method-access-on-null",
-    "mismatched-array-index",
-    "missing-override-attribute",
-    "mixed-argument",
-    "mixed-array-access",
-    "mixed-array-assignment",
-    "mixed-array-index",
-    "mixed-assignment",
-    "mixed-method-access",
-    "mixed-operand",
-    "mixed-property-access",
-    "mixed-return-statement",
-    "no-value",
-    "non-existent-method",
-    "non-existent-property",
-    "null-argument",
-    "null-array-index",
-    "null-operand",
-    "null-property-access",
-    "nullable-return-statement",
-    "possibly-invalid-argument",
-    "possibly-null-argument",
-    "possibly-null-array-access",
-    "possibly-null-array-index",
-    "possibly-null-operand",
-    "possibly-null-property-access",
-    "possibly-undefined-array-index",
-    "possibly-undefined-string-array-index",
-    "redundant-comparison",
-    "redundant-condition",
-    "redundant-logical-operation",
-    "redundant-null-coalesce",
-    "redundant-type-comparison",
-    "reference-to-undefined-variable",
-    "template-constraint-violation",
-    "too-many-arguments",
-    "undefined-string-array-index",
-    "undefined-variable",
-    "unhandled-thrown-type",
-    "unknown-match-subject-type",
-    "unused-parameter",
-    "unused-statement",
+    "impossible-assignment", # bad type inference
+    "impossible-condition", # wrong in very obvious places
+    "impossible-nonnull-entry-check", # confidently claims that keys cannot exist which very well can
+    "incompatible-property-type", # doesn't allow list<string> as an alias for array<int, string>
+    "invalid-argument", # bizarre inference failures, also doesn't grok list<>
+    "invalid-array-index", # doesn't allow non-negative-int
+    "invalid-destructuring-source", # thinks collections are `mixed`
+    "invalid-method-access", # completely broken with laravel
+    "invalid-named-argument", #  Unknown argument name `${argument_name}` (definitely a mago bug)
+    "invalid-operand", # prevents useful control-flow shorthand.  would enable if it allowed void context.
+    "invalid-return-statement", # broken when `static` return type is involved anywhere
+    "less-specific-nested-argument-type", # fails on every single test.  need to disable this just for tests/
+    "less-specific-nested-return-statement", # can't deal with collection method chaining
+    "less-specific-return-statement", # deferred
+    "mismatched-array-index", # deferred until we can put a stake through Laravel's craptastic __() function
+    "missing-magic-method", # laravel's obfuscations are still too much for mago to handle
+    "missing-override-attribute", # deferred, there's just too many of these
+    "mixed-argument", # poor type inference
+    "mixed-array-access", # completely broken, fails to infer an array even when it's the only return type
+    "mixed-array-assignment", # broken in the same fashion as mixed-array-access
+    "mixed-assignment", # complete non-starter, seems to do no type inference at all
+    "mixed-method-access", # might have some use if i could disable it on tests
+    "mixed-operand", # forbids even truthiness checks without a known type
+    "mixed-property-access", # deferred
+    "mixed-return-statement", # terrible type inference
+    "no-value", # infers 'never' for local variables that were guarded with !empty() on the line immediately above
+    "non-documented-method", # misses docblocks that are quite plainly present
+    "non-documented-property", # misses docblocks that are quite plainly present
+    "non-existent-method", # cannot handle magic methods at all, making it a non-starter with laravel
+    "non-existent-property", # also lacks magic support.  ironic for something called mago.
+    "null-argument", # fails to read type from @property-read
+    "null-array-index", # fails to read type from @property-read
+    "null-operand", # fails to read type from @property-read
+    "null-property-access", # fails to read type from @property-read
+    "possibly-invalid-argument", # deferred
+    "possibly-null-argument", # basic type inference failures
+    "possibly-null-array-access", # fails to read type from @property-read
+    "possibly-null-array-index", # more trouble with the __() function
+    "possibly-undefined-array-index", # deferred
+    "possibly-undefined-string-array-index", # fires on unset(), where it's fine for the index to not exist
+    "redundant-comparison", # fails to read type from @property-read
+    "redundant-condition", # basic type inference failures
+    "redundant-logical-operation", # basic type inference failures
+    "redundant-null-coalesce", # fails to read type from @property-read
+    "template-constraint-violation", # deferred
+    "too-many-arguments", # signature for test() is broken
+    "undefined-string-array-index", # won't even _assign_ to arbitrary arrays
+    "undefined-variable", # can't handle Pest's use of $this
+    "unhandled-thrown-type", # we will not globally enforce checked exceptions
+    "unused-parameter", # too common a case to warn about
+    "unused-statement", # too common a case to warn about
 ]
 
 

@@ -2,12 +2,14 @@
 
 namespace App\Values\Packages;
 
-use App\Enums\PackageType;
 use App\Enums\Origin;
+use App\Enums\PackageType;
 use App\Models\WpOrg\Plugin;
 use App\Models\WpOrg\Theme;
+use App\Utils\Regex;
 use App\Values\DTO;
 use Bag\Attributes\Transforms;
+use App\Services\Packages\PackageDIDService;
 
 readonly class PackageData extends DTO
 {
@@ -17,6 +19,7 @@ readonly class PackageData extends DTO
      * @param array<array<string, string>> $security
      * @param array<array<string, mixed>> $releases
      * @param array<string> $tags
+     * @param array<string, mixed> $sections
      */
     public function __construct(
         public string $did,
@@ -33,6 +36,7 @@ readonly class PackageData extends DTO
         public array $security = [],
         public array $releases = [],
         public array $tags = [],
+        public array $sections = [],
     ) {}
 
     /**
@@ -61,7 +65,7 @@ readonly class PackageData extends DTO
 
         $tags = $fairMetadata->raw_metadata['keywords'] ?? [];
 
-        return [
+        $ret = [
             'did' => $fairMetadata->id,
             'type' => $fairMetadata->type,
             'origin' => Origin::FAIR->value,
@@ -77,6 +81,12 @@ readonly class PackageData extends DTO
             'releases' => $releases,
             'tags' => $tags,
         ];
+
+        if ($fairMetadata->sections) {
+            $ret['sections'] = $fairMetadata->sections;
+        }
+
+        return $ret;
     }
 
     /**
@@ -86,7 +96,7 @@ readonly class PackageData extends DTO
     #[Transforms(Plugin::class)]
     public static function fromPlugin(Plugin $plugin): array
     {
-        if (\Safe\preg_match('/^<a href="([^"]+)">([^<]+)<\/a>$/', $plugin->author, $matches)) {
+        if ($matches = Regex::match('/^<a href="([^"]+)">([^<]+)<\/a>$/', $plugin->author)) {
             $authorUrl = $matches[1];
             $authorName = $matches[2];
         } else {
@@ -96,9 +106,11 @@ readonly class PackageData extends DTO
 
         $security = [
             [
-                'url' => ($authorUrl ?? $plugin->author_profile) ?? $plugin->support_url,
+                'url' => 'https://wordpress.org/about/security/',
             ],
         ];
+
+        $sections = $plugin->ac_raw_metadata['sections'] ?? null;
 
         $releases = [
             [
@@ -115,8 +127,11 @@ readonly class PackageData extends DTO
 
         $tags = $plugin->tags()->pluck('name')->toArray();
 
-        return [
-            'did' => 'fake:' . $plugin->slug, // @todo - generate a real DID
+        $packageInfo = app()->make(PackageDIDService::class);
+        $did = $packageInfo->generateWebDid(PackageType::PLUGIN->value, $plugin->slug);
+
+        $ret = [
+            'did' => $did,
             'type' => PackageType::PLUGIN->value,
             'origin' => Origin::WP->value,
             'slug' => $plugin->slug,
@@ -136,6 +151,12 @@ readonly class PackageData extends DTO
             'releases' => $releases,
             'tags' => $tags,
         ];
+
+        if ($sections) {
+            $ret['sections'] = $sections;
+        }
+
+        return $ret;
     }
 
     /**
@@ -147,7 +168,7 @@ readonly class PackageData extends DTO
     {
         $security = [
             [
-                'url' => $theme->author['author_url'],
+                'url' => 'https://wordpress.org/about/security/',
             ],
         ];
 
@@ -164,10 +185,18 @@ readonly class PackageData extends DTO
             ],
         ];
 
+        $sections = $theme->ac_raw_metadata['sections'] ?? null;
+
         $tags = $theme->tags()->pluck('name')->toArray();
 
-        return [
-            'did' => 'fake:' . $theme->slug, // @todo - generate a real DID
+        $packageInfo = app()->make(PackageDIDService::class);
+        $did = $packageInfo->generateWebDid(PackageType::THEME->value, $theme->slug);
+
+        $author = $theme->author;
+        $authors = $author ? [['name' => $author->user_nicename, 'url' => $author->author_url]] : [];
+
+        $ret = [
+            'did' => $did,
             'type' => PackageType::THEME->value,
             'origin' => Origin::WP->value,
             'slug' => $theme->slug,
@@ -177,16 +206,17 @@ readonly class PackageData extends DTO
             'version' => $theme->version,
             'license' => $theme->is_commercial ? 'proprietary' : 'GPL', // @todo - proper license
             'raw_metadata' => $theme->ac_raw_metadata,
-            'authors' => [
-                [
-                    'name' => $theme->author->user_nicename,
-                    'url' => $theme->author->author_url,
-                ],
-            ],
+            'authors' => $authors,
             'security' => $security,
             'releases' => $releases,
             'tags' => $tags,
         ];
+
+        if ($sections) {
+            $ret['sections'] = $sections;
+        }
+
+        return $ret;
     }
 
     /** @return array<string, mixed> */
@@ -205,6 +235,7 @@ readonly class PackageData extends DTO
             'security' => ['required', 'array'],
             'releases' => ['required', 'array'],
             'tags' => ['sometimes', 'array'],
+            'sections' => ['sometimes', 'array'],
         ];
     }
 }

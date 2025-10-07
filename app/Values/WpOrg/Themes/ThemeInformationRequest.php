@@ -38,7 +38,7 @@ readonly class ThemeInformationRequest extends DTO
             'template' => true,
         ];
 
-        if (version_compare($request->route('version'), '1.2', '>=')) {
+        if (version_compare($request->route('version') ?? '1.2', '1.2', '>=')) {
             $defaultFields['reviews_url'] = true;
             $defaultFields['creation_time'] = true;
         }
