@@ -34,7 +34,7 @@ class ReindexPluginsCommand extends Command
 
         Plugin::query()
             ->with('tags', 'contributors')
-            /** @param iterable<int, Plugin> $plugins */
+            /** @param Collection<int, Plugin> $plugins */
             ->chunk($chunkSize, function (Collection $plugins) use ($client) {
                 foreach ($plugins as $plugin) {
                     $client
@@ -44,8 +44,8 @@ class ReindexPluginsCommand extends Command
                                 'id' => $plugin->id,
                                 'body' => $plugin->toSearchArray(),
                             ]
-                        )
-                        ->wait();
+                        );
+
                     $this->line("Indexed plugin #{$plugin->id}");
                 }
             });

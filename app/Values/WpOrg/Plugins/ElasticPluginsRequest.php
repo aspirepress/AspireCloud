@@ -13,15 +13,16 @@ use Illuminate\Http\Request;
 readonly class ElasticPluginsRequest extends DTO
 {
     /**
-     * @param list<string>|null $tags
-     * @param list<string>|null $tagAnd
-     * @param list<string>|null $tagOr
-     * @param list<string>|null $tagNot
+     * @param string|list<string>|null $tags
+     * @param list<string>|null $tagsAnd
+     * @param list<string>|null $tagsOr
+     * @param list<string>|null $tagsNot
      * @param string|list<string>|null $fields
      */
     public function __construct(
         public ?string $search = null,
-        public ?array $tags = null,
+        /** @var string|list<string>|null */
+        public string|array|null $tags = null,
         public ?string $tag = null,
         public ?array $tagsAnd = null,
         public ?array $tagsOr = null,
@@ -41,17 +42,28 @@ readonly class ElasticPluginsRequest extends DTO
     public static function fromRequest(Request $request): array
     {
         $query = $request->query->all();
-        // search
-        $query['search'] = trim((string) $request->query('search', ''));
-        // compute offset/limit
+
+        $value = $request->query('search', '');
+
+        if (is_array($value)) {
+            // Join multiple search values into one string
+            $value = implode(' ', $value);
+        }
+
+        $query['search'] = trim($value);
         $page = max(1, (int) ($query['page'] ?? 1));
         $perPage = max(1, (int) ($query['per_page'] ?? 24));
         $query['offset'] = ($page - 1) * $perPage;
         $query['limit'] = $perPage;
-        // normalize all tag related params
+
+        // normalize tags and tag operators
         foreach (['tags', 'tag', 'tagsAnd', 'tagsOr', 'tagsNot'] as $key) {
             if (array_key_exists($key, $query)) {
-                $query[$key] = self::normalizeTags($query[$key]);
+                $normalized = self::normalizeTags($query[$key]);
+                // tag is a single string
+                $query[$key] = $key === 'tag'
+                    ? ($normalized[0] ?? null)
+                    : $normalized;
             }
         }
 
@@ -66,23 +78,16 @@ readonly class ElasticPluginsRequest extends DTO
      */
     public static function normalizeTags(string|array|null $input): array
     {
-        // array of strings
+        $tags = [];
+
         if (is_array($input)) {
-            return array_values(
-                array_filter(
-                    array_map(fn($tag) => strtolower(trim($tag)), $input)
-                )
-            );
-        }
-        // string of comma-separated values
-        if (is_string($input)) {
-            return array_values(
-                array_filter(
-                    array_map(fn($tag) => strtolower(trim($tag)), explode(',', $input))
-                )
-            );
+            $tags = $input;
+        } elseif (is_string($input)) {
+            $tags = explode(',', $input);
         }
 
-        return [];
+        return array_values(array_filter(
+            array_map(static fn($tag) => strtolower(trim($tag)), $tags)
+        ));
     }
 }

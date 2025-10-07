@@ -94,7 +94,8 @@ readonly class SearchPlugins
                 ],
                 'from' => $offset,
                 'size' => $limit,
-            ]);
+            ])
+            ->asArray();
         } catch (\Throwable $e) {
             return [
                 'total'   => 0,
