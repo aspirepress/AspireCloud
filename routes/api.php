@@ -25,11 +25,6 @@ use App\Http\Middleware\MetricsMiddleware;
 // https://codex.wordpress.org/WordPress.org_API
 
 $didRoutes = function (Router $router) {
-    $router->get('/packages/{did}', [PackageInformationController::class, 'fairMetadata'])
-        ->name('package.fairMetadata');
-
-    $router->get('/packages/{type}/{slug}/did.json', [PackageInformationController::class, 'didDocument'])
-        ->where('type', 'wp-plugin|wp-theme|wp-core');
 };
 
 Route::prefix('/')
@@ -45,6 +40,14 @@ Route::prefix('/')
             ->get('/metrics', MetricsController::class)
             ->name('api.metrics');
 
+        //// FAIR metadata
+        $router->get('/packages/{did}', [PackageInformationController::class, 'fairMetadata'])
+            ->name('package.fairMetadata');
+
+        $router->get('/packages/{type}/{slug}/did.json', [PackageInformationController::class, 'didDocument'])
+            ->where('type', 'wp-plugin|wp-theme|wp-core');
+
+        //// Legacy API
         $router
             ->any('/core/browse-happy/{version}', BrowseHappyController::class)
             ->where(['version' => '1.1'])
@@ -54,7 +57,7 @@ Route::prefix('/')
             ->where(['version' => '1.0'])
             ->name('api.wp.core.serve-happy');
         $router
-            ->match(['get', 'post'], '/core/stable-check/{version}', StableCheckController::class)
+            ->match(['get', 'post'], '/core/    stable-check/{version}', StableCheckController::class)
             ->where(['version' => '1.0'])
             ->name('api.wp.core.stable-check');
         $router
@@ -172,15 +175,6 @@ Route::prefix('/')
             ->where(['version' => '1.0'])
             ->name('api.wp.translations.themes');
 
-        $router
-            ->get('/packages/{did}', PackageInformationController::class)
-            ->name('api.wp.packages.info');
-        // DID routes
-        $didRoutes($router);
-
-        Route::domain(config('fair.domains.webdid'))->group(function () use ($router, $didRoutes) {
-            Route::group([], $didRoutes($router));
-        });
         // @formatter:on
     });
 
