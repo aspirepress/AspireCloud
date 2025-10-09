@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "ext-intl": "*",
         "ext-mbstring": "*",
         "dshafik/bag": "^2.6.1",
         "inertiajs/inertia-laravel": "^2.0.9",
