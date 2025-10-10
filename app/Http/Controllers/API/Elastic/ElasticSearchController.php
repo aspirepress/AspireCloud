@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API\Elastic;
 use App\Actions\Elastic\SearchPlugins;
 use App\Http\Controllers\Controller;
 use App\Values\WpOrg\Plugins\ElasticPluginsRequest;
-use Elastic\Elasticsearch\Client;
 use Illuminate\Http\JsonResponse;
 
 class ElasticSearchController extends Controller
@@ -13,16 +12,12 @@ class ElasticSearchController extends Controller
     /**
      * Search plugins
      *
-     * @param ElasticPluginsRequest $request
-     * @param Client $client
+     * @param ElasticPluginsRequest $elasticPluginsRequest
      * @return JsonResponse
      */
-    public function searchPlugins(
-        ElasticPluginsRequest $request,
-        Client                $client,
-    ): JsonResponse
+    public function searchPlugins(ElasticPluginsRequest $elasticPluginsRequest): JsonResponse
     {
-        return response()->json((new SearchPlugins($request::fromRequest(request()), $client))());
+        return response()->json((new SearchPlugins($elasticPluginsRequest::fromRequest(request())))());
     }
 
     /**

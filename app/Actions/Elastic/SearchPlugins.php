@@ -2,15 +2,11 @@
 
 namespace App\Actions\Elastic;
 
-use App\Values\WpOrg\Plugins\ElasticPluginsRequest;
 use Elastic\Elasticsearch\Client;
 
 readonly class SearchPlugins
 {
-    public function __construct(
-        private array $request,
-        private Client                $client
-    )
+    public function __construct(private array  $request)
     {
     }
 
@@ -83,25 +79,25 @@ readonly class SearchPlugins
         }
         // es search
         try {
-        $response = $this
-            ->client
-            ->search([
-                'index' => 'plugins',
-                'body' => [
-                    'query' => $finalQuery,
-                    'sort'  => $sort ?? [],
-                ],
-                'from' => $offset,
-                'size' => $limit,
-            ])
-            ->asArray();
+            $client = app(Client::class);
+            $response = $client
+                ->search([
+                    'index' => 'plugins',
+                    'body' => [
+                        'query' => $finalQuery,
+                        'sort' => $sort ?? [],
+                    ],
+                    'from' => $offset,
+                    'size' => $limit,
+                ])
+                ->asArray();
         } catch (\Throwable $e) {
             return [
-                'total'   => 0,
-                'limit'   => $limit,
-                'offset'  => $offset,
+                'total' => 0,
+                'limit' => $limit,
+                'offset' => $offset,
                 'results' => [],
-                'error'   => $e->getMessage(),
+                'error' => $e->getMessage(),
             ];
         }
 
