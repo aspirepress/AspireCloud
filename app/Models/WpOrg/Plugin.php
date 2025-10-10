@@ -115,6 +115,22 @@ final class Plugin extends BaseModel
         return 'plugins';
     }
 
+    /**
+     * @return array{
+     *     id: string,
+     *     name: string,
+     *     slug: string,
+     *     description: string,
+     *     short_description: string,
+     *     author: string,
+     *     contributors: string[],
+     *     tags: string[],
+     *     rating: int,
+     *     active_installs: int,
+     *     last_updated: string|null,
+     *     added: string|null
+     * }
+     */
     public function toSearchArray(): array
     {
         return [
@@ -124,8 +140,8 @@ final class Plugin extends BaseModel
             'description' => $this->description,
             'short_description' => $this->short_description,
             'author' => $this->author,
-            'contributors' => $this->contributors?->pluck('display_name')->map(fn($n) => strtolower($n))->all() ?? [],
-            'tags' => $this->tags?->pluck('name')->map(fn($t) => strtolower($t))->all() ?? [],
+            'contributors' => $this->contributors->pluck('display_name')->map(fn($n) => strtolower($n))->all() ?? [],
+            'tags' => $this->tags->pluck('name')->map(fn($t) => strtolower($t))->all() ?? [],
             'rating' => $this->rating,
             'active_installs' => $this->active_installs,
             'last_updated' => optional($this->last_updated)?->toDateString(),

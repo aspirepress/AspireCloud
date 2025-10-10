@@ -4,12 +4,38 @@ namespace App\Actions\Elastic;
 
 use Elastic\Elasticsearch\Client;
 
+/**
+ * @phpstan-type SearchPluginsRequest array{
+ *     search: string,
+ *     limit: int,
+ *     offset: int,
+ *     tags?: list<string>,
+ *     tagsAnd?: list<string>,
+ *     tagsOr?: list<string>,
+ *     tagsNot?: list<string>,
+ *     author?: string|null,
+ *     browse?: string|null
+ * }
+ *
+ * @phpstan-type SearchPluginsResult array{
+ *     total: int,
+ *     limit: int,
+ *     offset: int,
+ *     results: list<array<string, mixed>>,
+ *     error?: string
+ * }
+ */
 readonly class SearchPlugins
 {
+    /**
+     * @param SearchPluginsRequest $request
+     */
     public function __construct(private array  $request)
     {
     }
-
+    /**
+     * @return SearchPluginsResult
+     */
     public function __invoke(): array
     {
         $query = $this->request['search'];
@@ -85,7 +111,7 @@ readonly class SearchPlugins
                     'index' => 'plugins',
                     'body' => [
                         'query' => $finalQuery,
-                        'sort' => $sort ?? [],
+                        'sort' => $sort,
                     ],
                     'from' => $offset,
                     'size' => $limit,

@@ -76,9 +76,7 @@ readonly class ElasticPluginsRequest extends DTO
     }
 
     /**
-     * Normalize tags into lowercase, trimmed strings.
-     *
-     * @param string|array|null $input
+     * @param string|list<string>|null $input
      * @return list<string>
      */
     public static function normalizeTags(string|array|null $input): array

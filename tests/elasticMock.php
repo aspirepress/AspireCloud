@@ -1,6 +1,5 @@
 <?php
 
-// Helper function to create mock response
 function createMockResponse(array $data): object
 {
     return new class($data) {
@@ -13,19 +12,22 @@ function createMockResponse(array $data): object
     };
 }
 
-// Helper function to create mock client
 function createMockClient(array $responseData, ?callable $validator = null): object
 {
     return new class($responseData, $validator) {
         private $validator;
 
-        public function __construct(private readonly array $responseData, ?callable $validator) {
+        public function __construct(
+            private readonly array $responseData,
+            $validator
+        ) {
             $this->validator = $validator;
         }
 
-        public function search(array $params) {
-            if ($this->validator) {
-                ($this->validator)($params);
+        public function search(array $params): object
+        {
+            if (is_callable($this->validator)) {
+                call_user_func($this->validator, $params);
             }
 
             return new class($this->responseData) {
