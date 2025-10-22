@@ -3,20 +3,16 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware\Hacks;
 
-use App\Services\Packages\PackageInformationService;
-use App\Values\Packages\FairMetadata;
+use App\Models\Package;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 use function Safe\json_decode;
+use function Safe\json_encode;
 
 readonly class InlineFairMetadata
 {
-
-    public function __construct(
-        private PackageInformationService $packageInfo,
-    ) {}
-
     public function handle(Request $request, Closure $next): mixed
     {
         $response = $next($request);
@@ -40,45 +36,56 @@ readonly class InlineFairMetadata
             return $response;
         }
 
-        // Let's hear it for N+1 selects!  Not going to optimize or cache these though, this is purely a dev experiment.
+        $is_single = Arr::exists($body, 'slug');
+        $is_plugins = Arr::exists($body, 'plugins');
+        $is_themes = Arr::exists($body, 'themes');
 
-        if (isset($body['slug'])) {
-            $body = $this->insertPackage($body);
-        } elseif (is_array($body['plugins'] ?? null)) {
-            $body['plugins'] = array_map($this->insertPackage(...), $body['plugins'] ?? []);
-        } elseif (is_array($body['themes'] ?? null)) {
-            $body['themes'] = array_map($this->insertPackage(...), $body['themes'] ?? []);
+        $slugs = match (true) {
+            $is_single => [$body['slug']],
+            $is_plugins => array_column($body['plugins'], 'slug'),
+            $is_themes => array_column($body['themes'], 'slug'),
+            default => [],
+        };
+
+        if (empty($slugs)) {
+            return $response;
+        }
+
+        $fair_meta = Package::query()
+            ->whereIn('slug', $slugs)
+            ->pluck('raw_metadata', 'slug')
+            ->toArray();
+
+        if ($is_single) {
+            $body = $this->insertPackage($body, $fair_meta);
+        } elseif ($is_plugins) {
+            $body['plugins'] = array_map(fn ($item) => $this->insertPackage($item, $fair_meta), $body['plugins']);
+        } elseif ($is_themes) {
+            $body['themes'] = array_map(fn ($item) => $this->insertPackage($item, $fair_meta), $body['themes']);
         } else {
             return $response;
         }
 
-        $response->setContent(\Safe\json_encode($body));
+        $response->setContent(json_encode($body));
         return $response;
     }
 
     /**
      * @param array<string,mixed> $item
+     * @param array<string,array<string,mixed>> $fair_meta
      * @return array<string,mixed>
      */
-    private function insertPackage(array $item): array
+    private function insertPackage(array $item, array $fair_meta): array
     {
-        try {
-            $slug = $item['slug'] ?? null;
-            if ($slug === null) {
-                return $item;
-            }
-
-            $package = $this->packageInfo->findBySlug($slug);
-            if (!$package) {
-                return $item;
-            }
-
-            // $metadata = FairMetadata::from($package)->toArray();
-            $metadata = $package->_getRawMetadata(); // return raw data unmolested so signatures and extensions still work
-            return [...$item, '_fair' => $metadata];
-        } catch (\Throwable $e) {
-            report($e);
+        $slug = $item['slug'] ?? null;
+        if (!$slug) {
             return $item;
         }
+        $fair = $fair_meta[$slug] ?? null;
+        if (!$fair) {
+            return $item;
+        }
+
+        return [...$item, '_fair' => $fair];
     }
 }
