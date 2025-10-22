@@ -4,13 +4,20 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Services\Metrics\MetricsService;
+use App\Utils\Regex;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class MetricsMiddleware
 {
-    const string REQUESTS_COUNT = 'metrics_request_count';
-    const string REQUEST_COUNT_ROUTE = 'metrics_request_count_route_';
+    private const string REQUESTS_COUNT = 'metrics_request_count';
+    private const string REQUEST_COUNT_ROUTE = 'metrics_request_count_route_';
 
-    public function handle($request, Closure $next)
+    public function __construct(private MetricsService $metricsService)
+    {
+    }
+
+    public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
         // skip metrics endpoint itself
@@ -18,11 +25,24 @@ class MetricsMiddleware
             return $response;
         }
         // total requests
-        MetricsService::increment(self::REQUESTS_COUNT);
+        $this->metricsService->increment(self::REQUESTS_COUNT);
         // per route totals
-        $route = optional($request->route())?->getName() ?? $request->path();
-        $key = self::REQUEST_COUNT_ROUTE . str_replace(['/', '.', '-', '{', '}', ':'], '_', $route);
-        MetricsService::increment($key);
+        $route = null;
+        $requestRoute = $request->route();
+
+        if ($requestRoute) {
+             $name = $requestRoute->getName();
+             if ($name) {
+                 $route = $name;
+             }
+        }
+
+        if (!$route) {
+            $route = $request->path();
+        }
+
+        $key = self::REQUEST_COUNT_ROUTE . Regex::replace('/[\/\.\-\{\}\:]/', '_', $route);
+        $this->metricsService->increment($key);
 
         return $response;
     }

@@ -39,7 +39,8 @@ Route::prefix('/')
             ->name('package.fairMetadata');
 
         $router->get('/packages/{type}/{slug}/did.json', [PackageInformationController::class, 'didDocument'])
-            ->where('type', 'wp-plugin|wp-theme|wp-core');
+            ->where('type', 'wp-plugin|wp-theme|wp-core')
+            ->name('package.didDocument');
 
         //// Legacy API: https://codex.wordpress.org/WordPress.org_API
         $router

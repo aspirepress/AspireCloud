@@ -81,8 +81,6 @@ services:
         container_name: prometheus
         volumes:
             - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-        ports:
-            - "9090:9090"
         networks:
             - app-net
             - aspire-net
@@ -90,8 +88,6 @@ services:
     grafana:
         image: grafana/grafana:latest
         container_name: grafana
-        ports:
-            - "3000:3000"
         networks:
             - app-net
             - aspire-net

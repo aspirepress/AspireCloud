@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers\API\Metrics;
 
+use App\Utils\Regex;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Route;
 use App\Services\Metrics\MetricsService;
 
 class MetricsController extends Controller
 {
-    const string REQUESTS_COUNT = 'metrics_request_count';
-    const string REQUEST_COUNT_ROUTE = 'metrics_request_count_route_';
+    private const string REQUESTS_COUNT = 'metrics_request_count';
+    private const string REQUEST_COUNT_ROUTE = 'metrics_request_count_route_';
+
+    public function __construct(private MetricsService $metricsService)
+    {
+    }
 
     public function __invoke(): Response
     {
@@ -19,15 +24,19 @@ class MetricsController extends Controller
         // total request count
         $lines[] = '# HELP requests_total Total number of requests';
         $lines[] = '# TYPE requests_total counter';
-        $lines[] = 'requests_total ' . MetricsService::get(self::REQUESTS_COUNT);
+        $lines[] = 'requests_total ' . $this->metricsService->get(self::REQUESTS_COUNT);
         // requests by route
         $lines[] = '# HELP requests_by_route_total Requests by route';
         $lines[] = '# TYPE requests_by_route_total counter';
 
         $alreadySeen = [];
 
-        foreach (Route::getRoutes() as $route) {
-            $name = $route->getName() ?? $route->uri();
+        $routes = Route::getRoutes()->getRoutes();
+        foreach ($routes as $route) {
+            $name = $route->getName();
+            if (empty($name)) {
+                $name = $route->uri();
+            }
             // sanitize and skip duplicates
             $sanitized = self::sanitize($name);
 
@@ -37,7 +46,7 @@ class MetricsController extends Controller
             $alreadySeen[] = $sanitized;
 
             $key = self::REQUEST_COUNT_ROUTE . $sanitized;
-            $count = MetricsService::get($key);
+            $count = $this->metricsService->get($key);
             $escaped = addslashes($name);
 
             if ($count > 0) {
@@ -64,6 +73,6 @@ class MetricsController extends Controller
      */
     private static function sanitize(string $value): string
     {
-        return str_replace(['/', '.', '-', '{', '}', ':'], '_', $value);
+        return Regex::replace('/[\/\.\-\{\}\:]/', '_', $value);
     }
 }
