@@ -81,6 +81,7 @@ readonly class InlineFairMetadata
         if (!$slug) {
             return $item;
         }
+        assert(is_string($slug));
         $fair = $fair_meta[$slug] ?? null;
         if (!$fair) {
             return $item;
