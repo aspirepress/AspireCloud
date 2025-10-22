@@ -2,13 +2,15 @@
 
 namespace App\Services\Metrics;
 
-use App\Models\Metric;
 use App\Contracts\Metrics\Metrics;
+use App\Models\Metric;
 use Illuminate\Contracts\Cache\Repository;
 
 class MetricsService implements Metrics
 {
-    public function __construct(private Repository $cache) {}
+    public function __construct(
+        private Repository $cache,
+    ) {}
 
     /**
      * @param string $key
@@ -52,6 +54,6 @@ class MetricsService implements Metrics
             $this->cache->forever($key, $value);
         }
 
-        return (int)$value;
+        return (int) $value;
     }
 }

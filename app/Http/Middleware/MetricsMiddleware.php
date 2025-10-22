@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use App\Services\Metrics\MetricsService;
 use App\Utils\Regex;
+use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,9 +13,9 @@ class MetricsMiddleware
     private const string REQUESTS_COUNT = 'metrics_request_count';
     private const string REQUEST_COUNT_ROUTE = 'metrics_request_count_route_';
 
-    public function __construct(private MetricsService $metricsService)
-    {
-    }
+    public function __construct(
+        private MetricsService $metricsService,
+    ) {}
 
     public function handle(Request $request, Closure $next): Response
     {
@@ -31,10 +31,10 @@ class MetricsMiddleware
         $requestRoute = $request->route();
 
         if ($requestRoute) {
-             $name = $requestRoute->getName();
-             if ($name) {
-                 $route = $name;
-             }
+            $name = $requestRoute->getName();
+            if ($name) {
+                $route = $name;
+            }
         }
 
         if (!$route) {

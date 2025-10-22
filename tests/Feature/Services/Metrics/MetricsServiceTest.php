@@ -17,7 +17,6 @@ beforeEach(function () {
 });
 
 test('increment and get metrics', function () {
-
     $key = 'test_metric';
 
     // Initial value should be 0
@@ -53,7 +52,7 @@ test('increment and test database threshold', function () {
     $this->metricsService->increment($key, $threshold);
     expect($this->metricsService->get($key))->toBe($threshold + 1);
     $dbValue = Metric::query()->where('key', $key)->first();
-    expect($dbValue->value)->toBe($threshold + 1);
+    expect($dbValue?->value)->toBe($threshold + 1);
 
     // Clean up
     $this->cache->forget($key);

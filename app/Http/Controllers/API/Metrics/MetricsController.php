@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\API\Metrics;
 
+use App\Http\Controllers\Controller;
+use App\Services\Metrics\MetricsService;
 use App\Utils\Regex;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-use App\Services\Metrics\MetricsService;
 
 class MetricsController extends Controller
 {
     private const string REQUESTS_COUNT = 'metrics_request_count';
     private const string REQUEST_COUNT_ROUTE = 'metrics_request_count_route_';
 
-    public function __construct(private MetricsService $metricsService)
-    {
-    }
+    public function __construct(
+        private MetricsService $metricsService,
+    ) {}
 
     public function __invoke(): Response
     {
@@ -60,10 +60,11 @@ class MetricsController extends Controller
         $lines[] = 'model_count{model="plugins"} ' . DB::table('plugins')->count();
 
         return response(
-            implode("\n", $lines), 200,
+            implode("\n", $lines),
+            200,
             [
                 'Content-Type' => 'text/plain; version=0.0.4',
-            ]
+            ],
         );
     }
 
