@@ -76,6 +76,24 @@ services:
             MP_SMTP_AUTH_ACCEPT_ANY: 1
             MP_SMTP_AUTH_ALLOW_INSECURE: 1
 
+    prometheus:
+        image: prom/prometheus:latest
+        container_name: prometheus
+        volumes:
+            - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+        networks:
+            - app-net
+            - aspire-net
+
+    grafana:
+        image: grafana/grafana:latest
+        container_name: grafana
+        networks:
+            - app-net
+            - aspire-net
+        volumes:
+            - ./docker/grafana:/etc/grafana/provisioning
+
 networks:
     app-net: ~
     aspire-net:
