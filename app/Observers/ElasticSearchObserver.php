@@ -5,7 +5,6 @@ namespace App\Observers;
 
 use App\Models\WpOrg\Plugin;
 use App\Services\Elastic\IndexService;
-use Elastic\Elasticsearch\Client;
 
 readonly class ElasticSearchObserver
 {
