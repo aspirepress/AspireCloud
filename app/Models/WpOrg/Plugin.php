@@ -4,10 +4,12 @@ namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
 use App\Models\Traits\Indexable;
+use App\Observers\ElasticSearchObserver;
 use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\PluginFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -67,10 +69,11 @@ final class Plugin extends BaseModel
     //region Definition
 
     use HasUuids;
-    use Indexable;
 
     /** @use HasFactory<PluginFactory> */
     use HasFactory;
+
+    use Indexable;
 
     protected $table = 'plugins';
 
@@ -107,45 +110,6 @@ final class Plugin extends BaseModel
             'ac_origin' => 'string',
             'ac_created' => 'immutable_datetime',
             'ac_raw_metadata' => 'array',
-        ];
-    }
-
-    public function getSearchIndex(): string
-    {
-        return 'plugins';
-    }
-
-    /**
-     * @return array{
-     *     id: string,
-     *     name: string,
-     *     slug: string,
-     *     description: string,
-     *     short_description: string,
-     *     author: string,
-     *     contributors: string[],
-     *     tags: string[],
-     *     rating: int,
-     *     active_installs: int,
-     *     last_updated: string|null,
-     *     added: string|null
-     * }
-     */
-    public function toSearchArray(): array
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'slug' => $this->slug,
-            'description' => $this->description,
-            'short_description' => $this->short_description,
-            'author' => $this->author,
-            'contributors' => $this->contributors->pluck('display_name')->map(fn($n) => strtolower($n))->all() ?? [],
-            'tags' => $this->tags->pluck('name')->map(fn($t) => strtolower($t))->all() ?? [],
-            'rating' => $this->rating,
-            'active_installs' => $this->active_installs,
-            'last_updated' => optional($this->last_updated)?->toDateString(),
-            'added' => optional($this->added)?->toDateString(),
         ];
     }
 
