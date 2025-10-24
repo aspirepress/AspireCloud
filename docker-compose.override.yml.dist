@@ -17,3 +17,12 @@ services:
     mailpit:
         ports:
             - "${LOCAL_MAILPIT_PORT:-8025}:8025"
+
+    prometheus:
+        ports:
+            - "${LOCAL_PROMETHEUS_PORT:-9090}:9090"
+
+    grafana:
+        ports:
+            - "${LOCAL_GRAFANA_PORT:-3000}:3000"
+
