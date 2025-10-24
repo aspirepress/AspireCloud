@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'enabled' => env('ELASTICSEARCH_ENABLED', false),
+    'auto_index' => env('ELASTICSEARCH_AUTO_INDEX', false),
     'host' => env('ELASTICSEARCH_HOST', 'http://elasticsearch:9200'),
 ];

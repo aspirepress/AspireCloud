@@ -11,7 +11,7 @@ trait Indexable
 {
     public static function bootIndexable(): void
     {
-        // @phpstan-ignore-next-line (my hatred for Laravel's __magic has no bounds)
-        config('elasticsearch.enabled') and static::observe(ElasticSearchObserver::class);
+        // @phpstan-ignore-next-line (my disgust for Laravel's __magic knows no bounds)
+        config('elasticsearch.auto_index') and static::observe(ElasticSearchObserver::class);
     }
 }
