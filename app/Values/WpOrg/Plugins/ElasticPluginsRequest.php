@@ -38,8 +38,7 @@ readonly class ElasticPluginsRequest extends DTO
     }
 
     /** @return array<string, mixed> */
-    #[
-        Transforms(Request::class)]
+    #[Transforms(Request::class)]
     public static function fromRequest(Request $request): array
     {
         $query = $request->query->all();

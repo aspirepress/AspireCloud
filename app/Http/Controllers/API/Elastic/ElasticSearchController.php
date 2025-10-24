@@ -9,32 +9,9 @@ use Illuminate\Http\JsonResponse;
 
 class ElasticSearchController extends Controller
 {
-    /**
-     * Search plugins
-     *
-     * @param ElasticPluginsRequest $elasticPluginsRequest
-     * @return JsonResponse
-     */
     public function searchPlugins(ElasticPluginsRequest $elasticPluginsRequest): JsonResponse
     {
+        // TODO: refactor this weirdness
         return response()->json((new SearchPlugins($elasticPluginsRequest::fromRequest(request())))());
-    }
-
-    /**
-     * Search themes
-     * @return JsonResponse
-     */
-    public function searchThemes(): JsonResponse
-    {
-        return response()->json(['message' => 'Not implemented'], 501);
-    }
-
-    /**
-     * Search packages
-     * @return JsonResponse
-     */
-    public function searchPackages(): JsonResponse
-    {
-        return response()->json(['message' => 'Not implemented'], 501);
     }
 }
