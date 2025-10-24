@@ -54,7 +54,6 @@ services:
 
     elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:8.15.0
-        container_name: elasticsearch
         environment:
             - discovery.type=single-node
             - ES_JAVA_OPTS=-Xms512m -Xmx512m
@@ -95,7 +94,6 @@ services:
 
     prometheus:
         image: prom/prometheus:latest
-        container_name: prometheus
         volumes:
             - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
         networks:
@@ -104,7 +102,6 @@ services:
 
     grafana:
         image: grafana/grafana:latest
-        container_name: grafana
         networks:
             - app-net
             - aspire-net
