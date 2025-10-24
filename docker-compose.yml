@@ -119,4 +119,5 @@ networks:
         external: true
 
 volumes:
+    esdata: ~
     postgresdata: ~
