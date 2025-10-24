@@ -151,7 +151,7 @@ final class Theme extends BaseModel
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {
             $instance->addTags($metadata['tags']);
         }
-        return $instance;
+        return $instance->refresh();
     }
 
     //endregion

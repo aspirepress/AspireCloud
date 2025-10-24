@@ -206,7 +206,7 @@ final class Plugin extends BaseModel
             $instance->addContributors($metadata['contributors']);
         }
 
-        return $instance;
+        return $instance->refresh();
     }
 
     private static function rewriteDotOrgUrl(mixed $url): string
@@ -466,7 +466,6 @@ final class Plugin extends BaseModel
     /** @param array<string, array<string, string>> $contributors */
     public function addContributors(array $contributors): self
     {
-        $authors = [];
         foreach ($contributors as $username => $data) {
             $authors[] = Author::firstOrCreate(
                 ['user_nicename' => $username],
