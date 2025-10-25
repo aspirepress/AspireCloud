@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\Elastic\ElasticSearchController;
 use App\Http\Controllers\API\FAIR\Packages\PackageInformationController;
 use App\Http\Controllers\API\Metrics\MetricsController;
 use App\Http\Controllers\API\WpOrg\Core\BrowseHappyController;
@@ -41,6 +42,8 @@ Route::prefix('/')
         $router->get('/packages/{type}/{slug}/did.json', [PackageInformationController::class, 'didDocument'])
             ->where('type', 'wp-plugin|wp-theme|wp-core')
             ->name('package.didDocument');
+
+        Route::get('/plugins/search', [ElasticSearchController::class, 'searchPlugins']);
 
         //// Legacy API: https://codex.wordpress.org/WordPress.org_API
         $router

@@ -117,7 +117,7 @@ describe('Sync Plugins', function () {
             ->and($plugin->requires_plugins)->toBeEmpty()
             ->and($plugin->compatibility)->toBeEmpty()
             ->and($plugin->rating)->toBe(100)
-            ->and($plugin->ratings)->toBe(['5' => 1, '4' => 0, '3' => 0, '2' => 0, '1' => 0])
+            ->and($plugin->ratings)->toMatchArray(['5' => 1, '4' => 0, '3' => 0, '2' => 0, '1' => 0])
             ->and($plugin->num_ratings)->toBe(1)
             ->and($plugin->support_url)->toBe('https://wordpress.org/support/plugin/0-errors/')
             ->and($plugin->support_threads)->toBe(0)
@@ -168,15 +168,11 @@ describe('Sync Plugins', function () {
             ]);
     });
 
-    it('throws an exception if loaded as ClosedPlugin', function () use ($md_0errors) {
-        expect(function () use ($md_0errors) {
-            ClosedPlugin::fromSyncMetadata($md_0errors);
-        })->toThrow(InvalidArgumentException::class);
-    });
+    it('throws an exception if loaded as ClosedPlugin', fn () =>
+        expect(fn() => ClosedPlugin::fromSyncMetadata($md_0errors))->toThrow(InvalidArgumentException::class)
+    );
 
-    it('throws an exception if loaded as Theme', function () use ($md_0errors) {
-        expect(function () use ($md_0errors) {
-            Theme::fromSyncMetadata($md_0errors);
-        })->toThrow(InvalidArgumentException::class);
-    });
+    it('throws an exception if loaded as Theme', fn () =>
+        expect(fn() => Theme::fromSyncMetadata($md_0errors))->toThrow(InvalidArgumentException::class)
+    );
 });

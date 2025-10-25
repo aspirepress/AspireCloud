@@ -3,10 +3,13 @@
 namespace App\Models\WpOrg;
 
 use App\Models\BaseModel;
+use App\Models\Traits\Indexable;
+use App\Observers\ElasticSearchObserver;
 use App\Utils\Regex;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Database\Factories\WpOrg\PluginFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -15,51 +18,51 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use InvalidArgumentException;
 
 /**
- * @property-read string                                             $id
- * @property-read string                                             $slug
- * @property-read string                                             $name
- * @property-read string                                             $short_description
- * @property-read string                                             $description
- * @property-read string                                             $version
- * @property-read string                                             $author
- * @property-read string|null                                        $requires
- * @property-read string|null                                        $requires_php
- * @property-read string|null                                        $tested
- * @property-read string                                             $download_link
- * @property-read CarbonImmutable|null                               $added
- * @property-read CarbonImmutable|null                               $last_updated
- * @property-read string|null                                        $author_profile
- * @property-read int                                                $rating
- * @property-read int                                                $num_ratings
- * @property-read int                                                $support_threads
- * @property-read int                                                $support_threads_resolved
- * @property-read int                                                $active_installs
- * @property-read int                                                $downloaded
- * @property-read string|null                                        $homepage
- * @property-read string|null                                        $donate_link
- * @property-read string|null                                        $business_model
- * @property-read string|null                                        $commercial_support_url
- * @property-read string|null                                        $support_url
- * @property-read string|null                                        $preview_link
- * @property-read string|null                                        $repository_url
+ * @property-read string $id
+ * @property-read string $slug
+ * @property-read string $name
+ * @property-read string $short_description
+ * @property-read string $description
+ * @property-read string $version
+ * @property-read string $author
+ * @property-read string|null $requires
+ * @property-read string|null $requires_php
+ * @property-read string|null $tested
+ * @property-read string $download_link
+ * @property-read CarbonImmutable|null $added
+ * @property-read CarbonImmutable|null $last_updated
+ * @property-read string|null $author_profile
+ * @property-read int $rating
+ * @property-read int $num_ratings
+ * @property-read int $support_threads
+ * @property-read int $support_threads_resolved
+ * @property-read int $active_installs
+ * @property-read int $downloaded
+ * @property-read string|null $homepage
+ * @property-read string|null $donate_link
+ * @property-read string|null $business_model
+ * @property-read string|null $commercial_support_url
+ * @property-read string|null $support_url
+ * @property-read string|null $preview_link
+ * @property-read string|null $repository_url
  *
- * @property-read string                                             $ac_origin
- * @property-read CarbonImmutable                                    $ac_created
- * @property-read array<string, mixed>                               $ac_raw_metadata
+ * @property-read string $ac_origin
+ * @property-read CarbonImmutable $ac_created
+ * @property-read array<string, mixed> $ac_raw_metadata
  *
  * // Relationships
- * @property-read Collection<int,Author>                             $contributors
+ * @property-read Collection<int,Author> $contributors
  *
  * // Synthesized attributes
- * @property-read array<array-key, mixed>                            $banners       // TODO
+ * @property-read array<array-key, mixed> $banners       // TODO
  * @property-read array<array-key, array{src: string, caption: string}> $screenshots
- * @property-read array<string, string>                              $versions
- * @property-read array<string, string>                              $sections
+ * @property-read array<string, string> $versions
+ * @property-read array<string, string> $sections
  * @property-read array{"1":int, "2":int, "3":int, "4":int, "5":int} $ratings
- * @property-read string[]                                           $requires_plugins
- * @property-read array<string, string>                              $icons
- * @property-read array<array-key, mixed>                            $compatibility // TODO (it only ever seems to be empty)
- * @property-read array<string, string>                              $upgrade_notice
+ * @property-read string[] $requires_plugins
+ * @property-read array<string, string> $icons
+ * @property-read array<array-key, mixed> $compatibility // TODO (it only ever seems to be empty)
+ * @property-read array<string, string> $upgrade_notice
  */
 final class Plugin extends BaseModel
 {
@@ -69,6 +72,8 @@ final class Plugin extends BaseModel
 
     /** @use HasFactory<PluginFactory> */
     use HasFactory;
+
+    use Indexable;
 
     protected $table = 'plugins';
 
@@ -165,7 +170,7 @@ final class Plugin extends BaseModel
             $instance->addContributors($metadata['contributors']);
         }
 
-        return $instance;
+        return $instance->refresh();
     }
 
     private static function rewriteDotOrgUrl(mixed $url): string
