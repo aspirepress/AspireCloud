@@ -52,6 +52,22 @@ services:
             - app-net
             - aspire-net
 
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.15.0
+        environment:
+            - discovery.type=single-node
+            - ES_JAVA_OPTS=-Xms512m -Xmx512m
+            - xpack.security.enabled=false
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            - esdata:/usr/share/elasticsearch/data
+        networks:
+            - app-net
+            - aspire-net
+
     cli:
         build:
             context: .
@@ -76,6 +92,22 @@ services:
             MP_SMTP_AUTH_ACCEPT_ANY: 1
             MP_SMTP_AUTH_ALLOW_INSECURE: 1
 
+    prometheus:
+        image: prom/prometheus:latest
+        volumes:
+            - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+        networks:
+            - app-net
+            - aspire-net
+
+    grafana:
+        image: grafana/grafana:latest
+        networks:
+            - app-net
+            - aspire-net
+        volumes:
+            - ./docker/grafana:/etc/grafana/provisioning
+
 networks:
     app-net: ~
     aspire-net:
@@ -84,4 +116,5 @@ networks:
         external: true
 
 volumes:
+    esdata: ~
     postgresdata: ~

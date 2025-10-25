@@ -150,7 +150,7 @@ final class Theme extends BaseModel
         if (is_array($metadata['tags'] ?? null)) {
             $instance->addTags($metadata['tags']);
         }
-        return $instance;
+        return $instance->refresh();
     }
 
     //endregion
