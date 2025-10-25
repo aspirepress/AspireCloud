@@ -28,8 +28,8 @@ readonly class ThemeUpdateCheckResponse extends DTO
         $mkUpdates = fn(iterable $items) => ThemeUpdateData::collect($items)->keyBy('theme');
 
         return new self(
-            themes: $mkUpdates($themes),
-            no_update: $mkUpdates($no_update),
+            themes: $mkUpdates($themes), // @mago-expect analysis:less-specific-argument
+            no_update: $mkUpdates($no_update), // @mago-expect analysis:less-specific-argument
             translations: collect(), // TODO
         );
     }

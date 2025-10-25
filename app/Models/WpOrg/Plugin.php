@@ -404,11 +404,14 @@ final class Plugin extends BaseModel
 
     //region Collection Management
 
-    /** @param array<string, string> $tags */
+    /** @param array<array-key, string> $tags */
     public function addTags(array $tags): self
     {
         $pluginTags = [];
         foreach ($tags as $tagSlug => $name) {
+            if (is_int($tagSlug)) {
+                continue;
+            }
             $pluginTags[] = PluginTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
         }
         $this->tags()->saveMany($pluginTags);
@@ -427,11 +430,14 @@ final class Plugin extends BaseModel
         return $this->tags()->select('name', 'slug')->pluck('name', 'slug')->toArray();
     }
 
-    /** @param array<string, array<string, string>> $contributors */
+    /** @param array<array-key, array<string, string>> $contributors */
     public function addContributors(array $contributors): self
     {
         $authors = [];
         foreach ($contributors as $username => $data) {
+            if (is_int($username)) {
+                continue;
+            }
             $authors[] = Author::firstOrCreate(
                 ['user_nicename' => $username],
                 [
