@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5fc8f1cbc402cd486cd2aca7977d447",
+    "content-hash": "ca0670747adb45afe96b258b8cd44c49",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -9504,16 +9504,16 @@
         },
         {
             "name": "carthage-software/mago",
-            "version": "1.0.0-beta.24",
+            "version": "1.0.0-beta.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/carthage-software/mago.git",
-                "reference": "f98cf6ccda537e00a3a061bc2b99f74a7e9c52bc"
+                "reference": "1a29b3aae45456ec840d1af94be1346820415e38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/carthage-software/mago/zipball/f98cf6ccda537e00a3a061bc2b99f74a7e9c52bc",
-                "reference": "f98cf6ccda537e00a3a061bc2b99f74a7e9c52bc",
+                "url": "https://api.github.com/repos/carthage-software/mago/zipball/1a29b3aae45456ec840d1af94be1346820415e38",
+                "reference": "1a29b3aae45456ec840d1af94be1346820415e38",
                 "shasum": ""
             },
             "require": {
@@ -9551,7 +9551,7 @@
             ],
             "support": {
                 "issues": "https://github.com/carthage-software/mago/issues",
-                "source": "https://github.com/carthage-software/mago/tree/1.0.0-beta.24"
+                "source": "https://github.com/carthage-software/mago/tree/1.0.0-beta.34"
             },
             "funding": [
                 {
@@ -9559,7 +9559,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-24T01:57:13+00:00"
+            "time": "2025-10-19T06:57:10+00:00"
         },
         {
             "name": "composer/class-map-generator",
