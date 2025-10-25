@@ -23,9 +23,6 @@ always-break-named-arguments-list = false
 integrations = ["symfony", "laravel"]
 
 [linter.rules]
-# Will enable these eventually
-no-empty = { enabled = false }
-
 # These will stay disabled indefinitely
 assert-description = { enabled = false }
 braced-string-interpolation = { enabled = false }
@@ -41,6 +38,7 @@ literal-named-argument = { enabled = false }
 no-assign-in-condition = { enabled = false }
 no-boolean-flag-parameter = { enabled = false }
 no-else-clause = { enabled = false }
+no-empty = { enabled = false }  # empty() is awful, but loose truthiness is just as bad without being explicit about it.
 no-empty-comment = { enabled = false }
 no-literal-password = { enabled = false }
 no-shorthand-ternary = { enabled = false }
