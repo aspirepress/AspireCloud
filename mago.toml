@@ -23,7 +23,6 @@ always-break-named-arguments-list = false
 integrations = ["symfony", "laravel"]
 
 [linter.rules]
-# These will stay disabled indefinitely
 assert-description = { enabled = false }
 braced-string-interpolation = { enabled = false }
 class-name = { enabled = false }
@@ -90,7 +89,6 @@ ignore = [
     "invalid-array-index", # doesn't allow non-negative-int
     "invalid-destructuring-source", # thinks collections are `mixed`
     "invalid-method-access", # completely broken with laravel
-    "invalid-named-argument", #  Unknown argument name `${argument_name}` (definitely a mago bug)
     "invalid-operand", # prevents useful control-flow shorthand.  would enable if it allowed void context.
     "invalid-return-statement", # broken when `static` return type is involved anywhere
     "less-specific-nested-argument-type", # fails on every single test.  need to disable this just for tests/
@@ -98,7 +96,7 @@ ignore = [
     "less-specific-return-statement", # deferred
     "mismatched-array-index", # deferred until we can put a stake through Laravel's craptastic __() function
     "missing-magic-method", # laravel's obfuscations are still too much for mago to handle
-    "missing-override-attribute", # deferred, there's just too many of these
+    "missing-override-attribute", # unnecessary in many cases
     "mixed-argument", # poor type inference
     "mixed-array-access", # completely broken, fails to infer an array even when it's the only return type
     "mixed-array-assignment", # broken in the same fashion as mixed-array-access
