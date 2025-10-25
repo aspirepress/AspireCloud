@@ -148,11 +148,9 @@ readonly class FairMetadata extends DTO
     public static function rules(): array
     {
         return [
-            '@context' => function ($value) {
-                return is_array($value)
+            '@context' => fn ($value) => is_array($value)
                     ? $value[0] === self::CONTEXT
-                    : $value === self::CONTEXT;
-            },
+                    : $value === self::CONTEXT,
             'id' => ['required', 'string'],
             'type' => ['required', 'string', 'in:' . implode(',', PackageType::values())],
             'license' => ['required', 'string'], // @todo - validate against SPDX licenses?

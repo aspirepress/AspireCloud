@@ -30,7 +30,4 @@ test('api token permissions can be updated', function () {
         ->can('delete')->toBeTrue()
         ->can('read')->toBeFalse()
         ->can('missing-permission')->toBeFalse();
-})->skip(function () {
-    //    return !Features::hasApiFeatures();
-    return true;
-}, 'There is only a read option on the AspirePress API.');
+})->skip(fn () => true, 'There is only a read option on the AspirePress API.');

@@ -13,9 +13,7 @@ test('two factor authentication can be enabled', function () {
 
     expect($user->fresh()->two_factor_secret)->not?->toBeNull();
     expect($user->fresh()->recoveryCodes())->toHaveCount(8);
-})->skip(function () {
-    return !Features::canManageTwoFactorAuthentication();
-}, 'Two factor authentication is not enabled.');
+})->skip(fn () => !Features::canManageTwoFactorAuthentication(), 'Two factor authentication is not enabled.');
 
 test('recovery codes can be regenerated', function () {
     $this->actingAs($user = User::factory()->create());
@@ -31,9 +29,7 @@ test('recovery codes can be regenerated', function () {
 
     expect($user->recoveryCodes())->toHaveCount(8);
     expect(array_diff($user->recoveryCodes(), $user->fresh()->recoveryCodes()))->toHaveCount(8);
-})->skip(function () {
-    return !Features::canManageTwoFactorAuthentication();
-}, 'Two factor authentication is not enabled.');
+})->skip(fn () => !Features::canManageTwoFactorAuthentication(), 'Two factor authentication is not enabled.');
 
 test('two factor authentication can be disabled', function () {
     $this->actingAs($user = User::factory()->create());
@@ -47,6 +43,4 @@ test('two factor authentication can be disabled', function () {
     $this->delete('/user/two-factor-authentication');
 
     expect($user->fresh()->two_factor_secret)->toBeNull();
-})->skip(function () {
-    return !Features::canManageTwoFactorAuthentication();
-}, 'Two factor authentication is not enabled.');
+})->skip(fn () => !Features::canManageTwoFactorAuthentication(), 'Two factor authentication is not enabled.');

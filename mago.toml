@@ -25,7 +25,6 @@ integrations = ["symfony", "laravel"]
 [linter.rules]
 # Will enable these eventually
 no-empty = { enabled = false }
-prefer-arrow-function = { enabled = false }
 
 # These will stay disabled indefinitely
 assert-description = { enabled = false }
