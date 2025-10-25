@@ -25,7 +25,6 @@
         "tightenco/ziggy": "^2.6.0"
     },
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "^3.5.5",
         "carthage-software/mago": "1.0.0-beta.24",
         "fakerphp/faker": "^1.24.1",
         "larastan/larastan": "^3.7.2",
