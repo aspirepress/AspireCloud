@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadCoreController;
 use App\Http\Controllers\API\WpOrg\Downloads\DownloadPluginAssetController;

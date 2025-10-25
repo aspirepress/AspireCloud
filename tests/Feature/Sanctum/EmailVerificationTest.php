@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
@@ -14,9 +15,7 @@ test('email verification screen can be rendered', function () {
     $response = $this->actingAs($user)->get('/email/verify');
 
     $response->assertStatus(200);
-})->skip(function () {
-    return !Features::enabled(Features::emailVerification());
-}, 'Email verification not enabled.');
+})->skip(fn () => !Features::enabled(Features::emailVerification()), 'Email verification not enabled.');
 
 test('email can be verified', function () {
     Event::fake();
@@ -37,9 +36,7 @@ test('email can be verified', function () {
 
     expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
     $response->assertRedirect(route('dashboard', absolute: false) . '?verified=1');
-})->skip(function () {
-    return !Features::enabled(Features::emailVerification());
-}, 'Email verification not enabled.');
+})->skip(fn () => !Features::enabled(Features::emailVerification()), 'Email verification not enabled.');
 
 test('email can not verified with invalid hash', function () {
     $user = User::factory()->create([
@@ -55,6 +52,4 @@ test('email can not verified with invalid hash', function () {
     $this->actingAs($user)->get($verificationUrl);
 
     expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
-})->skip(function () {
-    return !Features::enabled(Features::emailVerification());
-}, 'Email verification not enabled.');
+})->skip(fn () => !Features::enabled(Features::emailVerification()), 'Email verification not enabled.');

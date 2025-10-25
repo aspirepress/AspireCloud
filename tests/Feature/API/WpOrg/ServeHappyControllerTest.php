@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 it('serves happy', function () {
     $response = $this->get('/core/serve-happy/1.0?php_version=8.3');

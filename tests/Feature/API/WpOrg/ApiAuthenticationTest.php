@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 it('should return 401 when an invalid auth token is present', function () {
     $this

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models\WpOrg;
 
@@ -147,7 +148,7 @@ final class Theme extends BaseModel
             'ac_raw_metadata' => $metadata,
         ]);
 
-        if (is_array($metadata['tags'] ?? null)) {
+        if (isset($metadata['tags']) && is_array($metadata['tags'])) {
             $instance->addTags($metadata['tags']);
         }
         return $instance->refresh();
@@ -282,11 +283,14 @@ final class Theme extends BaseModel
 
     //region Collection Management
 
-    /** @param array<string, string> $tags */
+    /** @param array<array-key, string> $tags */
     public function addTags(array $tags): self
     {
         $themeTags = [];
         foreach ($tags as $tagSlug => $name) {
+            if (is_int($tagSlug)) {
+                continue;
+            }
             $themeTags[] = ThemeTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
         }
         $this->tags()->saveMany($themeTags);

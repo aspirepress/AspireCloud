@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 // This one file should contain all boot-time actions relevant to the app.
 // There should be no need to create more ServiceProviders, unless for an actually separable concern.

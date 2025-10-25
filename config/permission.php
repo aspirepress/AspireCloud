@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;

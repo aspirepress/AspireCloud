@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Providers;
 
@@ -15,11 +16,9 @@ class ElasticsearchServiceProvider extends ServiceProvider implements Deferrable
             ->app
             ->singleton(
                 Client::class,
-                function () {
-                    return ClientBuilder::create()
+                fn () => ClientBuilder::create()
                         ->setHosts([config('elasticsearch.host')])
-                        ->build();
-                }
+                        ->build()
             );
     }
     /**

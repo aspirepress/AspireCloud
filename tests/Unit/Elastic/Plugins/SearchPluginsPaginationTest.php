@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 use App\Actions\Elastic\SearchPlugins;
 use Elastic\Elasticsearch\Client;

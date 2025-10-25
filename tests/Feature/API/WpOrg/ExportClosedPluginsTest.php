@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 use App\Models\WpOrg\ClosedPlugin;
 use Illuminate\Support\Facades\Storage;
