@@ -66,7 +66,7 @@ class PassThroughController extends Controller
             'id' => Str::uuid()->toString(),
             'request_path' => $request->path(),
             'request_query_params' => json_encode($request->query()),
-            'request_body' => json_encode($request->all()),
+            'request_body' => json_encode($request->all()),  // @mago-expect lint:no-request-all
             'request_headers' => json_encode($request->headers->all()),
             'response_code' => $response->status(),
             'response_body' => $content,

@@ -41,7 +41,7 @@ class MetricsController extends Controller
             // sanitize and skip duplicates
             $sanitized = self::sanitize($name);
 
-            if (in_array($sanitized, $alreadySeen)) {
+            if (in_array($sanitized, $alreadySeen, true)) {
                 continue;
             }
             $alreadySeen[] = $sanitized;

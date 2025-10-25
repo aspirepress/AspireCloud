@@ -19,7 +19,7 @@ class ExportController extends Controller
     public function __invoke(Request $request, string $type): StreamedResponse
     {
         $req = ExportRequest::from([
-            ...$request->all(),
+            ...$request->all(), // @mago-expect lint:no-request-all
             'type' => $type,
         ]);
 

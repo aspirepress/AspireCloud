@@ -18,6 +18,7 @@ enum AssetType: string
         return in_array(
             $this,
             [self::PLUGIN_SCREENSHOT, self::PLUGIN_BANNER, self::PLUGIN_GP_ICON, self::THEME_SCREENSHOT],
+            true,
         );
     }
 
