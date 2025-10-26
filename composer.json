@@ -8,15 +8,15 @@
         "php": "^8.3",
         "ext-intl": "*",
         "ext-mbstring": "*",
-        "beacon-hq/bag": "^2.6",
-        "cweagans/composer-patches": "^1.7",
+        "beacon-hq/bag": "^2.6.2",
+        "cweagans/composer-patches": "^1.7.3",
         "elasticsearch/elasticsearch": "^8.19",
         "inertiajs/inertia-laravel": "^2.0.10",
-        "laravel/framework": "^12.33.0",
+        "laravel/framework": "^12.35.1",
         "laravel/jetstream": "^5.3.8",
         "laravel/sanctum": "^4.2.0",
         "laravel/tinker": "^2.10.1",
-        "league/flysystem-aws-s3-v3": "^3.29",
+        "league/flysystem-aws-s3-v3": "^3.30.1",
         "predis/predis": "^2.4.0",
         "spatie/laravel-permission": "^6.21.0",
         "symfony/http-client": "^7.3.4",
@@ -33,7 +33,7 @@
         "nunomaduro/collision": "^8.8.2",
         "pestphp/pest": "^3.8.4",
         "pestphp/pest-plugin-laravel": "^3.2",
-        "phpstan/phpstan": "^2.1.30",
+        "phpstan/phpstan": "^2.1.31",
         "psalm/plugin-laravel": "^3.0.4",
         "roave/security-advisories": "dev-latest",
         "spatie/laravel-web-tinker": "^1.10.1",
@@ -94,6 +94,11 @@
     "extra": {
         "laravel": {
             "dont-discover": []
+        },
+        "patches": {
+            "beacon-hq/bag": {
+                "Fix Bag dependency injection in single-action controllers": "patches/fix-invokable-controller-injection.patch"
+            }
         }
     },
     "config": {
