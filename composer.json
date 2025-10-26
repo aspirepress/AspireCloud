@@ -9,6 +9,7 @@
         "ext-intl": "*",
         "ext-mbstring": "*",
         "beacon-hq/bag": "^2.6",
+        "cweagans/composer-patches": "^1.7",
         "elasticsearch/elasticsearch": "^8.19",
         "inertiajs/inertia-laravel": "^2.0.10",
         "laravel/framework": "^12.33.0",
@@ -98,6 +99,7 @@
     "config": {
         "allow-plugins": {
             "carthage-software/mago": true,
+            "cweagans/composer-patches": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
         },
