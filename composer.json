@@ -14,7 +14,6 @@
         "laravel/framework": "^12.33.0",
         "laravel/jetstream": "^5.3.8",
         "laravel/sanctum": "^4.2.0",
-        "laravel/telescope": "^5.14.0",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.29",
         "predis/predis": "^2.4.0",
