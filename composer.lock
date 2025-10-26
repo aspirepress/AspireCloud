@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ca0670747adb45afe96b258b8cd44c49",
+    "content-hash": "c3adce0e3799bcb3bf3370c44ac2dc8e",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -210,6 +210,81 @@
                 "source": "https://github.com/Bacon/BaconQrCode/tree/v3.0.1"
             },
             "time": "2024-10-01T13:55:55+00:00"
+        },
+        {
+            "name": "beacon-hq/bag",
+            "version": "2.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/beacon-hq/bag.git",
+                "reference": "f0c0a8b3ca29dd8e12feb4cc0b1eb1ad0d39d73c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/beacon-hq/bag/zipball/f0c0a8b3ca29dd8e12feb4cc0b1eb1ad0d39d73c",
+                "reference": "f0c0a8b3ca29dd8e12feb4cc0b1eb1ad0d39d73c",
+                "shasum": ""
+            },
+            "require": {
+                "brick/money": "^0.8.1 || ^0.9.0 || ^0.10.0",
+                "illuminate/collections": "^10|^11|^12",
+                "illuminate/database": "^10|^11|^12",
+                "illuminate/support": "^10|^11|^12",
+                "illuminate/validation": "^10|^11|^12",
+                "league/pipeline": "^1.0",
+                "nette/php-generator": "^4.1",
+                "php": "^8.2|^8.3|^8.4",
+                "prinsfrank/standards": "^3.8",
+                "ramsey/uuid": "^4.7"
+            },
+            "require-dev": {
+                "captainhook/captainhook-phar": "^5.23",
+                "captainhook/hook-installer": "^1.0",
+                "larastan/larastan": "^2.0|^3.0",
+                "laravel/pint": "^1.15",
+                "laravel/prompts": "^0.1.25 || ^0.2.0 || ^0.3.0",
+                "orchestra/pest-plugin-testbench": "^2.0|^3.0",
+                "pestphp/pest": "^2.0|^3.0",
+                "pestphp/pest-plugin-faker": "^2.0|^3.0",
+                "pestphp/pest-plugin-type-coverage": "^2.0|^3.0",
+                "ramsey/conventional-commits": "^1.5.1",
+                "roave/security-advisories": "dev-latest",
+                "symfony/var-dumper": "*"
+            },
+            "suggest": {
+                "barryvdh/laravel-debugbar": "Integrates with Laravel Debugbar",
+                "spatie/laravel-typescript-transformer": "Easily transform Bag Value objects into TypeScript types within Laravel applications",
+                "spatie/typescript-transformer": "Easily transform Bag Value objects into TypeScript types"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "\\Bag\\BagServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Bag\\": "src/Bag"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Davey Shafik",
+                    "email": "davey@php.net"
+                }
+            ],
+            "description": "A comprehensive immutable value objects implementation",
+            "support": {
+                "issues": "https://github.com/beacon-hq/bag/issues",
+                "source": "https://github.com/beacon-hq/bag/tree/2.6.2"
+            },
+            "time": "2025-10-09T02:27:33+00:00"
         },
         {
             "name": "brick/math",
@@ -753,82 +828,6 @@
                 }
             ],
             "time": "2024-10-09T13:47:03+00:00"
-        },
-        {
-            "name": "dshafik/bag",
-            "version": "2.6.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dshafik/bag.git",
-                "reference": "f0c0a8b3ca29dd8e12feb4cc0b1eb1ad0d39d73c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dshafik/bag/zipball/f0c0a8b3ca29dd8e12feb4cc0b1eb1ad0d39d73c",
-                "reference": "f0c0a8b3ca29dd8e12feb4cc0b1eb1ad0d39d73c",
-                "shasum": ""
-            },
-            "require": {
-                "brick/money": "^0.8.1 || ^0.9.0 || ^0.10.0",
-                "illuminate/collections": "^10|^11|^12",
-                "illuminate/database": "^10|^11|^12",
-                "illuminate/support": "^10|^11|^12",
-                "illuminate/validation": "^10|^11|^12",
-                "league/pipeline": "^1.0",
-                "nette/php-generator": "^4.1",
-                "php": "^8.2|^8.3|^8.4",
-                "prinsfrank/standards": "^3.8",
-                "ramsey/uuid": "^4.7"
-            },
-            "require-dev": {
-                "captainhook/captainhook-phar": "^5.23",
-                "captainhook/hook-installer": "^1.0",
-                "larastan/larastan": "^2.0|^3.0",
-                "laravel/pint": "^1.15",
-                "laravel/prompts": "^0.1.25 || ^0.2.0 || ^0.3.0",
-                "orchestra/pest-plugin-testbench": "^2.0|^3.0",
-                "pestphp/pest": "^2.0|^3.0",
-                "pestphp/pest-plugin-faker": "^2.0|^3.0",
-                "pestphp/pest-plugin-type-coverage": "^2.0|^3.0",
-                "ramsey/conventional-commits": "^1.5.1",
-                "roave/security-advisories": "dev-latest",
-                "symfony/var-dumper": "*"
-            },
-            "suggest": {
-                "barryvdh/laravel-debugbar": "Integrates with Laravel Debugbar",
-                "spatie/laravel-typescript-transformer": "Easily transform Bag Value objects into TypeScript types within Laravel applications",
-                "spatie/typescript-transformer": "Easily transform Bag Value objects into TypeScript types"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "\\Bag\\BagServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Bag\\": "src/Bag"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Davey Shafik",
-                    "email": "davey@php.net"
-                }
-            ],
-            "description": "A comprehensive immutable value objects implementation",
-            "support": {
-                "issues": "https://github.com/dshafik/bag/issues",
-                "source": "https://github.com/dshafik/bag/tree/2.6.2"
-            },
-            "abandoned": "beacon-hq/bag",
-            "time": "2025-10-09T02:27:33+00:00"
         },
         {
             "name": "egulias/email-validator",

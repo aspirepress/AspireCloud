@@ -8,7 +8,7 @@
         "php": "^8.3",
         "ext-intl": "*",
         "ext-mbstring": "*",
-        "dshafik/bag": "^2.6.2",
+        "beacon-hq/bag": "^2.6",
         "elasticsearch/elasticsearch": "^8.19",
         "inertiajs/inertia-laravel": "^2.0.10",
         "laravel/framework": "^12.33.0",
