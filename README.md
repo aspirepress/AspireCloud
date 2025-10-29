@@ -15,53 +15,13 @@ make init
 
 Next configure WordPress to use your local version of AspireCloud, and you're good to go! 
 
-Note: you'll have to add `api.aspiredev.org` to your `/etc/hosts` file to point to `127.0.0.1`.
-
-### Importing Plugins and Themes from AspireSync
-
-* Create a user with the RepoAdmin role (or use the built-in `admin@aspirecloud.io` admin user)
-* Create an API key for that user through the Jetstream UI.
-* Check out and build [AspireSync](https://github.com/aspirepress/AspireSync)
-* Set `ASPIRECLOUD_ADMIN_API_URL` and `ASPIRECLOUD_ADMIN_API_KEY` in your local environment
-  * _note: putting them only in `.env.local` will not work!_ 
-*  Run the following:
-
-```
-bin/console sync:meta:fetch:plugins -vvv
-bin/console sync:meta:fetch:themes -vvv
-
-bin/console sync:meta:dump:plugins | meta/bin/push-to-aspirecloud  
-bin/console sync:meta:dump:themes | meta/bin/push-to-aspirecloud  
-```
-
-## XDebug Instructions for PHPStorm
-
-1. Go to **Settings > PHP > Debug** and check "Break at first line of PHP scripts."
-2. Go to **Settings > PHP > Servers** and create a server with your desired hostname.
-3. Edit the `docker-compose.override.yml.dist` file so that the server name matches the one you entered in Step #2.
-4. Copy `docker-compose.override.yml.dist` to `docker-compose.override.yml` to include it in Docker. Then run `make down up` to restart Docker.
-5. Go to **Run > Edit Configurations**. Add a PHP Remote Debug configuration. Select your server and enter the PHPSTORM IDE key.
-6. Click the debug icon to start listening for debug connections.
-7. Refresh the page. It should stop at the first line of execution. If not, repeat the steps and use `xdebug_info()` to verify XDebug’s activity.
-8. Once debugging works, remove the "Break at first line..." setting from Step #1 to allow the program to progress until it hits breakpoints.
-
 ## Using https://api.aspiredev.org instead of localhost
 
 The local dev instance can be reached this way by enabling a [Traefik](https://hub.docker.com/_/traefik) proxy server:
 
     make traefik-up
 
-Next, add an entry to your `/etc/hosts` file (`C:\Windows\System32\drivers\etc\hosts` on Windows).  
-
-    127.0.0.1 api.aspiredev.org
-    ::1       api.aspiredev.org
-
-### Note about SSL/TLS (https:// urls)
-
-Because the proxy generates self-signed certs, you will get security warnings the first time you access the container after it is rebuilt.
-Any other access will also need to disable certificate validation.   
-
-Also note that plain old http://api.aspiredev.org always works. 
+You will then be able to reach the instance at https://api.aspiredev.org
 
 ## Notes
 
