@@ -43,7 +43,7 @@ readonly class FairMetadata extends DTO
         public string $type,
         public string $license,
         public array $authors,
-        public array $security,
+        public Optional|array $security,
         public array $releases,
         public Optional|array $keywords,
         public Optional|array $sections,
@@ -207,7 +207,7 @@ readonly class FairMetadata extends DTO
     {
         // [chuck 2025-09-19] largely disabled for now: some packages make this blank, which aborts the whole import.
         return [
-            'security' => ['required', 'array'],
+            // 'security' => ['required', 'array'], // [chuck 2025-10-29] disabled entirely
         ];
         // return [
         //     'security' => ['required', 'array', 'min:1'],
