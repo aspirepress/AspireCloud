@@ -3,6 +3,8 @@
 
 This project is designed to function as a CDN/API endpoint system for distributing WordPress assets (themes, plugins, core) to users of the [AspirePress Updater](https://github.com/aspirepress/updater-plugin).
 
+# 🪧 CloudFest Hackathon 2025: see [/docs/readme.hackathon.md](./docs/readme.hackathon.md)
+
 ## Setup
 
 ### Quick Start
