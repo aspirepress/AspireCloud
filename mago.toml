@@ -23,14 +23,10 @@ always-break-named-arguments-list = false
 integrations = ["symfony", "laravel"]
 
 [linter.rules]
-# Disable all rules currently firing by default
-# vendor/bin/mago lint --reporting-format=emacs | perl -nE 'say qq[$1 = { enabled = false }] if / - (.*?):/' | sort | uniq | pbcopy
-
 assert-description = { enabled = false }
 braced-string-interpolation = { enabled = false }
 class-name = { enabled = false }
 constant-name = { enabled = false }
-constant-type = { enabled = false }
 cyclomatic-complexity = { enabled = false }
 excessive-parameter-list = { enabled = false }
 final-controller = { enabled = false }
@@ -40,26 +36,19 @@ interface-name = { enabled = false }
 literal-named-argument = { enabled = false }
 no-assign-in-condition = { enabled = false }
 no-boolean-flag-parameter = { enabled = false }
-no-boolean-literal-comparison = { enabled = false }
 no-else-clause = { enabled = false }
-no-empty = { enabled = false }
+no-empty = { enabled = false }  # empty() is awful, but loose truthiness is just as bad without being explicit about it.
 no-empty-comment = { enabled = false }
 no-literal-password = { enabled = false }
-no-request-all = { enabled = false }
 no-shorthand-ternary = { enabled = false }
-parameter-type = { enabled = false }
-prefer-arrow-function = { enabled = false }
 prefer-first-class-callable = { enabled = false }
-property-type = { enabled = false }
-return-type = { enabled = false }
-strict-behavior = { enabled = false }
 tagged-fixme = { enabled = false }
 tagged-todo = { enabled = false }
 too-many-methods = { enabled = false }
 trait-name = { enabled = false }
 
 [analyzer]
-# Enable all features and categories, then disable every rule by default
+# Enable all features and categories, then disable individual rules as needed
 allow-possibly-undefined-array-keys = false
 analyze-dead-code = true
 check-throws = true
@@ -100,7 +89,6 @@ ignore = [
     "invalid-array-index", # doesn't allow non-negative-int
     "invalid-destructuring-source", # thinks collections are `mixed`
     "invalid-method-access", # completely broken with laravel
-    "invalid-named-argument", #  Unknown argument name `${argument_name}` (definitely a mago bug)
     "invalid-operand", # prevents useful control-flow shorthand.  would enable if it allowed void context.
     "invalid-return-statement", # broken when `static` return type is involved anywhere
     "less-specific-nested-argument-type", # fails on every single test.  need to disable this just for tests/
@@ -108,7 +96,7 @@ ignore = [
     "less-specific-return-statement", # deferred
     "mismatched-array-index", # deferred until we can put a stake through Laravel's craptastic __() function
     "missing-magic-method", # laravel's obfuscations are still too much for mago to handle
-    "missing-override-attribute", # deferred, there's just too many of these
+    "missing-override-attribute", # unnecessary in many cases
     "mixed-argument", # poor type inference
     "mixed-array-access", # completely broken, fails to infer an array even when it's the only return type
     "mixed-array-assignment", # broken in the same fashion as mixed-array-access

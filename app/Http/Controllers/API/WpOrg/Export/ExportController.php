@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\API\WpOrg\Export;
 
@@ -18,7 +19,7 @@ class ExportController extends Controller
     public function __invoke(Request $request, string $type): StreamedResponse
     {
         $req = ExportRequest::from([
-            ...$request->all(),
+            ...$request->all(), // @mago-expect lint:no-request-all
             'type' => $type,
         ]);
 

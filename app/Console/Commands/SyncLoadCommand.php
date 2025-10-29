@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Console\Commands;
 
@@ -35,7 +36,7 @@ class SyncLoadCommand extends Command
         ini_set('memory_limit', '-1');
 
         $filename = (string)$this->argument('file');
-        if (in_array($filename, ['-', '/dev/stdin', 'php://stdin'])) {
+        if (in_array($filename, ['-', '/dev/stdin', 'php://stdin'], true)) {
             $filename = 'php://stdin';
         } elseif (!file_exists($filename)) {
             $this->fail("$filename: file not found");

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Values\Packages;
 
@@ -42,7 +43,7 @@ readonly class FairMetadata extends DTO
         public string $type,
         public string $license,
         public array $authors,
-        public array $security,
+        public Optional|array $security,
         public array $releases,
         public Optional|array $keywords,
         public Optional|array $sections,
@@ -147,11 +148,9 @@ readonly class FairMetadata extends DTO
     public static function rules(): array
     {
         return [
-            '@context' => function ($value) {
-                return is_array($value)
+            '@context' => fn ($value) => is_array($value)
                     ? $value[0] === self::CONTEXT
-                    : $value === self::CONTEXT;
-            },
+                    : $value === self::CONTEXT,
             'id' => ['required', 'string'],
             'type' => ['required', 'string', 'in:' . implode(',', PackageType::values())],
             'license' => ['required', 'string'], // @todo - validate against SPDX licenses?
@@ -208,7 +207,7 @@ readonly class FairMetadata extends DTO
     {
         // [chuck 2025-09-19] largely disabled for now: some packages make this blank, which aborts the whole import.
         return [
-            'security' => ['required', 'array'],
+            // 'security' => ['required', 'array'], // [chuck 2025-10-29] disabled entirely
         ];
         // return [
         //     'security' => ['required', 'array', 'min:1'],

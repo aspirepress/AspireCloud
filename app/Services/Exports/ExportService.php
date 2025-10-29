@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Exports;
 
@@ -84,9 +85,7 @@ class ExportService
         // All exported models use the ac_raw_metadata field.
         // In the future, if different models need different transformations,
         // specific transformers can be defined here.
-        $transformer = function ($record) {
-            return $record->ac_raw_metadata;
-        };
+        $transformer = fn ($record) => $record->ac_raw_metadata;
 
         return $transformer;
     }

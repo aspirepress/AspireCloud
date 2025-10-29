@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\API\Metrics;
 
@@ -40,7 +41,7 @@ class MetricsController extends Controller
             // sanitize and skip duplicates
             $sanitized = self::sanitize($name);
 
-            if (in_array($sanitized, $alreadySeen)) {
+            if (in_array($sanitized, $alreadySeen, true)) {
                 continue;
             }
             $alreadySeen[] = $sanitized;

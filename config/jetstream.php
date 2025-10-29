@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 use Laravel\Jetstream\Features;
 use Laravel\Jetstream\Http\Middleware\AuthenticateSession;

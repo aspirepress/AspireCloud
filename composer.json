@@ -8,15 +8,15 @@
         "php": "^8.3",
         "ext-intl": "*",
         "ext-mbstring": "*",
-        "dshafik/bag": "^2.6.2",
+        "beacon-hq/bag": "^2.6.2",
+        "cweagans/composer-patches": "^1.7.3",
         "elasticsearch/elasticsearch": "^8.19",
         "inertiajs/inertia-laravel": "^2.0.10",
-        "laravel/framework": "^12.33.0",
+        "laravel/framework": "^12.35.1",
         "laravel/jetstream": "^5.3.8",
         "laravel/sanctum": "^4.2.0",
-        "laravel/telescope": "^5.14.0",
         "laravel/tinker": "^2.10.1",
-        "league/flysystem-aws-s3-v3": "^3.29",
+        "league/flysystem-aws-s3-v3": "^3.30.1",
         "predis/predis": "^2.4.0",
         "spatie/laravel-permission": "^6.21.0",
         "symfony/http-client": "^7.3.4",
@@ -25,8 +25,7 @@
         "tightenco/ziggy": "^2.6.0"
     },
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "^3.5.5",
-        "carthage-software/mago": "1.0.0-beta.24",
+        "carthage-software/mago": "1.0.0-beta.34",
         "fakerphp/faker": "^1.24.1",
         "larastan/larastan": "^3.7.2",
         "laravel/pail": "^1.2.3",
@@ -34,7 +33,7 @@
         "nunomaduro/collision": "^8.8.2",
         "pestphp/pest": "^3.8.4",
         "pestphp/pest-plugin-laravel": "^3.2",
-        "phpstan/phpstan": "^2.1.30",
+        "phpstan/phpstan": "^2.1.31",
         "psalm/plugin-laravel": "^3.0.4",
         "roave/security-advisories": "dev-latest",
         "spatie/laravel-web-tinker": "^1.10.1",
@@ -95,11 +94,17 @@
     "extra": {
         "laravel": {
             "dont-discover": []
+        },
+        "patches": {
+            "beacon-hq/bag": {
+                "Fix Bag dependency injection in single-action controllers": "patches/fix-invokable-controller-injection.patch"
+            }
         }
     },
     "config": {
         "allow-plugins": {
             "carthage-software/mago": true,
+            "cweagans/composer-patches": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
         },

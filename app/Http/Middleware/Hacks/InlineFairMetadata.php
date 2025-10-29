@@ -30,7 +30,6 @@ readonly class InlineFairMetadata
             return $response;
         }
 
-        /** @var array<string,mixed> $body */
         $body = json_decode($content, true);
         if (!is_array($body)) {
             return $response;
@@ -71,9 +70,9 @@ readonly class InlineFairMetadata
     }
 
     /**
-     * @param array<string,mixed> $item
+     * @param array<array-key,mixed> $item
      * @param array<string,array<string,mixed>> $fair_meta
-     * @return array<string,mixed>
+     * @return array<array-key,mixed>
      */
     private function insertPackage(array $item, array $fair_meta): array
     {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Values\Packages;
 
@@ -232,7 +233,7 @@ readonly class PackageData extends DTO
             'version' => ['required', 'string'],
             'origin' => ['required', 'string', 'in:' . implode(',', Origin::values())],
             'raw_metadata' => ['required', 'array'],
-            'security' => ['required', 'array'],
+            // 'security' => ['required', 'array'], // [chuck 2025-10-29] disabled entirely
             'releases' => ['required', 'array'],
             'tags' => ['sometimes', 'array'],
             'sections' => ['sometimes', 'array'],

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 return [
     /* Number of increments before syncing to DB. */
