@@ -176,6 +176,10 @@ final class Plugin extends BaseModel
 
     private static function rewriteDotOrgUrl(mixed $url): string
     {
+        if (!is_string($url)) {
+            // TODO: tighten up types
+            return '';
+        }
         $base = config('app.aspirecloud.download.base');
 
         // https://downloads.wordpress.org/plugin/elementor.3.26.5.zip
