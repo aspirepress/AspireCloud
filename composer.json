@@ -9,6 +9,8 @@
         "ext-intl": "*",
         "ext-mbstring": "*",
         "beacon-hq/bag": "^2.6.2",
+        "crell/fp": "^1.0",
+        "crell/serde": "^1.5",
         "cweagans/composer-patches": "^1.7.3",
         "elasticsearch/elasticsearch": "^8.19",
         "inertiajs/inertia-laravel": "^2.0.10",
