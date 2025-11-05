@@ -5,17 +5,17 @@ namespace App\Models;
 
 use Carbon\CarbonImmutable;
 use Database\Factories\PackageTagFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * @property-read string                                                 $id
- * @property-read string                                                 $name
- * @property-read string                                                 $slug
- * @property-read CarbonImmutable|null                                   $created_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Package> $packages
+ * @property-read string                   $id
+ * @property-read string                   $name
+ * @property-read string                   $slug
+ * @property-read CarbonImmutable|null     $created_at
+ * @property-read Collection<int, Package> $packages
  */
 class PackageTag extends BaseModel
 {
