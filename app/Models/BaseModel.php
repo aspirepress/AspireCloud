@@ -17,22 +17,12 @@ abstract class BaseModel extends Model
     protected $guarded = [];    // everything is fillable by default
 
     /**
-     * @param array<string, mixed> $attributes
-     */
-    protected static function _create(array $attributes = []): static
-    {
-        return static::query()->create($attributes);
-    }
-
-    /**
-     * Upsert a model instance.
+     * Exists solely because Laravel IDEA can't seem to find create() without this
      *
      * @param array<string, mixed> $attributes
-     * @param array<string, mixed> $values
-     * @return static
      */
-    protected static function _updateOrCreate(array $attributes, array $values): static
+    protected static function create(array $attributes = []): static
     {
-        return static::query()->updateOrCreate($attributes, $values);
+        return static::query()->create($attributes);
     }
 }

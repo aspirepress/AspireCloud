@@ -120,8 +120,7 @@ final class Theme extends BaseModel
         $authorData = $metadata['author'];
         $author = Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
 
-        // TODO: use self::create for validation
-        $instance = self::_create([
+        $instance = self::create([
             'author_id' => $author->id,
             'slug' => $metadata['slug'],
             'name' => $metadata['name'],
