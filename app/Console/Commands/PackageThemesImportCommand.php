@@ -33,6 +33,10 @@ class PackageThemesImportCommand extends Command
         Theme::with('author')
             ->lazy($this->chunkSize)
             ->each(function ($theme) {
+                if ($theme->ac_origin !== 'wp_org') {
+                    $this->comment("Skipping non-legacy theme {$theme->slug} ({$theme->ac_origin})");
+                    return;
+                }
                 $this->currentItem++;
                 $this->info("#$this->currentItem: $theme->slug");
                 try {

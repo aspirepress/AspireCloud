@@ -33,6 +33,10 @@ class PackagePluginsImportCommand extends Command
         Plugin::query()
             ->lazy($this->chunkSize)
             ->each(function ($plugin) {
+                if ($plugin->ac_origin !== 'wp_org') {
+                    $this->comment("Skipping non-legacy plugin {$plugin->slug} ({$plugin->ac_origin})");
+                    return;
+                }
                 $this->currentItem++;
                 $this->info("#$this->currentItem: $plugin->slug");
                 try {
