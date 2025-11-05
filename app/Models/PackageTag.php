@@ -17,14 +17,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read CarbonImmutable|null                                   $created_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Package> $packages
  */
-class PackageTag extends Model
+class PackageTag extends BaseModel
 {
     use HasUuids;
 
     /** @use HasFactory<PackageTagFactory> */
     use HasFactory;
-
-    public const UPDATED_AT = null;
 
     protected $table = 'package_tags';
 

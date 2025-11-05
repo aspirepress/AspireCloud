@@ -40,8 +40,6 @@ class Package extends BaseModel
     /** @use HasFactory<PackageFactory> */
     use HasFactory;
 
-    public const UPDATED_AT = null;
-
     protected $table = 'packages';
 
     protected static function booted(): void
