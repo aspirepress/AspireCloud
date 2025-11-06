@@ -5,7 +5,7 @@
     "keywords": ["aspirepress", "wordpress", "wp"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "ext-intl": "*",
         "ext-mbstring": "*",
         "beacon-hq/bag": "^2.6.2",
