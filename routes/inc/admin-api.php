@@ -19,3 +19,6 @@ Route::prefix('admin/api/v1')
         $router->post('/import', BulkImport::class)->can(Permission::BulkImport);
         $router->post('/packages/import', BulkPackageImport::class)->can(Permission::BulkImport);
     });
+
+
+// Route::post('/admin/api/v1/import', BulkImport::class)->middleware([RequireJson::class]);

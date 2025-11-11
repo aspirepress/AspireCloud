@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models\WpOrg;
 
@@ -111,11 +112,10 @@ final class Theme extends BaseModel
      */
     public static function fromSyncMetadata(array $metadata): self
     {
-        $syncmeta = $metadata['aspiresync_meta'];
+        $syncmeta = $metadata['aspiresync_meta'] ?? ['type' => 'theme', 'status' => 'open'];
+        $ac_origin = $syncmeta['origin'] ?? '';
         $syncmeta['type'] === 'theme' or throw new InvalidArgumentException("invalid type '{$syncmeta['type']}'");
         $syncmeta['status'] === 'open' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
-
-        $ac_raw_metadata = $metadata;
 
         $authorData = $metadata['author'];
         $author = Author::firstOrCreate(['user_nicename' => $authorData['user_nicename']], $authorData);
@@ -125,7 +125,7 @@ final class Theme extends BaseModel
             'author_id' => $author->id,
             'slug' => $metadata['slug'],
             'name' => $metadata['name'],
-            'description' => ($metadata['sections']['description'] ?? null) ?: null,
+            'description' => ($metadata['sections']['description'] ?? null) ?: "", // XXX should probably be nullable
             'version' => $metadata['version'],
             'download_link' => $metadata['download_link'],
             'requires' => ($metadata['requires'] ?? null) ?: null,
@@ -144,14 +144,14 @@ final class Theme extends BaseModel
             'external_support_url' => ($metadata['external_support_url'] ?? null) ?: null,
             'is_community' => ($metadata['is_community'] ?? null) ?: false,
             'external_repository_url' => ($metadata['external_repository_url'] ?? null) ?: null,
-            'ac_origin' => $syncmeta['origin'],
-            'ac_raw_metadata' => $ac_raw_metadata,
+            'ac_origin' => $ac_origin,
+            'ac_raw_metadata' => $metadata,
         ]);
 
         if (isset($metadata['tags']) && is_array($metadata['tags'])) {
             $instance->addTags($metadata['tags']);
         }
-        return $instance;
+        return $instance->refresh();
     }
 
     //endregion
@@ -283,11 +283,14 @@ final class Theme extends BaseModel
 
     //region Collection Management
 
-    /** @param array<string, string> $tags */
+    /** @param array<array-key, string> $tags */
     public function addTags(array $tags): self
     {
         $themeTags = [];
         foreach ($tags as $tagSlug => $name) {
+            if (is_int($tagSlug)) {
+                continue;
+            }
             $themeTags[] = ThemeTag::firstOrCreate(['slug' => $tagSlug], ['slug' => $tagSlug, 'name' => $name]);
         }
         $this->tags()->saveMany($themeTags);

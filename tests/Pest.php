@@ -1,9 +1,12 @@
 <?php
+declare(strict_types=1);
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
+
+require_once __DIR__.'/elasticMock.php';
 
 pest()
     ->extend(TestCase::class)

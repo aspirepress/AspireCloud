@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Downloads;
 
@@ -21,15 +22,30 @@ class DownloadService implements Downloader
         ?string $revision = null,
     ): Response
     {
-        $s3 = Storage::disk('s3');
-
-        $context = ['type' => $type->value, 'slug' => $slug, 'file' => $file, 'revision' => $revision];
-        Log::debug("DOWNLOAD", $context);
-
         if ($revision === 'head') {
             // head is there to have something in the url, but it behaves the same as not passing it
             $revision = null;
         }
+
+        try {
+            $s3 = Storage::disk('s3');
+        } catch (\Exception) {
+            // HACK: S3 is not configured, so redirect everything back to .org after all
+            // FIXME: use FILESYSTEM_DISK from config and deal with Laravel's godawful Storage facade
+            $upstream_url = $type->buildUpstreamUrl($slug, $file, $revision);
+            $context = [
+                'type' => $type->value,
+                'slug' => $slug,
+                'file' => $file,
+                'revision' => $revision,
+                'upstream_url' => $upstream_url,
+            ];
+            Log::warning("Could not instantiate S3 storage -- redirecting to original URL", $context);
+            return redirect()->to($upstream_url);
+        }
+
+        $context = ['type' => $type->value, 'slug' => $slug, 'file' => $file, 'revision' => $revision];
+        Log::debug("DOWNLOAD", $context);
 
         $path = $type->buildLocalPath($slug, $file, $revision);
 
@@ -43,7 +59,13 @@ class DownloadService implements Downloader
         $s3 = Storage::disk('s3');
         $path = $type->buildLocalPath($slug, $file, $revision);
         $upstream_url = $type->buildUpstreamUrl($slug, $file, $revision);
-        $context['upstream_url'] = $upstream_url;
+        $context = [
+            'type' => $type->value,
+            'slug' => $slug,
+            'file' => $file,
+            'revision' => $revision,
+            'upstream_url' => $upstream_url,
+        ];
 
         Log::debug("Downloading $file from $upstream_url", $context);
 

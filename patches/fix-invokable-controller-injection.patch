@@ -1,0 +1,16 @@
+--- bag/src/Bag/BagServiceProvider.php.orig	2025-10-08 20:27:33
++++ bag/src/Bag/BagServiceProvider.php	2025-10-26 12:11:11
+@@ -45,7 +45,12 @@
+                             $action = new ReflectionClosure($closure);
+                         } else {
+                             /** @var object|string $controller */
+-                            $action = new ReflectionMethod($controller, $route->getActionMethod());
++                            $method = $route->getActionMethod();
++                            $name = is_string($controller) ? $controller : get_class($controller);
++                            if ($method === $name) {
++                                $method = '__invoke';
++                            }
++                            $action = new ReflectionMethod($controller, $method);
+                         }
+ 
+                         if (Reflection::getParameters($action)->filter(function ($parameter) use ($class) {

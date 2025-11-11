@@ -28,12 +28,12 @@
         <env name="DB_PASSWORD" value="password"/>
         <env name="DB_PORT" value="5432"/>
         <env name="DB_USERNAME" value="postgres"/>
+        <env name="ELASTICSEARCH_AUTO_INDEX" value="false" />
         <env name="LOG_CHANNEL" value="null"/>
         <env name="LOG_LEVEL" value="debug"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
-        <env name="TELESCOPE_ENABLED" value="false"/>
     </php>
 </phpunit>
