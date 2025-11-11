@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Actions\Admin\API\V1\BulkImport;
+use App\Actions\Admin\API\V1\BulkPackageImport;
 use App\Auth\Permission;
 use App\Http\Middleware\RequireJson;
 use Illuminate\Routing\Router;
@@ -16,6 +17,7 @@ Route::prefix('admin/api/v1')
     ])
     ->group(function (Router $router) {
         $router->post('/import', BulkImport::class)->can(Permission::BulkImport);
+        $router->post('/packages/import', BulkPackageImport::class)->can(Permission::BulkImport);
     });
 
 
