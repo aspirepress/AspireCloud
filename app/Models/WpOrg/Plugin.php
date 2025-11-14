@@ -131,8 +131,7 @@ final class Plugin extends BaseModel
         $syncmeta['type'] === 'plugin' or throw new InvalidArgumentException("invalid type '{$syncmeta['type']}'");
         $syncmeta['status'] === 'open' or throw new InvalidArgumentException("invalid status '{$syncmeta['status']}'");
 
-        // TODO: use self::create for validation
-        $instance = self::_create([
+        $instance = self::create([
             'slug' => $syncmeta['slug'],
             'name' => $metadata['name'] ?? '',
             'short_description' => $metadata['short_description'] ?? '',

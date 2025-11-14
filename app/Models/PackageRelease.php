@@ -30,8 +30,6 @@ class PackageRelease extends BaseModel
     /** @use HasFactory<PackageReleaseFactory> */
     use HasFactory;
 
-    public const UPDATED_AT = null;
-
     protected $table = 'package_releases';
 
     protected function casts(): array
