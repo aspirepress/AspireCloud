@@ -26,5 +26,12 @@
                 <directory name="."/>
             </errorLevel>
         </MissingOverrideAttribute>
+
+        <UndefinedDocblockClass>
+            <!-- psalm is terrible at this when the classes are imported.  phpstan will catch it. -->
+            <errorLevel type="suppress">
+                <directory name="."/>
+            </errorLevel>
+        </UndefinedDocblockClass>
     </issueHandlers>
 </psalm>

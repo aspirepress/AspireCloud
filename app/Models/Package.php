@@ -8,6 +8,7 @@ use App\Values\Packages\FairMetadata;
 use App\Values\Packages\PackageData;
 use Carbon\CarbonImmutable;
 use Database\Factories\PackageFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,20 +19,20 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
- * @property-read string                                                        $id
- * @property-read string                                                        $did
- * @property-read string                                                        $slug
- * @property-read string                                                        $name
- * @property-read string                                                        $description
- * @property-read string                                                        $type
- * @property-read string                                                        $origin
- * @property-read string                                                        $license
- * @property-read array<string, mixed>|null                                     $raw_metadata
- * @property-read CarbonImmutable|null                                          $created_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Author>         $authors
- * @property-read \Illuminate\Database\Eloquent\Collection<int, PackageRelease> $releases
- * @property-read \Illuminate\Database\Eloquent\Collection<int, PackageTag>     $tags
- * @property-read PackageMetas|null                                             $metas
+ * @property-read string                          $id
+ * @property-read string                          $did
+ * @property-read string                          $slug
+ * @property-read string                          $name
+ * @property-read string                          $description
+ * @property-read string                          $type
+ * @property-read string                          $origin
+ * @property-read string                          $license
+ * @property-read array<string, mixed>|null       $raw_metadata
+ * @property-read CarbonImmutable|null            $created_at
+ * @property-read Collection<int, Author>         $authors
+ * @property-read Collection<int, PackageRelease> $releases
+ * @property-read Collection<int, PackageTag>     $tags
+ * @property-read PackageMetas|null               $metas
  */
 class Package extends BaseModel
 {
@@ -39,8 +40,6 @@ class Package extends BaseModel
 
     /** @use HasFactory<PackageFactory> */
     use HasFactory;
-
-    public const UPDATED_AT = null;
 
     protected $table = 'packages';
 

@@ -18,8 +18,6 @@ class PackageMetas extends BaseModel
 {
     use HasUuids;
 
-    public const UPDATED_AT = null;
-
     protected $table = 'package_metas';
 
     protected function casts(): array
