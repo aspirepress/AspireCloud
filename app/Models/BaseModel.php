@@ -21,7 +21,7 @@ abstract class BaseModel extends Model
      *
      * @param array<string, mixed> $attributes
      */
-    protected static function create(array $attributes = []): static
+    public static function create(array $attributes = []): static
     {
         return static::query()->create($attributes);
     }
